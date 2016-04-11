@@ -1,0 +1,9 @@
+sequenceDiagram
+  operator->>ODB:upgrade all instances
+  loop for all instances deployed by odb
+    ODB->>ServiceAdapter:generate-manifest
+    ServiceAdapter->>ODB: deployment manifest
+    ODB->>BOSH: deploy with manifest
+    BOSH-->>ODB: accepted
+    Note over ODB,BOSH: Polls till operation is complete
+  end

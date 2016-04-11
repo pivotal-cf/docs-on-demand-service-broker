@@ -1,0 +1,16 @@
+sequenceDiagram
+  User->>CloudFoundry:delete-service
+  CloudFoundry->>ODB:remove-instance
+  ODB->>BOSH:bosh delete deployment
+  BOSH->>ODB:accepted
+  ODB->>CloudFoundry:accepted
+  loop Until bosh task state is 'done'
+    CloudFoundry->>ODB:last operation
+    ODB->>BOSH:get task state
+    BOSH->>ODB:queued/processing
+    ODB->>CloudFoundry:in progress
+  end
+  CloudFoundry->>ODB:last operation
+  ODB->>BOSH:get task state
+  BOSH->>ODB:done
+  ODB->>CloudFoundry:completed

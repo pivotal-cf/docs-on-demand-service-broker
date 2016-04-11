@@ -1,0 +1,45 @@
+---
+title: On-demand Service Broker Documentation
+owner: London Services Enablement
+---
+
+## Contents
+- **[Overview](overview.html)**
+  - [What is a Cloud Foundry service broker?](/on-demand-service-broker/overview.html#what-is-a-cloud-foundry-service-broker)
+  - [What is an on-demand service broker?](/on-demand-service-broker/overview.html#what-is-an-on-demand-service-broker)
+  - [What is a service adapter?](/on-demand-service-broker/overview.html#what-is-a-service-adapter)
+  - [Why provision IAAS resources on-demand?](/on-demand-service-broker/overview.html#why-provision-iaas-resources-on-demand)
+  - [Why use ODB to develop on-demand service offerings?](/on-demand-service-broker/overview.html#why-use-odb-to-develop-on-demand-service-offerings)
+  - [Prerequisites for deploying brokers that use ODB](/on-demand-service-broker/overview.html#prerequisites-for-deploying-brokers-that-use-odb)
+     - [BOSH v2 Features we use](/on-demand-service-broker/overview.html#bosh-v2-features-we-use)
+  - [Steps required to use on-demand service broker](/on-demand-service-broker/overview.html#steps-required-to-use-on-demand-service-broker)
+- **[Creating a service adapter](creating.html)**
+  - [What is required of the Service Authors?](/on-demand-service-broker/creating.html#what-is-required-of-the-service-authors)
+  - [Creating a Service Release](/on-demand-service-broker/creating.html#creating-a-service-release)
+  - [Creating a Service Adapter](/on-demand-service-broker/creating.html#creating-a-service-adapter)
+  - [Service adapter interface](/on-demand-service-broker/creating.html#service-adapter-interface)
+  - [Subcommands](/on-demand-service-broker/creating.html#sub-commands)
+     - [generate-manifest](/on-demand-service-broker/creating.html#generate-manifest)
+     - [create-binding](/on-demand-service-broker/creating.html#create-binding)
+     - [delete-binding](/on-demand-service-broker/creating.html#delete-binding)
+  - [Packaging](/on-demand-service-broker/creating.html#packaging)
+- **[Operating the On-demand Service Broker](operating.html)**
+  - [What are the responsibilities of the Operator?](/on-demand-service-broker/operating.html#what-are-the-responsibilities-of-the-operator)
+  - [Upload Required Releases](/on-demand-service-broker/operating.html#upload-required-releases)
+  - [Write a Broker Manifest](/on-demand-service-broker/operating.html#write-a-broker-manifest)
+     - [Core Broker Configuration](/on-demand-service-broker/operating.html#core-broker-configuration)
+     - [Service catalog and Plan composition](/on-demand-service-broker/operating.html#service-catalog-and-plan-composition)
+  - [Broker Management](/on-demand-service-broker/operating.html#broker-management)
+     - [register-broker](/on-demand-service-broker/operating.html#register-broker)
+     - [deregister-broker](/on-demand-service-broker/operating.html#deregister-broker)
+     - [Upgrading the broker and existing service instances](/on-demand-service-broker/operating.html#upgrading-the-broker-and-existing-service-instances)
+    - [Deleting all service instances](/on-demand-service-broker/operating.html#deleting-all-service-instances)
+- **[On-demand Service Broker Concepts/Reference](concepts.html)**
+  - [Catalog](/on-demand-service-broker/concepts.html#catalog)
+  - [Create service instance](/on-demand-service-broker/concepts.html#create-service-instance)
+  - [Delete service instance](/on-demand-service-broker/concepts.html#delete-service-instance)
+  - [Update service instance](/on-demand-service-broker/concepts.html#update-service-instance)
+  - [Bind](/on-demand-service-broker/concepts.html#bind)
+  - [Unbind](/on-demand-service-broker/concepts.html#unbind)
+  - [Upgrade all instances](/on-demand-service-broker/concepts.html#upgrade-all-instances)
+  - [Delete all instances](/on-demand-service-broker/concepts.html#delete-all-instances)

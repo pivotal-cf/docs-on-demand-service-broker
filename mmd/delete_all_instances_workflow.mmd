@@ -1,0 +1,17 @@
+sequenceDiagram
+  operator->>DeleteErrand:start delete all instances
+  loop for all instances deployed by odb
+    DeleteErrand->>CF:unbind service via API
+    loop for bindings for the service instance
+      CF->>ODB:unbind
+      ODB->>ServiceAdapter:delete a binding
+      ServiceAdapter-->>ODB: deleted
+      ODB-->>CF: OK
+    end
+    DeleteErrand->>CF:delete service via API
+    CF->>ODB:delete-service-instance
+    ODB->>BOSH:delete deployment
+    BOSH-->>ODB: accepted
+    ODB-->>CF: accepted
+    Note over CF,BOSH: Polling till operation is complete
+  end
