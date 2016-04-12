@@ -37,7 +37,9 @@ For an example manifest for a Kafka service, see [kafka-example-service-adapter-
 
 <a id="configure-bosh"></a>
 ## Setting up your BOSH director
-The BOSH director must be configured to accept connections using SSL certificates. See [Director SSL Certificate Configuration](https://bosh.io/docs/director-certs.html) for details on how to generate and use them.
+To be able to use the On-demand Service Broker, you need to set up your BOSH director to accept trusted connections. This is achieved by generating and deploying SSL certificates on the jobs that speak to the director. The most common way to do that is through self-signed certificates, as it is not always possible to obtain a third-party certificate.
+
+BOSH offers a feature to allow authentication in this way; for more details on how to generate and use self-signed certificates, see [Director SSL Certificate Configuration](https://bosh.io/docs/director-certs.html).
 
 <a id="upload-required-releases"></a>
 ## Upload Required Releases
