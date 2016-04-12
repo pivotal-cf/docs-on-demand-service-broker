@@ -6,6 +6,7 @@ owner: London Services Enablement
 # Deploying an On-demand Service Broker
 
 - [What are the responsibilities of the Operator?](/on-demand-service-broker/operating.html#what-are-the-responsibilities-of-the-operator)
+- [Configure BOSH](/on-demand-service-broker/operating.html#configure-bosh)
 - [Upload Required Releases](/on-demand-service-broker/operating.html#upload-required-releases)
 - [Write a Broker Manifest](/on-demand-service-broker/operating.html#write-a-broker-manifest)
   - [Core Broker Configuration](/on-demand-service-broker/operating.html#core-broker-configuration)
@@ -19,6 +20,7 @@ owner: London Services Enablement
 <a id="what-are-the-responsibilities-of-the-operator"></a>
 ## What are the responsibilities of the Operator?
 The operator is responsible for the following tasks:
+- Configuring the BOSH director
 - Uploading the required releases for the broker deployment and service instance deployments.
 - Write a broker manifest
   - See [v2-style manifest docs](http://bosh.io/docs/manifest-v2.html) if unfamiliar with writing BOSH v2 manifests
