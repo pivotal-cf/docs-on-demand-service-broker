@@ -6,7 +6,7 @@ owner: London Services Enablement
 # Deploying an On-demand Service Broker
 
 - [What are the responsibilities of the Operator?](/on-demand-service-broker/operating.html#what-are-the-responsibilities-of-the-operator)
-- [Configure BOSH](/on-demand-service-broker/operating.html#configure-bosh)
+- [Setting up your BOSH director](/on-demand-service-broker/operating.html#configure-bosh)
 - [Upload Required Releases](/on-demand-service-broker/operating.html#upload-required-releases)
 - [Write a Broker Manifest](/on-demand-service-broker/operating.html#write-a-broker-manifest)
   - [Core Broker Configuration](/on-demand-service-broker/operating.html#core-broker-configuration)
@@ -36,7 +36,7 @@ For an example manifest for a Kafka service, see [kafka-example-service-adapter-
 
 
 <a id="configure-bosh"></a>
-## Configure BOSH
+## Setting up your BOSH director
 The BOSH director must be configured to accept connections using SSL certificates. See [Director SSL Certificate Configuration](https://bosh.io/docs/director-certs.html) for details on how to generate and use them.
 
 <a id="upload-required-releases"></a>
