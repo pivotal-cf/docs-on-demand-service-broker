@@ -34,10 +34,16 @@ For an example manifest for a Redis service, see [redis-example-service-adapter-
 
 For an example manifest for a Kafka service, see [kafka-example-service-adapter-release](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml).
 
+
+<a id="configure-bosh"></a>
+## Configure BOSH
+The BOSH director must be configured to accept connections using SSL certificates. See [Director SSL Certificate Configuration](https://bosh.io/docs/director-certs.html) for details on how to generate and use them.
+
 <a id="upload-required-releases"></a>
 ## Upload Required Releases
 
 Upload the following releases to the BOSH director:
+
 * on-demand-service-broker
 * your service adapter
 * your service release(s)
@@ -48,6 +54,7 @@ Upload the following releases to the BOSH director:
 <a id="core-broker-configuration"></a>
 ### Core Broker Configuration
 Your manifest should contain one non-errand instance group, that co-locates both:
+
 * the `broker` job from on-demand-service-broker
 * your service adapter job from your service adapter release
 
