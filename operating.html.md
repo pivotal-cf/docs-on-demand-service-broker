@@ -324,4 +324,43 @@ cf:
 
 Run the errand with `bosh run errand delete-sub-deployments`.
 
+<a id="troubleshooting"></a>
+## Troubleshooting
+
+Most operations on the on demand service broker API are implemented by launching BOSH tasks. If an operation fails, it may be useful to investigate the corresponding BOSH task. To do this:
+
+1. Determine the ID of the service for which an operation failed. You can do this using the Cloud Foundry CLI:
+
+    ```
+    cf service --guid <service name>
+    ```
+
+1. SSH on to the service broker VM:
+
+    ```
+    bosh deployment <path to broker manifest>
+    bosh ssh
+    ```
+
+1. Read the broker log file, which is located at `/var/vcap/sys/log/broker/broker.log`
+
+1. In the log, look for lines relating to the service, identified by the service ID. Lines recording the starting and finishing of BOSH tasks will also have the BOSH task ID:
+
+    ```
+    on-demand-service-broker: [on-demand-service-broker] 2016/04/13 09:01:50 Bosh task id for Create instance 30d4a67f-d220-4d06-9989-58a976b86b35 was 11470
+    on-demand-service-broker: [on-demand-service-broker] 2016/04/13 09:06:55 task 11470 success creating deployment for instance 30d4a67f-d220-4d06-9989-58a976b86b35: create deployment
+
+    on-demand-service-broker: [on-demand-service-broker] 2016/04/13 09:16:20 Bosh task id for Update instance 30d4a67f-d220-4d06-9989-58a976b86b35 was 11473
+    on-demand-service-broker: [on-demand-service-broker] 2016/04/13 09:17:20 task 11473 success updating deployment for instance 30d4a67f-d220-4d06-9989-58a976b86b35: create deployment
+
+    on-demand-service-broker: [on-demand-service-broker] 2016/04/13 09:17:52 Bosh task id for Delete instance 30d4a67f-d220-4d06-9989-58a976b86b35 was 11474
+    on-demand-service-broker: [on-demand-service-broker] 2016/04/13 09:19:56 task 11474 success deleting deployment for instance 30d4a67f-d220-4d06-9989-58a976b86b35: delete deployment service-instance_30d4a67f-d220-4d06-9989-58a976b86b35
+    ```
+
+1. Use the task ID to obtain the task log from BOSH (adding flags such as `--debug` or `--cpi` as necessary):
+
+    ```
+    bosh task <task ID>
+    ```
+
 **[Back to Contents Page](/on-demand-service-broker/index.html)**

@@ -33,7 +33,8 @@ owner: London Services Enablement
      - [register-broker](/on-demand-service-broker/operating.html#register-broker)
      - [deregister-broker](/on-demand-service-broker/operating.html#deregister-broker)
      - [Upgrading the broker and existing service instances](/on-demand-service-broker/operating.html#upgrading-the-broker-and-existing-service-instances)
-    - [Deleting all service instances](/on-demand-service-broker/operating.html#deleting-all-service-instances)
+     - [Deleting all service instances](/on-demand-service-broker/operating.html#deleting-all-service-instances)
+  - [Troubleshooting](/on-demand-service-broker/operating.html#troubleshooting)
 - **[On-demand Service Broker Concepts/Reference](concepts.html)**
   - [Catalog](/on-demand-service-broker/concepts.html#catalog)
   - [Create service instance](/on-demand-service-broker/concepts.html#create-service-instance)
