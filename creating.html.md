@@ -8,6 +8,7 @@ owner: London Services Enablement
 - [What is required of the Service Authors?](/on-demand-service-broker/creating.html#what-is-required-of-the-service-authors)
 - [Creating a Service Release](/on-demand-service-broker/creating.html#creating-a-service-release)
 - [Creating a Service Adapter](/on-demand-service-broker/creating.html#creating-a-service-adapter)
+- [Supporting Service Plan Properties](/on-demand-service-broker/creating.html#service-plan-properties)
 - [Service adapter interface](/on-demand-service-broker/creating.html#service-adapter-interface)
 - [Subcommands](/on-demand-service-broker/creating.html#sub-commands)
   - [generate-manifest](/on-demand-service-broker/creating.html#generate-manifest)
@@ -48,6 +49,16 @@ A service release is a BOSH release that is deployed at instance creation time, 
   * [Kafka](https://github.com/pivotal-cf-experimental/kafka-example-service-release)
 
 See the [BOSH docs](http://bosh.io/docs) for help creating a BOSH release. We recommend creating sample manifests that deploy the service release(s), as this will help you write the `generate-manifest` component of the Service Adapter later.
+
+<a id="service-plan-properties"></a>
+## Supporting Service Plan Properties
+Service authors can choose to support certain properties for the service in the adapter code. These properties are service-specific traits used to customise the service. They do not necessarily map to jobs one to one; a plan property may affect multiple jobs in the deployment. Plan properties are a mechanism for the operator to define different plans.
+
+Service authors must document the usage of plan properties for the operator.
+
+For example
+- the [Redis service adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_service_adapter.go) supports the `persistent` property which can be used to attach a disk to the vm.
+- the [Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go) supports the `auto_create_topics` property to enable auto creation of topics on the cluster.
 
 <a id="creating-a-service-adapter"></a>
 ## Creating a Service Adapter
