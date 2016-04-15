@@ -39,7 +39,7 @@ The following deliverables are required from the service authors:
   - Contains the Service Adapter CLI
 - Documentation for the operator to configure plan definitions for the Service Adapter
 
-For information about what is required of the Operator, see [Responsibilities of the Operator](/on-demand-service-broker/operators.html#responsibility-of-the-operator).
+For information about what is required of the Operator, see [Responsibilities of the Operator](/on-demand-service-broker/operating.html#responsibility-of-the-operator).
 
 <a id="creating-a-service-release"></a>
 ## Creating a Service Release
@@ -73,9 +73,11 @@ A Service Adapter is an executable invoked by ODB. It is expected to respond to 
     * the previous manifest, if this is an upgrade deployment,
 
   generate a BOSH manifest for your service instance deployment and print it to stdout as YAML.
+
 - `create-binding`
 
   Create (unique, if possible) credentials for the service instance, printing them to stdout as JSON.
+  
 - `delete-binding`
 
   Invalidate the created credentials, if possible. Some services (e.g. Redis) are single-user, and this endpoint will do nothing.
