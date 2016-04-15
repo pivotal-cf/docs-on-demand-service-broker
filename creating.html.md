@@ -173,15 +173,15 @@ You should provide documentation about which jobs are required by your Service A
 #### plan
 Plan for which the manifest is supposed to be generated
 
-| field                               |           Type           |                                                                                                 Description |
-|:------------------------------------|:------------------------:|------------------------------------------------------------------------------------------------------------:|
-| instance_groups                     | array of instance groups |                                                                     instance groups configured for the plan |
-| instance_group.name                 |          string          |                                                                                  name of the instance group |
-| instance_group.vm_type              |          string          |              the vm_type configured for the instance group, matches one in the cloud config on the director |
-| instance_group.persistent_disk_type |          string          | the persistent_disk_type configured for the instance group, matches one in the cloud config on the director |
-| instance_group.networks             |     array of strings     |                                                        the networks the instance group is supposed to be in |
-| instance_group.instances            |           int            |                                                                  number of instances for the instance group |
-| properties                          |           map            |                  properties with which the operator has configured the instance group, for the current plan |
+| field                                 |           Type           |                                                                                                 Description |
+|:--------------------------------------|:------------------------:|------------------------------------------------------------------------------------------------------------:|
+| instance_groups                       | array of instance groups |                                                                     instance groups configured for the plan |
+| instance_group.name                   |          string          |                                                                                  name of the instance group |
+| instance_group.vm\_type               |          string          |              the vm_type configured for the instance group, matches one in the cloud config on the director |
+| instance_group.persistent\_disk\_type |          string          | the persistent_disk_type configured for the instance group, matches one in the cloud config on the director |
+| instance_group.networks               |     array of strings     |                                                        the networks the instance group is supposed to be in |
+| instance_group.instances              |           int            |                                                                  number of instances for the instance group |
+| properties                            |           map            |                  properties with which the operator has configured the instance group, for the current plan |
 
 For example
 
