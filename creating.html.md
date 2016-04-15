@@ -50,6 +50,10 @@ A service release is a BOSH release that is deployed at instance creation time, 
 
 See the [BOSH docs](http://bosh.io/docs) for help creating a BOSH release. We recommend creating sample manifests that deploy the service release(s), as this will help you write the `generate-manifest` component of the Service Adapter later.
 
+### Job links
+When generating a manifest, we recommend not using static IPs as this makes network IP management very complex. Instead, we recommend using [BOSH's job links feature](https://bosh.io/docs/links.html).
+There are two types of job links, implicit and explicit. The [example Kafka release](https://github.com/pivotal-cf-experimental/kafka-example-service-release/blob/master/jobs/kafka_broker/spec#L15) uses implicit job links to get the IPs of the brokers and the zookeeper. Details on how to use the links feature are available [here](https://bosh.io/docs/links.html).
+
 <a id="service-plan-properties"></a>
 ## Supporting Service Plan Properties
 Service authors can choose to support certain properties for the service in the adapter code. These properties are service-specific traits used to customise the service. They do not necessarily map to jobs one to one; a plan property may affect multiple jobs in the deployment. Plan properties are a mechanism for the operator to define different plans.
@@ -77,7 +81,7 @@ A Service Adapter is an executable invoked by ODB. It is expected to respond to 
 - `create-binding`
 
   Create (unique, if possible) credentials for the service instance, printing them to stdout as JSON.
-  
+
 - `delete-binding`
 
   Invalidate the created credentials, if possible. Some services (e.g. Redis) are single-user, and this endpoint will do nothing.
