@@ -181,6 +181,7 @@ Plan for which the manifest is supposed to be generated
 | instance_group.persistent\_disk\_type |          string          | the persistent_disk_type configured for the instance group, matches one in the cloud config on the director |
 | instance_group.networks               |     array of strings     |                                                        the networks the instance group is supposed to be in |
 | instance_group.instances              |           int            |                                                                  number of instances for the instance group |
+| instance_group.azs                    |     array of strings     |                              a list of availability zones that the instance groups should be striped across |
 | properties                            |           map            |                  properties with which the operator has configured the instance group, for the current plan |
 
 For example

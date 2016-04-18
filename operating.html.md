@@ -135,6 +135,9 @@ The operator must:
      The resource values must correspond to valid resource definitions in the BOSH director's global cloud config.
 
      In some cases Service Authors will recommend resource configuration: e.g. in single-node Redis deployments, an instance count greater than 1 does not make sense.
+
+     Here the operator can configure the deployment to span multiple availability zones, by using the [BOSH multi-az feature](https://bosh.io/docs/azs.html). For example the [kafka multi az plan](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml#L74).
+
   1. Provide values for plan properties.
 
      Plan properties are key-value pairs defined by the Service Author. Some examples include a boolean to enable disk persistence for Redis, and a list of strings representing RabbitMQ plugins to load. The Service Author should document whether these properties are mandatory or optional, whether the use of one property precludes the use of another, and whether certain properties affect recommended instance group to resource mappings.
