@@ -72,7 +72,7 @@ A Service Adapter is an executable invoked by ODB. It is expected to respond to 
 - `generate-manifest`
 
   Given information about
-    * the BOSH director (e.g. stemcells, release names, UUID),
+    * the BOSH director (stemcells, release names),
     * the instance (ID, arbitrary parameters, plan properties, IAAS resources),
     * the previous manifest, if this is an upgrade deployment,
 
@@ -119,18 +119,16 @@ If the `generate-manifest` command is successful, it should return an exit code 
 #### bosh-info
 Provides information regarding the bosh director
 
-| field            |  Type  |                                                   Description |
-|:-----------------|:------:|--------------------------------------------------------------:|
-| director_uuid    | string | guid of the director, which can be injected into the manifest |
-| name             | string |                                          name of the director |
-| stemcell_os      | string |                         stemcell os available on the director |
-| stemcell_version | string |                    stemcell version available on the director |
+| field            |  Type  |                                Description |
+|:-----------------|:------:|-------------------------------------------:|
+| name             | string |     name of the deployment on the director |
+| stemcell_os      | string |      stemcell os available on the director |
+| stemcell_version | string | stemcell version available on the director |
 
 For example
 
 ```json
 {  
-   "director_uuid":"a-uuid",
    "name":"a-name",
    "stemcell_os":"BeOS",
    "stemcell_version":"2"

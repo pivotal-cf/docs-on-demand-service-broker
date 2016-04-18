@@ -105,7 +105,6 @@ broker: # choose a port and basic auth credentials for the broker
       password: <password>
   bosh:
     url: <director-url>
-    director_uuid: <director-uuid>
     authentication: # either basic or uaa, not both as shown
       basic:
         username: <bosh-username>
