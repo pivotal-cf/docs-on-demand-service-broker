@@ -7,6 +7,8 @@ owner: London Services Enablement
 
 - [What are the responsibilities of the Operator?](/on-demand-service-broker/operating.html#what-are-the-responsibilities-of-the-operator)
 - [Setting up your BOSH director](/on-demand-service-broker/operating.html#configure-bosh)
+  - [SSL certificates](#ssl-certificates)
+  - [BOSH teams](#bosh-teams)
 - [Upload Required Releases](/on-demand-service-broker/operating.html#upload-required-releases)
 - [Write a Broker Manifest](/on-demand-service-broker/operating.html#write-a-broker-manifest)
   - [Core Broker Configuration](/on-demand-service-broker/operating.html#core-broker-configuration)
