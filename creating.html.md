@@ -29,6 +29,7 @@ owner: London Services Enablement
      - [bosh-VMs-JSON](/on-demand-service-broker/creating.html#delete-binding-vm-json)
      - [manifest](/on-demand-service-broker/creating.html#delete-binding-manifest)
 - [Packaging](/on-demand-service-broker/creating.html#packaging)
+- [Golang SDK](/on-demand-service-broker/creating.html#sdk)
 
 <a id="what-is-required-of-the-service-authors"></a>
 ## What is required of the Service Authors?
@@ -98,7 +99,7 @@ service-adapter [subcommand] [params ...]
 
 where the subcommand can be generate-manifest, create-binding, delete-binding
 
-Examples are provided for [Redis](https://github.com/pivotal-cf-experimental/redis-example-service-adapter) and [Kafka](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter). Note that these Golang examples import helper packages from ODB to help with cross-cutting concerns such as unmarshalling the JSON command line parameters. For example, see the use of `CommandLineHelper` in the [redis-adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/cmd/service-adapter/main.go#L14).
+Examples are provided for [Redis](https://github.com/pivotal-cf-experimental/redis-example-service-adapter) and [Kafka](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter). Note that these Golang examples us the SDK to help with cross-cutting concerns such as unmarshalling the JSON command line parameters. For example, see the use of `CommandLineHelper` in the [redis-adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/cmd/service-adapter/main.go#L14).
 <a id="sub-commands"></a>
 ## Subcommands
 <a id="generate-manifest"></a>
@@ -322,5 +323,42 @@ The adapter should be packaged as a BOSH release, which should be co-located wit
 Example service adapter releases:
 - [kafka](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release)
 - [redis](https://github.com/pivotal-cf-experimental/redis-example-service-adapter-release)
+
+<a id="sdk"></a>
+## Golang SDK
+
+We have published a [SDK](https://github.com/pivotal-cf/on-demand-service-broker-sdk) for teams writing their service adapters in Golang. It encapsulates the command line invocation handling, parameter parsing and response serialization so the adapter authors can focus on the service specific bits in the adapter.
+
+To use the adapter, the author should create an struct, conforming to the interface:
+
+```go
+type ServiceAdapter interface {
+	GenerateManifest(boshInfo BoshInfo, serviceReleases ServiceReleases, plan Plan, arbitraryParams map[string]interface{}, previousManifest *bosh.BoshManifest) (bosh.BoshManifest, error)
+	CreateBinding(bindingID string, deploymentTopology bosh.BoshVMs, manifest bosh.BoshManifest) (map[string]interface{}, error)
+	DeleteBinding(bindingID string, deploymentTopology bosh.BoshVMs, manifest bosh.BoshManifest) error
+}
+```
+
+In the main function for the adapter, the author call the `HandleCommandLineInvocation` function, with the adapter object
+
+```go
+package main
+
+import (
+	"log"
+	"os"
+
+	"github.com/bar-org/foo-service-adapter/adapter"
+	"github.com/pivotal-cf/on-demand-service-broker-sdk/serviceadapter"
+)
+
+func main() {
+	logger := log.New(os.Stderr, "[foo-service-adapter] ", log.LstdFlags)
+	serviceAdapter := adapter.Adapter{}
+	serviceadapter.HandleCommandLineInvocation(os.Args, serviceAdapter, logger)
+}
+```
+
+For more complete code examples please take a look at the [kafka adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter) or the [redis adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter)
 
 **[Back to Contents Page](/on-demand-service-broker/index.html)**
