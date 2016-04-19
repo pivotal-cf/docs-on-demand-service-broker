@@ -7,14 +7,14 @@ owner: London Services Enablement
 
 The following page contains concepts relevant to the setting up and maintaining of a service instance. The diagrams allow you to see which tasks are undertaken by the ODB and which require interaction with the Service Adapter.
 
-- [Catalog](/on-demand-service-broker/concepts.html#catalog)
-- [Create service instance](/on-demand-service-broker/concepts.html#create-service-instance)
-- [Delete service instance](/on-demand-service-broker/concepts.html#delete-service-instance)
-- [Update service instance](/on-demand-service-broker/concepts.html#update-service-instance)
-- [Bind](/on-demand-service-broker/concepts.html#bind)
-- [Unbind](/on-demand-service-broker/concepts.html#unbind)
-- [Upgrade all instances](/on-demand-service-broker/concepts.html#upgrade-all-instances)
-- [Delete all instances](/on-demand-service-broker/concepts.html#delete-all-instances)
+- [Catalog](#catalog)
+- [Create service instance](#create-service-instance)
+- [Delete service instance](#delete-service-instance)
+- [Update service instance](#update-service-instance)
+- [Bind](#bind)
+- [Unbind](#unbind)
+- [Upgrade all instances](#upgrade-all-instances)
+- [Delete all instances](#delete-all-instances)
 
 ## ODB Workflows
 <a id="catalog"></a>

@@ -5,19 +5,19 @@ owner: London Services Enablement
 
 # Deploying an On-demand Service Broker
 
-- [What are the responsibilities of the Operator?](/on-demand-service-broker/operating.html#what-are-the-responsibilities-of-the-operator)
-- [Setting up your BOSH director](/on-demand-service-broker/operating.html#configure-bosh)
+- [What are the responsibilities of the Operator?](#what-are-the-responsibilities-of-the-operator)
+- [Setting up your BOSH director](#configure-bosh)
   - [SSL certificates](#ssl-certificates)
   - [BOSH teams](#bosh-teams)
-- [Upload Required Releases](/on-demand-service-broker/operating.html#upload-required-releases)
-- [Write a Broker Manifest](/on-demand-service-broker/operating.html#write-a-broker-manifest)
-  - [Core Broker Configuration](/on-demand-service-broker/operating.html#core-broker-configuration)
-  - [Service catalog and Plan composition](/on-demand-service-broker/operating.html#service-catalog-and-plan-composition)
-- [Broker Management](/on-demand-service-broker/operating.html#broker-management)
-  - [register-broker](/on-demand-service-broker/operating.html#register-broker)
-  - [deregister-broker](/on-demand-service-broker/operating.html#deregister-broker)
-  - [Upgrading the broker and existing service instances](/on-demand-service-broker/operating.html#upgrading-the-broker-and-existing-service-instances)
-  - [Deleting all service instances](/on-demand-service-broker/operating.html#deleting-all-service-instances)
+- [Upload Required Releases](#upload-required-releases)
+- [Write a Broker Manifest](#write-a-broker-manifest)
+  - [Core Broker Configuration](#core-broker-configuration)
+  - [Service catalog and Plan composition](#service-catalog-and-plan-composition)
+- [Broker Management](#broker-management)
+  - [register-broker](#register-broker)
+  - [deregister-broker](#deregister-broker)
+  - [Upgrading the broker and existing service instances](#upgrading-the-broker-and-existing-service-instances)
+  - [Deleting all service instances](#deleting-all-service-instances)
 
 <a id="what-are-the-responsibilities-of-the-operator"></a>
 ## What are the responsibilities of the Operator?
