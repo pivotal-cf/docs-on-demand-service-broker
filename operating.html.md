@@ -37,11 +37,31 @@ For an example manifest for a Kafka service, see [kafka-example-service-adapter-
 
 <a id="configure-bosh"></a>
 ## Setting up your BOSH director
+
+<a id="ssl-certificates"></a>
+### SSL certificates
+
 If the On-Demand Service Broker (ODB) is configured to communicate with BOSH on the director's private IP you can probably get away with insecure HTTP.
 
 If ODB is configured to communicate with BOSH on the director's public IP you will probably be using a self-signed certificate unless you have a domain for your BOSH director. ODB does not ignore TLS certificate validation errors (as expected), and there is no configuration option to add root certificates to the trusted pool.
 
 Instead, we recommend using BOSH's `trusted_certs` feature to add the self-signed CA certificate to each VM BOSH deploys. For more details on how to generate and use self-signed certificates for BOSH director and UAA, see [Director SSL Certificate Configuration](https://bosh.io/docs/director-certs.html).
+
+<a id="bosh-teams"></a>
+### BOSH teams
+
+BOSH has a teams feature that allows you to further control how BOSH operations are available to different clients. We recommend using it to ensure that your on-demand service broker client can only see deployments it is allowed to. For example, if you [use uaac](https://docs.cloudfoundry.org/adminguide/uaa-user-management.html) to create the client like this:
+
+```bash
+uaac client add <client-id> \
+  --secret <client-secret> \
+  --authorized_grant_types "refresh_token password client_credentials" \
+  --authorities "bosh.teams.<team-name>.admin"
+```
+
+Then when you [configure the broker's BOSH authentication](#core-broker-configuration), you can use this client ID and secret. The broker will then only be able to perform BOSH operations on deployments it has created itself.
+
+For more details on how to set up and use BOSH teams, see [Director teams and permissions configuration](https://bosh.io/docs/director-users-uaa-perms.html).
 
 <a id="upload-required-releases"></a>
 ## Upload Required Releases
