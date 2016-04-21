@@ -115,6 +115,7 @@ broker: # choose a port and basic auth credentials for the broker
   port: <broker-port>
   username: <broker-username>
   password: <broker-password>
+  disable_ssl_cert_verification: <true|false> # optional, defaults to false. This should NOT be used in production
   syslog_aggregator: # required only if using syslog-configurator
     address: <address>
     port: <port>
@@ -140,6 +141,8 @@ broker: # choose a port and basic auth credentials for the broker
 cf:
   system_domain: <system-domain> # required only if you want to access the broker from outside the BOSH private network
 ```
+
+Please note that the `disable_ssl_cert_verification` option is dangerous and **should not be used in production**.
 
 <a id="service-catalog-and-plan-composition"></a>
 ### Service catalog and Plan composition
