@@ -19,6 +19,7 @@ owner: London Services Enablement
   - [Upgrading the broker and existing service instances](#upgrading-the-broker-and-existing-service-instances)
   - [Deleting all service instances](#deleting-all-service-instances)
 - [Troubleshooting](#troubleshooting)
+  - [Logs](#logs)
   - [Identifying deployments in BOSH](#identifying-deployments)
   - [Identifying BOSH tasks](#identifying-tasks)
 
@@ -360,6 +361,12 @@ Run the errand with `bosh run errand delete-sub-deployments`.
 
 <a id="troubleshooting"></a>
 ## Troubleshooting
+
+<a id="logs"></a>
+### Logs
+
+The on-demand service broker writes logs to a log file, and to syslog. The log file is located at `/var/vcap/sys/log/broker/broker.log`. In syslog, logging is written with the tag `on-demand-service-broker`, under the facility `user`, with priority `info`.
+
 <a id="identifying-deployments"></a>
 ### Identifying deployments in BOSH
 
@@ -397,9 +404,7 @@ Most operations on the on demand service broker API are implemented by launching
     bosh ssh
     ```
 
-1. Read the broker log file, which is located at `/var/vcap/sys/log/broker/broker.log`
-
-1. In the log, look for lines relating to the service, identified by the service ID. Lines recording the starting and finishing of BOSH tasks will also have the BOSH task ID:
+1. In the broker log, look for lines relating to the service, identified by the service ID. Lines recording the starting and finishing of BOSH tasks will also have the BOSH task ID:
 
     ```
     on-demand-service-broker: [on-demand-service-broker] 2016/04/13 09:01:50 Bosh task id for Create instance 30d4a67f-d220-4d06-9989-58a976b86b35 was 11470
