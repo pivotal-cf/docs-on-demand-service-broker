@@ -18,6 +18,9 @@ owner: London Services Enablement
   - [deregister-broker](#deregister-broker)
   - [Upgrading the broker and existing service instances](#upgrading-the-broker-and-existing-service-instances)
   - [Deleting all service instances](#deleting-all-service-instances)
+- [Troubleshooting](#troubleshooting)
+  - [Identifying deployments in BOSH](#identifying-deployments)
+  - [Identifying BOSH tasks](#identifying-tasks)
 
 <a id="what-are-the-responsibilities-of-the-operator"></a>
 ## What are the responsibilities of the Operator?
@@ -357,6 +360,27 @@ Run the errand with `bosh run errand delete-sub-deployments`.
 
 <a id="troubleshooting"></a>
 ## Troubleshooting
+<a id="identifying-deployments"></a>
+### Identifying deployments in BOSH
+
+There is a one to one mapping between the service instance id from CF and the deployment name in BOSH. The convention is the bosh deployment name would be the service instance id prepended by `service-instance_`. To identify the bosh deployment for a service instance you can.
+
+1. Determine the GUID of the service
+
+    ```
+    cf service --guid <service-name>
+    ```
+
+2. Identify deployment in `bosh deployments` by looking for `service-instance_`GUID
+
+3. Get current tasks for the deployment by using
+
+    ```
+    bosh tasks --deployment service-instance_<GUID>
+    ```
+
+<a id="identifying-tasks"></a>
+### Identifying tasks in BOSH
 
 Most operations on the on demand service broker API are implemented by launching BOSH tasks. If an operation fails, it may be useful to investigate the corresponding BOSH task. To do this:
 
