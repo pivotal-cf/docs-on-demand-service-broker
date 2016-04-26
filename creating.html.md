@@ -256,55 +256,6 @@ Binding credentials for a service instance should share a namespace, and should 
 
 Note that at this time ODB does not support syslog drains or route services, so bindings are only a map of credentials.
 
-We have identified three approaches for creating credentials for a service binding.
-
-#### 1. Static credentials
-
-In this case, the same credentials are used for all bindings. One option is to define these credentials in the service instance manifest.
-
-This scenario makes sense for services that use the same credentials for all bindings, such as Redis. For example:
-
-```yaml
-properties:
-  redis:
-    password: <same-for-all-bindings>
-```
-
-#### 2. Credentials unique to each binding
-
-In this case, when the adapter `generate-manifest` subcommand is invoked, it generates random admin credentials and returns them as part of the service instance manifest. When the `create-binding` subcommand is invoked, the adapter can use the admin credentials from the manifest to create unique credentials for the binding. Subsequent `create-binding`s create new credentials.
-
-This option makes sense for services whose binding creation resembles user creation, such as MySQL or RabbitMQ. For example, in MySQL the admin user can be used to create a new user and database for the binding:
-
-```yaml
-properties:
-  admin_password: <use-to-create-credentials>
-```
-
-#### 3. Using an agent
-
-In this case, the author defines an agent responsible for handling creation of credentials unique to each binding. The agent must be added as a BOSH release in the service manifest. Moreover, the service and agent jobs should be co-located in the same instance group.
-
-This option is useful for services where the adapter cannot or prefers not to directly call out to the service instance, and instead delegates responsibility for setting up new credentials to an agent.
-
-For example:
-
-```yaml
-releases:
-  - name: service-release
-    version: latest
-  - name: credentials-agent-release
-    version: latest
-
-instance_groups:
-  - name: service-group
-    jobs:
-      - name: service-job
-        release: service-release
-      - name: credentials-agent-job
-        release: credentials-agent-release
-```
-
 <a id="create-binding-output"></a>
 #### Output
 
@@ -334,6 +285,58 @@ This can be used to connect to the instance deployment if required, to create a 
 The current manifest as YAML. This is used to extract information about the deployment that is necessary for the binding (e.g. admin credentials with which to create users). The format of the manifest should match the [bosh v2 manifest](https://bosh.io/docs/manifest-v2.html)
 
 For example see the [kafka create binding](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/cmd/service-adapter/main.go#L61)
+
+
+#### Credentials for bindings
+
+We have identified three approaches to credentials for a service binding.
+
+##### 1. Static credentials
+
+In this case, the same credentials are used for all bindings. One option is to define these credentials in the service instance manifest.
+
+This scenario makes sense for services that use the same credentials for all bindings, such as Redis. For example:
+
+```yaml
+properties:
+  redis:
+    password: <same-for-all-bindings>
+```
+
+##### 2. Credentials unique to each binding
+
+In this case, when the adapter `generate-manifest` subcommand is invoked, it generates random admin credentials and returns them as part of the service instance manifest. When the `create-binding` subcommand is invoked, the adapter can use the admin credentials from the manifest to create unique credentials for the binding. Subsequent `create-binding`s create new credentials.
+
+This option makes sense for services whose binding creation resembles user creation, such as MySQL or RabbitMQ. For example, in MySQL the admin user can be used to create a new user and database for the binding:
+
+```yaml
+properties:
+  admin_password: <use-to-create-credentials>
+```
+
+##### 3. Using an agent
+
+In this case, the author defines an agent responsible for handling creation of credentials unique to each binding. The agent must be added as a BOSH release in the service manifest. Moreover, the service and agent jobs should be co-located in the same instance group.
+
+This option is useful for services where the adapter cannot or prefers not to directly call out to the service instance, and instead delegates responsibility for setting up new credentials to an agent.
+
+For example:
+
+```yaml
+releases:
+  - name: service-release
+    version: latest
+  - name: credentials-agent-release
+    version: latest
+
+instance_groups:
+  - name: service-group
+    jobs:
+      - name: service-job
+        release: service-release
+      - name: credentials-agent-job
+        release: credentials-agent-release
+```
 
 ---
 
