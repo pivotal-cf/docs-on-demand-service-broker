@@ -173,16 +173,17 @@ You should provide documentation about which jobs are required by your Service A
 #### plan
 Plan for which the manifest is supposed to be generated
 
-| field                                 |           Type           |                                                                                                 Description |
-|:--------------------------------------|:------------------------:|------------------------------------------------------------------------------------------------------------:|
-| instance_groups                       | array of instance groups |                                                                     instance groups configured for the plan |
-| instance_group.name                   |          string          |                                                                                  name of the instance group |
-| instance_group.vm\_type               |          string          |              the vm_type configured for the instance group, matches one in the cloud config on the director |
-| instance_group.persistent\_disk\_type |          string          | the persistent_disk_type configured for the instance group, matches one in the cloud config on the director |
-| instance_group.networks               |     array of strings     |                                                        the networks the instance group is supposed to be in |
-| instance_group.instances              |           int            |                                                                  number of instances for the instance group |
-| instance_group.azs                    |     array of strings     |                              a list of availability zones that the instance groups should be striped across |
-| properties                            |           map            |                  properties with which the operator has configured the instance group, for the current plan |
+| field                                 |           Type           |                                                                                                                            Description |
+|:--------------------------------------|:------------------------:|---------------------------------------------------------------------------------------------------------------------------------------:|
+| instance_groups                       | array of instance groups |                                                                                                instance groups configured for the plan |
+| instance_group.name                   |          string          |                                                                                                             name of the instance group |
+| instance_group.vm\_type               |          string          |                                         the vm_type configured for the instance group, matches one in the cloud config on the director |
+| instance_group.persistent\_disk\_type |          string          |                            the persistent_disk_type configured for the instance group, matches one in the cloud config on the director |
+| instance_group.networks               |     array of strings     |                                                                                   the networks the instance group is supposed to be in |
+| instance_group.instances              |           int            |                                                                                             number of instances for the instance group |
+| instance_group.lifecycle              |          string          | Optional, specifies the kind of workload the instance group represents. Valid values are `service` and `errand`; defaults to `service` |
+| instance_group.azs                    |     array of strings     |                                                         a list of availability zones that the instance groups should be striped across |
+| properties                            |           map            |                                             properties with which the operator has configured the instance group, for the current plan |
 
 For example
 
@@ -200,6 +201,16 @@ For example
             "example-az"
          ],
          "instances":1
+      },
+      {
+         "name":"example-migrations",
+         "vm_type":"small",
+         "persistent_disk_type":"ten",
+         "networks":[
+            "example-network"
+         ],
+         "instances":1,
+         "lifecycle": "errand"
       }
    ],
    "properties":{
@@ -216,7 +227,7 @@ Plans are composed by the operator and consist of properties and resource mappin
 
 * **Resource mappings**
 
-  The `instance_groups` section of the plan JSON. This maps service deployment instance groups (defined by the service author) to resources (defined by the operator). The service developers should document the list of instance group names required for their deployment (e.g. "redis-server") and any constraints they recommend on resources (e.g. operator must add a persistent disk if persistence property is enabled). These constraints can of course be enforced in code.
+  The `instance_groups` section of the plan JSON. This maps service deployment instance groups (defined by the service author) to resources (defined by the operator). The service developers should document the list of instance group names required for their deployment (e.g. "redis-server") and any constraints they recommend on resources (e.g. operator must add a persistent disk if persistence property is enabled). These constraints can of course be enforced in code. The `instance_groups` section also contains a field for `lifecycle`, which can be set by the operator. The service adapter will add a lifecycle field to the instance group within the bosh manifest when specified.
 
 <a id="arbitrary-parameters"></a>
 #### arbitrary parameters
