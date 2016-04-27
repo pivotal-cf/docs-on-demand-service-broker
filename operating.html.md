@@ -19,6 +19,9 @@ owner: London Services Enablement
   - [Upgrading the broker](#upgrading-the-broker)
   - [Upgrading existing service instance](#upgrading-existing-service-instances)
   - [Deleting all service instances](#deleting-all-service-instances)
+  - [Updating service plans](#updating-service-plans)
+  - [Disabling service plans](#disabling-service-plans)
+  - [Removing service plans](#removing-service-plans)
 - [Troubleshooting](#troubleshooting)
   - [Logs](#logs)
   - [Identifying deployments in BOSH](#identifying-deployments)
@@ -325,7 +328,6 @@ Often, a broker upgrade will involve an upgrading of the service release(s). In 
 
 Note that if a developer runs `cf update-service` on an outdated instance, they will have their instance upgraded regardless of whether or not the operator ran the errand.
 
-
 <a id="deleting-all-service-instances"></a>
 ### Deleting all service instances
 
@@ -359,6 +361,25 @@ cf:
 ```
 
 Run the errand with `bosh run errand delete-sub-deployments`.
+
+<a id="updating-service-plans"></a>
+### Updating service plans
+
+Service plans can be updated by changing the plan properties in the `service_catalog` for the broker. All service plan properties except the `service_id` and `plan_id` are modifiable. After the changing the catalog, you should update the cf marketplace using the `cf update-service-broker` command. The updated plan properties would be applied to newly created instances. To apply the plan properties to already provisioned instances, the [update sub-deployments errand](#upgrading-existing-service-instances) has to be run.
+
+<a id="disabling-service-plans"></a>
+### Disabling service plans
+Access to a service plan can be disabled by using the cloudfoundry api.
+
+On the cli you can use
+```
+cf disable-service-access <service-name-from-catalog> -p <plan-name>
+```
+
+<a id="removing-service-plans"></a>
+### Removing service plans
+A service plans can be removed if there are no instances using the plan. To remove the a plan, remove it from the broker manifest and update the cf marketplace by using the `cf update-service-broker` command. If a plan with deployed service instances from the broker manifest, the broker will fail to startup.
+
 
 <a id="troubleshooting"></a>
 ## Troubleshooting
