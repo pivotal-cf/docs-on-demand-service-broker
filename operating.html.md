@@ -16,7 +16,8 @@ owner: London Services Enablement
 - [Broker Management](#broker-management)
   - [register-broker](#register-broker)
   - [deregister-broker](#deregister-broker)
-  - [Upgrading the broker and existing service instances](#upgrading-the-broker-and-existing-service-instances)
+  - [Upgrading the broker](#upgrading-the-broker)
+  - [Upgrading existing service instance](#upgrading-existing-service-instances)
   - [Deleting all service instances](#deleting-all-service-instances)
 - [Troubleshooting](#troubleshooting)
   - [Logs](#logs)
@@ -282,8 +283,8 @@ cf:
 
 Run the errand with `bosh run errand deregister-broker`.
 
-<a id="upgrading-the-broker-and-existing-service-instances" /></a>
-### Upgrading the broker and existing service instances
+<a id="upgrading-the-broker" /></a>
+### Upgrading the broker
 
 The broker is upgraded in a similar manner to all BOSH releases:
 
@@ -291,34 +292,39 @@ The broker is upgraded in a similar manner to all BOSH releases:
 * make any necessary manifest changes
 * deploy the manifest
 
-Often, a broker upgrade will involve an upgrading of the service release(s). In this case, upload the new version of the service release(s) and change the broker manifest properties to deploy these newer versions. Any new instances will use the new versions, but you must use an errand to upgrade existing service instances.
+Often, a broker upgrade will involve an upgrading of the service release(s). In this case, upload the new version of the service release(s) and change the broker manifest properties to deploy these newer versions. Any new instances will use the new versions, but you must use an [errand to upgrade existing service instances](#upgrading-existing-service-instances).
+
+<a id="upgrading-existing-service-instances" /></a>
+### Upgrading existing service instances
+
+1. Ensure you have the `upgrade-sub-deployments` errand instance group on the broker manifest
+
+    ```yaml
+    - name: upgrade-sub-deployments
+      lifecycle: errand
+      instances: 1
+      jobs:
+        - name: upgrade-sub-deployments
+          release: <odb-release-name>
+      vm_type: <vm>
+      stemcell: <stemcell>
+      networks: [{name: <network>}]
+    ```
+1. Ensure broker credentials are present in the manifest
+
+    ```yaml
+    broker:
+      port: <port>
+      username: <username>
+      password: <password>
+    ```
+1. Update the broker properties under `service_deployment/releases` to the required service release versions and `service_deployment/stemcell` has the required stemcell version
+1. Upload the releases and stem cells specified in the `service_deployment` section of properties to the bosh director
+1. Ensure latest broker manifest is deployed.
+1. Run the errand with `bosh run errand upgrade-sub-deployments`.
 
 Note that if a developer runs `cf update-service` on an outdated instance, they will have their instance upgraded regardless of whether or not the operator ran the errand.
 
-Add the following instance group to your manifest:
-
-```yaml
-- name: upgrade-sub-deployments
-  lifecycle: errand
-  instances: 1
-  jobs:
-    - name: upgrade-sub-deployments
-      release: <odb-release-name>
-  vm_type: <vm>
-  stemcell: <stemcell>
-  networks: [{name: <network>}]
-```
-
-Add the following manifest properties (they overlap with the properties blocks described in previous sections):
-
-```yaml
-broker:
-  port: <port>
-  username: <username>
-  password: <password>
-```
-
-Run the errand with `bosh run errand upgrade-sub-deployments`.
 
 <a id="deleting-all-service-instances"></a>
 ### Deleting all service instances
