@@ -239,9 +239,9 @@ The previous manifest as YAML. The previous manifest is nil if this is a new dep
 
 It is up to the service author to perform any necessary service-specific migration logic here, if previous manifest is non-nil.
 
-Another use-case of the previous manifest is for the migration of deployment properties which need to stay the same across multiple-deploys of a manifest. For example in the Redis example, we [generate a password](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_service_adapter.go#L322) when we do a new deployment. But when the previous deployment manifest is provided, we copy the password over from [the previous deployment](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_service_adapter.go#L320), as generating a new password for existing deployments will break existing bindings. 
+Another use-case of the previous manifest is for the migration of deployment properties which need to stay the same across multiple-deploys of a manifest. For example in the Redis example, we [generate a password](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_service_adapter.go#L322) when we do a new deployment. But when the previous deployment manifest is provided, we copy the password over from [the previous deployment](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_service_adapter.go#L320), as generating a new password for existing deployments will break existing bindings.
 
-For example see the [kafka generate manifest code](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/cmd/service-adapter/main.go#L36)
+For example see the [example Redis service adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_service_adapter.go#L318-L323).
 
 <a id="generate-manifest-output"></a>
 
