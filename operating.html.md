@@ -53,9 +53,17 @@ For an example manifest for a Kafka service, see [kafka-example-service-adapter-
 
 If the On-Demand Service Broker (ODB) is configured to communicate with BOSH on the director's private IP you can probably get away with insecure HTTP.
 
-If ODB is configured to communicate with BOSH on the director's public IP you will probably be using a self-signed certificate unless you have a domain for your BOSH director. ODB does not ignore TLS certificate validation errors (as expected), and there is no configuration option to add root certificates to the trusted pool.
+If ODB is configured to communicate with BOSH on the director's public IP you will probably be using a self-signed certificate unless you have a domain for your BOSH director. ODB does not ignore TLS certificate validation errors (as expected). You have two options to configure certificate-based authentication between the BOSH director and the ODB:
 
-Instead, we recommend using BOSH's `trusted_certs` feature to add the self-signed CA certificate to each VM BOSH deploys. For more details on how to generate and use self-signed certificates for BOSH director and UAA, see [Director SSL Certificate Configuration](https://bosh.io/docs/director-certs.html).
+1. Add the BOSH director's root certificate to ODB's trusted pool (**recommended**):
+
+```yaml
+bosh:
+  root_ca_cert: <root-ca-cert>
+```
+
+2.
+Use BOSH's `trusted_certs` feature to add a self-signed CA certificate to each VM BOSH deploys. For more details on how to generate and use self-signed certificates for BOSH director and UAA, see [Director SSL Certificate Configuration](https://bosh.io/docs/director-certs.html).
 
 <a id="bosh-teams"></a>
 ### BOSH teams
@@ -136,6 +144,7 @@ broker: # choose a port and basic auth credentials for the broker
       password: <password>
   bosh:
     url: <director-url>
+    root_ca_cert: <root-ca-cert> #optional, see SSL certificates
     authentication: # either basic or uaa, not both as shown
       basic:
         username: <bosh-username>
