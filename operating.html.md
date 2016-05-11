@@ -16,8 +16,16 @@ owner: London Services Enablement
 - [Broker Management](#broker-management)
   - [register-broker](#register-broker)
   - [deregister-broker](#deregister-broker)
-  - [Upgrading the broker and existing service instances](#upgrading-the-broker-and-existing-service-instances)
+  - [Upgrading the broker](#upgrading-the-broker)
+  - [Upgrading existing service instance](#upgrading-existing-service-instances)
   - [Deleting all service instances](#deleting-all-service-instances)
+  - [Updating service plans](#updating-service-plans)
+  - [Disabling service plans](#disabling-service-plans)
+  - [Removing service plans](#removing-service-plans)
+- [Troubleshooting](#troubleshooting)
+  - [Logs](#logs)
+  - [Identifying deployments in BOSH](#identifying-deployments)
+  - [Identifying BOSH tasks](#identifying-tasks)
 
 <a id="what-are-the-responsibilities-of-the-operator"></a>
 ## What are the responsibilities of the Operator?
@@ -155,15 +163,10 @@ The operator must:
 1. Compose plans. In ODB, service authors do not define plans but instead expose plan properties. The operator's role is to compose combinations of these properties, along with IAAS resources and catalog metadata into as many plans as they like.
   1. Create Cloud Foundry catalog metadata for each plan.
   1. Provide resource mapping for each instance group specified by the Service Author for each plan.
-
      The resource values must correspond to valid resource definitions in the BOSH director's global cloud config.
-
      In some cases Service Authors will recommend resource configuration: e.g. in single-node Redis deployments, an instance count greater than 1 does not make sense.
-
-     Here the operator can configure the deployment to span multiple availability zones, by using the [BOSH multi-az feature](https://bosh.io/docs/azs.html). For example the [kafka multi az plan](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml#L74).
-
+     Here the operator can configure the deployment to span multiple availability zones, by using the [BOSH multi-az feature](https://bosh.io/docs/azs.html). For example the [kafka multi az plan](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml#L74). In some cases, service authors will provide errands for the service release. You can add an instance group of type errand by setting the lifecycle field. For example the [smoke_tests for the kafka deployment](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml#L84).
   1. Provide values for plan properties.
-
      Plan properties are key-value pairs defined by the Service Author. Some examples include a boolean to enable disk persistence for Redis, and a list of strings representing RabbitMQ plugins to load. The Service Author should document whether these properties are mandatory or optional, whether the use of one property precludes the use of another, and whether certain properties affect recommended instance group to resource mappings.
 
 Add the snippet below to your manifest's properties section:
@@ -283,8 +286,8 @@ cf:
 
 Run the errand with `bosh run errand deregister-broker`.
 
-<a id="upgrading-the-broker-and-existing-service-instances" /></a>
-### Upgrading the broker and existing service instances
+<a id="upgrading-the-broker" /></a>
+### Upgrading the broker
 
 The broker is upgraded in a similar manner to all BOSH releases:
 
@@ -292,34 +295,38 @@ The broker is upgraded in a similar manner to all BOSH releases:
 * make any necessary manifest changes
 * deploy the manifest
 
-Often, a broker upgrade will involve an upgrading of the service release(s). In this case, upload the new version of the service release(s) and change the broker manifest properties to deploy these newer versions. Any new instances will use the new versions, but you must use an errand to upgrade existing service instances.
+Often, a broker upgrade will involve an upgrading of the service release(s). In this case, upload the new version of the service release(s) and change the broker manifest properties to deploy these newer versions. Any new instances will use the new versions, but you must use an [errand to upgrade existing service instances](#upgrading-existing-service-instances).
+
+<a id="upgrading-existing-service-instances" /></a>
+### Upgrading existing service instances
+
+1. Ensure you have the `upgrade-sub-deployments` errand instance group on the broker manifest
+
+    ```yaml
+    - name: upgrade-sub-deployments
+      lifecycle: errand
+      instances: 1
+      jobs:
+        - name: upgrade-sub-deployments
+          release: <odb-release-name>
+      vm_type: <vm>
+      stemcell: <stemcell>
+      networks: [{name: <network>}]
+    ```
+1. Ensure broker credentials are present in the manifest
+
+    ```yaml
+    broker:
+      port: <port>
+      username: <username>
+      password: <password>
+    ```
+1. Update the broker properties under `service_deployment/releases` to the required service release versions and `service_deployment/stemcell` has the required stemcell version
+1. Upload the releases and stem cells specified in the `service_deployment` section of properties to the bosh director
+1. Ensure latest broker manifest is deployed.
+1. Run the errand with `bosh run errand upgrade-sub-deployments`.
 
 Note that if a developer runs `cf update-service` on an outdated instance, they will have their instance upgraded regardless of whether or not the operator ran the errand.
-
-Add the following instance group to your manifest:
-
-```yaml
-- name: upgrade-sub-deployments
-  lifecycle: errand
-  instances: 1
-  jobs:
-    - name: upgrade-sub-deployments
-      release: <odb-release-name>
-  vm_type: <vm>
-  stemcell: <stemcell>
-  networks: [{name: <network>}]
-```
-
-Add the following manifest properties (they overlap with the properties blocks described in previous sections):
-
-```yaml
-broker:
-  port: <port>
-  username: <username>
-  password: <password>
-```
-
-Run the errand with `bosh run errand upgrade-sub-deployments`.
 
 <a id="deleting-all-service-instances"></a>
 ### Deleting all service instances
@@ -355,8 +362,54 @@ cf:
 
 Run the errand with `bosh run errand delete-sub-deployments`.
 
+<a id="updating-service-plans"></a>
+### Updating service plans
+
+Service plans can be updated by changing the plan properties in the `service_catalog` for the broker. All service plan properties except the `service_id` and `plan_id` are modifiable. After the changing the catalog, you should update the cf marketplace using the `cf update-service-broker` command. The updated plan properties would be applied to newly created instances. To apply the plan properties to already provisioned instances, the [update sub-deployments errand](#upgrading-existing-service-instances) has to be run.
+
+<a id="disabling-service-plans"></a>
+### Disabling service plans
+Access to a service plan can be disabled by using the cloudfoundry api.
+
+On the cli you can use
+```
+cf disable-service-access <service-name-from-catalog> -p <plan-name>
+```
+
+<a id="removing-service-plans"></a>
+### Removing service plans
+A service plans can be removed if there are no instances using the plan. To remove the a plan, remove it from the broker manifest and update the cf marketplace by using the `cf update-service-broker` command. If a plan with deployed service instances from the broker manifest, the broker will fail to startup.
+
+
 <a id="troubleshooting"></a>
 ## Troubleshooting
+
+<a id="logs"></a>
+### Logs
+
+The on-demand service broker writes logs to a log file, and to syslog. The log file is located at `/var/vcap/sys/log/broker/broker.log`. In syslog, logging is written with the tag `on-demand-service-broker`, under the facility `user`, with priority `info`.
+
+<a id="identifying-deployments"></a>
+### Identifying deployments in BOSH
+
+There is a one to one mapping between the service instance id from CF and the deployment name in BOSH. The convention is the bosh deployment name would be the service instance id prepended by `service-instance_`. To identify the bosh deployment for a service instance you can.
+
+1. Determine the GUID of the service
+
+    ```
+    cf service --guid <service-name>
+    ```
+
+2. Identify deployment in `bosh deployments` by looking for `service-instance_`GUID
+
+3. Get current tasks for the deployment by using
+
+    ```
+    bosh tasks --deployment service-instance_<GUID>
+    ```
+
+<a id="identifying-tasks"></a>
+### Identifying tasks in BOSH
 
 Most operations on the on demand service broker API are implemented by launching BOSH tasks. If an operation fails, it may be useful to investigate the corresponding BOSH task. To do this:
 
@@ -373,9 +426,7 @@ Most operations on the on demand service broker API are implemented by launching
     bosh ssh
     ```
 
-1. Read the broker log file, which is located at `/var/vcap/sys/log/broker/broker.log`
-
-1. In the log, look for lines relating to the service, identified by the service ID. Lines recording the starting and finishing of BOSH tasks will also have the BOSH task ID:
+1. In the broker log, look for lines relating to the service, identified by the service ID. Lines recording the starting and finishing of BOSH tasks will also have the BOSH task ID:
 
     ```
     on-demand-service-broker: [on-demand-service-broker] 2016/04/13 09:01:50 Bosh task id for Create instance 30d4a67f-d220-4d06-9989-58a976b86b35 was 11470
