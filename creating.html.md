@@ -71,20 +71,15 @@ For example
 A Service Adapter is an executable invoked by ODB. It is expected to respond to three subcommands:
 
 - `generate-manifest`
-
-  Given information about
-    * the BOSH director (stemcells, release names),
-    * the instance (ID, arbitrary parameters, plan properties, IAAS resources),
-    * the previous manifest, if this is an upgrade deployment,
-
-  generate a BOSH manifest for your service instance deployment and print it to stdout as YAML.
+  Generate a BOSH manifest for your service instance deployment and output to stdout as YAML, given information about the:
+  - BOSH director (stemcells, release names)
+  - service instance (ID, arbitrary parameters, plan properties, IAAS resources)
+  - previous manifest, if this is an upgrade deployment
 
 - `create-binding`
-
   Create (unique, if possible) credentials for the service instance, printing them to stdout as JSON.
 
 - `delete-binding`
-
   Invalidate the created credentials, if possible. Some services (e.g. Redis) are single-user, and this endpoint will do nothing.
 
 The parameters, and expected output from these subcommands will be explained in detail below. For each of these subcommands, exit status 0 indicates that the command succeeded, and any non-zero status indicates failure.
@@ -219,7 +214,9 @@ Plans are composed by the operator and consist of properties and resource mappin
 
 <a id="arbitrary-parameters"></a>
 #### arbitrary parameters
-This is a JSON object with arbitrary keys and values which were passed by the application developer as a `cf` CLI parameter when creating a service or updating the service.
+This is a JSON object with arbitrary keys and values which were passed by the application developer as a `cf` CLI parameter when creating a service, or updating the service.
+
+Note that for upgrading existing service instances, the arbitrary parameters are not available and must be retrieved from the previous manifest.
 
 <a id="previous-manifest"></a>
 #### previous manifest
