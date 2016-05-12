@@ -56,15 +56,52 @@ See the [BOSH docs](http://bosh.io/docs) for help creating a BOSH release. We re
 When generating a manifest, we recommend not using static IPs as this makes network IP management very complex. Instead, we recommend using [BOSH's job links feature](https://bosh.io/docs/links.html).
 There are two types of job links, implicit and explicit. The [example Kafka release](https://github.com/pivotal-cf-experimental/kafka-example-service-release/blob/master/jobs/kafka_broker/spec#L15) uses implicit job links to get the IPs of the brokers and the zookeeper. Details on how to use the links feature are available [here](https://bosh.io/docs/links.html).
 
+## Configuring the generation of manifests
+
+<a id="arbitrary-parameters"></a>
+### Arbitrary parameters for service instances
+
+Service authors can choose to allow Cloud Foundry users to configure service instances with arbitrary parameters. See the PCF docs on [Managing Service Instances with the CLI](https://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html). Arbitrary parameters can be passed to the service adapter when creating, or updating a service instance. They allow Cloud Foundry users to override the default configuration for a service plan.
+
+Service authors must document the usage of arbitrary parameters for Cloud Foundry users.
+
+Note: we recommend that arbitrary parameters are recorded in the service instance manifest, so that they can be migrated in subsequent deployments.
+
+For example:
+
+- the [Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go) supports the `auto_create_topics` arbitrary parameter to configure auto-creation of topics on the cluster.
+
+### Previous manifest properties
+
+Service authors can choose to migrate certain properties for the service from the previous manifest when updating a service instance. If the previous manifest is ignored then any properties configured using arbitrary parameters will not be migrated when a service instance is updated.
+
+Service authors must document the migration of previous manifest properties for operators.
+
+For example:
+
+- the [Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go) supports migration of the `auto_create_topics` previous plan property to configure auto-creation of topics on the cluster.
+
 <a id="service-plan-properties"></a>
-## Supporting Service Plan Properties
-Service authors can choose to support certain properties for the service in the adapter code. These properties are service-specific traits used to customise the service. They do not necessarily map to jobs one to one; a plan property may affect multiple jobs in the deployment. Plan properties are a mechanism for the operator to define different plans.
+### Service plan properties
+
+Service authors can choose to support certain properties for the service in the adapter code. These properties are service-specific traits used to customize the service. They do not necessarily map to jobs one to one; a plan property may affect multiple jobs in the deployment. Plan properties are a mechanism for the operator to define different plans.
 
 Service authors must document the usage of plan properties for the operator.
 
-For example
+For example:
+
 - the [Redis service adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_service_adapter.go) supports the `persistent` property which can be used to attach a disk to the vm.
-- the [Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go) supports the `auto_create_topics` property to enable auto creation of topics on the cluster.
+- the [Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go) supports the `auto_create_topics` property to enable auto-creation of topics on the cluster.
+
+### Order of precedence
+
+Note, we recommend service authors use the following order of precedence in their service adapters when generating manifests:
+
+1. arbitrary parameters
+1. previous manifest properties
+1. plan properties
+
+For example, see `auto_create_topics` in the [example Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go).
 
 <a id="creating-a-service-adapter"></a>
 ## Creating a Service Adapter
@@ -226,9 +263,9 @@ Plans are composed by the operator and consist of properties and resource mappin
 
 <a id="arbitrary-parameters"></a>
 #### arbitrary parameters
-This is a JSON object with arbitrary keys and values which were passed by the application developer as a `cf` CLI parameter when creating a service, or updating the service.
+This is a JSON object with arbitrary keys and values which were passed by the application developer as a `cf` CLI parameter when creating, or updating the service instance.
 
-Note that for upgrading existing service instances, the arbitrary parameters are not available and must be retrieved from the previous manifest.
+Note: when updating existing service instances, any arbitrary parameters passed on a previous create or update will not be passed again. Therefore, for arbitrary parameters to stay the same across multiple deployments they must be retrieved from the previous manifest.
 
 <a id="previous-manifest"></a>
 #### previous manifest
@@ -236,7 +273,7 @@ The previous manifest as YAML. The previous manifest is nil if this is a new dep
 
 It is up to the service author to perform any necessary service-specific migration logic here, if previous manifest is non-nil.
 
-Another use-case of the previous manifest is for the migration of deployment properties which need to stay the same across multiple-deploys of a manifest. For example in the Redis example, we [generate a password](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_service_adapter.go#L322) when we do a new deployment. But when the previous deployment manifest is provided, we copy the password over from [the previous deployment](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_service_adapter.go#L320), as generating a new password for existing deployments will break existing bindings.
+Another use-case of the previous manifest is for the migration of deployment properties which need to stay the same across multiple deployments of a manifest. For example in the Redis example, we [generate a password](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_service_adapter.go#L322) when we do a new deployment. But when the previous deployment manifest is provided, we copy the password over from [the previous deployment](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_service_adapter.go#L320), as generating a new password for existing deployments will break existing bindings.
 
 For example see the [example Redis service adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_service_adapter.go#L318-L323).
 
