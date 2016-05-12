@@ -8,7 +8,11 @@ owner: London Services Enablement
 - [What is required of the Service Authors?](#what-is-required-of-the-service-authors)
 - [Creating a Service Release](#creating-a-service-release)
 - [Creating a Service Adapter](#creating-a-service-adapter)
-- [Supporting Service Plan Properties](#service-plan-properties)
+- [Configuring manifest generation](#configuring-manifest-generation)
+  - [Arbitrary parameters](#arbitrary-parameters)
+  - [Previous manifest properties](#previous-manifest-properties)
+  - [Service plan properties](#service-plan-properties)
+  - [Order of precedence](#order-of-precedence)
 - [Service adapter interface](#service-adapter-interface)
 - [Subcommands](#sub-commands)
   - [generate-manifest](#generate-manifest)
@@ -56,10 +60,30 @@ See the [BOSH docs](http://bosh.io/docs) for help creating a BOSH release. We re
 When generating a manifest, we recommend not using static IPs as this makes network IP management very complex. Instead, we recommend using [BOSH's job links feature](https://bosh.io/docs/links.html).
 There are two types of job links, implicit and explicit. The [example Kafka release](https://github.com/pivotal-cf-experimental/kafka-example-service-release/blob/master/jobs/kafka_broker/spec#L15) uses implicit job links to get the IPs of the brokers and the zookeeper. Details on how to use the links feature are available [here](https://bosh.io/docs/links.html).
 
-## Configuring the generation of manifests
+<a id="creating-a-service-adapter"></a>
+## Creating a Service Adapter
+
+A Service Adapter is an executable invoked by ODB. It is expected to respond to three subcommands:
+
+- `generate-manifest`
+  Generate a BOSH manifest for your service instance deployment and output to stdout as YAML, given information about the:
+  - BOSH director (stemcells, release names)
+  - service instance (ID, arbitrary parameters, plan properties, IAAS resources)
+  - previous manifest, if this is an upgrade deployment
+
+- `create-binding`
+  Create (unique, if possible) credentials for the service instance, printing them to stdout as JSON.
+
+- `delete-binding`
+  Invalidate the created credentials, if possible. Some services (e.g. Redis) are single-user, and this endpoint will do nothing.
+
+The parameters, and expected output from these subcommands will be explained in detail below. For each of these subcommands, exit status 0 indicates that the command succeeded, and any non-zero status indicates failure.
+
+<a id="configuring-manifest-generation"></a>
+## Configuring manifest generation
 
 <a id="arbitrary-parameters"></a>
-### Arbitrary parameters for service instances
+### Arbitrary parameters
 
 Service authors can choose to allow Cloud Foundry users to configure service instances with arbitrary parameters. See the PCF docs on [Managing Service Instances with the CLI](https://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html). Arbitrary parameters can be passed to the service adapter when creating, or updating a service instance. They allow Cloud Foundry users to override the default configuration for a service plan.
 
@@ -71,6 +95,7 @@ For example:
 
 - the [Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go) supports the `auto_create_topics` arbitrary parameter to configure auto-creation of topics on the cluster.
 
+<a id="previous-manifest-properties"></a>
 ### Previous manifest properties
 
 Service authors can choose to migrate certain properties for the service from the previous manifest when updating a service instance. If the previous manifest is ignored then any properties configured using arbitrary parameters will not be migrated when a service instance is updated.
@@ -93,6 +118,7 @@ For example:
 - the [Redis service adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_service_adapter.go) supports the `persistent` property which can be used to attach a disk to the vm.
 - the [Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go) supports the `auto_create_topics` property to enable auto-creation of topics on the cluster.
 
+<a id="order-of-precedence"></a>
 ### Order of precedence
 
 Note, we recommend service authors use the following order of precedence in their service adapters when generating manifests:
@@ -102,25 +128,6 @@ Note, we recommend service authors use the following order of precedence in thei
 1. plan properties
 
 For example, see `auto_create_topics` in the [example Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go).
-
-<a id="creating-a-service-adapter"></a>
-## Creating a Service Adapter
-
-A Service Adapter is an executable invoked by ODB. It is expected to respond to three subcommands:
-
-- `generate-manifest`
-  Generate a BOSH manifest for your service instance deployment and output to stdout as YAML, given information about the:
-  - BOSH director (stemcells, release names)
-  - service instance (ID, arbitrary parameters, plan properties, IAAS resources)
-  - previous manifest, if this is an upgrade deployment
-
-- `create-binding`
-  Create (unique, if possible) credentials for the service instance, printing them to stdout as JSON.
-
-- `delete-binding`
-  Invalidate the created credentials, if possible. Some services (e.g. Redis) are single-user, and this endpoint will do nothing.
-
-The parameters, and expected output from these subcommands will be explained in detail below. For each of these subcommands, exit status 0 indicates that the command succeeded, and any non-zero status indicates failure.
 
 <a id="service-adapter-interface"></a>
 ## Service adapter interface
