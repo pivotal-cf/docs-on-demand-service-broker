@@ -280,14 +280,14 @@ For example see the [example Redis service adapter](https://github.com/pivotal-c
 ### create-binding
 
 ```
-service-adapter create-binding [binding-ID] [bosh-VMs-JSON] [manifest-YAML]
+service-adapter create-binding [binding-ID] [bosh-VMs-JSON] [manifest-YAML] [arbitrary-parameters]
 ```
 
 Binding credentials for a service instance should share a namespace, and should be unique if possible. E.g. for MySQL, two bindings could include a different username/password pairs, but share the same MySQL database tables and data. The first step is to determine which credentials are best to supply in the context of your service. We recommend that users can be identified statelessly from the binding ID, and the simplest way to do this is to name the user after the binding ID.
 
 Note that at this time ODB does not support syslog drains or route services, so bindings are only a map of credentials.
-
 <a id="create-binding-output"></a>
+
 #### Output
 
 If the `create-binding` command is successful, it should return an exit code of 0 and print the arbitrary credentials JSON on stdout. If the command failed, it should return any non-zero exit code. Stdout and stderr from the command will be logged by the ODB.
@@ -315,6 +315,9 @@ This can be used to connect to the instance deployment if required, to create a 
 #### manifest
 The current manifest as YAML. This is used to extract information about the deployment that is necessary for the binding (e.g. admin credentials with which to create users). The format of the manifest should match the [bosh v2 manifest](https://bosh.io/docs/manifest-v2.html)
 
+#### arbitrary-params
+
+This is a JSON object with arbitrary keys and values which were passed by the application developer as a `cf` CLI parameter when binding to a service.
 For example see the [kafka create binding](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/cmd/service-adapter/main.go#L61)
 
 
