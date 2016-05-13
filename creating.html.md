@@ -17,8 +17,7 @@ owner: London Services Enablement
 - [Subcommands](#sub-commands)
   - [generate-manifest](#generate-manifest)
      - [Output](#generate-manifest-output)
-     - [bosh-info](#bosh-info)
-     - [service-releases](#service-releases)
+     - [service-deployment](#service-deployment)
      - [plan](#plan)
      - [arbitrary parameters](#arbitrary-parameters)
      - [previous manifest](#previous-manifest)
@@ -146,63 +145,52 @@ Examples are provided for [Redis](https://github.com/pivotal-cf-experimental/red
 ### generate-manifest
 
 ```
-service-adapter generate-manifest [bosh-info-JSON] [service-releases-JSON] [plan-JSON] [arbitary-params-JSON] [previous-manifest-YAML]
+service-adapter generate-manifest [service-deployment-JSON] [plan-JSON] [arbitrary-params-JSON] [previous-manifest-YAML]
 ```
 
-The generate-manifest subcommand takes in 5 arguments and returns a BOSH deployment manifest YAML.
+The generate-manifest subcommand takes in 4 arguments and returns a BOSH deployment manifest YAML.
 
 <a id="generate-manifest-output"></a>
 #### Output
 
 If the `generate-manifest` command is successful, it should return an exit code of 0 and print the BOSH manifest YAML to stdout. If the command failed, it should return any non-zero exit code. Stdout and stderr from the command will be logged by the ODB.
 
-<a id="bosh-info"></a>
-#### bosh-info
+<a id="service-deployment"></a>
+#### service-deployment
 Provides information regarding the bosh director
 
-| field            |  Type  |                                Description |
-|:-----------------|:------:|-------------------------------------------:|
-| name             | string |     name of the deployment on the director |
-| stemcell_os      | string |      stemcell os available on the director |
-| stemcell_version | string | stemcell version available on the director |
+| field                     |       Type        |                                                            Description |
+|:--------------------------|:-----------------:|-----------------------------------------------------------------------:|
+| deployment_name           |      string       |                                 name of the deployment on the director |
+| releases                  | array of releases | list of service releases configured for the deployment by the operator |
+| release.name              |      string       |                                    name of the release on the director |
+| release.version           |      string       |                                                 version of the release |
+| release.jobs              | array of strings  |                                 list of jobs required from the release |
+| stemcell                  |        map        |                                 the stemcell available on the director |
+| stemcell.stemcell_os      |      string       |                                  stemcell OS available on the director |
+| stemcell.stemcell_version |      string       |                             stemcell version available on the director |
 
 For example
 
 ```json
-{  
-   "name":"a-name",
-   "stemcell_os":"BeOS",
-   "stemcell_version":"2"
+{
+    "deployment_name": "service-instance_$GUID",
+    "releases": [{
+        "name": "kafka",
+        "version": "dev.42",
+        "jobs": [
+            "kafka_node",
+            "zookeeper"
+        ]
+    }],
+    "stemcell": {
+        "stemcell_os": "BeOS",
+        "stemcell_version": "2"
+    }
 }
 ```
 
 ODB only supports injecting one stemcell into each service deployment (different instance groups cannot have different stemcells).
-
-<a id="service-releases"></a>
-#### service-releases
-A list of service releases configured for the deployment by the operator. Each item in the service-releases array has the structure:
-
-| field   |       Type       |                            Description |
-|:--------|:----------------:|---------------------------------------:|
-| name    |      string      |    name of the release on the director |
-| version |      string      |                 version of the release |
-| jobs    | array of strings | list of jobs required from the release |
-
-
-For example
-
-```json
-[
-   {
-      "name":"kafka",
-      "version":"dev.42",
-      "jobs":[
-         "kafka_node",
-         "zookeeper"
-      ]
-   }
-]
-```
 
 Your Service Adapter should be opinionated about which jobs it requires to generate its manifest. For example, the Kafka example requires `kafka_node` and `zookeeper`. It should not be opinionated about the mapping of BOSH release to job. The jobs can all be provided by one release, or across many. [Here](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/deploymentinstancegroups/deployment_instance_groups.go) is an example of mapping the service releases parameter to a BOSH manifest `releases` and `instance_groups` sections.
 
@@ -440,7 +428,7 @@ To use the adapter, the author should create an struct, conforming to the interf
 
 ```go
 type ServiceAdapter interface {
-	GenerateManifest(boshInfo BoshInfo, serviceReleases ServiceReleases, plan Plan, arbitraryParams map[string]interface{}, previousManifest *bosh.BoshManifest) (bosh.BoshManifest, error)
+	GenerateManifest(serviceDeployment ServiceDeployment, plan Plan, arbitraryParams map[string]interface{}, previousManifest *bosh.BoshManifest) (bosh.BoshManifest, error)
 	CreateBinding(bindingID string, deploymentTopology bosh.BoshVMs, manifest bosh.BoshManifest) (map[string]interface{}, error)
 	DeleteBinding(bindingID string, deploymentTopology bosh.BoshVMs, manifest bosh.BoshManifest) error
 }
