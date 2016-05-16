@@ -427,6 +427,8 @@ Example service adapter releases:
 
 We have published a [SDK](https://github.com/pivotal-cf/on-demand-service-broker-sdk) for teams writing their service adapters in Golang. It encapsulates the command line invocation handling, parameter parsing and response serialization so the adapter authors can focus on the service specific bits in the adapter.
 
+For the generated BOSH manifest the SDK supports properties in two levels: manifest (global) and instance group level. The global properties are [deprecated in BOSH](http://bosh.io/docs/manifest-v2.html#properties), in favour of instance group level properties and job links. As an example, refer to the [Kafka example service adapter property generation](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/c4cc3682a1e7c492883b064f8faf3a8d10fd1849/adapter/generate_manifest.go#L72-101).
+
 To use the adapter, the author should create an struct, conforming to the interface:
 
 ```go
