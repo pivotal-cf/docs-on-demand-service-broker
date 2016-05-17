@@ -168,9 +168,9 @@ The operator must:
 
 1. Supply each release job specified by the Service Author exactly once. You can include releases that provide many jobs, as long as each required job is provided by exactly one release.
 1. Supply one stemcell that is used on each VM in the service deployments. ODB does not currently support service instance deployments that use a different stemcell for different instance groups.
-1. Create Cloud Foundry catalog metadata for the service offering.
+1. Create Cloud Foundry [service metadata](https://docs.pivotal.io/pivotalcf/services/catalog-metadata.html#services-metadata-fields) in the catalog for the service offering. This metadata will be aggregated in the Cloud Foundry marketplace and displayed in Apps Manager and the `cf` CLI.
 1. Compose plans. In ODB, service authors do not define plans but instead expose plan properties. The operator's role is to compose combinations of these properties, along with IAAS resources and catalog metadata into as many plans as they like.
-  1. Create Cloud Foundry catalog metadata for each plan.
+  1. Create Cloud Foundry [service plan metadata](https://docs.pivotal.io/pivotalcf/services/catalog-metadata.html#plan-metadata-fields) in the service catalog for each plan.
   1. Provide resource mapping for each instance group specified by the Service Author for each plan.
      The resource values must correspond to valid resource definitions in the BOSH director's global cloud config.
      In some cases Service Authors will recommend resource configuration: e.g. in single-node Redis deployments, an instance count greater than 1 does not make sense.
@@ -198,6 +198,11 @@ broker:
     plan_updatable: <true|false>
     metadata: # optional
       display_name: <display name>
+      image_url: <image url>
+      long_description: <long description>
+      provider_display_name: <provider display name>
+      documentation_url: <documentation url>
+      support_url: <support url>
     plans:
       - name: <CF marketplace plan name>
         plan_id: <CF marketplace plan id>
@@ -205,6 +210,10 @@ broker:
         metadata: # optional
           display_name: <display name>
           bullets: [<bullet1>, <bullet2>]
+          costs:
+            - amount:
+                <currency code>: <currency amount (float)>
+              unit: <frequency of cost>
         quotas: # optional
           service_instance_limit: <instance limit>
         instance_groups: # resource mapping for the instance groups defined by the Service Author
