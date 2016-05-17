@@ -111,8 +111,6 @@ instance_groups:
     jobs:
       - name: broker
         release: on-demand-service-broker
-      - name: syslog-configurator # optional
-        release: on-demand-service-broker
       - name: <service-adapter-job-name>
         release: <service-adapter-release>
     vm_type: <vm-type>
@@ -132,10 +130,6 @@ broker: # choose a port and basic auth credentials for the broker
   username: <broker-username>
   password: <broker-password>
   disable_ssl_cert_verification: <true|false> # optional, defaults to false. This should NOT be used in production
-  syslog_aggregator: # required only if using syslog-configurator
-    address: <address>
-    port: <port>
-    transport: <tcp|udp|relp>
   cf_route: # required only if you want to access the broker from outside the BOSH private network
     subdomain: <subdomain>
     nats:
@@ -406,6 +400,8 @@ A service plans can be removed if there are no instances using the plan. To remo
 ### Logs
 
 The on-demand service broker writes logs to a log file, and to syslog. The log file is located at `/var/vcap/sys/log/broker/broker.log`. In syslog, logging is written with the tag `on-demand-service-broker`, under the facility `user`, with priority `info`.
+
+If you want to forward syslog to a syslog aggregator, we recommend co-locating [syslog release](https://github.com/cloudfoundry/syslog-release) with the broker.
 
 <a id="identifying-deployments"></a>
 ### Identifying deployments in BOSH
