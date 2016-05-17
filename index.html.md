@@ -40,6 +40,9 @@ owner: London Services Enablement
       - [deregister-broker](/on-demand-service-broker/operating.html#deregister-broker)
       - [Upgrading the broker and existing service instances](/on-demand-service-broker/operating.html#upgrading-the-broker-and-existing-service-instances)
       - [Deleting all service instances](/on-demand-service-broker/operating.html#deleting-all-service-instances)
+  - [Security](/on-demand-service-broker/operating.html#security)
+      - [BOSH API Endpoints](/on-demand-service-broker/operating.html#bosh-api-endpoints)
+      - [BOSH UAA permissions](/on-demand-service-broker/operating.html#bosh-uaa-permissions)
   - [Troubleshooting](/on-demand-service-broker/operating.html#troubleshooting)
 - **[On-demand Service Broker Concepts/Reference](concepts.html)**
   - [Catalog](/on-demand-service-broker/concepts.html#catalog)

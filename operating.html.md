@@ -22,6 +22,9 @@ owner: London Services Enablement
   - [Updating service plans](#updating-service-plans)
   - [Disabling service plans](#disabling-service-plans)
   - [Removing service plans](#removing-service-plans)
+- [Security](#security)
+  - [BOSH API Endpoints](#bosh-api-endpoints)
+  - [BOSH UAA permissions](#bosh-uaa-permissions)
 - [Troubleshooting](#troubleshooting)
   - [Logs](#logs)
   - [Identifying deployments in BOSH](#identifying-deployments)
@@ -80,6 +83,8 @@ uaac client add <client-id> \
 Then when you [configure the broker's BOSH authentication](#core-broker-configuration), you can use this client ID and secret. The broker will then only be able to perform BOSH operations on deployments it has created itself.
 
 For more details on how to set up and use BOSH teams, see [Director teams and permissions configuration](https://bosh.io/docs/director-users-uaa-perms.html).
+
+For more details on securing how ODB uses BOSH, see [Security](#security).
 
 <a id="upload-required-releases"></a>
 ## Upload Required Releases
@@ -398,6 +403,55 @@ cf disable-service-access <service-name-from-catalog> -p <plan-name>
 ### Removing service plans
 A service plans can be removed if there are no instances using the plan. To remove the a plan, remove it from the broker manifest and update the cf marketplace by using the `cf update-service-broker` command. If a plan with deployed service instances from the broker manifest, the broker will fail to startup.
 
+<a id="security"></a>
+## Security
+
+<a id="bosh-api-endpoints"></a>
+### BOSH API Endpoints
+
+The ODB accesses the following [BOSH API](https://bosh.io/docs/director-api-v1.html) endpoints during the service instance lifecycle:
+
+| API endpoint                                                     | Examples of usage in the ODB                                                                                                                                 |
+|:-----------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `POST /deployments`                                              | create, or update a service instance                                                                                                                         |
+| `POST /deployments/<deployment_name>/errands/<errand_name>/runs` | register, or de-register the on-demand broker with the Cloud Controller, run smoke tests                                                                     |
+| `GET /deployments/<deployment_name>`                             | passed as argument to the service adapter for `generate-manifest` and `create-binding`                                                                       |
+| `GET /deployments/<deployment_name>/vms?format=full`             | passed as argument to the service adapter for `create-binding`                                                                                               |
+| `DELETE /deployments/<deployment_name>`                          | delete a service instance                                                                                                                                    |
+| `GET /tasks/<task_ID>/output?type=result`                        | check a task was successful (i.e. the exit code was zero), get list of VMs                                                                                   |
+| `GET /tasks/<task_ID>`                                           | poll the BOSH director until a task finishes, e.g. create, update, or delete a deployment                                                                    |
+| `GET /tasks?deployment=<deployment_name>`                        | determine the last operation status and message for a service instance, e.g. 'create in progress' - used when creating, updating, deleting service instances |
+
+<a id="bosh-uaa-permissions"></a>
+### BOSH UAA permissions
+
+The actions that the ODB needs to be able to perform are:
+
+Modify:
+
+- `bosh deploy`
+- `bosh delete deployment`
+- `bosh run errand`
+
+Read only:
+
+- `bosh deployments`
+- `bosh vms`
+- `bosh tasks`
+
+The minimum UAA authority required by the BOSH Director to perform these actions is `bosh.teams.<team>.admin`. Note: a team admin cannot view or update the director's cloud config, nor upload releases or stemcells.
+
+For more details on how to set up and use BOSH teams, see [Director teams and permissions configuration](https://bosh.io/docs/director-users-uaa-perms.html).
+
+#### Unused BOSH permissions
+The team admin authority also allows the following actions, which currently are not used by the ODB:
+
+- `bosh start/stop/recreate`
+- `bosh cck`
+- `bosh ssh`
+- `bosh logs`
+- `bosh releases`
+- `bosh stemcells`
 
 <a id="troubleshooting"></a>
 ## Troubleshooting
@@ -460,7 +514,7 @@ Most operations on the on demand service broker API are implemented by launching
 1. Use the task ID to obtain the task log from BOSH (adding flags such as `--debug` or `--cpi` as necessary):
 
     ```
-    bosh task <task ID>
+    bosh task <task_ID>
     ```
 
 **[Back to Contents Page](/on-demand-service-broker/index.html)**
