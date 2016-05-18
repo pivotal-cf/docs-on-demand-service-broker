@@ -453,7 +453,11 @@ The team admin authority also allows the following actions, which currently are 
 <a id="logs"></a>
 ### Logs
 
-The on-demand service broker writes logs to a log file, and to syslog. The log file is located at `/var/vcap/sys/log/broker/broker.log`. In syslog, logging is written with the tag `on-demand-service-broker`, under the facility `user`, with priority `info`.
+The on-demand service broker writes logs to a log file, and to syslog.
+
+The broker log contains error messages and non-zero exit codes returned by the service adapter, as well as the stdout and stderr streams of the adapter.
+
+The log file is located at `/var/vcap/sys/log/broker/broker.log`. In syslog, logging is written with the tag `on-demand-service-broker`, under the facility `user`, with priority `info`.
 
 If you want to forward syslog to a syslog aggregator, we recommend co-locating [syslog release](https://github.com/cloudfoundry/syslog-release) with the broker.
 

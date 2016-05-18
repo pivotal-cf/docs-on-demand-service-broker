@@ -8,6 +8,7 @@ owner: London Services Enablement
 - [What is required of the Service Authors?](#what-is-required-of-the-service-authors)
 - [Creating a Service Release](#creating-a-service-release)
 - [Creating a Service Adapter](#creating-a-service-adapter)
+  - [Handling errors](#handling-errors)
 - [Configuring manifest generation](#configuring-manifest-generation)
   - [Arbitrary parameters](#arbitrary-parameters)
   - [Previous manifest properties](#previous-manifest-properties)
@@ -77,6 +78,12 @@ A Service Adapter is an executable invoked by ODB. It is expected to respond to 
   Invalidate the created credentials, if possible. Some services (e.g. Redis) are single-user, and this endpoint will do nothing.
 
 The parameters, and expected output from these subcommands will be explained in detail below. For each of these subcommands, exit status 0 indicates that the command succeeded, and any non-zero status indicates failure.
+
+<a id="handling-errors"></a>
+### Handling errors
+If a subcommand fails, the adapter must return a non-zero exit status and an error, and may optionally print to stdout and/or stderr. The error message, along with the stdout and stderr streams will be printed in the broker log.
+
+See an example implementation [here](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/bb5094efdd7c5e230ecade88d68eda131ef1a8a2/adapter/create_binding.go#L26-28).
 
 <a id="configuring-manifest-generation"></a>
 ## Configuring manifest generation
