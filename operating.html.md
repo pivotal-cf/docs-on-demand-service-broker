@@ -29,6 +29,7 @@ owner: London Services Enablement
   - [Logs](#logs)
   - [Identifying deployments in BOSH](#identifying-deployments)
   - [Identifying BOSH tasks](#identifying-tasks)
+  - [Identifying issues with connecting to BOSH and/or UAA](#identifying-bosh-uaa-issues)
 
 <a id="what-are-the-responsibilities-of-the-operator"></a>
 ## What are the responsibilities of the Operator?
@@ -516,5 +517,18 @@ Most operations on the on demand service broker API are implemented by launching
     ```
     bosh task <task_ID>
     ```
+
+<a id="identifying-bosh-uaa-issues"></a>
+### Identifying issues with connecting to BOSH and/or UAA
+
+The ODB interacts with the BOSH director to provision and deprovision instances, and is authenticated via the director's UAA. See [Core Broker Configuration](#core-broker-configuration) for an example configuration.
+
+If BOSH and/or UAA are wrongly configured in the broker's manifest, then meaningful error messages will be displayed in the broker's log, indicating whether the issue is caused by an unreachable destination or bad credentials.
+
+For example
+
+```
+on-demand-service-broker: [on-demand-service-broker] 2016/05/18 15:56:40 Error authenticating (401): {"error":"unauthorized","error_description":"Bad credentials"}, please ensure that properties.<broker-job>.bosh.authentication.uaa is correct and try again.
+```
 
 **[Back to Contents Page](/on-demand-service-broker/index.html)**
