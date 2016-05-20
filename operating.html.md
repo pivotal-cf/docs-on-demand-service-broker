@@ -117,8 +117,37 @@ instance_groups:
     jobs:
       - name: broker
         release: on-demand-service-broker
+        properties:
+          # choose a port and basic auth credentials for the broker
+          port: <broker-port>
+          username: <broker-username>
+          password: <broker-password>
+          disable_ssl_cert_verification: <true|false> # optional, defaults to false. This should NOT be used in production
+          cf_system_domain: <system-domain> # required only if you want to access the broker from outside the BOSH private network
+          cf_route: # required only if you want to access the broker from outside the BOSH private network
+            subdomain: <subdomain>
+            nats:
+              host: <host>
+              username: <username>
+              password: <password>
+          bosh:
+            url: <director-url>
+            root_ca_cert: <root-ca-cert> #optional, see SSL certificates
+            authentication: # either basic or uaa, not both as shown
+              basic:
+                username: <bosh-username>
+                password: <bosh-password>
+              uaa:
+                url: <uaa-url> # often on the same host as the director, on a different port
+                client_id: <bosh-client-id>
+                client_secret: <bosh-client-secret>
+          service_adapter:
+            path: <path-to-service-adapter-binary> # provided by the Service Author
+          # There are more properties here, that will be discussed below
+
       - name: <service-adapter-job-name>
         release: <service-adapter-release>
+
     vm_type: <vm-type>
     persistent_disk_type: <persistent-disk-type>
     stemcell: <stemcell>
@@ -126,38 +155,7 @@ instance_groups:
       - name: <network>
 ```
 
-Note that this snippet is using the BOSH v2 syntax, and making use of global cloud config.
-
-Add the snippet below to your manifest's properties section:
-
-```yaml
-broker: # choose a port and basic auth credentials for the broker
-  port: <broker-port>
-  username: <broker-username>
-  password: <broker-password>
-  disable_ssl_cert_verification: <true|false> # optional, defaults to false. This should NOT be used in production
-  cf_route: # required only if you want to access the broker from outside the BOSH private network
-    subdomain: <subdomain>
-    nats:
-      host: <host>
-      username: <username>
-      password: <password>
-  bosh:
-    url: <director-url>
-    root_ca_cert: <root-ca-cert> #optional, see SSL certificates
-    authentication: # either basic or uaa, not both as shown
-      basic:
-        username: <bosh-username>
-        password: <bosh-password>
-      uaa:
-        url: <uaa-url> # often on the same host as the director, on a different port
-        client_id: <bosh-client-id>
-        client_secret: <bosh-client-secret>
-  service_adapter:
-    path: <path-to-service-adapter-binary> # provided by the Service Author
-cf:
-  system_domain: <system-domain> # required only if you want to access the broker from outside the BOSH private network
-```
+This snippet is using the BOSH v2 syntax, and making use of global cloud config and job-level properties.
 
 Please note that the `disable_ssl_cert_verification` option is dangerous and **should not be used in production**.
 
@@ -178,52 +176,51 @@ The operator must:
   1. Provide values for plan properties.
      Plan properties are key-value pairs defined by the Service Author. Some examples include a boolean to enable disk persistence for Redis, and a list of strings representing RabbitMQ plugins to load. The Service Author should document whether these properties are mandatory or optional, whether the use of one property precludes the use of another, and whether certain properties affect recommended instance group to resource mappings.
 
-Add the snippet below to your manifest's properties section:
+Add the snippet below to your broker job properties section:
 
 ```yaml
-broker:
-  service_deployment:
-    releases:
-      - name: <service-release>
-        version: <service-release-version> # does not support "latest"
-        jobs: [<release-jobs-needed-for-deployment>] # Service Author will specify list of jobs required
-    stemcell: # every instance group in the service deployment has the same stemcell
-      os: <service-stemcell>
-      version: <service-stemcell-version> # does not support "latest"
-  service_catalog:
-    id: <CF marketplace ID>
-    service_name: <CF marketplace service offering name>
-    service_description: <CF marketplace description>
-    bindable: <true|false>
-    plan_updatable: <true|false>
-    metadata: # optional
-      display_name: <display name>
-      image_url: <image url>
-      long_description: <long description>
-      provider_display_name: <provider display name>
-      documentation_url: <documentation url>
-      support_url: <support url>
-    plans:
-      - name: <CF marketplace plan name>
-        plan_id: <CF marketplace plan id>
-        description: <CF marketplace description>
-        metadata: # optional
-          display_name: <display name>
-          bullets: [<bullet1>, <bullet2>]
-          costs:
-            - amount:
-                <currency code>: <currency amount (float)>
-              unit: <frequency of cost>
-        quotas: # optional
-          service_instance_limit: <instance limit>
-        instance_groups: # resource mapping for the instance groups defined by the Service Author
-          - name: <service author provided instance group name>
-            vm_type: <vm type>
-            instances: <instance count>
-            networks: [<network>]
-            azs: [<az>] # optional
-            persistent_disk: <disk> # optional
-        properties: {} # valid property key-value pairs are defined by the Service Author
+service_deployment:
+  releases:
+    - name: <service-release>
+      version: <service-release-version> # does not support "latest"
+      jobs: [<release-jobs-needed-for-deployment>] # Service Author will specify list of jobs required
+  stemcell: # every instance group in the service deployment has the same stemcell
+    os: <service-stemcell>
+    version: <service-stemcell-version> # does not support "latest"
+service_catalog:
+  id: <CF marketplace ID>
+  service_name: <CF marketplace service offering name>
+  service_description: <CF marketplace description>
+  bindable: <true|false>
+  plan_updatable: <true|false>
+  metadata: # optional
+    display_name: <display name>
+    image_url: <image url>
+    long_description: <long description>
+    provider_display_name: <provider display name>
+    documentation_url: <documentation url>
+    support_url: <support url>
+  plans:
+    - name: <CF marketplace plan name>
+      plan_id: <CF marketplace plan id>
+      description: <CF marketplace description>
+      metadata: # optional
+        display_name: <display name>
+        bullets: [<bullet1>, <bullet2>]
+        costs:
+          - amount:
+              <currency code>: <currency amount (float)>
+            unit: <frequency of cost>
+      quotas: # optional
+        service_instance_limit: <instance limit>
+      instance_groups: # resource mapping for the instance groups defined by the Service Author
+        - name: <service author provided instance group name>
+          vm_type: <vm type>
+          instances: <instance count>
+          networks: [<network>]
+          azs: [<az>] # optional
+          persistent_disk: <disk> # optional
+      properties: {} # valid property key-value pairs are defined by the Service Author
 ```
 
 <a id="broker-management"></a>
@@ -244,29 +241,15 @@ Add the following instance group to your manifest:
   jobs:
     - name: register-broker
       release: <odb-release-name>
+      properties:
+        broker_name: <broker-name>      
+        cf:
+          api_url: <cf-api-url>
+          admin_username: <cf-api-admin-username>
+          admin_password: <cf-api-admin-password>
   vm_type: <vm-type>
   stemcell: <stemcell>
   networks: [{name: <network>}]
-```
-
-Add the following manifest properties (they overlap with the properties blocks described in previous sections):
-
-```yaml
-broker:
-  name: <broker-name>
-  port:  <broker-port>
-  username:  <broker-username>
-  password:  <broker-password>
-  cf_route: # required only if you want to access the broker from outside the BOSH private network
-    subdomain: <broker-route>
-  service_catalog:
-    service_name: <broker-name>
-
-cf:
-  api_url: <cf-api-url>
-  admin_username: <cf-api-admin-username>
-  admin_password: <cf-api-admin-password>
-  system_domain:  <cf-system-domain> # required only if you want to access the broker from outside the BOSH private network
 ```
 
 Run the errand with `bosh run errand register-broker`.
@@ -285,21 +268,15 @@ Add the following instance group to your manifest:
   jobs:
     - name: deregister-broker
       release: <odb-release-name>
+      properties:
+        broker_name: <broker-name>      
+        cf:
+          api_url: <cf-api-url>
+          admin_username: <cf-api-admin-username>
+          admin_password: <cf-api-admin-password>
   vm_type: <vm-type>
   stemcell: <stemcell>
   networks: [{name: <service-network>}]
-```
-
-Add the following manifest properties (they overlap with the properties blocks described in previous sections):
-
-```yaml
-broker:
-  name: <broker-name>
-cf:
-  api_url: <cf-api-url>
-  admin_username: <cf-api-admin-username>
-  admin_password: <cf-api-admin-password>
-  system_domain:  <cf-system-domain>
 ```
 
 Run the errand with `bosh run errand deregister-broker`.
@@ -331,14 +308,6 @@ Often, a broker upgrade will involve an upgrading of the service release(s). In 
       stemcell: <stemcell>
       networks: [{name: <network>}]
     ```
-1. Ensure broker credentials are present in the manifest
-
-    ```yaml
-    broker:
-      port: <port>
-      username: <username>
-      password: <password>
-    ```
 1. Update the broker properties under `service_deployment/releases` to the required service release versions and `service_deployment/stemcell` has the required stemcell version
 1. Upload the releases and stem cells specified in the `service_deployment` section of properties to the bosh director
 1. Ensure latest broker manifest is deployed.
@@ -359,23 +328,19 @@ Add the following instance group to your manifest:
 - name: delete-sub-deployments
   lifecycle: errand
   instances: 1
-  jobs: [{name: <delete-sub-deployments>, release: *broker-release}]
+  jobs:
+    - name: <delete-sub-deployments>
+      release: *broker-release
+      properties:
+        timeout_minutes: <time to wait for all instances to be deleted> # defaults to 60
+        cf:
+          api_url: <cf-api-url>
+          admin_username: <cf-api-admin-username>
+          admin_password: <cf-api-admin-password>
+
   vm_type: small
   stemcell: trusty
   networks: [{name: redis}]
-```
-
-Add the following manifest properties (they overlap with the properties blocks described in previous sections):
-
-```yaml
-broker:
-  service_catalog:
-    id: <CF marketplace service ID>
-timeout_minutes: <time to wait for all instances to be deleted> # defaults to 60
-cf:
-  api_url: <cf-api-url>
-  admin_username: <cf-api-admin-username>
-  admin_password: <cf-api-admin-password>
 ```
 
 Run the errand with `bosh run errand delete-sub-deployments`.
