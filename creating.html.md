@@ -22,6 +22,7 @@ owner: London Services Enablement
      - [plan](#plan)
      - [arbitrary parameters](#arbitrary-parameters)
      - [previous manifest](#previous-manifest)
+     - [previous plan](#previous-plan)
   - [create-binding](#create-binding)
      - [Output](#create-binding-output)
      - [binding-ID](#create-binding-id)
@@ -152,7 +153,7 @@ Examples are provided for [Redis](https://github.com/pivotal-cf-experimental/red
 ### generate-manifest
 
 ```
-service-adapter generate-manifest [service-deployment-JSON] [plan-JSON] [arbitrary-params-JSON] [previous-manifest-YAML]
+service-adapter generate-manifest [service-deployment-JSON] [plan-JSON] [arbitrary-params-JSON] [previous-manifest-YAML] [previous-plan-JSON]
 ```
 
 The generate-manifest subcommand takes in 4 arguments and returns a BOSH deployment manifest YAML.
@@ -206,6 +207,9 @@ You should provide documentation about which jobs are required by your Service A
 <a id="plan"></a>
 #### plan
 Plan for which the manifest is supposed to be generated
+
+<a id="plan-schema"></a>
+##### plan schema
 
 | field                                 |           Type           |                                                                                                                            Description |
 |:--------------------------------------|:------------------------:|---------------------------------------------------------------------------------------------------------------------------------------:|
@@ -278,6 +282,10 @@ It is up to the service author to perform any necessary service-specific migrati
 Another use-case of the previous manifest is for the migration of deployment properties which need to stay the same across multiple deployments of a manifest. For example in the Redis example, we [generate a password](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_service_adapter.go#L322) when we do a new deployment. But when the previous deployment manifest is provided, we copy the password over from [the previous deployment](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_service_adapter.go#L320), as generating a new password for existing deployments will break existing bindings.
 
 For example see the [example Redis service adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_service_adapter.go#L318-L323).
+
+<a id="previous-plan"></a>
+#### previous plan
+The previous plan as JSON. The previous plan is nil if this is a new deployment. The format of the plan should match [plan schema](#plan-schema). The previous plan can be used for complex plan migration logic, for example the [kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go#L27:L33), rejects a plan migration if the new plan reduces the number of instances, to prevent data loss.
 
 <a id="generate-manifest-output"></a>
 
