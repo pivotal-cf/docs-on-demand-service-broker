@@ -20,7 +20,7 @@ owner: London Services Enablement
      - [Output](#generate-manifest-output)
      - [service-deployment](#service-deployment)
      - [plan](#plan)
-     - [arbitrary parameters](#arbitrary-parameters)
+     - [request parameters](#request-parameters)
      - [previous manifest](#previous-manifest)
      - [previous plan](#previous-plan)
   - [create-binding](#create-binding)
@@ -153,7 +153,7 @@ Examples are provided for [Redis](https://github.com/pivotal-cf-experimental/red
 ### generate-manifest
 
 ```
-service-adapter generate-manifest [service-deployment-JSON] [plan-JSON] [arbitrary-params-JSON] [previous-manifest-YAML] [previous-plan-JSON]
+service-adapter generate-manifest [service-deployment-JSON] [plan-JSON] [request-params-JSON] [previous-manifest-YAML] [previous-plan-JSON]
 ```
 
 The generate-manifest subcommand takes in 4 arguments and returns a BOSH deployment manifest YAML.
@@ -267,9 +267,11 @@ Plans are composed by the operator and consist of properties and resource mappin
 
   The `instance_groups` section of the plan JSON. This maps service deployment instance groups (defined by the service author) to resources (defined by the operator). The service developers should document the list of instance group names required for their deployment (e.g. "redis-server") and any constraints they recommend on resources (e.g. operator must add a persistent disk if persistence property is enabled). These constraints can of course be enforced in code. The `instance_groups` section also contains a field for `lifecycle`, which can be set by the operator. The service adapter will add a lifecycle field to the instance group within the bosh manifest when specified.
 
-<a id="arbitrary-parameters"></a>
-#### arbitrary parameters
-This is a JSON object with arbitrary keys and values which were passed by the application developer as a `cf` CLI parameter when creating, or updating the service instance.
+<a id="request-parameters"></a>
+#### request parameters
+This is a JSON object that holds the entire body of the [service provision](http://docs.cloudfoundry.org/services/api.html#provisioning) or [service update](http://docs.cloudfoundry.org/services/api.html#updating_service_instance) request sent by the Cloud Controller to the service broker. The request parameters JSON will be `null` for upgrades.
+
+The field `parameters` contains arbitrary key-value pairs which were passed by the application developer as a `cf` CLI parameter when creating, or updating the service instance.
 
 Note: when updating existing service instances, any arbitrary parameters passed on a previous create or update will not be passed again. Therefore, for arbitrary parameters to stay the same across multiple deployments they must be retrieved from the previous manifest.
 
