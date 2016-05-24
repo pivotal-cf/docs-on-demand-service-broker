@@ -456,7 +456,7 @@ type ServiceAdapter interface {
 }
 ```
 
-In the main function for the adapter, the author call the `HandleCommandLineInvocation` function, with the adapter object
+In the main function for the adapter, the author calls the `HandleCommandLineInvocation` function, with the adapter object
 
 ```go
 package main
@@ -475,6 +475,9 @@ func main() {
 	serviceadapter.HandleCommandLineInvocation(os.Args, serviceAdapter, logger)
 }
 ```
+
+The helper function `GenerateInstanceGroupsWithNoProperties` can be used to generate the instance groups for the BOSH manifest from the arguments passed to the adapter.
+One of the inputs for this function is the mapping of instance groups to jobs for the deployment (`deploymentInstanceGroupsToJobs`). This mapping must be provided by the service author. This function will not address job level properties for the generated instance groups; these properties must also be provided by the service author. For an example implementation see the [job mapping in the Kafka example adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go#L12:L18).
 
 For more complete code examples please take a look at the [kafka adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter) or the [redis adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter)
 
