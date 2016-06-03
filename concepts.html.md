@@ -23,6 +23,8 @@ The following page contains concepts relevant to the setting up and maintaining 
 
 <a id="create-service-instance"></a>
 ### Create service instance
+Note that there are two ways this can fail: synchronously and asynchronously. When it fails synchronously, the Cloud Controller will subsequently delete the service according to its [orphan mitigation strategy](http://docs.cloudfoundry.org/services/api.html#orphans). In the case when it fails asynchronously (e.g. while bosh deploys the service instance), the Cloud Controller won't issue a delete request.
+
 ![create-service-workflow](/on-demand-service-broker/img/create_service_workflow.mmd.png)
 
 <a id="delete-service-instance"></a>
