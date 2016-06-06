@@ -311,7 +311,7 @@ Note that at this time ODB does not support syslog drains or route services, so 
 
 #### Output
 
-If the `create-binding` command is successful, it should return an exit code of 0 and print a [service broker API binding JSON response](http://docs.cloudfoundry.org/services/api.html#binding) on stdout. An example response is shown below. If the command failed, it should return any non-zero exit code. Stdout and stderr from the command will be logged by the ODB.
+If the `create-binding` command is successful, it should return an exit code of 0 and print a [service broker API binding JSON response](http://docs.cloudfoundry.org/services/api.html#binding) on stdout. An example response is shown below. If the command failed, it should return any non-zero exit code, see the [supported exit code table](#create-binding-exit-codes) for details of supported failure cases. Stdout and stderr from the command will be logged by the ODB.
 
 Example success response to `create-binding`:
 
@@ -325,6 +325,14 @@ Example success response to `create-binding`:
   "route_service_url": "optional: for route services only"
 }
 ```
+<a id="create-binding-exit-codes"></a>
+
+#### Supported exit codes for binding
+| exit code     |      Description       |
+|:--------------|:----------------------:|
+| 0             |        success         |
+| 49            | binding already exists |
+| anything else |        failure         |
 
 #### Parameters
 
