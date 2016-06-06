@@ -43,6 +43,7 @@ owner: London Services Enablement
   - [Security](/on-demand-service-broker/operating.html#security)
       - [BOSH API Endpoints](/on-demand-service-broker/operating.html#bosh-api-endpoints)
       - [BOSH UAA permissions](/on-demand-service-broker/operating.html#bosh-uaa-permissions)
+      - [PCF IPsec Add-On](/on-demand-service-broker/operating.html#ipsec)
   - [Troubleshooting](/on-demand-service-broker/operating.html#troubleshooting)
 - **[Creating a PCF OpsMan Tile](tile.html)**
   - [Requirements](/on-demand-service-broker/tile.html#requirements)

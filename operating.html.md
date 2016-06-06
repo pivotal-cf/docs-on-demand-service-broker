@@ -25,6 +25,7 @@ owner: London Services Enablement
 - [Security](#security)
   - [BOSH API Endpoints](#bosh-api-endpoints)
   - [BOSH UAA permissions](#bosh-uaa-permissions)
+  - [PCF IPsec Add-On](#ipsec)
 - [Troubleshooting](#troubleshooting)
   - [Logs](#logs)
   - [Identifying deployments in BOSH](#identifying-deployments)
@@ -412,6 +413,11 @@ The team admin authority also allows the following actions, which currently are 
 - `bosh logs`
 - `bosh releases`
 - `bosh stemcells`
+
+<a id="ipsec"></a>
+### PCF IPsec Add-On
+
+The ODB has been tested with the [PCF IPsec Add-On](https://docs.pivotal.io/addon-ipsec/installing.html), and it appears to work. Note that we excluded the BOSH director itself from IPsec ranges, as the BOSH add-on cannot be applied to BOSH itself.
 
 <a id="troubleshooting"></a>
 ## Troubleshooting
