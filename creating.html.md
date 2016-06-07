@@ -220,7 +220,7 @@ Plan for which the manifest is supposed to be generated
 | instance_groups                       | array of instance groups |                                                                                                instance groups configured for the plan |
 | instance_group.name                   |          string          |                                                                                                             name of the instance group |
 | instance_group.vm\_type               |          string          |                                         the vm_type configured for the instance group, matches one in the cloud config on the director |
-| instance_group.persistent\_disk\_type |          string          |                            the persistent_disk_type configured for the instance group, matches one in the cloud config on the director |
+| instance_group.persistent\_disk\_type |          string          |                Optional, the persistent\_disk\_type configured for the instance group, matches one in the cloud config on the director |
 | instance_group.networks               |     array of strings     |                                                                                   the networks the instance group is supposed to be in |
 | instance_group.instances              |           int            |                                                                                             number of instances for the instance group |
 | instance_group.lifecycle              |          string          | Optional, specifies the kind of workload the instance group represents. Valid values are `service` and `errand`; defaults to `service` |

@@ -219,7 +219,7 @@ service_catalog:
           vm_type: <vm type>
           instances: <instance count>
           networks: [<network>]
-          azs: [<az>] # optional
+          azs: [<az>]
           persistent_disk: <disk> # optional
       properties: {} # valid property key-value pairs are defined by the Service Author
 ```
