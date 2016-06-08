@@ -328,11 +328,12 @@ Example success response to `create-binding`:
 <a id="create-binding-exit-codes"></a>
 
 #### Supported exit codes for binding
-| exit code     |      Description       |
-|:--------------|:----------------------:|
-| 0             |        success         |
-| 49            | binding already exists |
-| anything else |        failure         |
+| exit code     |                    Description                    |
+|:--------------|:-------------------------------------------------:|
+| 0             |                      success                      |
+| 42            | app_guid not provided in the binding request body |
+| 49            |              binding already exists               |
+| anything else |                      failure                      |
 
 #### Parameters
 
