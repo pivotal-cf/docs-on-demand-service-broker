@@ -479,12 +479,15 @@ We have published a [SDK](https://github.com/pivotal-cf/on-demand-service-broker
 
 For the generated BOSH manifest the SDK supports properties in two levels: manifest (global) and job level. Global properties are [deprecated in BOSH](http://bosh.io/docs/manifest-v2.html#properties), in favour of job level properties and job links. As an example, refer to the [Kafka example service adapter property generation](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/c4cc3682a1e7c492883b064f8faf3a8d10fd1849/adapter/generate_manifest.go#L72-101).
 
-To use the adapter, the author should create an struct, conforming to the interface:
+To use the adapter, the author should create an struct, conforming to these interfaces:
 
 ```go
-type ServiceAdapter interface {
-	GenerateManifest(serviceDeployment ServiceDeployment, plan Plan, arbitraryParams map[string]interface{}, previousManifest *bosh.BoshManifest) (bosh.BoshManifest, error)
-	CreateBinding(bindingID string, deploymentTopology bosh.BoshVMs, manifest bosh.BoshManifest) (map[string]interface{}, error)
+type ManifestGenerator interface {
+	GenerateManifest(serviceDeployment ServiceDeployment, plan Plan, requestParams RequestParameters, previousManifest *bosh.BoshManifest, previousPlan *Plan) (bosh.BoshManifest, error)
+}
+
+type Binder interface {
+	CreateBinding(bindingID string, deploymentTopology bosh.BoshVMs, manifest bosh.BoshManifest, arbitraryParams map[string]interface{}) (Binding, error)
 	DeleteBinding(bindingID string, deploymentTopology bosh.BoshVMs, manifest bosh.BoshManifest) error
 }
 ```
@@ -503,9 +506,10 @@ import (
 )
 
 func main() {
-	logger := log.New(os.Stderr, "[foo-service-adapter] ", log.LstdFlags)
-	serviceAdapter := adapter.Adapter{}
-	serviceadapter.HandleCommandLineInvocation(os.Args, serviceAdapter, logger)
+  logger := log.New(os.Stderr, "[foo-service-adapter] ", log.LstdFlags)
+  manifestGenerator := adapter.ManifestGenerator{}
+  binder := adapter.Binder{}
+  serviceadapter.HandleCommandLineInvocation(os.Args, manifestGenerator, binder, logger)
 }
 ```
 
