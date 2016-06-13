@@ -23,6 +23,11 @@ owner: London Services Enablement
      - [request parameters](#request-parameters)
      - [previous manifest](#previous-manifest)
      - [previous plan](#previous-plan)
+  - [dashboard-url](#dashboard-url)
+      - [Output](#dashboard-url-output)
+      - [instance-ID](#dashboard-url-instance-id)    
+      - [plan-JSON](#dashboard-url-plan)    
+      - [manifest-YAML](#dashboard-url-manifest)    
   - [create-binding](#create-binding)
      - [Output](#create-binding-output)
      - [binding-ID](#create-binding-id)
@@ -64,7 +69,7 @@ There are two types of job links, implicit and explicit. The [example Kafka rele
 <a id="creating-a-service-adapter"></a>
 ## Creating a Service Adapter
 
-A Service Adapter is an executable invoked by ODB. It is expected to respond to three subcommands:
+A Service Adapter is an executable invoked by ODB. It is expected to respond to these subcommands:
 
 - `generate-manifest`
   Generate a BOSH manifest for your service instance deployment and output to stdout as YAML, given information about the:
@@ -72,13 +77,17 @@ A Service Adapter is an executable invoked by ODB. It is expected to respond to 
   - service instance (ID, arbitrary parameters, plan properties, IAAS resources)
   - previous manifest, if this is an upgrade deployment
 
+- `dashboard-url`
+  Generate an optional URL of a web-based management user interface for the service instance.
+
 - `create-binding`
   Create (unique, if possible) credentials for the service instance, printing them to stdout as JSON.
 
 - `delete-binding`
   Invalidate the created credentials, if possible. Some services (e.g. Redis) are single-user, and this endpoint will do nothing.
 
-The parameters, and expected output from these subcommands will be explained in detail below. For each of these subcommands, exit status 0 indicates that the command succeeded, and any non-zero status indicates failure.
+
+The parameters, and expected output from these subcommands will be explained in detail below. For each of these subcommands, exit status 0 indicates that the command succeeded exit status 10 indicates not implemented, and any non-zero status indicates failure.
 
 <a id="handling-errors"></a>
 ### Handling errors
@@ -297,6 +306,52 @@ The previous plan as JSON. The previous plan is nil if this is a new deployment.
 
 ---
 
+<a id="dashboard-url"></a>
+### dashboard-url
+
+```
+service-adapter dashboard-url [instance-id] [plan-JSON] [manifest-YAML]
+```
+
+The generate-manifest subcommand takes in 3 arguments and returns a JSON with the `dashboard_url`. The dashboard url is optional. If no dashboard url is relevant to the service, the subcommand should exit with code 10. Provisioning will be successful without the dashboard url.
+
+<a id="dashboard-url-output"></a>
+#### Output
+If the `dashboard-url` command generates a url successfully, it should exit with 0 and return the generated manifest in the following structure:
+
+
+| field         |  Type  |                           Description |
+|:--------------|:------:|--------------------------------------:|
+| dashboard_url | string | dashboard url returned to the cf user |
+
+```
+{
+   "dashboard_url":"https://someurl.com"
+}
+```
+
+#### Supported exit codes for dashboard_url
+| exit code     |        Description         |
+|:--------------|:--------------------------:|
+| 0             |          success           |
+| 10            | subcommand not implemented |
+| anything else |          failure           |
+
+
+<a id="dashboard-url-instance-id"></a>
+#### Instance Id
+Provided by the cloud controller which uniquely identifies the service-instance.
+
+<a id="dashboard-url-plan"></a>
+#### Plan
+Current plan for the service instance as JSON. The structure should be the same as the [plan given in the generate manifest](#plan)
+
+<a id="dashboard-url-manifest"></a>
+#### Manifest
+The current manifest as YAML. The format of the manifest should match the [bosh v2 manifest](https://bosh.io/docs/manifest-v2.html)
+
+---
+
 <a id="create-binding"></a>
 ### create-binding
 
@@ -511,7 +566,8 @@ func main() {
   logger := log.New(os.Stderr, "[foo-service-adapter] ", log.LstdFlags)
   manifestGenerator := adapter.ManifestGenerator{}
   binder := adapter.Binder{}
-  serviceadapter.HandleCommandLineInvocation(os.Args, manifestGenerator, binder, logger)
+  dashboardUrlGenerator := adapter.DashboardUrlGenerator{}
+  serviceadapter.HandleCommandLineInvocation(os.Args, manifestGenerator, binder, dashboardUrlGenerator, logger)
 }
 ```
 
