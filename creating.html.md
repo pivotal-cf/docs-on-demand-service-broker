@@ -33,6 +33,7 @@ owner: London Services Enablement
      - [binding-ID](#create-binding-id)
      - [bosh-VMs-JSON](#create-bosh-vms-json)
      - [manifest](#create-binding-manifest)
+     - [request-params-JSON](#request-params-JSON)
   - [delete-binding](#delete-binding)
      - [Output](#delete-binding-output)
      - [binding-ID](#delete-binding-id)
@@ -356,7 +357,7 @@ The current manifest as YAML. The format of the manifest should match the [bosh 
 ### create-binding
 
 ```
-service-adapter create-binding [binding-ID] [bosh-VMs-JSON] [manifest-YAML] [arbitrary-parameters]
+service-adapter create-binding [binding-ID] [bosh-VMs-JSON] [manifest-YAML] [request-params-JSON]
 ```
 
 Binding credentials for a service instance should share a namespace, and should be unique if possible. E.g. for MySQL, two bindings could include a different username/password pairs, but share the same MySQL database tables and data. The first step is to determine which credentials are best to supply in the context of your service. We recommend that users can be identified statelessly from the binding ID, and the simplest way to do this is to name the user after the binding ID.
@@ -418,10 +419,12 @@ This can be used to connect to the instance deployment if required, to create a 
 #### manifest
 The current manifest as YAML. This is used to extract information about the deployment that is necessary for the binding (e.g. admin credentials with which to create users). The format of the manifest should match the [bosh v2 manifest](https://bosh.io/docs/manifest-v2.html)
 
-#### arbitrary-params
+<a id="request-params-JSON"></a>
+#### request-params-JSON
+This is a JSON object that holds the entire body of the [service binding](http://docs.cloudfoundry.org/services/api.html#binding) request sent by the Cloud Controller to the service broker.
 
-This is a JSON object with arbitrary keys and values which were passed by the application developer as a `cf` CLI parameter when binding to a service.
-For example see the [example Kafka binding implementation](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/create_binding.go#L31).
+The field `parameters` contains arbitrary key-value pairs which were passed by the application developer as a `cf` CLI parameter when creating, or updating the service instance.
+
 
 
 #### Credentials for bindings
