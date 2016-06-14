@@ -16,6 +16,7 @@ owner: London Services Enablement
 - [Broker Management](#broker-management)
   - [register-broker](#register-broker)
   - [deregister-broker](#deregister-broker)
+  - [Administering service instances](#administering-instances)
   - [Upgrading the broker](#upgrading-the-broker)
   - [Upgrading existing service instance](#upgrading-existing-service-instances)
   - [Deleting all service instances](#deleting-all-service-instances)
@@ -281,6 +282,12 @@ Add the following instance group to your manifest:
 ```
 
 Run the errand with `bosh run errand deregister-broker`.
+
+<a id="administering-instances" /></a>
+### Administering service instances
+We recommend using the [bosh cli gem](https://bosh.io/docs/bosh-cli.html) for administering the deployments created by ODB; for example for checking VMs, ssh, viewing logs.
+
+We **recommend against** using the bosh cli for updating/deleting ODB service deployments as it might accidentally trigger a race condition with Cloud Controller-induced updates/deletes or result in ODB overriding your [snowflake](http://martinfowler.com/bliki/SnowflakeServer.html) changes at the next deploy. All updates to the service instances must be done using the [errand to upgrade existing service instances](#upgrading-existing-service-instances).
 
 <a id="upgrading-the-broker" /></a>
 ### Upgrading the broker
