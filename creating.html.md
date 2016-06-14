@@ -9,7 +9,7 @@ owner: London Services Enablement
 - [Creating a Service Release](#creating-a-service-release)
 - [Creating a Service Adapter](#creating-a-service-adapter)
   - [Handling errors](#handling-errors)
-- [Configuring manifest generation](#configuring-manifest-generation)
+- [Inputs for manifest generation](#inputs-for-manifest-generation)
   - [Arbitrary parameters](#arbitrary-parameters)
   - [Previous manifest properties](#previous-manifest-properties)
   - [Service plan properties](#service-plan-properties)
@@ -96,8 +96,8 @@ If a subcommand fails, the adapter must return a non-zero exit status and an err
 
 See an example implementation [here](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/bb5094efdd7c5e230ecade88d68eda131ef1a8a2/adapter/create_binding.go#L26-28).
 
-<a id="configuring-manifest-generation"></a>
-## Configuring manifest generation
+<a id="inputs-for-manifest-generation"></a>
+## Inputs for manifest generation
 
 <a id="arbitrary-parameters"></a>
 ### Arbitrary parameters

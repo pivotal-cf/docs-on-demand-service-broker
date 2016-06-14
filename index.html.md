@@ -17,7 +17,7 @@ owner: London Services Enablement
   - [What is required of the Service Authors?](/on-demand-service-broker/creating.html#what-is-required-of-the-service-authors)
   - [Creating a Service Release](/on-demand-service-broker/creating.html#creating-a-service-release)
   - [Creating a Service Adapter](/on-demand-service-broker/creating.html#creating-a-service-adapter)
-  - [Configuring manifest generation](/on-demand-service-broker/creating.html#configuring-manifest-generation)
+  - [Inputs for manifest generation](/on-demand-service-broker/creating.html#inputs-for-manifest-generation)
       - [Arbitrary parameters](/on-demand-service-broker/creating.html#arbitrary-parameters)
       - [Previous manifest properties](/on-demand-service-broker/creating.html#previous-manifest-properties)
       - [Service plan properties](/on-demand-service-broker/creating.html#service-plan-properties)
