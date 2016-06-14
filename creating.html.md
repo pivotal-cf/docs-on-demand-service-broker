@@ -18,11 +18,11 @@ owner: London Services Enablement
 - [Subcommands](#sub-commands)
   - [generate-manifest](#generate-manifest)
      - [Output](#generate-manifest-output)
-     - [service-deployment](#service-deployment)
-     - [plan](#plan)
-     - [request parameters](#request-parameters)
-     - [previous manifest](#previous-manifest)
-     - [previous plan](#previous-plan)
+     - [service-deployment-JSON](#service-deployment)
+     - [plan-JSON](#plan)
+     - [request-params-JSON](#generate-request-params-JSON)
+     - [previous-manifest-YAML](#previous-manifest)
+     - [previous-plan-JSON](#previous-plan)
   - [dashboard-url](#dashboard-url)
       - [Output](#dashboard-url-output)
       - [instance-ID](#dashboard-url-instance-id)    
@@ -32,13 +32,13 @@ owner: London Services Enablement
      - [Output](#create-binding-output)
      - [binding-ID](#create-binding-id)
      - [bosh-VMs-JSON](#create-bosh-vms-json)
-     - [manifest](#create-binding-manifest)
-     - [request-params-JSON](#request-params-JSON)
+     - [manifest-YAML](#create-binding-manifest)
+     - [request-params-JSON](#create-request-params-JSON)
   - [delete-binding](#delete-binding)
      - [Output](#delete-binding-output)
      - [binding-ID](#delete-binding-id)
      - [bosh-VMs-JSON](#delete-binding-vm-json)
-     - [manifest](#delete-binding-manifest)
+     - [manifest-YAML](#delete-binding-manifest)
 - [Packaging](#packaging)
 - [Golang SDK](#sdk)
 
@@ -178,7 +178,7 @@ If the `generate-manifest` command is successful, it should return an exit code 
 ---
 
 <a id="service-deployment"></a>
-#### service-deployment
+#### service-deployment-JSON
 Provides information regarding the bosh director
 
 | field                     |       Type        |                                                            Description |
@@ -219,11 +219,11 @@ Your Service Adapter should be opinionated about which jobs it requires to gener
 You should provide documentation about which jobs are required by your Service Adapter, and which BOSH releases operators should get these jobs from.
 
 <a id="plan"></a>
-#### plan
+#### plan-JSON
 Plan for which the manifest is supposed to be generated
 
 <a id="plan-schema"></a>
-##### plan schema
+##### plan-JSON schema
 
 | field                                 |           Type           |                                                                                                                            Description |
 |:--------------------------------------|:------------------------:|---------------------------------------------------------------------------------------------------------------------------------------:|
@@ -281,8 +281,8 @@ Plans are composed by the operator and consist of properties and resource mappin
 
   The `instance_groups` section of the plan JSON. This maps service deployment instance groups (defined by the service author) to resources (defined by the operator). The service developers should document the list of instance group names required for their deployment (e.g. "redis-server") and any constraints they recommend on resources (e.g. operator must add a persistent disk if persistence property is enabled). These constraints can of course be enforced in code. The `instance_groups` section also contains a field for `lifecycle`, which can be set by the operator. The service adapter will add a lifecycle field to the instance group within the bosh manifest when specified.
 
-<a id="request-parameters"></a>
-#### request parameters
+<a id="generate-request-params-JSON"></a>
+#### request-params-JSON
 This is a JSON object that holds the entire body of the [service provision](http://docs.cloudfoundry.org/services/api.html#provisioning) or [service update](http://docs.cloudfoundry.org/services/api.html#updating_service_instance) request sent by the Cloud Controller to the service broker. The request parameters JSON will be `null` for upgrades.
 
 The field `parameters` contains arbitrary key-value pairs which were passed by the application developer as a `cf` CLI parameter when creating, or updating the service instance.
@@ -290,7 +290,7 @@ The field `parameters` contains arbitrary key-value pairs which were passed by t
 Note: when updating existing service instances, any arbitrary parameters passed on a previous create or update will not be passed again. Therefore, for arbitrary parameters to stay the same across multiple deployments they must be retrieved from the previous manifest.
 
 <a id="previous-manifest"></a>
-#### previous manifest
+#### previous-manifest-YAML
 The previous manifest as YAML. The previous manifest is nil if this is a new deployment. The format of the manifest should match the [bosh v2 manifest](https://bosh.io/docs/manifest-v2.html).
 
 It is up to the service author to perform any necessary service-specific migration logic here, if previous manifest is non-nil.
@@ -300,10 +300,8 @@ Another use-case of the previous manifest is for the migration of deployment pro
 For example see the [example Redis service adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_service_adapter.go#L318-L323).
 
 <a id="previous-plan"></a>
-#### previous plan
+#### previous-plan-JSON
 The previous plan as JSON. The previous plan is nil if this is a new deployment. The format of the plan should match [plan schema](#plan-schema). The previous plan can be used for complex plan migration logic, for example the [kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go#L27:L33), rejects a plan migration if the new plan reduces the number of instances, to prevent data loss.
-
-<a id="generate-manifest-output"></a>
 
 ---
 
@@ -311,7 +309,7 @@ The previous plan as JSON. The previous plan is nil if this is a new deployment.
 ### dashboard-url
 
 ```
-service-adapter dashboard-url [instance-id] [plan-JSON] [manifest-YAML]
+service-adapter dashboard-url [instance-ID] [plan-JSON] [manifest-YAML]
 ```
 
 The generate-manifest subcommand takes in 3 arguments and returns a JSON with the `dashboard_url`. The dashboard url is optional. If no dashboard url is relevant to the service, the subcommand should exit with code 10. Provisioning will be successful without the dashboard url.
@@ -340,15 +338,15 @@ If the `dashboard-url` command generates a url successfully, it should exit with
 
 
 <a id="dashboard-url-instance-id"></a>
-#### Instance Id
+#### instance-ID
 Provided by the cloud controller which uniquely identifies the service-instance.
 
 <a id="dashboard-url-plan"></a>
-#### Plan
+#### plan-JSON
 Current plan for the service instance as JSON. The structure should be the same as the [plan given in the generate manifest](#plan)
 
 <a id="dashboard-url-manifest"></a>
-#### Manifest
+#### manifest-YAML
 The current manifest as YAML. The format of the manifest should match the [bosh v2 manifest](https://bosh.io/docs/manifest-v2.html)
 
 ---
@@ -416,10 +414,10 @@ For example
 This can be used to connect to the instance deployment if required, to create a service specific binding. In the example above, the Service Adapter may connect to MySQL as the admin and create a user. As part of the binding, the `mysql_node` IPs would be returned, but maybe not the `management_box`.
 
 <a id="create-binding-manifest"></a>
-#### manifest
+#### manifest-YAML
 The current manifest as YAML. This is used to extract information about the deployment that is necessary for the binding (e.g. admin credentials with which to create users). The format of the manifest should match the [bosh v2 manifest](https://bosh.io/docs/manifest-v2.html)
 
-<a id="request-params-JSON"></a>
+<a id="create-request-params-JSON"></a>
 #### request-params-JSON
 This is a JSON object that holds the entire body of the [service binding](http://docs.cloudfoundry.org/services/api.html#binding) request sent by the Cloud Controller to the service broker.
 
@@ -519,7 +517,7 @@ For example
 This can be used to connect to the actual VMs if required, to delete a service specific binding. For example delete a user in MySQL.
 
 <a id="delete-binding-manifest"></a>
-#### manifest
+#### manifest-YAML
 The current manifest as YAML. This is used to extract information about the deployment that is necessary for the binding (e.g. credentials). The format of the manifest should match the [bosh v2 manifest](https://bosh.io/docs/manifest-v2.html)
 
 For example see the [kafka delete binding](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/cmd/service-adapter/main.go#L73)
