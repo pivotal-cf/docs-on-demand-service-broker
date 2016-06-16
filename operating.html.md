@@ -32,6 +32,7 @@ owner: London Services Enablement
   - [Identifying deployments in BOSH](#identifying-deployments)
   - [Identifying BOSH tasks](#identifying-tasks)
   - [Identifying issues with connecting to BOSH and/or UAA](#identifying-bosh-uaa-issues)
+  - [Listing service instances](#listing-service-instances)
 
 <a id="what-are-the-responsibilities-of-the-operator"></a>
 ## What are the responsibilities of the Operator?
@@ -507,6 +508,37 @@ For example
 
 ```
 on-demand-service-broker: [on-demand-service-broker] 2016/05/18 15:56:40 Error authenticating (401): {"error":"unauthorized","error_description":"Bad credentials"}, please ensure that properties.<broker-job>.bosh.authentication.uaa is correct and try again.
+```
+
+<a id="listing-service-instances"></a>
+### Listing service instances
+
+The ODB persists the list of ODB-deployed service instances and provides an endpoint to retrieve them. This endpoint requires basic authentication.
+
+During disaster recovery this endpoint could be used to assess the situation.
+
+**Request**
+
+`GET http://username:password@<REPLACE_WITH_BROKER_IP>:8080/mgmt/service_instances`
+
+**Response**
+
+200 OK
+
+Example JSON body:
+```json
+[
+  {
+    "instance_id": "4d19462c-33cf-11e6-91cc-685b3585cc4e",
+    "plan_id": "60476620-33cf-11e6-a841-685b3585cc4e",
+    "bosh_deployment_name": "service-instance_4d19462c-33cf-11e6-91cc-685b3585cc4e"
+  },
+  {
+    "instance_id": "57014734-33cf-11e6-ba8d-685b3585cc4e",
+    "plan_id": "60476620-33cf-11e6-a841-685b3585cc4e",
+    "bosh_deployment_name": "service-instance_57014734-33cf-11e6-ba8d-685b3585cc4e"
+  }
+]
 ```
 
 **[Back to Contents Page](/on-demand-service-broker/index.html)**
