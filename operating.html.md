@@ -526,19 +526,20 @@ During disaster recovery this endpoint could be used to assess the situation.
 200 OK
 
 Example JSON body:
-```json
-[
-  {
-    "instance_id": "4d19462c-33cf-11e6-91cc-685b3585cc4e",
-    "plan_id": "60476620-33cf-11e6-a841-685b3585cc4e",
-    "bosh_deployment_name": "service-instance_4d19462c-33cf-11e6-91cc-685b3585cc4e"
-  },
-  {
-    "instance_id": "57014734-33cf-11e6-ba8d-685b3585cc4e",
-    "plan_id": "60476620-33cf-11e6-a841-685b3585cc4e",
-    "bosh_deployment_name": "service-instance_57014734-33cf-11e6-ba8d-685b3585cc4e"
-  }
-]
-```
+
+  ```json
+  [
+    {
+      "instance_id": "4d19462c-33cf-11e6-91cc-685b3585cc4e",
+      "plan_id": "60476620-33cf-11e6-a841-685b3585cc4e",
+      "bosh_deployment_name": "service-instance_4d19462c-33cf-11e6-91cc-685b3585cc4e"
+    },
+    {
+      "instance_id": "57014734-33cf-11e6-ba8d-685b3585cc4e",
+      "plan_id": "60476620-33cf-11e6-a841-685b3585cc4e",
+      "bosh_deployment_name": "service-instance_57014734-33cf-11e6-ba8d-685b3585cc4e"
+    }
+  ]
+  ```
 
 **[Back to Contents Page](/on-demand-service-broker/index.html)**
