@@ -178,6 +178,8 @@ The operator must:
      Here the operator can configure the deployment to span multiple availability zones, by using the [BOSH multi-az feature](https://bosh.io/docs/azs.html). For example the [kafka multi az plan](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml#L74). In some cases, service authors will provide errands for the service release. You can add an instance group of type errand by setting the lifecycle field. For example the [smoke_tests for the kafka deployment](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml#L84).
   1. Provide values for plan properties.
      Plan properties are key-value pairs defined by the Service Author. Some examples include a boolean to enable disk persistence for Redis, and a list of strings representing RabbitMQ plugins to load. The Service Author should document whether these properties are mandatory or optional, whether the use of one property precludes the use of another, and whether certain properties affect recommended instance group to resource mappings.
+  1. Provide an (optional) update block for each plan.
+     You may require plan-specific configuration for BOSH's update instance operation. The ODB passes the plan-specific update block to the service adapter. Plan-specific update blocks should have the same structure as [the update block in a BOSH manifest](https://bosh.io/docs/manifest-v2.html#update). The Service Author can define a default update block to be used when a plan-specific update block is not provided, and whether the service adapter supports their configuration in the manifest.
 
 Add the snippet below to your broker job properties section:
 
@@ -224,6 +226,12 @@ service_catalog:
           azs: [<az>]
           persistent_disk: <disk> # optional
       properties: {} # valid property key-value pairs are defined by the Service Author
+      update: # optional
+        canaries: 1 # required
+        max_in_flight: 2  # required
+        canary_watch_time: 1000-30000 # required
+        update_watch_time: 1000-30000 # required
+        serial: true # optional
 ```
 
 <a id="broker-management"></a>
