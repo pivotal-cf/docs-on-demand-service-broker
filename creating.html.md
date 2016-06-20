@@ -479,7 +479,7 @@ instance_groups:
 
 ---
 
-<a id="§"></a>
+<a id="delete-binding"></a>
 ### delete-binding
 
 ```
