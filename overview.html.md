@@ -68,6 +68,6 @@ The operator will then configure a range of plans for the service in the ODB BOS
 The follow steps are required to create and maintain an ODB:
 
 * [The Service Authors provide their deliverables](/on-demand-service-broker/creating.html)
-* [The Operators upload their releases and write a manifest](/on-demand-service-broker/installing.html)
+* [The Operators upload their releases and write a manifest](/on-demand-service-broker/operating.html)
 
 **[Back to Contents Page](/on-demand-service-broker/index.html)**
