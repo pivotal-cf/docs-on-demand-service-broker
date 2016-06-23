@@ -66,7 +66,7 @@ See the [BOSH docs](http://bosh.io/docs) for help creating a BOSH release. We re
 
 ### Job links
 When generating a manifest, we recommend not using static IPs as this makes network IP management very complex. Instead, we recommend using [BOSH's job links feature](https://bosh.io/docs/links.html).
-There are two types of job links, implicit and explicit. The [example Kafka release](https://github.com/pivotal-cf-experimental/kafka-example-service-release/blob/master/jobs/kafka_broker/spec#L15) uses implicit job links to get the IPs of the brokers and the zookeeper. Details on how to use the links feature are available [here](https://bosh.io/docs/links.html).
+There are two types of job links, implicit and explicit. The [example Kafka release](https://github.com/pivotal-cf-experimental/kafka-example-service-release/blob/master/jobs/kafka_server/spec#L15) uses implicit job links to get the IPs of the brokers and the zookeeper. Details on how to use the links feature are available [here](https://bosh.io/docs/links.html).
 
 <a id="creating-a-service-adapter"></a>
 ## Creating a Service Adapter

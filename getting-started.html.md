@@ -174,7 +174,7 @@ This guide describes how to create and manage an on-demand service broker using 
                 releases:
                   - name: kafka-example-service
                     version: latest
-                    jobs: [kafka_broker, zookeeper_server]
+                    jobs: [kafka_server, zookeeper_server]
                 stemcell:
                   os: ubuntu-trusty
                   version: 3147 #if you have downloaded a different stemcell version, replace with that number
@@ -190,7 +190,7 @@ This guide describes how to create and manage an on-demand service broker using 
                     plan_id: 11789210-D743-4C65-9D38-C80B29F4D9C8
                     description: A Kafka deployment with a single instance of each job and persistent disk
                     instance_groups:
-                      - name: kafka_broker
+                      - name: kafka_server
                         vm_type: container
                         instances: 1
                         persistent_disk: ten
