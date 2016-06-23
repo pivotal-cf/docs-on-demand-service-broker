@@ -93,7 +93,7 @@ The parameters, and expected output from these subcommands will be explained in 
 
 <a id="handling-errors"></a>
 ### Handling errors
-If a subcommand fails, the adapter must return a non-zero exit status and an error, and may optionally print to stdout and/or stderr. The error message, along with the stdout and stderr streams will be printed in the broker log.
+If a subcommand fails, the adapter must return a non-zero exit status and an error, and may optionally print to stdout and/or stderr. The error message, along with the stdout and stderr streams will be printed in the broker log. For that reason, we recommend not printing the manifest or other sensitive details to stdout/stderr, as the ODB does no validation on this output.
 
 See an example implementation [here](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/bb5094efdd7c5e230ecade88d68eda131ef1a8a2/adapter/create_binding.go#L26-28).
 
