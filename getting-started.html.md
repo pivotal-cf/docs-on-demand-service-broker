@@ -73,6 +73,9 @@ This guide describes how to create and manage an on-demand service broker using 
 
     ```yaml
     ---
+    azs:
+    - name: z1
+
     vm_types:
     - name: container
       cloud_properties: {}
@@ -84,6 +87,7 @@ This guide describes how to create and manage an on-demand service broker using 
       - range: 10.244.1.0/24
         gateway: 10.244.1.1
         cloud_properties: {}
+        az: z1
 
     disk_types:
     - name: ten
@@ -94,6 +98,7 @@ This guide describes how to create and manage an on-demand service broker using 
       workers: 2
       reuse_compilation_vms: true
       network: kafka
+      az: z1
       cloud_properties: {}
     ```
 
@@ -153,6 +158,7 @@ This guide describes how to create and manage an on-demand service broker using 
 
     instance_groups:
       - name: broker
+        azs: [z1]
         instances: 1
         jobs:
           - name: broker
@@ -193,11 +199,13 @@ This guide describes how to create and manage an on-demand service broker using 
                       - name: kafka_server
                         vm_type: container
                         instances: 1
+                        azs: [z1]
                         persistent_disk: ten
                         networks: [kafka]
                       - name: zookeeper_server
                         vm_type: container
                         instances: 1
+                        azs: [z1]
                         persistent_disk: ten
                         networks: [kafka]
                     properties:
