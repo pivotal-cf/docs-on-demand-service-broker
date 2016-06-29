@@ -13,6 +13,7 @@ owner: London Services Enablement
   - [Prerequisites for deploying brokers that use ODB](/on-demand-service-broker/overview.html#prerequisites-for-deploying-brokers-that-use-odb)
      - [BOSH v2 Features we use](/on-demand-service-broker/overview.html#bosh-v2-features-we-use)
   - [Steps required to use on-demand service broker](/on-demand-service-broker/overview.html#steps-required-to-use-on-demand-service-broker)
+- **[Setting up a local environment](getting-started.html)**
 - **[Creating a service adapter](creating.html)**
   - [What is required of the Service Authors?](/on-demand-service-broker/creating.html#what-is-required-of-the-service-authors)
   - [Creating a Service Release](/on-demand-service-broker/creating.html#creating-a-service-release)
