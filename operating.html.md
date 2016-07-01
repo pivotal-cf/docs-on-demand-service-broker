@@ -55,6 +55,8 @@ For an example manifest for a Kafka service, see [kafka-example-service-adapter-
 <a id="configure-bosh"></a>
 ## Setting up your BOSH director
 
+You must use BOSH director version v257 or greater to use the On-Demand Service Broker.
+
 <a id="ssl-certificates"></a>
 ### SSL certificates
 
@@ -187,11 +189,11 @@ Add the snippet below to your broker job properties section:
 service_deployment:
   releases:
     - name: <service-release>
-      version: <service-release-version> # does not support "latest"
+      version: <service-release-version>
       jobs: [<release-jobs-needed-for-deployment>] # Service Author will specify list of jobs required
   stemcell: # every instance group in the service deployment has the same stemcell
     os: <service-stemcell>
-    version: <service-stemcell-version> # does not support "latest"
+    version: <service-stemcell-version>
 service_catalog:
   id: <CF marketplace ID>
   service_name: <CF marketplace service offering name>
