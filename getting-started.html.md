@@ -5,7 +5,7 @@ owner: London Services Enablement
 
 # Setting up a local environment
 
-This guide describes how to create and manage an on-demand service broker using PCF Dev and BOSH lite on your local machine, which are containerised versions of Pivotal Cloud Foundry and BOSH respectively. For this tutorial we will be using the [kafka-service-adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter) and the a test [kafka service release](https://github.com/pivotal-cf-experimental/kafka-example-service-release)
+This guide describes how to create and manage an on-demand service broker using PCF Dev and BOSH lite, which are tools that allow you run bosh and Cloud Foundry in VMs on your local development machine. For this tutorial we will be using the [kafka-service-adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter) and the a test [kafka service release](https://github.com/pivotal-cf-experimental/kafka-example-service-release)
 
 ## Prerequisites
 
