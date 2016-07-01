@@ -66,7 +66,7 @@ See the [BOSH docs](http://bosh.io/docs) for help creating a BOSH release. We re
 
 ### Job links
 When generating a manifest, we recommend not using static IPs as this makes network IP management very complex. Instead, we recommend using [BOSH's job links feature](https://bosh.io/docs/links.html).
-There are two types of job links, implicit and explicit. The [example Kafka release](https://github.com/pivotal-cf-experimental/kafka-example-service-release/blob/master/jobs/kafka_broker/spec#L15) uses implicit job links to get the IPs of the brokers and the zookeeper. Details on how to use the links feature are available [here](https://bosh.io/docs/links.html).
+There are two types of job links, implicit and explicit. The [example Kafka release](https://github.com/pivotal-cf-experimental/kafka-example-service-release/blob/master/jobs/kafka_server/spec#L15) uses implicit job links to get the IPs of the brokers and the zookeeper. Details on how to use the links feature are available [here](https://bosh.io/docs/links.html).
 
 <a id="creating-a-service-adapter"></a>
 ## Creating a Service Adapter
@@ -93,7 +93,7 @@ The parameters, and expected output from these subcommands will be explained in 
 
 <a id="handling-errors"></a>
 ### Handling errors
-If a subcommand fails, the adapter must return a non-zero exit status and an error, and may optionally print to stdout and/or stderr. The error message, along with the stdout and stderr streams will be printed in the broker log.
+If a subcommand fails, the adapter must return a non-zero exit status and an error, and may optionally print to stdout and/or stderr. The error message, along with the stdout and stderr streams will be printed in the broker log. For that reason, we recommend not printing the manifest or other sensitive details to stdout/stderr, as the ODB does no validation on this output.
 
 See an example implementation [here](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/bb5094efdd7c5e230ecade88d68eda131ef1a8a2/adapter/create_binding.go#L26-28).
 
@@ -236,51 +236,72 @@ Plan for which the manifest is supposed to be generated
 | instance_group.instances              |           int            |                                                                                             number of instances for the instance group |
 | instance_group.lifecycle              |          string          | Optional, specifies the kind of workload the instance group represents. Valid values are `service` and `errand`; defaults to `service` |
 | instance_group.azs                    |     array of strings     |                                                         a list of availability zones that the instance groups should be striped across |
-| properties                            |           map            |                                             properties with which the operator has configured the instance group, for the current plan |
+| properties                            |           map            |                                                       properties which the operator has configured for deployments of the current plan |
+| update                                |           map            |                                                     update block which the operator has configured for deployments of the current plan |
+| update.canaries                       |           int            |                                                                                               plan-specific number of canary instances |
+| update.max_in_flight                  |           int            |                                                             plan-specific maximum number of non-canary instances to update in parallel |
+| update.canary_watch_time              |          string          |              plan-specific time in milliseconds that the BOSH Director sleeps before checking whether the canary instances are healthy |
+| update.update_watch_time              |          string          |          plan-specific time in milliseconds that the BOSH Director sleeps before checking whether the non-canary instances are healthy |
+| update.serial                         |         boolean          |             Optional, plan-specific flag to deploy instance groups sequentially (`true`), or in parallel (`false`); defaults to `true` |
 
 For example
 
 ```json
 {
-   "instance_groups":[
+   "instance_groups": [
       {
-         "name":"example-server",
-         "vm_type":"small",
-         "persistent_disk_type":"ten",
-         "networks":[
+         "name": "example-server",
+         "vm_type": "small",
+         "persistent_disk_type": "ten",
+         "networks": [
             "example-network"
          ],
-         "azs":[
+         "azs": [
             "example-az"
          ],
-         "instances":1
+         "instances": 1
       },
       {
-         "name":"example-migrations",
-         "vm_type":"small",
-         "persistent_disk_type":"ten",
-         "networks":[
+         "name": "example-migrations",
+         "vm_type": "small",
+         "persistent_disk_type": "ten",
+         "networks": [
             "example-network"
          ],
-         "instances":1,
+         "instances": 1,
          "lifecycle": "errand"
       }
    ],
-   "properties":{
-      "example":"property"
-   }
+   "properties": {
+      "example": "property"
+   },
+   "update": {
+      "canaries": 1,
+      "max_in_flight": 2,
+      "canary_watch_time": "1000-30000",
+      "update_watch_time": "1000-30000",
+      "serial": true
+  }
 }
 ```
 
-Plans are composed by the operator and consist of properties and resource mappings:
+Plans are composed by the operator and consist of resource mappings, properties and an optional update block:
+
+* **Resource mappings**
+
+  The `instance_groups` section of the plan JSON. This maps service deployment instance groups (defined by the service author) to resources (defined by the operator). The service developers should document the list of instance group names required for their deployment (e.g. "redis-server") and any constraints they recommend on resources (e.g. operator must add a persistent disk if persistence property is enabled). These constraints can of course be enforced in code. The `instance_groups` section also contains a field for `lifecycle`, which can be set by the operator. The service adapter will add a lifecycle field to the instance group within the bosh manifest when specified.
 
 * **Properties**
 
   Properties are service-specific parameters chosen by the service author. The Redis example exposes a property `persistence`, which takes a boolean value and toggles disk persistence for Redis. These should be documented by the service developers for the operator.
 
-* **Resource mappings**
+* **Update block (optional)**
 
-  The `instance_groups` section of the plan JSON. This maps service deployment instance groups (defined by the service author) to resources (defined by the operator). The service developers should document the list of instance group names required for their deployment (e.g. "redis-server") and any constraints they recommend on resources (e.g. operator must add a persistent disk if persistence property is enabled). These constraints can of course be enforced in code. The `instance_groups` section also contains a field for `lifecycle`, which can be set by the operator. The service adapter will add a lifecycle field to the instance group within the bosh manifest when specified.
+  This block defines a plan-specific configuration for BOSH's update instance operation. Although the ODB considers this block optional, the service adapter must output an update block in every manifest it generates. Some ways to achieve that are:
+
+  1. *(Recommended)* Define a default update block for all plans, which is used when a plan-specific update block is not provided by the operator
+  1. Hard code an update block for all plans in the service adapter
+  1. Make the update block mandatory, so that operators must provide an update block for every plan in the service catalogue section of the ODB manifest
 
 <a id="generate-request-params-JSON"></a>
 #### request-params-JSON
@@ -479,7 +500,7 @@ instance_groups:
 
 ---
 
-<a id="§"></a>
+<a id="delete-binding"></a>
 ### delete-binding
 
 ```

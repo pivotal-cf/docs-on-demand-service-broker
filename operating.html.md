@@ -32,6 +32,7 @@ owner: London Services Enablement
   - [Identifying deployments in BOSH](#identifying-deployments)
   - [Identifying BOSH tasks](#identifying-tasks)
   - [Identifying issues with connecting to BOSH and/or UAA](#identifying-bosh-uaa-issues)
+  - [Listing service instances](#listing-service-instances)
 
 <a id="what-are-the-responsibilities-of-the-operator"></a>
 ## What are the responsibilities of the Operator?
@@ -177,6 +178,8 @@ The operator must:
      Here the operator can configure the deployment to span multiple availability zones, by using the [BOSH multi-az feature](https://bosh.io/docs/azs.html). For example the [kafka multi az plan](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml#L74). In some cases, service authors will provide errands for the service release. You can add an instance group of type errand by setting the lifecycle field. For example the [smoke_tests for the kafka deployment](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml#L84).
   1. Provide values for plan properties.
      Plan properties are key-value pairs defined by the Service Author. Some examples include a boolean to enable disk persistence for Redis, and a list of strings representing RabbitMQ plugins to load. The Service Author should document whether these properties are mandatory or optional, whether the use of one property precludes the use of another, and whether certain properties affect recommended instance group to resource mappings.
+  1. Provide an (optional) update block for each plan.
+     You may require plan-specific configuration for BOSH's update instance operation. The ODB passes the plan-specific update block to the service adapter. Plan-specific update blocks should have the same structure as [the update block in a BOSH manifest](https://bosh.io/docs/manifest-v2.html#update). The Service Author can define a default update block to be used when a plan-specific update block is not provided, and whether the service adapter supports their configuration in the manifest.
 
 Add the snippet below to your broker job properties section:
 
@@ -223,6 +226,12 @@ service_catalog:
           azs: [<az>]
           persistent_disk: <disk> # optional
       properties: {} # valid property key-value pairs are defined by the Service Author
+      update: # optional
+        canaries: 1 # required
+        max_in_flight: 2  # required
+        canary_watch_time: 1000-30000 # required
+        update_watch_time: 1000-30000 # required
+        serial: true # optional
 ```
 
 <a id="broker-management"></a>
@@ -508,5 +517,37 @@ For example
 ```
 on-demand-service-broker: [on-demand-service-broker] 2016/05/18 15:56:40 Error authenticating (401): {"error":"unauthorized","error_description":"Bad credentials"}, please ensure that properties.<broker-job>.bosh.authentication.uaa is correct and try again.
 ```
+
+<a id="listing-service-instances"></a>
+### Listing service instances
+
+The ODB persists the list of ODB-deployed service instances and provides an endpoint to retrieve them. This endpoint requires basic authentication.
+
+During disaster recovery this endpoint could be used to assess the situation.
+
+**Request**
+
+`GET http://username:password@<REPLACE_WITH_BROKER_IP>:8080/mgmt/service_instances`
+
+**Response**
+
+200 OK
+
+Example JSON body:
+
+  ```json
+  [
+    {
+      "instance_id": "4d19462c-33cf-11e6-91cc-685b3585cc4e",
+      "plan_id": "60476620-33cf-11e6-a841-685b3585cc4e",
+      "bosh_deployment_name": "service-instance_4d19462c-33cf-11e6-91cc-685b3585cc4e"
+    },
+    {
+      "instance_id": "57014734-33cf-11e6-ba8d-685b3585cc4e",
+      "plan_id": "60476620-33cf-11e6-a841-685b3585cc4e",
+      "bosh_deployment_name": "service-instance_57014734-33cf-11e6-ba8d-685b3585cc4e"
+    }
+  ]
+  ```
 
 **[Back to Contents Page](/on-demand-service-broker/index.html)**
