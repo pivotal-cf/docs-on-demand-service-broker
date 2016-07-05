@@ -55,7 +55,10 @@ For an example manifest for a Kafka service, see [kafka-example-service-adapter-
 <a id="configure-bosh"></a>
 ## Setting up your BOSH director
 
-You must use BOSH director version v257 or greater to use the On-Demand Service Broker.
+Dependencies for the On-Demand Service Broker:
+
+- BOSH director v257 or later
+- Cloud Foundry v238 or later
 
 <a id="ssl-certificates"></a>
 ### SSL certificates
