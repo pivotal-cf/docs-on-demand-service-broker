@@ -347,7 +347,7 @@ If the `dashboard-url` command generates a url successfully, it should exit with
 
 ```
 {
-   "dashboard_url":"https://someurl.com"
+   "dashboard_url":"https://someurl.example.com"
 }
 ```
 
@@ -428,8 +428,8 @@ For example
 
 ```json
 {
-  "mysql_node": ["10.0.0.1", "10.0.0.2", "10.0.0.3"],
-  "management_box": ["10.0.0.4"]
+  "mysql_node": ["192.0.2.1", "192.0.2.2", "192.0.2.3"],
+  "management_box": ["192.0.2.4"]
 }
 ```
 
@@ -532,7 +532,7 @@ For example
 
 ```json
 {
-  "my-instance-group": ["10.0.0.1", "10.0.0.2", "10.0.0.3"]
+  "my-instance-group": ["192.0.2.1", "192.0.2.2", "192.0.2.3"]
 }
 ```
 

@@ -22,7 +22,7 @@ At the time of writing, **BOSH lite does not contain a sufficiently recent versi
 
     ```
     bosh target
-    Current target is https://192.168.50.4:25555 (Bosh Lite Director)
+    Current target is https://192.0.2.4:25555 (Bosh Lite Director)
     ```
 
 1. Upload the [BOSH lite stemcell](http://bosh.cloudfoundry.org/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent)
@@ -90,8 +90,8 @@ At the time of writing, **BOSH lite does not contain a sufficiently recent versi
     - name: kafka
       type: manual
       subnets:
-      - range: 10.244.1.0/24
-        gateway: 10.244.1.1
+      - range: 192.0.2.0/24
+        gateway: 192.0.2.1
         az: lite
         cloud_properties: {}
         az: z1
@@ -134,7 +134,7 @@ At the time of writing, **BOSH lite does not contain a sufficiently recent versi
 
     Director
       Name       Bosh Lite Director
-      URL        https://192.168.50.4:25555
+      URL        https://192.0.2.4:25555
       Version    1.3215.0 (00000000)
       User       admin
       UUID       17a45148-1d00-43bc-af28-9882e5a6535a
@@ -267,7 +267,7 @@ At the time of writing, **BOSH lite does not contain a sufficiently recent versi
     +--------------------------------------------------+---------+-----+-----------+------------+
     | Instance                                         | State   | AZ  | VM Type   | IPs        |
     +--------------------------------------------------+---------+-----+-----------+------------+
-    | broker/0 (59231277-d7b8-46bb-8bbb-8154b6bae347)* | running | n/a | container | 10.244.1.2 |
+    | broker/0 (59231277-d7b8-46bb-8bbb-8154b6bae347)* | running | n/a | container | 192.0.2.2 |
     +--------------------------------------------------+---------+-----+-----------+------------+
 
     (*) Bootstrap node
