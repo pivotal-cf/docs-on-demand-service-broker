@@ -95,7 +95,7 @@ The parameters, and expected output from these subcommands will be explained in 
 ### Handling errors
 If a subcommand fails, the adapter must return a non-zero exit status and an error, and may optionally print to stdout and/or stderr. The error message, along with the stdout and stderr streams will be printed in the broker log. For that reason, we recommend not printing the manifest or other sensitive details to stdout/stderr, as the ODB does no validation on this output.
 
-See an example implementation [here](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/bb5094efdd7c5e230ecade88d68eda131ef1a8a2/adapter/create_binding.go#L26-28).
+See an example implementation [here](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/bb5094efdd7c5e230ecade88d68eda131ef1a8a2/adapter/create_binding.go#L26-L28).
 
 <a id="inputs-for-manifest-generation"></a>
 ## Inputs for manifest generation
@@ -133,7 +133,7 @@ Service authors must document the usage of plan properties for the operator.
 
 For example:
 
-- the [Redis service adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_service_adapter.go) supports the `persistent` property which can be used to attach a disk to the vm.
+- the [Redis service adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_manifest_generator.go) supports the `persistence` property which can be used to attach a disk to the vm.
 - the [Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go) supports the `auto_create_topics` property to enable auto-creation of topics on the cluster.
 
 <a id="order-of-precedence"></a>
@@ -145,7 +145,7 @@ Note, we recommend service authors use the following order of precedence in thei
 1. previous manifest properties
 1. plan properties
 
-For example, see `auto_create_topics` in the [example Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go).
+For example, see `auto_create_topics` in the [example Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go#L68-L77).
 
 <a id="service-adapter-interface"></a>
 ## Service adapter interface
@@ -157,7 +157,7 @@ service-adapter [subcommand] [params ...]
 
 where the subcommand can be generate-manifest, create-binding, delete-binding
 
-Examples are provided for [Redis](https://github.com/pivotal-cf-experimental/redis-example-service-adapter) and [Kafka](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter). Note that these Golang examples us the SDK to help with cross-cutting concerns such as unmarshalling the JSON command line parameters. For example, see the use of `CommandLineHelper` in the [redis-adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/cmd/service-adapter/main.go#L14).
+Examples are provided for [Redis](https://github.com/pivotal-cf-experimental/redis-example-service-adapter) and [Kafka](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter). Note that these Golang examples us the SDK to help with cross-cutting concerns such as unmarshalling the JSON command line parameters. For example, see the use of `HandleCommandLineInvocation` in the [redis-adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/cmd/service-adapter/main.go#L15).
 <a id="sub-commands"></a>
 ## Subcommands
 <a id="generate-manifest"></a>
@@ -317,9 +317,9 @@ The previous manifest as YAML. The previous manifest is nil if this is a new dep
 
 It is up to the service author to perform any necessary service-specific migration logic here, if previous manifest is non-nil.
 
-Another use-case of the previous manifest is for the migration of deployment properties which need to stay the same across multiple deployments of a manifest. For example in the Redis example, we [generate a password](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_service_adapter.go#L322) when we do a new deployment. But when the previous deployment manifest is provided, we copy the password over from [the previous deployment](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_service_adapter.go#L320), as generating a new password for existing deployments will break existing bindings.
+Another use-case of the previous manifest is for the migration of deployment properties which need to stay the same across multiple deployments of a manifest. For example in the Redis example, we [generate a password](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_manifest_generator.go#L112-L123) when we do a new deployment. But when the previous deployment manifest is provided, we copy the password over from [the previous deployment](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_manifest_generator.go#L333-L338), as generating a new password for existing deployments will break existing bindings.
 
-For example see the [example Redis service adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_service_adapter.go#L318-L323).
+For example see the [example Redis service adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_manifest_generator.go#L333-L338).
 
 <a id="previous-plan"></a>
 #### previous-plan-JSON
@@ -542,7 +542,7 @@ This can be used to connect to the actual VMs if required, to delete a service s
 #### manifest-YAML
 The current manifest as YAML. This is used to extract information about the deployment that is necessary for the binding (e.g. credentials). The format of the manifest should match the [bosh v2 manifest](https://bosh.io/docs/manifest-v2.html)
 
-For example see the [kafka delete binding](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/cmd/service-adapter/main.go#L73)
+For example see the [kafka delete binding](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/delete_binding.go)
 
 <a id="delete-request-params-JSON"></a>
 ### request-params-JSON
@@ -565,7 +565,7 @@ Example service adapter releases:
 
 We have published a [SDK](https://github.com/pivotal-cf/on-demand-service-broker-sdk) for teams writing their service adapters in Golang. It encapsulates the command line invocation handling, parameter parsing and response serialization so the adapter authors can focus on the service specific bits in the adapter.
 
-For the generated BOSH manifest the SDK supports properties in two levels: manifest (global) and job level. Global properties are [deprecated in BOSH](http://bosh.io/docs/manifest-v2.html#properties), in favour of job level properties and job links. As an example, refer to the [Kafka example service adapter property generation](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/c4cc3682a1e7c492883b064f8faf3a8d10fd1849/adapter/generate_manifest.go#L72-101).
+For the generated BOSH manifest the SDK supports properties in two levels: manifest (global) and job level. Global properties are [deprecated in BOSH](http://bosh.io/docs/manifest-v2.html#properties), in favour of job level properties and job links. As an example, refer to the [Kafka example service adapter property generation](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go#L84-L112).
 
 To use the adapter, the author should create an struct, conforming to these interfaces:
 
