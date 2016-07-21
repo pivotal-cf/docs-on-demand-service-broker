@@ -9,6 +9,7 @@ owner: London Services Enablement
 - [Setting up your BOSH director](#configure-bosh)
   - [SSL certificates](#ssl-certificates)
   - [BOSH teams](#bosh-teams)
+  - [Cloud Controller](#cloud-controller)
 - [Upload Required Releases](#upload-required-releases)
 - [Write a Broker Manifest](#write-a-broker-manifest)
   - [Core Broker Configuration](#core-broker-configuration)
@@ -65,17 +66,18 @@ Dependencies for the On-Demand Service Broker:
 
 If the On-Demand Service Broker (ODB) is configured to communicate with BOSH on the director's private IP you can probably get away with insecure HTTP.
 
-If ODB is configured to communicate with BOSH on the director's public IP you will probably be using a self-signed certificate unless you have a domain for your BOSH director. ODB does not ignore TLS certificate validation errors (as expected). You have two options to configure certificate-based authentication between the BOSH director and the ODB:
+If ODB is configured to communicate with BOSH on the director's public IP you will probably be using a self-signed certificate unless you have a domain for your BOSH director. ODB does not ignore TLS certificate validation errors by default (as expected). You have two options to configure certificate-based authentication between the BOSH director and the ODB:
 
 1. Add the BOSH director's root certificate to ODB's trusted pool (**recommended**):
 
-```yaml
-bosh:
-  root_ca_cert: <root-ca-cert>
-```
+    ```yaml
+    bosh:
+      root_ca_cert: <root-ca-cert>
+    ```
 
-2.
-Use BOSH's `trusted_certs` feature to add a self-signed CA certificate to each VM BOSH deploys. For more details on how to generate and use self-signed certificates for BOSH director and UAA, see [Director SSL Certificate Configuration](https://bosh.io/docs/director-certs.html).
+1. Use BOSH's `trusted_certs` feature to add a self-signed CA certificate to each VM BOSH deploys. For more details on how to generate and use self-signed certificates for BOSH director and UAA, see [Director SSL Certificate Configuration](https://bosh.io/docs/director-certs.html).
+
+You can also configure a separate root CA certificate that is used when ODB communicates with the Cloud Foundry API (Cloud Controller). This is done in a similar way to above. Please see [manifest snippets below](#core-broker-configuration) for details.
 
 <a id="bosh-teams"></a>
 ### BOSH teams
@@ -94,6 +96,11 @@ Then when you [configure the broker's BOSH authentication](#core-broker-configur
 For more details on how to set up and use BOSH teams, see [Director teams and permissions configuration](https://bosh.io/docs/director-users-uaa-perms.html).
 
 For more details on securing how ODB uses BOSH, see [Security](#security).
+
+<aid="cloud-controller"></a>
+### Cloud Controller
+
+ODB used the Cloud Controller as a source of truth about service offerings, plans, and instances. To reach Cloud Controller, ODB needs to be configured with client credentials that can do this. As of Cloud Foundry v238, the UAA client must have authority `cloud_controller.admin`. Detailed broker configuration is covered [below](#core-broker-configuration).
 
 <a id="upload-required-releases"></a>
 ## Upload Required Releases
@@ -114,7 +121,7 @@ Your manifest should contain one non-errand instance group, that co-locates both
 * the `broker` job from on-demand-service-broker
 * your service adapter job from your service adapter release
 
-The instance group should have a persistent disk, and only one instance. The VM type can be quite small: a single CPU and 1 GB of memory should be sufficient in most cases. The persistent disk can also be small; the broker stores a few hundred bytes per service instance.
+The broker is stateless and does not need a persistent disk. The VM type can be quite small: a single CPU and 1 GB of memory should be sufficient in most cases.
 
 An example snippet is shown below:
 
@@ -127,37 +134,44 @@ instance_groups:
         release: on-demand-service-broker
         properties:
           # choose a port and basic auth credentials for the broker
-          port: <broker-port>
-          username: <broker-username>
-          password: <broker-password>
+          port: <broker port>
+          username: <broker username>
+          password: <broker password>
           disable_ssl_cert_verification: <true|false> # optional, defaults to false. This should NOT be used in production
-          cf_system_domain: <system-domain> # required only if you want to access the broker from outside the BOSH private network
+          cf_system_domain: <system domain> # required only if you want to access the broker from outside the BOSH private network
           cf_route: # required only if you want to access the broker from outside the BOSH private network
             subdomain: <subdomain>
             nats:
               host: <host>
               username: <username>
               password: <password>
+          cf:
+            url: <CF API URL>
+            root_ca_cert: <ca cert for cloud controller> # optional, see SSL certificates
+            authentication:
+              uaa:
+                url: <CF UAA URL>
+                client_id: <UAA client id with cloud_controller.admin authority>
+                client_secret: <UAA client secret>
           bosh:
-            url: <director-url>
-            root_ca_cert: <root-ca-cert> #optional, see SSL certificates
+            url: <director url>
+            root_ca_cert: <ca cert for bosh director and associated UAA> # optional, see SSL certificates
             authentication: # either basic or uaa, not both as shown
               basic:
-                username: <bosh-username>
-                password: <bosh-password>
+                username: <bosh username>
+                password: <bosh password>
               uaa:
-                url: <uaa-url> # often on the same host as the director, on a different port
-                client_id: <bosh-client-id>
-                client_secret: <bosh-client-secret>
+                url: <BOSH UAA URL> # often on the same host as the director, on a different port
+                client_id: <bosh client id>
+                client_secret: <bosh client secret>
           service_adapter:
-            path: <path-to-service-adapter-binary> # provided by the Service Author
+            path: <path to service adapter binary> # provided by the Service Author
           # There are more properties here, that will be discussed below
 
-      - name: <service-adapter-job-name>
-        release: <service-adapter-release>
+      - name: <service adapter job name>
+        release: <service adapter release>
 
-    vm_type: <vm-type>
-    persistent_disk_type: <persistent-disk-type>
+    vm_type: <vm type>
     stemcell: <stemcell>
     networks:
       - name: <network>

@@ -7,7 +7,7 @@ owner: London Services Enablement
 
 This guide describes how to create and manage an on-demand service broker using PCF Dev and BOSH lite, which are tools that allow you run BOSH and Cloud Foundry in VMs on your local development machine. For this tutorial we will be using the [kafka-service-adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter) and the a test [kafka service release](https://github.com/pivotal-cf-experimental/kafka-example-service-release).
 
-At the time of writing, **BOSH lite does not contain a sufficiently recent version of the BOSH director to run the On-Demand Service Broker**. You need to run director v257 or greater. At some point BOSH lite will be upgraded and these steps will be useful again.
+At the time of writing, **BOSH lite does not contain a sufficiently recent version of the BOSH director to run the On-Demand Service Broker**. Minimum versions of Cloud Foundry and BOSH are described in [the operator section](/on-demand-service-broker/operating.html#configure-bosh). At some point BOSH lite will be upgraded and these steps will be useful again.
 
 ## Prerequisites
 
