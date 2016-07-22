@@ -22,7 +22,7 @@ A Cloud Foundry service broker allows application developers to provision servic
 ## What is an on-demand service broker?
 An on-demand Cloud Foundry service broker is a service broker that provisions IAAS resources at service instance creation time, as opposed to pre-provisioning a fixed quantity of these resources at broker deployment time. The **On-demand Service Broker (ODB)** is a generic on-demand service broker for single-tenant (dedicated service process/cluster per Cloud Foundry service instance) service offerings where one service instance corresponds to one BOSH deployment.
 
-Service-specific functionality is plugged in by the service author via an executable called a **Service Adapter**. For more information about the responsibilities of Service Authors, please see [Creating the Service Author Deliverables](/on-demand-service-broker/creating.html).
+Service-specific functionality is plugged in by the service author via an executable called a **Service Adapter**. For more information about the responsibilities of Service Authors, please see [Creating the Service Author Deliverables](creating.html).
 
 The Pivotal approaches leverages native platform features, such as BOSH 2.0, OpsManager and Elastic Runtime. No additional or 3rd party components other than the service broker and the BOSH release for the service itself are required. This greatly simplifies the setup, everything is done through the single install process as per today, it simplifies support as there are less moving parts and there is less customisation required of the customer’s network around specific DNS rules and additional firewall ports over and above what they already require.
 
@@ -33,7 +33,7 @@ This approach does not impose any constraints on the tile author's ability to of
 <a id="what-is-a-service-adapter"></a>
 ## What is a service adapter?
 A service adapter is a binary which would be called out by the ODB, when it wants to do service-specific tasks.
-![responsibility-diagram](/on-demand-service-broker/img/responsibility-diagram.png)
+![responsibility-diagram](img/responsibility-diagram.png)
 The above diagram shows where responsibility lies for each aspect of the ODB workflow.
 
 You can see that the service author can now focus on building the BOSH release of their service and simply provide a service adapter binary that is responsible for managing the manifest generation and binding / unbinding. The ODB manages all interactions with Cloud Foundry and BOSH.
@@ -53,7 +53,7 @@ The operator will then configure a range of plans for the service in the ODB BOS
 
 <a id="prerequisites-for-deploying-brokers-that-use-odb"></a>
 ## Prerequisites for deploying brokers that use ODB
-Minimum versions of Cloud Foundry and BOSH are described in [the operator section](/on-demand-service-broker/operating.html#configure-bosh).
+Minimum versions of Cloud Foundry and BOSH are described in [the operator section](operating.html#configure-bosh).
 
 <a id="bosh-v2-features-we-use"></a>
 ### BOSH v2 Features we use
@@ -67,7 +67,7 @@ Minimum versions of Cloud Foundry and BOSH are described in [the operator sectio
 
 The follow steps are required to create and maintain an ODB:
 
-* [The Service Authors provide their deliverables](/on-demand-service-broker/creating.html)
-* [The Operators upload their releases and write a manifest](/on-demand-service-broker/operating.html)
+* [The Service Authors provide their deliverables](creating.html)
+* [The Operators upload their releases and write a manifest](operating.html)
 
-**[Back to Contents Page](/on-demand-service-broker/index.html)**
+**[Back to Contents Page](index.html)**

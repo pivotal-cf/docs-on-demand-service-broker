@@ -53,7 +53,7 @@ The following deliverables are required from the service authors:
 - Contains the Service Adapter CLI
 - Documentation for the operator to configure plan definitions for the Service Adapter
 
-For information about what is required of the Operator, see [Responsibilities of the Operator](/on-demand-service-broker/operating.html#responsibility-of-the-operator).
+For information about what is required of the Operator, see [Responsibilities of the Operator](operating.html#responsibility-of-the-operator).
 
 <a id="creating-a-service-release"></a>
 ## Creating a Service Release
@@ -607,4 +607,4 @@ One of the inputs for this function is the mapping of instance groups to jobs fo
 
 For more complete code examples please take a look at the [kafka adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter) or the [redis adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter)
 
-**[Back to Contents Page](/on-demand-service-broker/index.html)**
+**[Back to Contents Page](index.html)**

@@ -47,7 +47,7 @@ Used to provide fields relating to the BOSH director installation present.
 | Accessor                  |                                                                       Description                                                                        |
 |:--------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------:|
 | $director.deployment\_ip  |                                                                The director's IP address                                                                 |
-| $director.ca\_public\_key | The director's root ca certificate. Related: [how to configure SSL certificates for the ODB](/on-demand-service-broker/operating.html#ssl-certificates). |
+| $director.ca\_public\_key | The director's root ca certificate. Related: [how to configure SSL certificates for the ODB](operating.html#ssl-certificates). |
 
 For example
 

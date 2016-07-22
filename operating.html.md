@@ -46,7 +46,7 @@ The operator is responsible for the following tasks:
   - Service catalog and Plan composition
 - Broker Management
 
-For a list of deliverables provided by the Service Author, see [Required Deliverables](/on-demand-service-broker/creating.html#what-is-required-of-the-service-authors).
+For a list of deliverables provided by the Service Author, see [Required Deliverables](creating.html#what-is-required-of-the-service-authors).
 
 For an example manifest for a Redis service, see [redis-example-service-adapter-release](https://github.com/pivotal-cf-experimental/redis-example-service-adapter-release/blob/master/docs/example-manifest.yml).
 
@@ -569,4 +569,4 @@ Example JSON body:
   ]
   ```
 
-**[Back to Contents Page](/on-demand-service-broker/index.html)**
+**[Back to Contents Page](index.html)**

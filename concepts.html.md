@@ -19,36 +19,36 @@ The following page contains concepts relevant to the setting up and maintaining 
 ## ODB Workflows
 <a id="catalog"></a>
 ### Catalog
-![service-catalog-workflow](/on-demand-service-broker/img/service_catalog_workflow.mmd.png)
+![service-catalog-workflow](img/service_catalog_workflow.mmd.png)
 
 <a id="create-service-instance"></a>
 ### Create service instance
 Note that there are two ways this can fail: synchronously and asynchronously. When it fails synchronously, the Cloud Controller will subsequently delete the service according to its [orphan mitigation strategy](http://docs.cloudfoundry.org/services/api.html#orphans). In the case when it fails asynchronously (e.g. while bosh deploys the service instance), the Cloud Controller won't issue a delete request.
 
-![create-service-workflow](/on-demand-service-broker/img/create_service_workflow.mmd.png)
+![create-service-workflow](img/create_service_workflow.mmd.png)
 
 <a id="delete-service-instance"></a>
 ### Delete service instance
-In the delete service workflow the service adapter is not invoked ![delete-service-workflow](/on-demand-service-broker/img/delete_service_workflow.mmd.png)
+In the delete service workflow the service adapter is not invoked ![delete-service-workflow](img/delete_service_workflow.mmd.png)
 
 <a id="update-service-instance"></a>
 ### Update service instance
-![update-service-workflow](/on-demand-service-broker/img/update_service_workflow.mmd.png)
+![update-service-workflow](img/update_service_workflow.mmd.png)
 
 <a id="bind"></a>
 ### Bind
-![bind-service-workflow](/on-demand-service-broker/img/bind_service_workflow.mmd.png)
+![bind-service-workflow](img/bind_service_workflow.mmd.png)
 
 <a id="unbind"></a>
 ### Unbind
-![unbind-service-workflow](/on-demand-service-broker/img/unbind_service_workflow.mmd.png)
+![unbind-service-workflow](img/unbind_service_workflow.mmd.png)
 
 <a id="upgrade-all-instances"></a>
 ### Upgrade all instances
-ODB provides BOSH errand to upgrade all the instances managed by the broker. This can also be used in the scenario when a plan changes; this errand will update all instances that implement the plan with the new plan definition. ![upgrade-all-instances-workflow](/on-demand-service-broker/img/upgrade_all_instances_workflow.mmd.png)
+ODB provides BOSH errand to upgrade all the instances managed by the broker. This can also be used in the scenario when a plan changes; this errand will update all instances that implement the plan with the new plan definition. ![upgrade-all-instances-workflow](img/upgrade_all_instances_workflow.mmd.png)
 
 <a id="delete-all-instances"></a>
 ### Delete all instances
-ODB provides BOSH errand to delete all the instances managed by the broker. ![delete-all-instances-workflow](/on-demand-service-broker/img/delete_all_instances_workflow.mmd.png)
+ODB provides BOSH errand to delete all the instances managed by the broker. ![delete-all-instances-workflow](img/delete_all_instances_workflow.mmd.png)
 
-**[Back to Contents Page](/on-demand-service-broker/index.html)**
+**[Back to Contents Page](index.html)**
