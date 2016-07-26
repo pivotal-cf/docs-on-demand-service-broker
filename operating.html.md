@@ -138,16 +138,16 @@ instance_groups:
           username: <broker username>
           password: <broker password>
           disable_ssl_cert_verification: <true|false> # optional, defaults to false. This should NOT be used in production
-          cf_system_domain: <system domain> # required only if you want to access the broker from outside the BOSH private network
-          cf_route: # required only if you want to access the broker from outside the BOSH private network
-            subdomain: <subdomain>
-            nats:
-              host: <host>
-              username: <username>
-              password: <password>
           cf:
             url: <CF API URL>
             root_ca_cert: <ca cert for cloud controller> # optional, see SSL certificates
+            route_registration: # optional, required only if you want to access the broker from outside the BOSH private network
+              system_domain: <system domain>
+              subdomain: <subdomain>
+              nats:
+                host: <host>
+                username: <username>
+                password: <password>
             authentication:
               uaa:
                 url: <CF UAA URL>
