@@ -44,9 +44,9 @@ Follow the default build your own [Product tile documentation](https://docs.pivo
 #### director
 Used to provide fields relating to the BOSH director installation present.
 
-| Accessor                  |                                                                       Description                                                                        |
-|:--------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| $director.deployment\_ip  |                                                                The director's IP address                                                                 |
+| Accessor                  |                                                          Description                                                           |
+|:--------------------------|:------------------------------------------------------------------------------------------------------------------------------:|
+| $director.deployment\_ip  |                                                   The director's IP address                                                    |
 | $director.ca\_public\_key | The director's root ca certificate. Related: [how to configure SSL certificates for the ODB](operating.html#ssl-certificates). |
 
 For example
@@ -75,11 +75,12 @@ The service network has to be created manually. Create a subnet on AWS and then 
 For example
 
 ```yaml
-authentication:
-  uaa:
-    url: https://(( $director.deployment_ip )):8443
-    client_id: (( $self.uaa_client_name ))
-    client_secret: (( $self.uaa_client_secret ))
+bosh:
+  authentication:
+    uaa:
+      url: https://(( $director.deployment_ip )):8443
+      client_id: (( $self.uaa_client_name ))
+      client_secret: (( $self.uaa_client_secret ))
 ```
 
 For more accessors you can see the [ops-manager-example product](https://github.com/pivotal-cf-experimental/ops-manager-example)

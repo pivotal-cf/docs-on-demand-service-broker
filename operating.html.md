@@ -100,7 +100,12 @@ For more details on securing how ODB uses BOSH, see [Security](#security).
 <aid="cloud-controller"></a>
 ### Cloud Controller
 
-ODB used the Cloud Controller as a source of truth about service offerings, plans, and instances. To reach Cloud Controller, ODB needs to be configured with client credentials that can do this. As of Cloud Foundry v238, the UAA client must have authority `cloud_controller.admin`. Detailed broker configuration is covered [below](#core-broker-configuration).
+ODB used the Cloud Controller as a source of truth about service offerings, plans, and instances. To reach Cloud Controller, ODB needs to be configured with credentials. These can be either client or user credentials:
+
+* Client credentials: as of Cloud Foundry v238, the UAA client must have authority `cloud_controller.admin`.
+* User credentials: a Cloud Foundry admin user, i.e. a member of the `scim.read` and `cloud_controller.admin` groups as a minimum.
+
+Detailed broker configuration is covered [below](#core-broker-configuration).
 
 <a id="upload-required-releases"></a>
 ## Upload Required Releases
@@ -148,11 +153,14 @@ instance_groups:
                 host: <host>
                 username: <username>
                 password: <password>
-            authentication:
-              uaa:
-                url: <CF UAA URL>
+            authentication: # either client_credentials or user_credentials, not both as shown
+              url: <CF UAA URL>
+              client_credentials:
                 client_id: <UAA client id with cloud_controller.admin authority and client_credentials in the authorized_grant_type>
-                client_secret: <UAA client secret>
+                secret: <UAA client secret>
+              user_credentials:
+                username: <CF admin username in the cloud_controller.admin and scim.read groups>
+                password: <CF admin password>
           bosh:
             url: <director url>
             root_ca_cert: <ca cert for bosh director and associated UAA> # optional, see SSL certificates
