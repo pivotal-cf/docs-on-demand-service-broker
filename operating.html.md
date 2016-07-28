@@ -151,7 +151,7 @@ instance_groups:
             authentication:
               uaa:
                 url: <CF UAA URL>
-                client_id: <UAA client id with cloud_controller.admin authority>
+                client_id: <UAA client id with cloud_controller.admin authority and client_credentials in the authorized_grant_type>
                 client_secret: <UAA client secret>
           bosh:
             url: <director url>
