@@ -280,7 +280,8 @@ Add the following instance group to your manifest:
     - name: register-broker
       release: <odb-release-name>
       properties:
-        broker_name: <broker-name>      
+        broker_name: <broker-name>
+        disable_ssl_cert_verification: <true|false> # defaults to false      
         cf:
           api_url: <cf-api-url>
           admin_username: <cf-api-admin-username>
@@ -307,7 +308,8 @@ Add the following instance group to your manifest:
     - name: deregister-broker
       release: <odb-release-name>
       properties:
-        broker_name: <broker-name>      
+        broker_name: <broker-name>
+        disable_ssl_cert_verification: <true|false> # defaults to false      
         cf:
           api_url: <cf-api-url>
           admin_username: <cf-api-admin-username>
@@ -377,6 +379,7 @@ Add the following instance group to your manifest:
       release: *broker-release
       properties:
         timeout_minutes: <time to wait for all instances to be deleted> # defaults to 60
+        disable_ssl_cert_verification: <true|false> # defaults to false
         cf:
           api_url: <cf-api-url>
           admin_username: <cf-api-admin-username>
