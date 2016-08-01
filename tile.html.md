@@ -37,11 +37,13 @@ Notes:
 
 <a id="building"></a>
 ## Building a tile
-Follow the default build your own [Product tile documentation](https://docs.pivotal.io/partners/deploying-with-ops-man-tile.html#build-your-own), enhance the handcraft.yml with the accessors listed below. To access the `$self` accessors, the `service-broker` flag has to be set on the handcraft.
+Follow the default build your own [Product tile documentation](https://docs.pivotal.io/partners/deploying-with-ops-man-tile.html#build-your-own), enhance the `handcraft.yml` with the accessors listed below. To access the `$self` accessors, the `service-broker` flag must be `true` in the handcraft.
 
 <a id="accessors"></a>
 ## Non exhaustive Accessors Reference
+
 #### director
+
 Used to provide fields relating to the BOSH director installation present.
 
 | Accessor                  |                                                          Description                                                           |
@@ -82,5 +84,32 @@ bosh:
       client_id: (( $self.uaa_client_name ))
       client_secret: (( $self.uaa_client_secret ))
 ```
+
+#### cf
+
+Used to provide fields from the Elastic Runtime Tile (i.e. Cloud Foundry) present in the Ops Manager installation.
+
+| Accessor                                        |                                    Description                                     |
+|:------------------------------------------------|:----------------------------------------------------------------------------------:|
+| ..cf.ha\_proxy.skip\_cert\_verify.value         |      Flag to skip SSL certificate verification for connections to the CF API       |
+| ..cf.cloud\_controller.apps\_domain.value       |              The application domain configured in the CF installation              |
+| ..cf.cloud\_controller.system\_domain.value     |                The system domain configured in the CF installation                 |
+| ..cf.uaa.system\_services\_credentials.identity | Username of a CF user in the cloud\_controller.admin group, to be used by services |
+| ..cf.uaa.system\_services\_credentials.password | Password of a CF user in the cloud\_controller.admin group, to be used by services |
+
+For example
+
+```yaml
+disable_ssl_cert_verification: (( ..cf.ha_proxy.skip_cert_verify.value ))
+cf:
+  url: https://api.(( ..cf.cloud_controller.system_domain.value ))
+  authentication:
+    url: https://uaa.(( ..cf.cloud_controller.system_domain.value ))
+    user_credentials:
+      username: (( ..cf.uaa.system_services_credentials.identity ))
+      password: (( ..cf.uaa.system_services_credentials.password ))
+```
+
+#### Reference
 
 For more accessors you can see the [ops-manager-example product](https://github.com/pivotal-cf-experimental/ops-manager-example)
