@@ -281,7 +281,7 @@ Add the following instance group to your manifest:
       release: <odb-release-name>
       properties:
         broker_name: <broker-name>
-        disable_ssl_cert_verification: <true|false> # defaults to false      
+        disable_ssl_cert_verification: <true|false> # defaults to false
         cf:
           api_url: <cf-api-url>
           admin_username: <cf-api-admin-username>
@@ -309,7 +309,7 @@ Add the following instance group to your manifest:
       release: <odb-release-name>
       properties:
         broker_name: <broker-name>
-        disable_ssl_cert_verification: <true|false> # defaults to false      
+        disable_ssl_cert_verification: <true|false> # defaults to false
         cf:
           api_url: <cf-api-url>
           admin_username: <cf-api-admin-username>
