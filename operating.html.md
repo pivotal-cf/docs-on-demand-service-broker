@@ -14,6 +14,7 @@ owner: London Services Enablement
 - [Write a Broker Manifest](#write-a-broker-manifest)
   - [Core Broker Configuration](#core-broker-configuration)
   - [Service catalog and Plan composition](#service-catalog-and-plan-composition)
+  - [Route registration](#route-registration)
 - [Broker Management](#broker-management)
   - [register-broker](#register-broker)
   - [deregister-broker](#deregister-broker)
@@ -146,13 +147,6 @@ instance_groups:
           cf:
             url: <CF API URL>
             root_ca_cert: <ca cert for cloud controller> # optional, see SSL certificates
-            route_registration: # optional, required only if you want to access the broker from outside the BOSH private network
-              system_domain: <system domain>
-              subdomain: <subdomain>
-              nats:
-                host: <host>
-                username: <username>
-                password: <password>
             authentication: # either client_credentials or user_credentials, not both as shown
               url: <CF UAA URL>
               client_credentials:
@@ -261,6 +255,18 @@ service_catalog:
         serial: true # optional
 ```
 
+<a id="route-registration"></a>
+## Route registration
+
+You can optionally colocate the `route_registrar` job from the [routing release](http://bosh.io/releases/github.com/cloudfoundry-incubator/cf-routing-release?all=1) with the on-demand-service-broker, in order to:
+
+1. load balance multiple instances of ODB using Cloud Foundry's router
+1. access ODB from the public internet
+
+To do this, upload the release to your BOSH director and [configure the job properties](http://bosh.io/jobs/route_registrar?source=github.com/cloudfoundry-incubator/cf-routing-release&version=0.136.0), replacing the version in that docs URL query string as appropriate.
+
+Remember to set the `broker_uri` property in the [register-broker errand](#register-broker) if you configure a route.
+
 <a id="broker-management"></a>
 ## Broker Management
 
@@ -269,6 +275,8 @@ Management tasks on the broker are performed with BOSH errands.
 <a id="register-broker"></a>
 ### register-broker
 This errand registers the broker with Cloud Foundry and enables access for all orgs and spaces to the defined plans of the service. The errand should be run whenever the broker is re-deployed with new catalog metadata to update the Cloud Foundry catalog.
+
+Please note that if the `broker_uri` property is set, then you should also register a route for your broker with Cloud Foundry. See [Route registration](#route-registration) section for more details.
 
 Add the following instance group to your manifest:
 
@@ -281,6 +289,7 @@ Add the following instance group to your manifest:
       release: <odb-release-name>
       properties:
         broker_name: <broker-name>
+        broker_uri: <broker URI, only required when a route has been registered> # optional
         disable_ssl_cert_verification: <true|false> # defaults to false
         cf:
           api_url: <cf-api-url>
