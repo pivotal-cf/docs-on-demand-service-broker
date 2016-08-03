@@ -172,7 +172,14 @@ The generate-manifest subcommand takes in 4 arguments and returns a BOSH deploym
 <a id="generate-manifest-output"></a>
 #### Output
 
-If the `generate-manifest` command is successful, it should return an exit code of 0 and print the BOSH manifest YAML to stdout. If the `generate-manifest` command isn't implemented it should exit with code 10. If the command failed, it should return any non-zero exit code. Stdout and stderr from the command will be logged by the ODB.
+The following table describes the supported exit codes and output for the `generate-manifest` subcommand:
+
+#### Supported exit codes for generate-manifest
+| exit code     | Description     | Output                                                                                                                           |
+|:--------------|:----------------|:---------------------------------------------------------------------------------------------------------------------------------|
+| 0             | success         | Stdout: BOSH manifest YAML                                                                                                       |
+| 10            | not implemented |                                                                                                                                  |
+| anything else | failure         | Stdout: optional error message for CF CLI users<br/> Stderr: error message for operator<br/> ODB will log both stdout and stderr |
 
 #### Parameters
 
