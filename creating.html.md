@@ -93,9 +93,13 @@ The parameters, and expected output from these subcommands will be explained in 
 
 <a id="handling-errors"></a>
 ### Handling errors
-If a subcommand fails, the adapter must return a non-zero exit status and an error, and may optionally print to stdout and/or stderr. The error message, along with the stdout and stderr streams will be printed in the broker log. For that reason, we recommend not printing the manifest or other sensitive details to stdout/stderr, as the ODB does no validation on this output.
+If a subcommand fails, the adapter must return a non-zero exit status, and may optionally print to stdout and/or stderr.
 
-See an example implementation [here](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/bb5094efdd7c5e230ecade88d68eda131ef1a8a2/adapter/create_binding.go#L26-L28).
+Anything printed to stdout will be returned to the CF CLI user.
+
+Both the stdout and stderr streams will be printed in the broker log for the operator. For that reason, we recommend not printing the manifest or other sensitive details to stdout/stderr, as the ODB does no validation on this output.
+
+See an example implementation [here](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/07c38cff05d1a772f299fbac9ace393a77cbaa35/adapter/create_binding.go#L27-L29).
 
 <a id="inputs-for-manifest-generation"></a>
 ## Inputs for manifest generation
@@ -411,13 +415,13 @@ Example success response to `create-binding`:
 <a id="create-binding-exit-codes"></a>
 
 #### Supported exit codes for binding
-| exit code     |                    Description                    |
-|:--------------|:-------------------------------------------------:|
-| 0             |                      success                      |
-| 10            |            subcommand not implemented             |
-| 42            | app_guid not provided in the binding request body |
-| 49            |              binding already exists               |
-| anything else |                      failure                      |
+| exit code     | Description                                       | Output                                                                                                                           |
+|:--------------|:--------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------|
+| 0             | success                                           | Stdout: binding credentials JSON                                                                                                 |
+| 10            | subcommand not implemented                        |                                                                                                                                  |
+| 42            | app_guid not provided in the binding request body | Stdout: optional error message for CF CLI users<br/> Stderr: error message for operator<br/> ODB will log both stdout and stderr |
+| 49            | binding already exists                            | Stdout: optional error message for CF CLI users<br/> Stderr: error message for operator<br/> ODB will log both stdout and stderr |
+| anything else | failure                                           | Stdout: optional error message for CF CLI users<br/> Stderr: error message for operator<br/> ODB will log both stdout and stderr |
 
 #### Parameters
 
