@@ -193,16 +193,16 @@ The following table describes the supported exit codes and output for the `gener
 #### service-deployment-JSON
 Provides information regarding the bosh director
 
-| field                     |       Type        |                                                            Description |
-|:--------------------------|:-----------------:|-----------------------------------------------------------------------:|
-| deployment_name           |      string       |                                 name of the deployment on the director |
+| field                     | Type              | Description                                                            |
+|:--------------------------|:------------------|:-----------------------------------------------------------------------|
+| deployment_name           | string            | name of the deployment on the director                                 |
 | releases                  | array of releases | list of service releases configured for the deployment by the operator |
-| release.name              |      string       |                                    name of the release on the director |
-| release.version           |      string       |                                                 version of the release |
-| release.jobs              | array of strings  |                                 list of jobs required from the release |
-| stemcell                  |        map        |                                 the stemcell available on the director |
-| stemcell.stemcell_os      |      string       |                                  stemcell OS available on the director |
-| stemcell.stemcell_version |      string       |                             stemcell version available on the director |
+| release.name              | string            | name of the release on the director                                    |
+| release.version           | string            | version of the release                                                 |
+| release.jobs              | array of strings  | list of jobs required from the release                                 |
+| stemcell                  | map               | the stemcell available on the director                                 |
+| stemcell.stemcell_os      | string            | stemcell OS available on the director                                  |
+| stemcell.stemcell_version | string            | stemcell version available on the director                             |
 
 For example
 
@@ -237,23 +237,23 @@ Plan for which the manifest is supposed to be generated
 <a id="plan-schema"></a>
 ##### plan-JSON schema
 
-| field                                 |           Type           |                                                                                                                            Description |
-|:--------------------------------------|:------------------------:|---------------------------------------------------------------------------------------------------------------------------------------:|
-| instance_groups                       | array of instance groups |                                                                                                instance groups configured for the plan |
-| instance_group.name                   |          string          |                                                                                                             name of the instance group |
-| instance_group.vm\_type               |          string          |                                         the vm_type configured for the instance group, matches one in the cloud config on the director |
-| instance_group.persistent\_disk\_type |          string          |                Optional, the persistent\_disk\_type configured for the instance group, matches one in the cloud config on the director |
-| instance_group.networks               |     array of strings     |                                                                                   the networks the instance group is supposed to be in |
-| instance_group.instances              |           int            |                                                                                             number of instances for the instance group |
-| instance_group.lifecycle              |          string          | Optional, specifies the kind of workload the instance group represents. Valid values are `service` and `errand`; defaults to `service` |
-| instance_group.azs                    |     array of strings     |                                                         a list of availability zones that the instance groups should be striped across |
-| properties                            |           map            |                                                       properties which the operator has configured for deployments of the current plan |
-| update                                |           map            |                                                     update block which the operator has configured for deployments of the current plan |
-| update.canaries                       |           int            |                                                                                               plan-specific number of canary instances |
-| update.max_in_flight                  |           int            |                                                             plan-specific maximum number of non-canary instances to update in parallel |
-| update.canary_watch_time              |          string          |              plan-specific time in milliseconds that the BOSH Director sleeps before checking whether the canary instances are healthy |
-| update.update_watch_time              |          string          |          plan-specific time in milliseconds that the BOSH Director sleeps before checking whether the non-canary instances are healthy |
-| update.serial                         |         boolean          |             Optional, plan-specific flag to deploy instance groups sequentially (`true`), or in parallel (`false`); defaults to `true` |
+| field                                 | Type                     | Description                                                                                                                            |
+|:--------------------------------------|:-------------------------|:---------------------------------------------------------------------------------------------------------------------------------------|
+| instance_groups                       | array of instance groups | instance groups configured for the plan                                                                                                |
+| instance_group.name                   | string                   | name of the instance group                                                                                                             |
+| instance_group.vm\_type               | string                   | the vm_type configured for the instance group, matches one in the cloud config on the director                                         |
+| instance_group.persistent\_disk\_type | string                   | Optional, the persistent\_disk\_type configured for the instance group, matches one in the cloud config on the director                |
+| instance_group.networks               | array of strings         | the networks the instance group is supposed to be in                                                                                   |
+| instance_group.instances              | int                      | number of instances for the instance group                                                                                             |
+| instance_group.lifecycle              | string                   | Optional, specifies the kind of workload the instance group represents. Valid values are `service` and `errand`; defaults to `service` |
+| instance_group.azs                    | array of strings         | a list of availability zones that the instance groups should be striped across                                                         |
+| properties                            | map                      | properties which the operator has configured for deployments of the current plan                                                       |
+| update                                | map                      | update block which the operator has configured for deployments of the current plan                                                     |
+| update.canaries                       | int                      | plan-specific number of canary instances                                                                                               |
+| update.max_in_flight                  | int                      | plan-specific maximum number of non-canary instances to update in parallel                                                             |
+| update.canary_watch_time              | string                   | plan-specific time in milliseconds that the BOSH Director sleeps before checking whether the canary instances are healthy              |
+| update.update_watch_time              | string                   | plan-specific time in milliseconds that the BOSH Director sleeps before checking whether the non-canary instances are healthy          |
+| update.serial                         | boolean                  | Optional, plan-specific flag to deploy instance groups sequentially (`true`), or in parallel (`false`); defaults to `true`             |
 
 For example
 
@@ -345,15 +345,15 @@ The previous plan as JSON. The previous plan is nil if this is a new deployment.
 service-adapter dashboard-url [instance-ID] [plan-JSON] [manifest-YAML]
 ```
 
-The generate-manifest subcommand takes in 3 arguments and returns a JSON with the `dashboard_url`. The dashboard url is optional. If no dashboard url is relevant to the service, the subcommand should exit with code 10. Provisioning will be successful without the dashboard url.
+The `dashboard-url` subcommand takes in 3 arguments and returns a JSON with the `dashboard_url`. The dashboard URL is optional. If no dashboard URL is relevant to the service, the subcommand should exit with code 10. Provisioning will be successful without the dashboard URL.
 
 <a id="dashboard-url-output"></a>
 #### Output
-If the `dashboard-url` command generates a url successfully, it should exit with 0 and return the generated manifest in the following structure:
+If the `dashboard-url` command generates a url successfully, it should exit with 0 and return a dashboard URL JSON with the following structure:
 
 
-| field         |  Type  |                           Description |
-|:--------------|:------:|--------------------------------------:|
+| field         | Type   | Description                           |
+|:--------------|:-------|:--------------------------------------|
 | dashboard_url | string | dashboard url returned to the cf user |
 
 ```
@@ -362,13 +362,12 @@ If the `dashboard-url` command generates a url successfully, it should exit with
 }
 ```
 
-#### Supported exit codes for dashboard_url
-| exit code     |        Description         |
-|:--------------|:--------------------------:|
-| 0             |          success           |
-| 10            | subcommand not implemented |
-| anything else |          failure           |
-
+#### Supported exit codes for dashboard-url
+| exit code     | Description     | Output                                                                                                                           |
+|:--------------|:----------------|:---------------------------------------------------------------------------------------------------------------------------------|
+| 0             | success         | Stdout: dashboard URL JSON                                                                                                       |
+| 10            | not implemented |                                                                                                                                  |
+| anything else | failure         | Stdout: optional error message for CF CLI users<br/> Stderr: error message for operator<br/> ODB will log both stdout and stderr |
 
 <a id="dashboard-url-instance-id"></a>
 #### instance-ID
@@ -587,7 +586,13 @@ For the generated BOSH manifest the SDK supports properties in two levels: manif
 
 ### Usage
 
-In the main function for the service adapter, the author calls the `HandleCommandLineInvocation` function:
+Get the SDK:
+
+```sh
+go get github.com/pivotal-cf/on-demand-service-broker-sdk
+```
+
+In the main function for the service adapter, call the `HandleCommandLineInvocation` function:
 
 ```go
 package main
