@@ -7,7 +7,7 @@ owner: London Services Enablement
 
 The following page contains concepts relevant to the setting up and maintaining of a service instance. The diagrams allow you to see which tasks are undertaken by the ODB and which require interaction with the Service Adapter.
 
-- [Register Service Broker](#catalog)
+- [Register service broker](#catalog)
 - [Create service instance](#create-service-instance)
 - [Delete service instance](#delete-service-instance)
 - [Update service instance](#update-service-instance)
