@@ -15,6 +15,7 @@ owner: London Services Enablement
   - [Core Broker Configuration](#core-broker-configuration)
   - [Service catalog and Plan composition](#service-catalog-and-plan-composition)
   - [Route registration](#route-registration)
+  - [Broker metrics](#broker-metrics)
 - [Broker Management](#broker-management)
   - [register-broker](#register-broker)
   - [deregister-broker](#deregister-broker)
@@ -31,6 +32,7 @@ owner: London Services Enablement
   - [PCF IPsec Add-On](#ipsec)
 - [Troubleshooting](#troubleshooting)
   - [Logs](#logs)
+  - [Metrics](#metrics)
   - [Identifying deployments in BOSH](#identifying-deployments)
   - [Identifying BOSH tasks](#identifying-tasks)
   - [Identifying issues with connecting to BOSH and/or UAA](#identifying-bosh-uaa-issues)
@@ -267,6 +269,43 @@ To do this, upload the release to your BOSH director and [configure the job prop
 
 Remember to set the `broker_uri` property in the [register-broker errand](#register-broker) if you configure a route.
 
+<a id="broker-metrics"></a>
+## Broker metrics
+
+The ODB bosh release contains a metrics job, that can be used to emit metrics when colocated with [service metrics](https://github.com/pivotal-cf-experimental/service-metrics-release). You must include the loggregator release in order to do this.
+
+Add the following jobs to the broker instance group:
+
+```yaml
+- name: service-metrics
+  release: service-metrics
+  properties:
+    service_metrics:
+      execution_interval_seconds: <interval between successive metrics collections>
+      origin: <origin tag for metrics>
+      metrics_command: /var/vcap/jobs/odb-metrics/bin/gather-metrics.sh # hardcode this
+      metrics_command_args: [] # hardcode this
+      monit_dependencies: [broker] # hardcode this
+- name: metron_agent
+  release: loggregator
+  properties:
+    metron_agent:
+      deployment: <deployment tag for metrics>
+    metron_endpoint:
+      shared_secret: <metron secret>
+    loggregator:
+      etcd:
+        machines: [<CF etcd IPs>]
+    loggregator_endpoint:
+      shared_secret: <loggregator secret>
+- name: odb-metrics
+  release: <ODB release>
+```
+
+We have tested this example configuration with loggregator v58 and service-metrics v1.4.3.
+
+Please see the [service metrics docs](http://docs.pivotal.io/service-metrics) for more details on service metrics.
+
 <a id="broker-management"></a>
 ## Broker Management
 
@@ -487,6 +526,18 @@ The broker log contains error messages and non-zero exit codes returned by the s
 The log file is located at `/var/vcap/sys/log/broker/broker.log`. In syslog, logging is written with the tag `on-demand-service-broker`, under the facility `user`, with priority `info`.
 
 If you want to forward syslog to a syslog aggregator, we recommend co-locating [syslog release](https://github.com/cloudfoundry/syslog-release) with the broker.
+
+<a id="metrics"></a>
+### Metrics
+
+If you have [configured service metrics](#broker-metrics), then metrics should be visible from loggregator. You can consume these by using the [CF CLI firehose plugin](https://github.com/cloudfoundry/firehose-plugin).
+
+For each plan, the metrics will report how many instances there are of that plan and if a quota is set how much of that quota is remaining. The metrics are in the format shown below.
+
+```
+origin:"<broker deployment name>" eventType:ValueMetric timestamp:<timestamp> deployment:"<broker deployment name>" job:"broker" index:"<bosh job index>" ip:"<IP>" valueMetric:<name:"/on-demand-broker/<service offering name>/<plan name>/total_instances" value:<instance count> unit:"count" >
+origin:"<broker deployment name>" eventType:ValueMetric timestamp:<timestamp> deployment:"<broker deployment name>" job:"broker" index:"<bosh job index>" ip:"<IP>" valueMetric:<name:"/on-demand-broker/<service offering name>/<plan name>/quota_remaining" value:<quota remaining> unit:"count" >
+```
 
 <a id="identifying-deployments"></a>
 ### Identifying deployments in BOSH
