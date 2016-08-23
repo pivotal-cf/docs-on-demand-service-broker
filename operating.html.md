@@ -169,7 +169,7 @@ instance_groups:
                 client_id: <bosh client id>
                 client_secret: <bosh client secret>
           service_adapter:
-            path: <path to service adapter binary> # provided by the Service Author
+            path: <path to service adapter binary> # optional, provided by the Service Author. Defaults to /var/vcap/packages/odb-service-adapter/bin/service-adapter
           # There are more properties here, that will be discussed below
 
       - name: <service adapter job name>
