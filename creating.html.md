@@ -545,8 +545,8 @@ The field `parameters` contains arbitrary key-value pairs which were passed by t
 The adapter should be packaged as a BOSH release, which should be co-located with the ODB release in a BOSH manifest by the operator. This is only done in order to place the adapter executable on the same VM as the ODB server, therefore the adapter BOSH job's `monit` file should probably have no processes defined.
 
 Example service adapter releases:
-- <a href="https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release" class="subnav">kafka</a>
-- <a href="https://github.com/pivotal-cf-experimental/redis-example-service-adapter-release" class="subnav">redis</a>
+- <a href="https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release">kafka</a>
+- <a href="https://github.com/pivotal-cf-experimental/redis-example-service-adapter-release">redis</a>
 
 <a id="sdk"></a>
 ## Golang SDK
@@ -622,6 +622,6 @@ serviceadapter.NewBindingAlreadyExistsError()
 serviceadapter.NewAppGuidNotProvidedError()
 ```
 
-For more complete code examples please take a look at the [kafka adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter) or the [redis adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter)
+For more complete code examples please take a look at the [kafka adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter) or the [redis adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter).
 
 **[Back to Contents Page](index.html)**
