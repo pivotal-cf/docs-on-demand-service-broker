@@ -4,7 +4,7 @@ owner: London Services Enablement
 ---
 
 ## Contents
-- **[Overview](overview.html)**
+- **<a href="overview.html" class="subnav">Overview</a>**
   - [What is a Cloud Foundry service broker?](overview.html#what-is-a-cloud-foundry-service-broker)
   - [What is an on-demand service broker?](overview.html#what-is-an-on-demand-service-broker)
   - [What is a service adapter?](overview.html#what-is-a-service-adapter)
@@ -13,8 +13,8 @@ owner: London Services Enablement
   - [Prerequisites for deploying brokers that use ODB](overview.html#prerequisites-for-deploying-brokers-that-use-odb)
      - [BOSH v2 Features we use](overview.html#bosh-v2-features-we-use)
   - [Steps required to use on-demand service broker](overview.html#steps-required-to-use-on-demand-service-broker)
-- **[Setting up a local environment](getting-started.html)**
-- **[Creating a service adapter](creating.html)**
+- **<a href="getting-started.html" class="subnav">Setting up a local environment</a>**
+- **<a href="creating.html" class="subnav">Creating a service adapter</a>**
   - [What is required of the Service Authors?](creating.html#what-is-required-of-the-service-authors)
   - [Creating a Service Release](creating.html#creating-a-service-release)
   - [Creating a Service Adapter](creating.html#creating-a-service-adapter)
@@ -30,7 +30,7 @@ owner: London Services Enablement
       - [delete-binding](creating.html#delete-binding)
   - [Packaging](creating.html#packaging)
   - [Golang SDK](creating.html#sdk)
-- **[Operating the On-demand Service Broker](operating.html)**
+- **<a href="operating.html" class="subnav">Operating the On-demand Service Broker</a>**
   - [What are the responsibilities of the Operator?](operating.html#what-are-the-responsibilities-of-the-operator)
   - [Upload Required Releases](operating.html#upload-required-releases)
   - [Write a Broker Manifest](operating.html#write-a-broker-manifest)
@@ -46,12 +46,12 @@ owner: London Services Enablement
       - [BOSH UAA permissions](operating.html#bosh-uaa-permissions)
       - [PCF IPsec Add-On](operating.html#ipsec)
   - [Troubleshooting](operating.html#troubleshooting)
-- **[Creating a PCF OpsMan Tile](tile.html)**
+- **<a href="tile.html" class="subnav">Creating a PCF OpsMan Tile</a>**
   - [Requirements](tile.html#requirements)
   - [Deploying OpsMan to AWS](tile.html#deploying)
   - [Building a tile](tile.html#building)
   - [Non exhaustive Accessors Reference](tile.html#accessors)
-- **[On-demand Service Broker Concepts/Reference](concepts.html)**
+- **<a href="concepts.html" class="subnav">On-demand Service Broker Concepts/Reference</a>**
   - [Catalog](concepts.html#catalog)
   - [Create service instance](concepts.html#create-service-instance)
   - [Delete service instance](concepts.html#delete-service-instance)

@@ -5,38 +5,13 @@ owner: London Services Enablement
 
 # Deploying an On-demand Service Broker
 
-- [What are the responsibilities of the Operator?](#what-are-the-responsibilities-of-the-operator)
-- [Setting up your BOSH director](#configure-bosh)
-  - [SSL certificates](#ssl-certificates)
-  - [BOSH teams](#bosh-teams)
-  - [Cloud Controller](#cloud-controller)
-- [Upload Required Releases](#upload-required-releases)
-- [Write a Broker Manifest](#write-a-broker-manifest)
-  - [Core Broker Configuration](#core-broker-configuration)
-  - [Service catalog and Plan composition](#service-catalog-and-plan-composition)
-  - [Route registration](#route-registration)
-  - [Broker metrics](#broker-metrics)
-- [Broker Management](#broker-management)
-  - [register-broker](#register-broker)
-  - [deregister-broker](#deregister-broker)
-  - [Administering service instances](#administering-instances)
-  - [Upgrading the broker](#upgrading-the-broker)
-  - [Upgrading existing service instance](#upgrading-existing-service-instances)
-  - [Deleting all service instances](#deleting-all-service-instances)
-  - [Updating service plans](#updating-service-plans)
-  - [Disabling service plans](#disabling-service-plans)
-  - [Removing service plans](#removing-service-plans)
-- [Security](#security)
-  - [BOSH API Endpoints](#bosh-api-endpoints)
-  - [BOSH UAA permissions](#bosh-uaa-permissions)
-  - [PCF IPsec Add-On](#ipsec)
-- [Troubleshooting](#troubleshooting)
-  - [Logs](#logs)
-  - [Metrics](#metrics)
-  - [Identifying deployments in BOSH](#identifying-deployments)
-  - [Identifying BOSH tasks](#identifying-tasks)
-  - [Identifying issues with connecting to BOSH and/or UAA](#identifying-bosh-uaa-issues)
-  - [Listing service instances](#listing-service-instances)
+- <a href="#what-are-the-responsibilities-of-the-operator" class="subnav">What are the responsibilities of the Operator?</a>
+- <a href="#configure-bosh" class="subnav">Setting up your BOSH director</a>
+- <a href="#upload-required-releases" class="subnav">Upload Required Releases</a>
+- <a href="#write-a-broker-manifest" class="subnav">Write a Broker Manifest</a>
+- <a href="#broker-management" class="subnav">Broker Management</a>
+- <a href="#security" class="subnav">Security</a>
+- <a href="#troubleshooting" class="subnav">Troubleshooting</a>
 
 <a id="what-are-the-responsibilities-of-the-operator"></a>
 ## What are the responsibilities of the Operator?

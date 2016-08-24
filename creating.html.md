@@ -5,43 +5,14 @@ owner: London Services Enablement
 
 # Creating the Service Author Deliverables
 
-- [What is required of the Service Authors?](#what-is-required-of-the-service-authors)
-- [Creating a Service Release](#creating-a-service-release)
-- [Creating a Service Adapter](#creating-a-service-adapter)
-  - [Handling errors](#handling-errors)
-- [Inputs for manifest generation](#inputs-for-manifest-generation)
-  - [Arbitrary parameters](#arbitrary-parameters)
-  - [Previous manifest properties](#previous-manifest-properties)
-  - [Service plan properties](#service-plan-properties)
-  - [Order of precedence](#order-of-precedence)
-- [Service adapter interface](#service-adapter-interface)
-- [Subcommands](#sub-commands)
-  - [generate-manifest](#generate-manifest)
-     - [Output](#generate-manifest-output)
-     - [service-deployment-JSON](#service-deployment)
-     - [plan-JSON](#plan)
-     - [request-params-JSON](#generate-request-params-JSON)
-     - [previous-manifest-YAML](#previous-manifest)
-     - [previous-plan-JSON](#previous-plan)
-  - [dashboard-url](#dashboard-url)
-      - [Output](#dashboard-url-output)
-      - [instance-ID](#dashboard-url-instance-id)    
-      - [plan-JSON](#dashboard-url-plan)    
-      - [manifest-YAML](#dashboard-url-manifest)    
-  - [create-binding](#create-binding)
-     - [Output](#create-binding-output)
-     - [binding-ID](#create-binding-id)
-     - [bosh-VMs-JSON](#create-bosh-vms-json)
-     - [manifest-YAML](#create-binding-manifest)
-     - [request-params-JSON](#create-request-params-JSON)
-  - [delete-binding](#delete-binding)
-     - [Output](#delete-binding-output)
-     - [binding-ID](#delete-binding-id)
-     - [bosh-VMs-JSON](#delete-binding-vm-json)
-     - [manifest-YAML](#delete-binding-manifest)
-     - [request-params-JSON](#delete-request-params-JSON)
-- [Packaging](#packaging)
-- [Golang SDK](#sdk)
+- <a href="#what-is-required-of-the-service-authors" class="subnav">What is required of the Service Authors?</a>
+- <a href="#creating-a-service-release" class="subnav">Creating a Service Release</a>
+- <a href="#creating-a-service-adapter" class="subnav">Creating a Service Adapter</a>
+- <a href="#inputs-for-manifest-generation" class="subnav">Inputs for manifest generation</a>
+- <a href="#service-adapter-interface" class="subnav">Service adapter interface</a>
+- <a href="#sub-commands" class="subnav">Subcommands</a>
+- <a href="#packaging" class="subnav">Packaging</a>
+- <a href="#sdk" class="subnav">Golang SDK</a>
 
 <a id="what-is-required-of-the-service-authors"></a>
 ## What is required of the Service Authors?
@@ -574,8 +545,8 @@ The field `parameters` contains arbitrary key-value pairs which were passed by t
 The adapter should be packaged as a BOSH release, which should be co-located with the ODB release in a BOSH manifest by the operator. This is only done in order to place the adapter executable on the same VM as the ODB server, therefore the adapter BOSH job's `monit` file should probably have no processes defined.
 
 Example service adapter releases:
-- [kafka](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release)
-- [redis](https://github.com/pivotal-cf-experimental/redis-example-service-adapter-release)
+- <a href="https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release" class="subnav">kafka</a>
+- <a href="https://github.com/pivotal-cf-experimental/redis-example-service-adapter-release" class="subnav">redis</a>
 
 <a id="sdk"></a>
 ## Golang SDK

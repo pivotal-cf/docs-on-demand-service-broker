@@ -7,10 +7,10 @@ owner: London Services Enablement
 # Creating a PCF OpsMan Tile
 This documents the process for deploying a ODB with a service in a single tile, on a AWS installation of Ops Manager 1.8. We have built a reference [Kafka title](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile).
 
-- [Requirements](#requirements)
-- [Deploying OpsMan to AWS](#deploying)
-- [Building a tile](#building)
-- [Non exhaustive Accessors Reference](#accessors)
+- <a href="#requirements" class="subnav">Requirements</a>
+- <a href="#deploying" class="subnav">Deploying OpsMan to AWS</a>
+- <a href="#building" class="subnav">Building a tile</a>
+- <a href="#accessors" class="subnav">Non exhaustive Accessors Reference</a>
 
 
 <a id="requirements"></a>
