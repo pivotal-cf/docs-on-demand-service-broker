@@ -7,14 +7,14 @@ owner: London Services Enablement
 
 The following page contains concepts relevant to the setting up and maintaining of a service instance. The diagrams allow you to see which tasks are undertaken by the ODB and which require interaction with the Service Adapter.
 
-- <a href="#catalog" class="subnav">Register service broker</a>
-- <a href="#create-service-instance" class="subnav">Create service instance</a>
-- <a href="#delete-service-instance" class="subnav">Delete service instance</a>
-- <a href="#update-service-instance" class="subnav">Update service instance</a>
-- <a href="#bind" class="subnav">Bind</a>
-- <a href="#unbind" class="subnav">Unbind</a>
-- <a href="#upgrade-all-instances" class="subnav">Upgrade all instances</a>
-- <a href="#delete-all-instances" class="subnav">Delete all instances</a>
+- <a href="#catalog">Register service broker</a>
+- <a href="#create-service-instance">Create service instance</a>
+- <a href="#delete-service-instance">Delete service instance</a>
+- <a href="#update-service-instance">Update service instance</a>
+- <a href="#bind">Bind</a>
+- <a href="#unbind">Unbind</a>
+- <a href="#upgrade-all-instances">Upgrade all instances</a>
+- <a href="#delete-all-instances">Delete all instances</a>
 
 ## ODB Workflows
 <a id="catalog"></a>

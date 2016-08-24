@@ -5,13 +5,13 @@ owner: London Services Enablement
 
 # Deploying an On-demand Service Broker
 
-- <a href="#what-are-the-responsibilities-of-the-operator" class="subnav">What are the responsibilities of the Operator?</a>
-- <a href="#configure-bosh" class="subnav">Setting up your BOSH director</a>
-- <a href="#upload-required-releases" class="subnav">Upload Required Releases</a>
-- <a href="#write-a-broker-manifest" class="subnav">Write a Broker Manifest</a>
-- <a href="#broker-management" class="subnav">Broker Management</a>
-- <a href="#security" class="subnav">Security</a>
-- <a href="#troubleshooting" class="subnav">Troubleshooting</a>
+- <a href="#what-are-the-responsibilities-of-the-operator">What are the responsibilities of the Operator?</a>
+- <a href="#configure-bosh">Setting up your BOSH director</a>
+- <a href="#upload-required-releases">Upload Required Releases</a>
+- <a href="#write-a-broker-manifest">Write a Broker Manifest</a>
+- <a href="#broker-management">Broker Management</a>
+- <a href="#security">Security</a>
+- <a href="#troubleshooting">Troubleshooting</a>
 
 <a id="what-are-the-responsibilities-of-the-operator"></a>
 ## What are the responsibilities of the Operator?

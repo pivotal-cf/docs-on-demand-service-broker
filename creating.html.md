@@ -5,14 +5,14 @@ owner: London Services Enablement
 
 # Creating the Service Author Deliverables
 
-- <a href="#what-is-required-of-the-service-authors" class="subnav">What is required of the Service Authors?</a>
-- <a href="#creating-a-service-release" class="subnav">Creating a Service Release</a>
-- <a href="#creating-a-service-adapter" class="subnav">Creating a Service Adapter</a>
-- <a href="#inputs-for-manifest-generation" class="subnav">Inputs for manifest generation</a>
-- <a href="#service-adapter-interface" class="subnav">Service adapter interface</a>
-- <a href="#sub-commands" class="subnav">Subcommands</a>
-- <a href="#packaging" class="subnav">Packaging</a>
-- <a href="#sdk" class="subnav">Golang SDK</a>
+- <a href="#what-is-required-of-the-service-authors">What is required of the Service Authors?</a>
+- <a href="#creating-a-service-release">Creating a Service Release</a>
+- <a href="#creating-a-service-adapter">Creating a Service Adapter</a>
+- <a href="#inputs-for-manifest-generation">Inputs for manifest generation</a>
+- <a href="#service-adapter-interface">Service adapter interface</a>
+- <a href="#sub-commands">Subcommands</a>
+- <a href="#packaging">Packaging</a>
+- <a href="#sdk">Golang SDK</a>
 
 <a id="what-is-required-of-the-service-authors"></a>
 ## What is required of the Service Authors?
