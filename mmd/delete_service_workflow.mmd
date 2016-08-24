@@ -1,8 +1,6 @@
 sequenceDiagram
   User->>CloudFoundry:delete-service
   CloudFoundry->>ODB:remove-instance
-  ODB->>ServiceAdapter:pre-delete-deployment
-  ServiceAdapter->>ODB:done
   ODB->>BOSH:bosh delete deployment
   BOSH->>ODB:accepted
   ODB->>CloudFoundry:accepted

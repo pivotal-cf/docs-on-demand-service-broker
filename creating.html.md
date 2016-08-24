@@ -40,11 +40,6 @@ owner: London Services Enablement
      - [bosh-VMs-JSON](#delete-binding-vm-json)
      - [manifest-YAML](#delete-binding-manifest)
      - [request-params-JSON](#delete-request-params-JSON)
-  - [pre-delete-deployment](#pre-delete-deployment)
-     - [Output](#pre-delete-deployment-output)
-     - [instance-ID](#pre-delete-deployment-id)
-     - [bosh-VMs-JSON](#pre-delete-deployment-vm-json)
-     - [manifest-YAML](#pre-delete-deployment-manifest)
 - [Packaging](#packaging)
 - [Golang SDK](#sdk)
 
@@ -76,25 +71,23 @@ There are two types of job links, implicit and explicit. The [example Kafka rele
 <a id="creating-a-service-adapter"></a>
 ## Creating a Service Adapter
 
-A Service Adapter is an executable invoked by ODB. It can implement at least some of the following subcommands:
+A Service Adapter is an executable invoked by ODB. It is expected to respond to these subcommands:
 
 - `generate-manifest`
-  Mandatory. Generate a BOSH manifest for your service instance deployment and output to stdout as YAML, given information about the:
+  Generate a BOSH manifest for your service instance deployment and output to stdout as YAML, given information about the:
   - BOSH director (stemcells, release names)
   - service instance (ID, arbitrary parameters, plan properties, IAAS resources)
   - previous manifest, if this is an upgrade deployment
 
 - `dashboard-url`
-  Optional. Generate a URL of a web-based management user interface for the service instance.
+  Generate an optional URL of a web-based management user interface for the service instance.
 
 - `create-binding`
-  Mandatory, unless `bindable` is declared `false` in the [service catalog](operating.html#service-catalog-and-plan-composition). Create (unique, if possible) credentials for the service instance, printing them to stdout as JSON.
+  Create (unique, if possible) credentials for the service instance, printing them to stdout as JSON.
 
 - `delete-binding`
-  Mandatory, unless `bindable` is declared `false` in the [service catalog](operating.html#service-catalog-and-plan-composition). Invalidate the created credentials, if possible. Some services (e.g. Redis) are single-user, and this endpoint will do nothing.
+  Invalidate the created credentials, if possible. Some services (e.g. Redis) are single-user, and this endpoint will do nothing.
 
-- `pre-delete-deployment`
-  Optional. Clean up external resources before deleting the service instance.
 
 The parameters, and expected output from these subcommands will be explained in detail below. For each of these subcommands, exit status 0 indicates that the command succeeded exit status 10 indicates not implemented, and any non-zero status indicates failure.
 
@@ -552,6 +545,8 @@ A map of instance group name to an array of IPs provisioned for that instance gr
 
 For example
 
+For example
+
 ```json
 {
   "my-instance-group": ["192.0.2.1", "192.0.2.2", "192.0.2.3"]
@@ -573,54 +568,6 @@ This is a JSON object that holds the entire body of the [service unbinding](http
 The field `parameters` contains arbitrary key-value pairs which were passed by the application developer as a `cf` CLI parameter when creating, or updating the service instance.
 
 
----
-
-<a id="pre-delete-deployment"></a>
-### pre-delete-deployment
-
-```
-service-adapter pre-delete-deployment [service-instance-ID] [bosh-VMs-JSON] [manifest-YAML]
-```
-
-This is an optional lifecycle hook that offers the service author the opportunity to clean up external resources before the service instance deployment is deleted. For example, deregister your service instance cluster IPs from some external multi-tenant management interface that exists outside of the deployment.
-
-<a id="pre-delete-deployment-output"></a>
-#### Output
-
-The following table describes the supported exit codes and output for the `pre-delete-deployment` subcommand:
-
-#### Supported exit codes for pre-delete-deployment
-| exit code     | Description     | Output                                                                                                                           |
-|:--------------|:----------------|:---------------------------------------------------------------------------------------------------------------------------------|
-| 0             | success         | No output is required                                                                                                            |
-| 10            | not implemented |                                                                                                                                  |
-| anything else | failure         | Stdout: optional error message for CF CLI users<br/> Stderr: error message for operator<br/> ODB will log both stdout and stderr |
-
-#### Parameters
-
----
-
-<a id="pre-delete-deployment-id"></a>
-#### instance-ID
-The ID of the service instance about to be deleted.
-
-<a id="pre-delete-deployment-vm-json"></a>
-#### bosh-VMs-JSON
-A map of instance group name to an array of IPs provisioned for that instance group.
-
-For example
-
-```json
-{
-  "my-instance-group": ["192.0.2.1", "192.0.2.2", "192.0.2.3"]
-}
-```
-
-The VM IPs may be useful if they can be used to locate external resources to clean up, but ideally any intra-deployment cleanup will be handled in the service jobs themselves.
-
-<a id="pre-delete-deployment-manifest"></a>
-#### manifest-YAML
-The current manifest as YAML. This is used to extract information about the deployment that is necessary for cleanup. The format of the manifest should match the [bosh v2 manifest](https://bosh.io/docs/manifest-v2.html)
 
 <a id="packaging"></a>
 ## Packaging

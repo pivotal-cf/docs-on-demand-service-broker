@@ -28,7 +28,6 @@ owner: London Services Enablement
       - [generate-manifest](creating.html#generate-manifest)
       - [create-binding](creating.html#create-binding)
       - [delete-binding](creating.html#delete-binding)
-      - [pre-delete-deployment](creating.html#pre-delete-deployment)
   - [Packaging](creating.html#packaging)
   - [Golang SDK](creating.html#sdk)
 - **[Operating the On-demand Service Broker](operating.html)**
