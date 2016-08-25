@@ -176,6 +176,8 @@ The operator must:
      Here the operator can configure the deployment to span multiple availability zones, by using the [BOSH multi-az feature](https://bosh.io/docs/azs.html). For example the [kafka multi az plan](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml#L100). In some cases, service authors will provide errands for the service release. You can add an instance group of type errand by setting the lifecycle field. For example the [smoke_tests for the kafka deployment](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml#L93).
   1. Provide values for plan properties.
      Plan properties are key-value pairs defined by the Service Author. Some examples include a boolean to enable disk persistence for Redis, and a list of strings representing RabbitMQ plugins to load. The Service Author should document whether these properties are mandatory or optional, whether the use of one property precludes the use of another, and whether certain properties affect recommended instance group to resource mappings.
+
+     Properties can also be specified at the service offering level, where they will be applied to every plan. If there is a conflict between global and plan-level properties, the plan properties will take precedence.
   1. Provide an (optional) update block for each plan.
      You may require plan-specific configuration for BOSH's update instance operation. The ODB passes the plan-specific update block to the service adapter. Plan-specific update blocks should have the same structure as [the update block in a BOSH manifest](https://bosh.io/docs/manifest-v2.html#update). The Service Author can define a default update block to be used when a plan-specific update block is not provided, and whether the service adapter supports their configuration in the manifest.
 
@@ -203,6 +205,7 @@ service_catalog:
     provider_display_name: <provider display name>
     documentation_url: <documentation url>
     support_url: <support url>
+  global_properties: {} # optional, applied to every plan.
   plans:
     - name: <CF marketplace plan name>
       plan_id: <CF marketplace plan id>
