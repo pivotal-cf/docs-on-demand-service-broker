@@ -225,7 +225,7 @@ service_catalog:
           instances: <instance count>
           networks: [<network>]
           azs: [<az>]
-          persistent_disk: <disk> # optional
+          persistent_disk_type: <disk> # optional
       properties: {} # valid property key-value pairs are defined by the Service Author
       update: # optional
         canaries: 1 # required

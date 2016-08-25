@@ -212,14 +212,14 @@ At the time of writing, **BOSH lite does not contain a sufficiently recent versi
                         vm_type: container
                         instances: 1
                         azs: [z1]
-                        persistent_disk: ten
+                        persistent_disk_type: ten
                         azs: [lite]
                         networks: [kafka]
                       - name: zookeeper_server
                         vm_type: container
                         instances: 1
                         azs: [z1]
-                        persistent_disk: ten
+                        persistent_disk_type: ten
                         azs: [lite]
                         networks: [kafka]
                     properties:
