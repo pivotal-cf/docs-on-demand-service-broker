@@ -42,7 +42,7 @@ A Service Adapter is an executable invoked by ODB. It is expected to respond to 
 - `generate-manifest`
   Generate a BOSH manifest for your service instance deployment and output to stdout as YAML, given information about the:
   - BOSH director (stemcells, release names)
-  - service instance (ID, arbitrary parameters, plan properties, IAAS resources)
+  - service instance (ID, request parameters, plan properties, IAAS resources)
   - previous manifest, if this is an upgrade deployment
 
 - `dashboard-url`
@@ -69,13 +69,13 @@ See an example implementation [here](https://github.com/pivotal-cf-experimental/
 
 ## <a id="manifest"></a>Inputs for manifest generation
 
-### <a id="arbitrary-params"></a>Arbitrary parameters
+### <a id="request-params"></a>Request parameters
+
+The [body](https://docs.cloudfoundry.org/services/api.html#provisioning) of the provision request from Cloud Controller, including arbitrary parameters from the CLI user.
 
 Service authors can choose to allow Cloud Foundry users to configure service instances with arbitrary parameters. See the PCF docs on [Managing Service Instances with the CLI](https://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html). Arbitrary parameters can be passed to the service adapter when creating, or updating a service instance. They allow Cloud Foundry users to override the default configuration for a service plan.
 
 Service authors must document the usage of arbitrary parameters for Cloud Foundry users.
-
-Note: we recommend that arbitrary parameters are recorded in the service instance manifest, so that they can be migrated in subsequent deployments.
 
 For example:
 
