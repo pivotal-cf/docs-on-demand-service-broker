@@ -1,9 +1,7 @@
 ---
-title: On-demand Service Broker Documentation
+title: Creating the Service Author Deliverables
 owner: London Services Enablement
 ---
-
-# Creating the Service Author Deliverables
 
 - <a href="#what-is-required-of-the-service-authors">What is required of the Service Authors?</a>
 - <a href="#creating-a-service-release">Creating a Service Release</a>
@@ -14,8 +12,7 @@ owner: London Services Enablement
 - <a href="#packaging">Packaging</a>
 - <a href="#sdk">Golang SDK</a>
 
-<a id="what-is-required-of-the-service-authors"></a>
-## What is required of the Service Authors?
+## <a id="required"></a>What is required of the Service Authors?
 The following deliverables are required from the service authors:
 
 - Service release(s)
@@ -26,8 +23,7 @@ The following deliverables are required from the service authors:
 
 For information about what is required of the Operator, see [Responsibilities of the Operator](operating.html#responsibility-of-the-operator).
 
-<a id="creating-a-service-release"></a>
-## Creating a Service Release
+## <a id="create-release"></a>Creating a Service Release
 
 A service release is a BOSH release that is deployed at instance creation time, once for each service instance, by the On-demand Service Broker (ODB). We have created two examples:
   * [Redis](https://github.com/pivotal-cf-experimental/redis-example-service-release)
@@ -39,8 +35,7 @@ See the [BOSH docs](http://bosh.io/docs) for help creating a BOSH release. We re
 When generating a manifest, we recommend not using static IPs as this makes network IP management very complex. Instead, we recommend using [BOSH's job links feature](https://bosh.io/docs/links.html).
 There are two types of job links, implicit and explicit. The [example Kafka release](https://github.com/pivotal-cf-experimental/kafka-example-service-release/blob/master/jobs/kafka_server/spec#L15) uses implicit job links to get the IPs of the brokers and the zookeeper. Details on how to use the links feature are available [here](https://bosh.io/docs/links.html).
 
-<a id="creating-a-service-adapter"></a>
-## Creating a Service Adapter
+## <a id="create-adapter"></a>Creating a Service Adapter
 
 A Service Adapter is an executable invoked by ODB. It is expected to respond to these subcommands:
 
@@ -62,8 +57,8 @@ A Service Adapter is an executable invoked by ODB. It is expected to respond to 
 
 The parameters, and expected output from these subcommands will be explained in detail below. For each of these subcommands, exit status 0 indicates that the command succeeded exit status 10 indicates not implemented, and any non-zero status indicates failure.
 
-<a id="handling-errors"></a>
-### Handling errors
+### <a id="handling-errors"></a>Handling errors
+
 If a subcommand fails, the adapter must return a non-zero exit status, and may optionally print to stdout and/or stderr.
 
 Anything printed to stdout will be returned to the CF CLI user.
@@ -72,11 +67,9 @@ Both the stdout and stderr streams will be printed in the broker log for the ope
 
 See an example implementation [here](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/07c38cff05d1a772f299fbac9ace393a77cbaa35/adapter/create_binding.go#L27-L29).
 
-<a id="inputs-for-manifest-generation"></a>
-## Inputs for manifest generation
+## <a id="manifest"></a>Inputs for manifest generation
 
-<a id="arbitrary-parameters"></a>
-### Arbitrary parameters
+### <a id="arbitrary-params"></a>Arbitrary parameters
 
 Service authors can choose to allow Cloud Foundry users to configure service instances with arbitrary parameters. See the PCF docs on [Managing Service Instances with the CLI](https://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html). Arbitrary parameters can be passed to the service adapter when creating, or updating a service instance. They allow Cloud Foundry users to override the default configuration for a service plan.
 
@@ -88,8 +81,7 @@ For example:
 
 - the [Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go) supports the `auto_create_topics` arbitrary parameter to configure auto-creation of topics on the cluster.
 
-<a id="previous-manifest-properties"></a>
-### Previous manifest properties
+### <a id="prev-props"></a>Previous manifest properties
 
 Service authors can choose to migrate certain properties for the service from the previous manifest when updating a service instance. If the previous manifest is ignored then any properties configured using arbitrary parameters will not be migrated when a service instance is updated.
 
@@ -99,8 +91,7 @@ For example:
 
 - the [Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go) supports migration of the `auto_create_topics` previous plan property to configure auto-creation of topics on the cluster.
 
-<a id="service-plan-properties"></a>
-### Service plan properties
+### <a id="plan-props"></a>Service plan properties
 
 Service authors can choose to support certain properties for the service in the adapter code. These properties are service-specific traits used to customize the service. They do not necessarily map to jobs one to one; a plan property may affect multiple jobs in the deployment. Plan properties are a mechanism for the operator to define different plans.
 
@@ -111,8 +102,7 @@ For example:
 - the [Redis service adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_manifest_generator.go) supports the `persistence` property which can be used to attach a disk to the vm.
 - the [Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go) supports the `auto_create_topics` property to enable auto-creation of topics on the cluster.
 
-<a id="order-of-precedence"></a>
-### Order of precedence
+### <a id="precedence"></a>Order of precedence
 
 Note, we recommend service authors use the following order of precedence in their service adapters when generating manifests:
 
@@ -122,8 +112,7 @@ Note, we recommend service authors use the following order of precedence in thei
 
 For example, see `auto_create_topics` in the [example Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go#L68-L77).
 
-<a id="service-adapter-interface"></a>
-## Service adapter interface
+## <a id="interface"></a>Service adapter interface
 A service adapter is expected to be implemented as a binary with the interface
 
 ```
@@ -133,10 +122,10 @@ service-adapter [subcommand] [params ...]
 where the subcommand can be generate-manifest, create-binding, delete-binding
 
 Examples are provided for [Redis](https://github.com/pivotal-cf-experimental/redis-example-service-adapter) and [Kafka](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter). Note that these Golang examples us the SDK to help with cross-cutting concerns such as unmarshalling the JSON command line parameters. For example, see the use of `HandleCommandLineInvocation` in the [redis-adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/cmd/service-adapter/main.go#L15).
-<a id="sub-commands"></a>
-## Subcommands
-<a id="generate-manifest"></a>
-### generate-manifest
+
+## <a id="sub-commands"></a>Subcommands
+
+### <a id="generate-manifest"></a>generate-manifest
 
 ```
 service-adapter generate-manifest [service-deployment-JSON] [plan-JSON] [request-params-JSON] [previous-manifest-YAML] [previous-plan-JSON]
@@ -160,8 +149,8 @@ The following table describes the supported exit codes and output for the `gener
 
 ---
 
-<a id="service-deployment"></a>
-#### service-deployment-JSON
+#### <a id="service-deployment"></a>service-deployment-JSON
+
 Provides information regarding the bosh director
 
 | field                     | Type              | Description                                                            |
@@ -201,12 +190,11 @@ Your Service Adapter should be opinionated about which jobs it requires to gener
 
 You should provide documentation about which jobs are required by your Service Adapter, and which BOSH releases operators should get these jobs from.
 
-<a id="plan"></a>
-#### plan-JSON
+#### <a id="plan"></a>plan-JSON
+
 Plan for which the manifest is supposed to be generated
 
-<a id="plan-schema"></a>
-##### plan-JSON schema
+##### <a id="plan-schema"></a>plan-JSON schema
 
 | field                                 | Type                     | Description                                                                                                                            |
 |:--------------------------------------|:-------------------------|:---------------------------------------------------------------------------------------------------------------------------------------|
@@ -285,16 +273,16 @@ Plans are composed by the operator and consist of resource mappings, properties 
   1. Hard code an update block for all plans in the service adapter
   1. Make the update block mandatory, so that operators must provide an update block for every plan in the service catalogue section of the ODB manifest
 
-<a id="generate-request-params-JSON"></a>
-#### request-params-JSON
+#### <a id="generate-request-params-JSON"></a>request-params-JSON
+
 This is a JSON object that holds the entire body of the [service provision](http://docs.cloudfoundry.org/services/api.html#provisioning) or [service update](http://docs.cloudfoundry.org/services/api.html#updating_service_instance) request sent by the Cloud Controller to the service broker. The request parameters JSON will be `null` for upgrades.
 
 The field `parameters` contains arbitrary key-value pairs which were passed by the application developer as a `cf` CLI parameter when creating, or updating the service instance.
 
 Note: when updating existing service instances, any arbitrary parameters passed on a previous create or update will not be passed again. Therefore, for arbitrary parameters to stay the same across multiple deployments they must be retrieved from the previous manifest.
 
-<a id="previous-manifest"></a>
-#### previous-manifest-YAML
+#### <a id="previous-manifest"></a>previous-manifest-YAML
+
 The previous manifest as YAML. The previous manifest is nil if this is a new deployment. The format of the manifest should match the [bosh v2 manifest](https://bosh.io/docs/manifest-v2.html).
 
 It is up to the service author to perform any necessary service-specific migration logic here, if previous manifest is non-nil.
@@ -309,8 +297,7 @@ The previous plan as JSON. The previous plan is nil if this is a new deployment.
 
 ---
 
-<a id="dashboard-url"></a>
-### dashboard-url
+### <a id="dashboard-url"></a>dashboard-url
 
 ```
 service-adapter dashboard-url [instance-ID] [plan-JSON] [manifest-YAML]
@@ -318,8 +305,8 @@ service-adapter dashboard-url [instance-ID] [plan-JSON] [manifest-YAML]
 
 The `dashboard-url` subcommand takes in 3 arguments and returns a JSON with the `dashboard_url`. The dashboard URL is optional. If no dashboard URL is relevant to the service, the subcommand should exit with code 10. Provisioning will be successful without the dashboard URL.
 
-<a id="dashboard-url-output"></a>
-#### Output
+#### <a id="dashboard-url-output"></a>Output
+
 If the `dashboard-url` command generates a url successfully, it should exit with 0 and return a dashboard URL JSON with the following structure:
 
 
@@ -334,28 +321,28 @@ If the `dashboard-url` command generates a url successfully, it should exit with
 ```
 
 #### Supported exit codes for dashboard-url
+
 | exit code     | Description     | Output                                                                                                                           |
 |:--------------|:----------------|:---------------------------------------------------------------------------------------------------------------------------------|
 | 0             | success         | Stdout: dashboard URL JSON                                                                                                       |
 | 10            | not implemented |                                                                                                                                  |
 | anything else | failure         | Stdout: optional error message for CF CLI users<br/> Stderr: error message for operator<br/> ODB will log both stdout and stderr |
 
-<a id="dashboard-url-instance-id"></a>
-#### instance-ID
+#### <a id="dashboard-url-instance-id"></a>instance-ID
+
 Provided by the cloud controller which uniquely identifies the service-instance.
 
-<a id="dashboard-url-plan"></a>
-#### plan-JSON
+#### <a id="dashboard-url-plan"></a>plan-JSON
+
 Current plan for the service instance as JSON. The structure should be the same as the [plan given in the generate manifest](#plan)
 
-<a id="dashboard-url-manifest"></a>
-#### manifest-YAML
+#### <a id="dashboard-url-manifest"></a>manifest-YAML
+
 The current manifest as YAML. The format of the manifest should match the [bosh v2 manifest](https://bosh.io/docs/manifest-v2.html)
 
 ---
 
-<a id="create-binding"></a>
-### create-binding
+### <a id="create-binding"></a>create-binding
 
 ```
 service-adapter create-binding [binding-ID] [bosh-VMs-JSON] [manifest-YAML] [request-params-JSON]
@@ -364,9 +351,8 @@ service-adapter create-binding [binding-ID] [bosh-VMs-JSON] [manifest-YAML] [req
 Binding credentials for a service instance should share a namespace, and should be unique if possible. E.g. for MySQL, two bindings could include a different username/password pairs, but share the same MySQL database tables and data. The first step is to determine which credentials are best to supply in the context of your service. We recommend that users can be identified statelessly from the binding ID, and the simplest way to do this is to name the user after the binding ID.
 
 Note that at this time ODB does not support syslog drains or route services, so bindings are only a map of credentials.
-<a id="create-binding-output"></a>
 
-#### Output
+#### <a id="create-binding-output"></a>Output
 
 If the `create-binding` command is successful, it should return an exit code of 0 and print a [service broker API binding JSON response](http://docs.cloudfoundry.org/services/api.html#binding) on stdout. An example response is shown below. If the command failed, it should return any non-zero exit code, see the [supported exit code table](#create-binding-exit-codes) for details of supported failure cases. Stdout and stderr from the command will be logged by the ODB.
 
@@ -382,9 +368,9 @@ Example success response to `create-binding`:
   "route_service_url": "optional: for route services only"
 }
 ```
-<a id="create-binding-exit-codes"></a>
 
-#### Supported exit codes for binding
+#### <a id="create-binding-exit-codes"></a>Supported exit codes for binding
+
 | exit code     | Description                                       | Output                                                                                                                           |
 |:--------------|:--------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------|
 | 0             | success                                           | Stdout: binding credentials JSON                                                                                                 |
@@ -397,12 +383,12 @@ Example success response to `create-binding`:
 
 ---
 
-<a id="create-binding-id"></a>
-#### binding-ID
+#### <a id="create-binding-id"></a>binding-ID
+
 The binding-ID generated by the Cloud Controller.
 
-<a id="create-bosh-vms-json"></a>
-#### bosh-VMs-JSON
+#### <a id="create-bosh-vms-json"></a>bosh-VMs-JSON
+
 A map of instance group name to an array of IPs provisioned for that instance group.
 
 For example
@@ -416,17 +402,15 @@ For example
 
 This can be used to connect to the instance deployment if required, to create a service specific binding. In the example above, the Service Adapter may connect to MySQL as the admin and create a user. As part of the binding, the `mysql_node` IPs would be returned, but maybe not the `management_box`.
 
-<a id="create-binding-manifest"></a>
-#### manifest-YAML
+#### <a id="create-binding-manifest"></a>manifest-YAML
+
 The current manifest as YAML. This is used to extract information about the deployment that is necessary for the binding (e.g. admin credentials with which to create users). The format of the manifest should match the [bosh v2 manifest](https://bosh.io/docs/manifest-v2.html)
 
-<a id="create-request-params-JSON"></a>
-#### request-params-JSON
+#### <a id="create-request-params-JSON"></a>request-params-JSON
+
 This is a JSON object that holds the entire body of the [service binding](http://docs.cloudfoundry.org/services/api.html#binding) request sent by the Cloud Controller to the service broker.
 
 The field `parameters` contains arbitrary key-value pairs which were passed by the application developer as a `cf` CLI parameter when creating, or updating the service instance.
-
-
 
 #### Credentials for bindings
 
@@ -481,8 +465,7 @@ instance_groups:
 
 ---
 
-<a id="delete-binding"></a>
-### delete-binding
+### <a id="delete-binding"></a>delete-binding
 
 ```
 service-adapter delete-binding [binding-ID] [bosh-VMs-JSON] [manifest-YAML] [request-params-JSON]
@@ -490,8 +473,7 @@ service-adapter delete-binding [binding-ID] [bosh-VMs-JSON] [manifest-YAML] [req
 
 This should invalidate the credentials that were generated by `create-binding` if possible. E.g. for MySQL, it would delete the binding user.
 
-<a id="delete-binding-output"></a>
-#### Output
+#### <a id="delete-binding-output"></a>Output
 
 The following table describes the supported exit codes and output for the `delete-binding` subcommand:
 
@@ -506,12 +488,12 @@ The following table describes the supported exit codes and output for the `delet
 
 ---
 
-<a id="delete-binding-id"></a>
-#### binding-ID
+#### <a id="delete-binding-id"></a>binding-ID
+
 The binding to be deleted.
 
-<a id="delete-binding-vm-json"></a>
-#### bosh-VMs-JSON
+#### <a id="delete-binding-vm-json"></a>bosh-VMs-JSON
+
 A map of instance group name to an array of IPs provisioned for that instance group.
 
 For example
@@ -526,30 +508,27 @@ For example
 
 This can be used to connect to the actual VMs if required, to delete a service specific binding. For example delete a user in MySQL.
 
-<a id="delete-binding-manifest"></a>
-#### manifest-YAML
+#### <a id="delete-binding-manifest"></a>manifest-YAML
+
 The current manifest as YAML. This is used to extract information about the deployment that is necessary for the binding (e.g. credentials). The format of the manifest should match the [bosh v2 manifest](https://bosh.io/docs/manifest-v2.html)
 
 For example see the [kafka delete binding](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/delete_binding.go)
 
-<a id="delete-request-params-JSON"></a>
-### request-params-JSON
+### <a id="delete-request-params-JSON"></a>request-params-JSON
+
 This is a JSON object that holds the entire body of the [service unbinding](http://docs.cloudfoundry.org/services/api.html#unbinding) request sent by the Cloud Controller to the service broker.
 
 The field `parameters` contains arbitrary key-value pairs which were passed by the application developer as a `cf` CLI parameter when creating, or updating the service instance.
 
+## <a id="packaging"></a>Packaging
 
-
-<a id="packaging"></a>
-## Packaging
 The adapter should be packaged as a BOSH release, which should be co-located with the ODB release in a BOSH manifest by the operator. This is only done in order to place the adapter executable on the same VM as the ODB server, therefore the adapter BOSH job's `monit` file should probably have no processes defined.
 
 Example service adapter releases:
 - <a href="https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release">kafka</a>
 - <a href="https://github.com/pivotal-cf-experimental/redis-example-service-adapter-release">redis</a>
 
-<a id="sdk"></a>
-## Golang SDK
+## <a id="sdk"></a>Golang SDK
 
 We have published a [SDK](https://github.com/pivotal-cf/on-demand-service-broker-sdk) for teams writing their service adapters in Golang. It encapsulates the command line invocation handling, parameter parsing, response serialization and error handling so the adapter authors can focus on the service-specific logic in the adapter.
 

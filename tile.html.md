@@ -1,24 +1,15 @@
 ---
-title: On-demand Service Broker Documentation
+title: Creating a PCF OpsMan Tile
 owner: London Services Enablement
 ---
 
-
-# Creating a PCF OpsMan Tile
 This documents the process for deploying a ODB with a service in a single tile, on a AWS installation of Ops Manager 1.8. We have built a reference [Kafka title](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile).
 
-- <a href="#requirements">Requirements</a>
-- <a href="#deploying">Deploying OpsMan to AWS</a>
-- <a href="#building">Building a tile</a>
-- <a href="#accessors">Non exhaustive Accessors Reference</a>
+## <a id="requirements"></a>Requirements
 
-
-<a id="requirements"></a>
-## Requirements
 Pre ODB, opsman controls the IP allocation of the private network that it lives in. So when using the ODB within a tile, you need to create two subnetworks: one to host the tile VMs and one where the service VMs will be placed.
 
-<a id="deploying"></a>
-## Deploying OpsMan to AWS
+## <a id="deploying"></a>Deploying OpsMan to AWS
 
 1. Follow the default OpsMan deployment [docs](https://docs.pivotal.io/pivotalcf/customizing/cloudform-template.html), but with these modifications:
   1. Create a self-signed wildcard SSL certificate for a domain you control: This will usually be `*.some-subdomain.cf-app.com`, and upload it (along with the associated private key) to AWS. Instructions [here](http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/ssl-server-cert.html#create-cert).
@@ -35,12 +26,11 @@ Notes:
 1. The ELBs created by CloudFormation are both for CF, not ops man. One of them will be configured with your wildcard certificate. This takes the place of HAProxy in AWS PCF deployments, and is therefore not used until you deploy the ERT tile.
 1. To target the bosh director from the OpsMan VM: `bosh --ca-cert /var/tempest/workspaces/default/root_ca_certificate target 10.0.16.10`
 
-<a id="building"></a>
-## Building a tile
+## <a id="building"></a>Building a tile
+
 Follow the default build your own [Product tile documentation](https://docs.pivotal.io/partners/deploying-with-ops-man-tile.html#build-your-own), enhance the `handcraft.yml` with the accessors listed below. To access the `$self` accessors, the `service-broker` flag must be `true` in the handcraft.
 
-<a id="accessors"></a>
-## Non exhaustive Accessors Reference
+## <a id="accessors"></a>Non exhaustive Accessors Reference
 
 #### director
 

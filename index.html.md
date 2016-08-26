@@ -1,62 +1,56 @@
 ---
-title: On-demand Service Broker Documentation
+title: On-Demand Service Broker SDK
 owner: London Services Enablement
 ---
 
-## Contents
-- **<a href="overview.html" class="subnav">Overview</a>**
-  - [What is a Cloud Foundry service broker?](overview.html#what-is-a-cloud-foundry-service-broker)
-  - [What is an on-demand service broker?](overview.html#what-is-an-on-demand-service-broker)
-  - [What is a service adapter?](overview.html#what-is-a-service-adapter)
-  - [Why provision IAAS resources on-demand?](overview.html#why-provision-iaas-resources-on-demand)
-  - [Why use ODB to develop on-demand service offerings?](overview.html#why-use-odb-to-develop-on-demand-service-offerings)
-  - [Prerequisites for deploying brokers that use ODB](overview.html#prerequisites-for-deploying-brokers-that-use-odb)
-     - [BOSH v2 Features we use](overview.html#bosh-v2-features-we-use)
-  - [Steps required to use on-demand service broker](overview.html#steps-required-to-use-on-demand-service-broker)
-- **<a href="getting-started.html" class="subnav">Setting up a local environment</a>**
-- **<a href="creating.html" class="subnav">Creating a service adapter</a>**
-  - [What is required of the Service Authors?](creating.html#what-is-required-of-the-service-authors)
-  - [Creating a Service Release](creating.html#creating-a-service-release)
-  - [Creating a Service Adapter](creating.html#creating-a-service-adapter)
-  - [Inputs for manifest generation](creating.html#inputs-for-manifest-generation)
-      - [Arbitrary parameters](creating.html#arbitrary-parameters)
-      - [Previous manifest properties](creating.html#previous-manifest-properties)
-      - [Service plan properties](creating.html#service-plan-properties)
-      - [Order of precedence](creating.html#order-of-precedence)
-  - [Service adapter interface](creating.html#service-adapter-interface)
-  - [Subcommands](creating.html#sub-commands)
-      - [generate-manifest](creating.html#generate-manifest)
-      - [create-binding](creating.html#create-binding)
-      - [delete-binding](creating.html#delete-binding)
-  - [Packaging](creating.html#packaging)
-  - [Golang SDK](creating.html#sdk)
-- **<a href="operating.html" class="subnav">Operating the On-demand Service Broker</a>**
-  - [What are the responsibilities of the Operator?](operating.html#what-are-the-responsibilities-of-the-operator)
-  - [Upload Required Releases](operating.html#upload-required-releases)
-  - [Write a Broker Manifest](operating.html#write-a-broker-manifest)
-      - [Core Broker Configuration](operating.html#core-broker-configuration)
-      - [Service catalog and Plan composition](operating.html#service-catalog-and-plan-composition)
-  - [Broker Management](operating.html#broker-management)
-      - [register-broker](operating.html#register-broker)
-      - [deregister-broker](operating.html#deregister-broker)
-      - [Upgrading the broker and existing service instances](operating.html#upgrading-the-broker-and-existing-service-instances)
-      - [Deleting all service instances](operating.html#deleting-all-service-instances)
-  - [Security](operating.html#security)
-      - [BOSH API Endpoints](operating.html#bosh-api-endpoints)
-      - [BOSH UAA permissions](operating.html#bosh-uaa-permissions)
-      - [PCF IPsec Add-On](operating.html#ipsec)
-  - [Troubleshooting](operating.html#troubleshooting)
-- **<a href="tile.html" class="subnav">Creating a PCF OpsMan Tile</a>**
-  - [Requirements](tile.html#requirements)
-  - [Deploying OpsMan to AWS](tile.html#deploying)
-  - [Building a tile](tile.html#building)
-  - [Non exhaustive Accessors Reference](tile.html#accessors)
-- **<a href="concepts.html" class="subnav">On-demand Service Broker Concepts/Reference</a>**
-  - [Catalog](concepts.html#catalog)
-  - [Create service instance](concepts.html#create-service-instance)
-  - [Delete service instance](concepts.html#delete-service-instance)
-  - [Update service instance](concepts.html#update-service-instance)
-  - [Bind](concepts.html#bind)
-  - [Unbind](concepts.html#unbind)
-  - [Upgrade all instances](concepts.html#upgrade-all-instances)
-  - [Delete all instances](concepts.html#delete-all-instances)
+This guide is intended for people who want to author service tiles for PCF using the On-Demand Service Broker SDK.
+
+## <a id='overview'></a>Overview
+
+TEXT TK - Lifted from ISV Portal: As an Independent Software Vendor (ISV), you are likely to find more and more Pivotal Cloud Foundry (PCF) users among your customers. Many of these will be asking you to integrate your software with PCF to enable use of your software with the applications they are developing on PCF.
+
+Pivotal is very supportive of these types of integrations and is committed to making this process as easy as possible. This site provides a technical overview on how to integrate your software with PCF. You are welcome to start this process on your own, or contact us to ask for our support and/or publish your integration in our marketplace.
+
+There are a lot of things you will have to learn and do to complete an integration with Cloud Foundry. This page attempts to lay out a typical progression of an integration with PCF.
+
+The [About the On-Demand Service Broker SDK](./about.html) topic describes how service brokers work and why on-demand services are best, and explains that the On-Demand Service Broker SDK is the simplest and best way to develop an on-demand service for PCF.
+
+## <a id='product-snapshot'></a>Product Snapshot
+
+<dl>
+<dt>Current On-Demand Service Broker SDK details:</dt>
+<dd><strong>Version</strong>: 0.8.0 </dd>
+<dd><strong>Release date</strong>: TK</dd>
+<dd><strong>Software component version</strong>: TK</dd>
+<dd><strong>Compatible Ops Manager Version(s)</strong>: vTK.x</dd>
+<dd><strong>Compatible Elastic Runtime version(s)</strong>: vTK.x</dd>
+<dd><strong>vSphere support?</strong> Yes</dd>
+<dd><strong>AWS support?</strong> Yes</dd>
+</dl>
+
+## <a id='new-features'></a>Key Features
+
+TK
+
+## <a id='prerequisites'></a>Prerequisites for deploying brokers that use ODB
+
+Minimum versions of Cloud Foundry and BOSH are described in [the operator section](operating.html#configure-bosh).
+
+## <a id='known-issues'></a>Known Issues
+
+TK
+
+## <a id='see-also'></a>See Also
+
+LINKS TK
+
+<hr>
+
+## <a id='contents'></a>Contents
+
+* <a href="about.html" class="subnav">About the On-Demand Service Broker SDK</a>
+* <a href="getting-started.html" class="subnav">Setting up a Local Environment</a>
+* <a href="creating.html" class="subnav">Creating a Service Adapter</a>
+* <a href="operating.html" class="subnav">Operating the On-demand Service Broker</a>
+* <a href="tile.html" class="subnav">Creating a PCF OpsMan Tile</a>
+* <a href="concepts.html" class="subnav">On-Demand Service Broker Concepts/Reference</a>

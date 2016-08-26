@@ -1,25 +1,14 @@
 ---
-title: On-demand Service Broker Documentation
+title: About the On-demand Service Broker SDK
 owner: London Services Enablement
 ---
 
-# Overview
+## <a id="cf-broker"></a>What is a Cloud Foundry service broker?
 
-- <a href="overview.html#what-is-a-cloud-foundry-service-broker">What is a Cloud Foundry service broker?</a>
-- <a href="overview.html#what-is-an-on-demand-service-broker">What is an on-demand service broker?</a>
-- <a href="overview.html#what-is-a-service-adapter">What is a service adapter?</a>
-- <a href="overview.html#why-provision-iaas-resources-on-demand">Why provision IAAS resources on-demand?</a>
-- <a href="overview.html#why-use-odb-to-develop-on-demand-service-offerings">Why use ODB to develop on-demand service offerings?</a>
-- <a href="overview.html#prerequisites-for-deploying-brokers-that-use-odb">Prerequisites for deploying brokers that use ODB</a>
-- <a href="overview.html#bosh-v2-features-we-use">BOSH v2 Features we use</a>
-- <a href="overview.html#steps-required-to-use-on-demand-service-broker">Steps required to use on-demand service broker</a>
-
-<a id="what-is-a-cloud-foundry-service-broker"></a>
-## What is a Cloud Foundry service broker?
 A Cloud Foundry service broker allows application developers to provision services to be used by their Cloud Foundry apps. They are implemented as HTTP servers that conform to the [service broker API](http://docs.cloudfoundry.org/services/api.html). These brokers are registered with Cloud Controller in order to populate a service marketplace.
 
-<a id="what-is-an-on-demand-service-broker"></a>
-## What is an on-demand service broker?
+## <a id="odb"></a>What is an on-demand service broker?
+
 An on-demand Cloud Foundry service broker is a service broker that provisions IAAS resources at service instance creation time, as opposed to pre-provisioning a fixed quantity of these resources at broker deployment time. The **On-demand Service Broker (ODB)** is a generic on-demand service broker for single-tenant (dedicated service process/cluster per Cloud Foundry service instance) service offerings where one service instance corresponds to one BOSH deployment.
 
 Service-specific functionality is plugged in by the service author via an executable called a **Service Adapter**. For more information about the responsibilities of Service Authors, please see [Creating the Service Author Deliverables](creating.html).
@@ -30,9 +19,10 @@ The ODB will be the standard approach to deploying on-demand services across all
 
 This approach does not impose any constraints on the tile author's ability to offer new functionality or expose configuration options in their service plans, such as rate limiting, external load balancers.
 
-<a id="what-is-a-service-adapter"></a>
-## What is a service adapter?
+## <a id="adapter"></a>What is a service adapter?
+
 A service adapter is a binary which would be called out by the ODB, when it wants to do service-specific tasks.
+
 ![responsibility-diagram](img/responsibility-diagram.png)
 The above diagram shows where responsibility lies for each aspect of the ODB workflow.
 
@@ -40,30 +30,24 @@ You can see that the service author can now focus on building the BOSH release o
 
 The operator will then configure a range of plans for the service in the ODB BOSH manifest. This gives the operator control of what service configurations to offer their app developers. There is consistency of experience for the Operator in terms of how to install, configure and upgrade the Pivotal products using this approach.
 
+## <a id="why-od"></a>Why provision IAAS resources on-demand?
 
-<a id="why-provision-iaas-resources-on-demand"></a>
-## Why provision IAAS resources on-demand?
 * Scale resource consumption linearly with need, without having to plan for pre-provisioning.
 * Application developers get some control over resources, and do not have to do acquire them through the operator.
 
-<a id="why-use-odb-to-develop-on-demand-service-offerings"></a>
-## Why use ODB to develop on-demand service offerings?
+## <a id="why-use-odb"></a>Why use ODB to develop on-demand service offerings?
+
 * ODB reduces the amount of code service developers have to write by abstracting away functionality common to most single-tenant on-demand service brokers.
 * ODB uses BOSH to deploy service instances, so anything that is BOSH-deployable can be integrated with Cloud Foundry's services marketplace.
 
-<a id="prerequisites-for-deploying-brokers-that-use-odb"></a>
-## Prerequisites for deploying brokers that use ODB
-Minimum versions of Cloud Foundry and BOSH are described in [the operator section](operating.html#configure-bosh).
+### <a id="bosh-v2"></a>BOSH v2 Features we use
 
-<a id="bosh-v2-features-we-use"></a>
-### BOSH v2 Features we use
 * Dynamic IP management
 * Availability zones
 * Globally-defined resources (**Cloud Config**). This results in manifests that are portable across BOSH CPIs, and are substantially smaller than old-style manifests.
 * Links: deployed BOSH instances consuming information (e.g. IP address) of other instances.
 
-<a id="steps-required-to-use-on-demand-service-broker"></a>
-## Steps required to use on-demand service broker
+## <a id="steps"></a>Steps required to use on-demand service broker
 
 The follow steps are required to create and maintain an ODB:
 
