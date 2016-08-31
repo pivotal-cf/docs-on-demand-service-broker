@@ -533,6 +533,8 @@ Example service adapter releases:
 
 We have published a [SDK](https://github.com/pivotal-cf/on-demand-service-broker-sdk) for teams writing their service adapters in Golang. It encapsulates the command line invocation handling, parameter parsing, response serialization and error handling so the adapter authors can focus on the service-specific logic in the adapter.
 
+You should use the same version of the SDK as your ODB release. For example if you are using v0.8.0 of the ODB BOSH release you should checkout the v0.8.0 tag of the SDK.
+
 For the generated BOSH manifest the SDK supports properties in two levels: manifest (global) and job level. Global properties are [deprecated in BOSH](http://bosh.io/docs/manifest-v2.html#properties), in favour of job level properties and job links. As an example, refer to the [Kafka example service adapter property generation](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/ffe85fecc2d9cf1b663fab418875e67ddcf3327f/adapter/generate_manifest.go#L79-L123).
 
 ### Usage
