@@ -1,33 +1,27 @@
 ---
-title: Setting up a local environment
+title: Setting Up and Using a Local Development Environment
 owner: London Services Enablement
 ---
 
-This topic describes how to create and manage an On-Demand Service Broker (ODB) using BOSH lite and PCF Dev. This topic describes how to use the following Apache Kafka service broker examples:
+Using BOSH Lite and PCF Dev, you can create and manage an On-Demand Service Broker (ODB) on your local development environment. The procedures below use the following Apache Kafka examples to demonstrate how to use ODB:
 
 * [Kafka Service Adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter)
 * [Kafka Service Release](https://github.com/pivotal-cf-experimental/kafka-example-service-release)
 
+## <a id="prereq"></a>Prerequisites
 
-
-## Prerequisites
-
-Before configuring an on-demand service broker to run locally, install and configure the following:
+Before setting up and using ODB on your local development environment, install and configure the following components:
 
 - [BOSH Lite](https://github.com/cloudfoundry/bosh-lite#install-bosh-lite)
+ <p class="note"><strong>Note</strong>: BOSH Lite does not contain a current version of the BOSH director to run the On-Demand Service Broker. The minimum required versions of Cloud Foundry and BOSH are described in <a href="./operating.html#configure-bosh">the operator section.</a></p>
 
-<p class="note"><strong>Note</strong>: BOSH Lite does not contain a current version of the BOSH director to run the On-Demand Service Broker. The minimum required versions of Cloud Foundry and BOSH are described in <a href="./operating.html#configure-bosh">the operator section.</a></p>
+ <p class="note">For PCFDev to route requests to the deployments on BOSH Lite ensure you run the script `bin/add-route` in the BOSH Lite repository. You may need to run this again if your networking is reset (e.g. reboot, or connecting to a different network).</p>
 
 - [PCF Dev](https://docs.pivotal.io/pcf-dev/#installing)
 
+## <a id="set_up_bosh"></a>Step 1: Set Up Your BOSH Lite Installation
 
-<p class="note">For PCFDev to route requests to the deployments on BOSH Lite ensure you run the script `bin/add-route` in the BOSH Lite repository. You may need to run this again if your networking is reset (e.g. reboot, or connecting to a different network).</p>
-
-## Task 1: Setup BOSH
-
-After installing BOSH Lite, target the BOSH Lite director and upload the stemcell.
-
-1. Target your BOSH Lite director:
+1. Target your BOSH Lite installation:
    <pre class="terminal">
     $ bosh target
     Current target is https<span>:</span>//192.0.2.4:25555 (Bosh Lite Director)
@@ -38,58 +32,73 @@ After installing BOSH Lite, target the BOSH Lite director and upload the stemcel
     $ bosh upload stemcell https<span>:</span>//bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent?v=3147
    </pre>
 
-## Task 2: Download and Configure the Apache Kafka Service Release
-
-To download and configure the 
+## <a id="set_up_kafka_sr"></a> Step 2: Set Up the Kafka Service Release Example
 
 1. Clone the [kafka service release](https://github.com/pivotal-cf-experimental/kafka-example-service-release) in your workspace:
    <pre class="terminal">
     $ git clone https<span>:</span>//github.com/pivotal-cf-experimental/kafka-example-service-release.git
    </pre>
 
-1. Create and upload the kafka service release on the director:
+1. In the `kafka-example-service-release` directory, create and upload the kafka service release:
    <pre class="terminal">
     $ cd kafka-example-service-release
     $ bosh create release --name kafka-example-service
-    $ bosh upload release
    </pre>
 
-## Task 3: Download and Configure the Kafka Service Adapter Release
+1. Upload the service to the BOSH director:
+  <pre class="terminal">
+    $ bosh upload release
+  </pre>
+
+## <a id="set_up_kafka_sa"></a> Step 3: Set Up the Kafka Service Adapter Release Example
 
 1. Clone the [kafka service adapter release](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release) and run `git submodule update --init` to bring in the adapter's dependencies
    <pre class="terminal">
     $ git clone https<span>:</span>//github.com/pivotal-cf-experimental/kafka-example-service-adapter-release.git
    </pre>
 
-1. Download the service adapter dependencies:
+1. Update the service adapter dependencies:
   <pre class="terminal">
     $ cd kafka-example-service-adapter-release
     $ git submodule update --init --recursive
   </pre>
 
-1. Create and upload the kafka example service adapter release on the director
+1. 1. Create the kafka example service adapter:
   <pre class="terminal">
     $ bosh create release --name kafka-example-service-adapter
+  </pre>
+
+1. Upload the kafka example service adapter to the BOSH director:
+  <pre class="terminal">
     $ bosh upload release
   </pre>
 
-## Task 4: Download and Configure On-Demand Service Broker
+## <a id="set_up_odb"></a> Step 4: Set Up the On-Demand Service Broker Release
 
-1. Clone the [on demand service broker release](https://github.com/pivotal-cf/on-demand-service-broker-release)
+1. Clone the [on-demand service broker release](https://github.com/pivotal-cf/on-demand-service-broker-release)
   <pre class="terminal">
     $ git clone https://github.com/pivotal-cf/on-demand-service-broker-release.git
     $ cd on-demand-service-broker-release
     $ git submodule update --init --recursive
   </pre>
 
-1. Create and upload the [on demand service broker release](https://github.com/pivotal-cf/on-demand-service-broker-release)
+1. Update submodule dependencies:
+  <pre class="terminal">
+    $ cd on-demand-service-broker-release
+    $ git submodule update --init --recursive
+  </pre>
+
+1. Create the `on-demand-service-broker` release:
   <pre class="terminal">
     $ bosh create release --name on-demand-service-broker
+  </pre>
+
+1. Upload the `on-demand-service-broker` release:
+  <pre class="terminal">
     $ bosh upload release
   </pre>
 
-
-## Task 5: Configure the BOSH Lite Director
+## <a id="create_bosh"></a> Step 5: Create a BOSH Deployment 
 
 1. Create a new directory in your workspace and a `cloud_config.yml` for the BOSH Lite Director. For example:
   <code>
@@ -261,7 +270,7 @@ To download and configure the
     $ bosh deploy
     </pre>
 
-1. Find out the ip address of the broker that was deployed with the `instances` BOSH command  d s
+1. Determine the IP address of the broker that was deployed with the `instances` BOSH commandds
     <pre class="terminal">
     bosh instances
     </pre>
@@ -286,6 +295,8 @@ To download and configure the
     Instances total: 1
     </code>
     Note the IP address of the broker.
+
+## <a id="create_service"></a> Step 6: Create a Service Broker on PCF Dev
 
 1. Create a service broker on PCF dev and enable access to its service offering. You will need the broker's credentials set in the deployment manifest and the IP of the broker VM.
     <pre class="terminal">
@@ -324,19 +335,21 @@ To download and configure the
     cf create-service kafka-service-with-odb small k1
     </pre>
 
-1. Check the status of your service. Initially, it should be `create in progress`. Eventually, it should be `create succeeded`.
+## <a id="status"></a> Step 7: Verify Your BOSH Deployment and On-Demand Service
 
+1. Check the status of your service:
     <pre class="terminal">
     cf service k1
     </pre>
 
-1. Check the BOSH deployment to see the on demand service provisioned by ODB.
+  Initially, the service status state is: `create in progress`. After the service is created, the status is: `create succeeded`.
 
+1. Verify that the on-demand service is provisioned in the BOSH deployment
     <pre class="terminal">
     bosh deployments
     </pre>
 
-    Sample output:
+    The output of this command appears as follows:
 
     <pre class="terminal">
     +-------------------------------------------------------+---------------------------------------+--------------------------------------------------+--------------+
@@ -349,4 +362,4 @@ To download and configure the
     +-------------------------------------------------------+---------------------------------------+--------------------------------------------------+--------------+
     </pre>
 
-    Note the service instance has been provisioned with the service releases specified in the ODB deployment manifest.
+    In this example, the service instance is provisioned and the service releases are specified in the ODB deployment manifest.

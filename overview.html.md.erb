@@ -1,11 +1,9 @@
 ---
-title: On-Demand Service Broker Documentation
+title: Overview
 owner: London Services Enablement
 ---
 
 This documentation describes how to set up and use the On-Demand Service Broker (ODB). 
-
-## Overview
 
 - <a href="overview.html#what-is-an-on-demand-service-broker">What is an on-demand service broker?</a>
 - <a href="overview.html#what-is-a-service-adapter">What is a service adapter?</a>
@@ -13,15 +11,13 @@ This documentation describes how to set up and use the On-Demand Service Broker 
 - <a href="overview.html#why-use-odb-to-develop-on-demand-service-offerings">Why use ODB to develop on-demand service offerings?</a>
 - <a href="overview.html#prerequisites-for-deploying-brokers-that-use-odb">Prerequisites for deploying brokers that use ODB</a>
 - <a href="overview.html#bosh-v2-features-we-use">BOSH v2 Features we use</a>
-- <a href="overview.html#steps-required-to-use-on-demand-service-broker">Steps required to use on-demand service broker</a>
-
-### <a id="cloud-foundry-service-broker"></a> About Cloud Foundry Service Brokers
+- <a href="overview.html#steps-required-to-use-on-demand-service-broker">Steps required to use on-demand service broker</a>- <a id="cloud-foundry-service-broker"></a> About Cloud Foundry Service Brokers
 
 A Cloud Foundry service broker allows app developers to provision services to be used by their Cloud Foundry apps. 
 The services are implemented as HTTP servers that conform to the [service broker API](http://docs.cloudfoundry.org/services/api.html). 
 These brokers are registered with Cloud Controller in order to populate a service marketplace.
 
-### <a id="on-demand-service-broker"></a> About On-Demand Service Brokers
+## <a id="on-demand-service-broker"></a> About On-Demand Service Brokers
 
 An on-demand Cloud Foundry service broker is a service broker that provisions IaaS resources at service instance creation time, 
 as opposed to pre-provisioning a fixed quantity of these resources at broker deployment time. 
