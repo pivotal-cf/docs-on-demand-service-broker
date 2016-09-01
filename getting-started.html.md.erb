@@ -126,16 +126,16 @@ Before setting up and using ODB on your local development environment, install a
         cloud_properties: {}
   </pre>
 
-1. Update the BOSH Lite cloud config.
+1. Update the BOSH Lite cloud config using the deployment manifest created in the previous step:
   <pre class="terminal">
     $ bosh update cloud-config cloud_config.yml
   </pre>
 
-1. Obtain the URL andUUID  BOSH Lite director information
+1. Obtain the URL and UUID  BOSH Lite director information:
   <pre class="terminal">
     $ bosh status
   </pre>
-  Running this command results in output similar to the following:
+  This command produces output similar to the following:
   <pre class="terminal">
     → bosh status
     Config
@@ -155,32 +155,33 @@ Before setting up and using ODB on your local development environment, install a
 
   Record the URL and UUID from your output. These are added to the `deployment_manifest.yml` in the next step.
 
-1. Create a BOSH Lite deployment manifest in a file called `deployment_manifest.yml`. 
+1. Create a BOSH Lite deployment manifest in a file called `deployment_manifest.yml` using the following as a base. 
 
-    Use the following as a sample for your manifest. Replace `BOSH_LITE_UUID` and `BOSH_LITE_IP` with the value obtained in the previous step. 
-    <pre>
+  Replace `BOSH_LITE_UUID` and `BOSH_LITE_IP` with the value obtained in the previous step.
+
+  <pre>
     name: kafka-on-demand-broker
 
     director_uuid: fb70f16a-4d6f-41f8-bc2e-0181a03dff18
 
     releases:
-      \- name: &broker-release on-demand-service-broker
+      - name: &broker-release on-demand-service-broker
         version: latest
-      \- name: &service-adapter-release kafka-example-service-adapter
+      - name: &service-adapter-release kafka-example-service-adapter
         version: latest
-      \- name: &service-release kafka-example-service
+      - name: &service-release kafka-example-service
         version: latest
 
     stemcells:
-      \- alias: trusty
+      - alias: trusty
         os: ubuntu-trusty
         version: latest
 
     instance_groups:
-      \- name: broker
+      - name: broker
         instances: 1
         jobs:
-          \- name: broker
+          - name: broker
             release: *broker-release
             properties:
               port: 8080
@@ -197,7 +198,7 @@ Before setting up and using ODB on your local development environment, install a
                 path: /var/vcap/packages/kafka-service-adapter/bin/service-adapter
               service_deployment:
                 releases:
-                  \- name: *service-release
+                  - name: *service-release
                     version: latest
                     jobs: [kafka_server, zookeeper_server]
                 stemcell:
@@ -211,17 +212,17 @@ Before setting up and using ODB on your local development environment, install a
                 plan_updatable: true
                 tags: [kafka]
                 plans:
-                  \- name: small
+                  - name: small
                     plan_id: 11789210-D743-4C65-9D38-C80B29F4D9C8
                     description: A Kafka deployment with a single instance of each job and persistent disk
                     instance_groups:
-                      \- name: kafka_server
+                      - name: kafka_server
                         vm_type: container
                         instances: 1
                         persistent_disk_type: ten
                         azs: [lite]
                         networks: [kafka]
-                      \- name: zookeeper_server
+                      - name: zookeeper_server
                         vm_type: container
                         instances: 1
                         persistent_disk_type: ten
@@ -230,7 +231,7 @@ Before setting up and using ODB on your local development environment, install a
                     properties:
                       auto_create_topics: true
                       default_replication_factor: 1
-          \- name: kafka-service-adapter
+          - name: kafka-service-adapter
             release: *service-adapter-release
 
         vm_type: container
@@ -238,7 +239,7 @@ Before setting up and using ODB on your local development environment, install a
         stemcell: trusty
         azs: [lite]
         networks:
-          \- name: kafka
+          - name: kafka
 
     update:
       canaries: 1
@@ -247,20 +248,24 @@ Before setting up and using ODB on your local development environment, install a
       max_in_flight: 4
     </pre>
 
-1. Deploy using the manifest from the previous step
+1. Change the BOSH deployment to use the deployment manifest created in the previous step:
     <pre class="terminal">
     $ bosh deployment deployment_manifest.yml
+    </pre>
+
+1. Deploy the manifest:
+    <pre class="terminal">
     $ bosh deploy
     </pre>
 
-1. Determine the IP address of the broker that was deployed with the `instances` BOSH commandds
+1. Obtain the IP address of the deployed broker:
     <pre class="terminal">
-    bosh instances
+    $ bosh instances
     </pre>
 
-    Sample output:
+    This command produces output similar to the following:
 
-    <code>
+    <pre>
     Acting as client 'admin' on deployment 'kafka-on-demand-broker' on 'Bosh Lite Director'
 
     Director task 147
@@ -276,8 +281,9 @@ Before setting up and using ODB on your local development environment, install a
     (*) Bootstrap node
 
     Instances total: 1
-    </code>
-    Note the IP address of the broker.
+    </pre>
+    
+    Record the address of the broker. This address is used in the next step to create a service broker.
 
 ## <a id="create_service"></a> Step 6: Create a Service Broker on PCF Dev
 
