@@ -156,32 +156,30 @@ Before setting up and using ODB on your local development environment, install a
   Record the URL and UUID from your output. These are added to the `deployment_manifest.yml` in the next step.
 
 1. Create a BOSH Lite deployment manifest in a file called `deployment_manifest.yml` using the following as a base. 
-
-  Replace `BOSH_LITE_UUID` and `BOSH_LITE_IP` with the value obtained in the previous step.
-
-  <pre>
+<p class="note">Replace `BOSH_LITE_UUID` and `BOSH_LITE_IP` with the value obtained in the previous step.</p>
+<pre>
     name: kafka-on-demand-broker
 
     director_uuid: fb70f16a-4d6f-41f8-bc2e-0181a03dff18
 
     releases:
-      - name: &broker-release on-demand-service-broker
+      \- name: &;broker-release on-demand-service-broker
         version: latest
-      - name: &service-adapter-release kafka-example-service-adapter
+      \- name: &;service-adapter-release kafka-example-service-adapter
         version: latest
-      - name: &service-release kafka-example-service
+      \- name: &service-release kafka-example-service
         version: latest
 
     stemcells:
-      - alias: trusty
+      \- alias: trusty
         os: ubuntu-trusty
         version: latest
 
     instance_groups:
-      - name: broker
+      \- name: broker
         instances: 1
         jobs:
-          - name: broker
+          \- name: broker
             release: *broker-release
             properties:
               port: 8080
@@ -231,7 +229,7 @@ Before setting up and using ODB on your local development environment, install a
                     properties:
                       auto_create_topics: true
                       default_replication_factor: 1
-          - name: kafka-service-adapter
+          \- name: kafka-service-adapter
             release: *service-adapter-release
 
         vm_type: container
@@ -239,15 +237,14 @@ Before setting up and using ODB on your local development environment, install a
         stemcell: trusty
         azs: [lite]
         networks:
-          - name: kafka
+          \- name: kafka
 
     update:
       canaries: 1
       canary_watch_time: 30000-180000
       update_watch_time: 30000-180000
       max_in_flight: 4
-    </pre>
-
+</pre>
 1. Change the BOSH deployment to use the deployment manifest created in the previous step:
     <pre class="terminal">
     $ bosh deployment deployment_manifest.yml
@@ -289,23 +286,22 @@ Before setting up and using ODB on your local development environment, install a
 
 1. Create a service broker on PCF dev and enable access to its service offering. You will need the broker's credentials set in the deployment manifest and the IP of the broker VM.
     <pre class="terminal">
-    cf create-service-broker kafka-broker broker password http://<REPLACE_WITH_BROKER_IP>:8080
+    $ cf create-service-broker kafka-broker broker password http://<REPLACE_WITH_BROKER_IP>:8080
     </pre>
 
     For more details on service brokers see [here](http://docs.cloudfoundry.org/services/api.html).
 
 1. Enable access to the broker's service plans:
     <pre class="terminal">
-    cf enable-service-access kafka-service-with-odb
+    $ cf enable-service-access kafka-service-with-odb
     </pre>
 
-    See the services offered by the broker in the marketplace:
-
+1. View the services offered by the broker in the marketplace:
     <pre class="terminal">
-    cf marketplace
+    $ cf marketplace
     </pre>
 
-    Sample output:
+    This command produces output similar to the following:
 
     <pre class="terminal">
     Getting services from marketplace in org pcfdev-org / space pcfdev-space as admin...
@@ -321,21 +317,21 @@ Before setting up and using ODB on your local development environment, install a
 1. Create a service instance using the Kafka on-demand service broker.
 
     <pre class="terminal">
-    cf create-service kafka-service-with-odb small k1
+    $ cf create-service kafka-service-with-odb small k1
     </pre>
 
 ## <a id="status"></a> Step 7: Verify Your BOSH Deployment and On-Demand Service
 
 1. Check the status of your service:
     <pre class="terminal">
-    cf service k1
+    $ cf service k1
     </pre>
 
   Initially, the service status state is: `create in progress`. After the service is created, the status is: `create succeeded`.
 
 1. Verify that the on-demand service is provisioned in the BOSH deployment
     <pre class="terminal">
-    bosh deployments
+    $ bosh deployments
     </pre>
 
     The output of this command appears as follows:

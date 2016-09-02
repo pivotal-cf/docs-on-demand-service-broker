@@ -1,9 +1,7 @@
 ---
-title: On-demand Service Broker Documentation
+title: Creating the Service Author Deliverables
 owner: London Services Enablement
 ---
-
-# Creating the Service Author Deliverables
 
 - <a href="#what-is-required-of-the-service-authors">What is required of the Service Authors?</a>
 - <a href="#creating-a-service-release">Creating a Service Release</a>
@@ -27,7 +25,7 @@ The following deliverables are required from the service authors:
 For information about what is required of the Operator, see [Responsibilities of the Operator](operating.html#responsibility-of-the-operator).
 
 <a id="creating-a-service-release"></a>
-## Creating a Service Release
+## Create a Service Release
 
 A service release is a BOSH release that is deployed at instance creation time, once for each service instance, by the On-demand Service Broker (ODB). We have created two examples:
   * [Redis](https://github.com/pivotal-cf-experimental/redis-example-service-release)
@@ -40,7 +38,7 @@ When generating a manifest, we recommend not using static IPs as this makes netw
 There are two types of job links, implicit and explicit. The [example Kafka release](https://github.com/pivotal-cf-experimental/kafka-example-service-release/blob/master/jobs/kafka_server/spec#L15) uses implicit job links to get the IPs of the brokers and the zookeeper. Details on how to use the links feature are available [here](https://bosh.io/docs/links.html).
 
 <a id="creating-a-service-adapter"></a>
-## Creating a Service Adapter
+## Create a Service Adapter
 
 A Service Adapter is an executable invoked by ODB. It is expected to respond to these subcommands:
 
@@ -63,7 +61,7 @@ A Service Adapter is an executable invoked by ODB. It is expected to respond to 
 The parameters, and expected output from these subcommands will be explained in detail below. For each of these subcommands, exit status 0 indicates that the command succeeded exit status 10 indicates not implemented, and any non-zero status indicates failure.
 
 <a id="handling-errors"></a>
-### Handling errors
+### Handle errors
 If a subcommand fails, the adapter must return a non-zero exit status, and may optionally print to stdout and/or stderr.
 
 Anything printed to stdout will be returned to the CF CLI user.
