@@ -1,5 +1,5 @@
 ---
-title: Setting Up and Using a Local Development Environment
+title: Setting Up a Local Development Environment
 owner: London Services Enablement
 ---
 
@@ -13,9 +13,8 @@ Using BOSH Lite and PCF Dev, you can create and manage an On-Demand Service Brok
 Before setting up and using ODB on your local development environment, install and configure the following components:
 
 - [BOSH Lite](https://github.com/cloudfoundry/bosh-lite#install-bosh-lite)
- <p class="note"><strong>Note</strong>: BOSH Lite does not contain a current version of the BOSH director to run the On-Demand Service Broker. The minimum required versions of Cloud Foundry and BOSH are described in <a href="./operating.html#configure-bosh">the operator section.</a></p>
 
- <p class="note">For PCFDev to route requests to the deployments on BOSH Lite ensure you run the script `bin/add-route` in the BOSH Lite repository. You may need to run this again if your networking is reset (e.g. reboot, or connecting to a different network).</p>
+ <p class="note">**Note**: For PCFDev to route requests to the deployments on BOSH Lite ensure you run the script `bin/add-route` in the BOSH Lite repository. You may need to run this again if your networking is reset (e.g. reboot, or connecting to a different network).</p>
 
 - [PCF Dev](https://docs.pivotal.io/pcf-dev/#installing)
 
@@ -152,7 +151,6 @@ Before setting up and using ODB on your local development environment, install a
       compiled_package_cache enabled (provider: local)
       snapshots  disabled
   </pre>
-
   Record the URL and UUID from your output. These are added to the `deployment_manifest.yml` in the next step.
 
 1. Create a BOSH Lite deployment manifest in a file called `deployment_manifest.yml` using the following as a base. 
@@ -326,8 +324,7 @@ Before setting up and using ODB on your local development environment, install a
     <pre class="terminal">
     $ cf service k1
     </pre>
-
-  Initially, the service status state is: `create in progress`. After the service is created, the status is: `create succeeded`.
+    Initially, the service status state is: `create in progress`. After the service is created, the status changes to: `create succeeded`.
 
 1. Verify that the on-demand service is provisioned in the BOSH deployment
     <pre class="terminal">
@@ -347,4 +344,4 @@ Before setting up and using ODB on your local development environment, install a
     +-------------------------------------------------------+---------------------------------------+--------------------------------------------------+--------------+
     </pre>
 
-    In this example, the service instance is provisioned and the service releases are specified in the ODB deployment manifest.
+    This example shows that the service instance is provisioned and the service releases are specified in the ODB deployment manifest.
