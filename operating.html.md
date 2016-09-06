@@ -3,16 +3,16 @@ title: Deploying an On-demand Service Broker
 owner: London Services Enablement
 ---
 
-## <a id="op-responsibilities"></a>What are the responsibilities of the Operator?
+## <a id="operator"></a>Operator Responsibilities
+The operator is responsible for performing the following:
 
-The operator is responsible for the following tasks:
-- Configuring the BOSH director
-- Uploading the required releases for the broker deployment and service instance deployments.
-- Write a broker manifest
-  - See [v2-style manifest docs](http://bosh.io/docs/manifest-v2.html) if unfamiliar with writing BOSH v2 manifests
-  - Core broker Configuration
-  - Service catalog and Plan composition
-- Broker Management
+* Configure the BOSH director
+* Upload the required releases for the broker deployment and service instance deployments.
+* Write a broker manifest
+  * See [v2-style manifest docs](http://bosh.io/docs/manifest-v2.html) if unfamiliar with writing BOSH v2 manifests
+  * Core broker configuration
+  * Service catalog and plan composition
+* Manage brokers
 
 For a list of deliverables provided by the Service Author, see [Required Deliverables](creating.html#what-is-required-of-the-service-authors).
 
@@ -20,7 +20,7 @@ For an example manifest for a Redis service, see [redis-example-service-adapter-
 
 For an example manifest for a Kafka service, see [kafka-example-service-adapter-release](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml).
 
-## <a id="configure-bosh"></a>Setting up your BOSH director
+## <a id="configure-bosh"></a>Set Up Your BOSH Director
 
 Dependencies for the On-Demand Service Broker:
 
@@ -78,7 +78,7 @@ Upload the following releases to the BOSH director:
 * your service adapter
 * your service release(s)
 
-## <a id="broker-manifest"></a>Write a broker manifest
+## <a id="broker-manifest"></a>Write a Broker Manifest
 
 ### <a id="core-broker-config"></a>Core Broker Configuration
 
@@ -143,7 +143,7 @@ This snippet is using the BOSH v2 syntax, and making use of global cloud config 
 
 Please note that the `disable_ssl_cert_verification` option is dangerous and **should not be used in production**.
 
-### <a id="catalog"></a>Service catalog and Plan composition
+### <a id="catalog"></a>Service Catalog and Plan Composition
 
 The operator must:
 
@@ -217,7 +217,7 @@ service_catalog:
         serial: true # optional
 ```
 
-## <a id="route"></a>Route registration
+## <a id="route"></a>Route Registration
 
 You can optionally colocate the `route_registrar` job from the [routing release](http://bosh.io/releases/github.com/cloudfoundry-incubator/cf-routing-release?all=1) with the on-demand-service-broker, in order to:
 
@@ -228,7 +228,7 @@ To do this, upload the release to your BOSH director and [configure the job prop
 
 Remember to set the `broker_uri` property in the [register-broker errand](#register-broker) if you configure a route.
 
-## <a id="metrics"></a>Broker metrics
+## <a id="metrics"></a>Broker Metrics
 
 The ODB bosh release contains a metrics job, that can be used to emit metrics when colocated with [service metrics](https://github.com/pivotal-cf-experimental/service-metrics-release). You must include the loggregator release in order to do this.
 
@@ -325,14 +325,13 @@ Add the following instance group to your manifest:
 
 Run the errand with `bosh run errand deregister-broker`.
 
-### <a id="admin-instances" /></a>Administering service instances
+### <a id="admin-instances"></a>Administer Service Instances
 
 We recommend using the [bosh cli gem](https://bosh.io/docs/bosh-cli.html) for administering the deployments created by ODB; for example for checking VMs, ssh, viewing logs.
 
 We **recommend against** using the bosh cli for updating/deleting ODB service deployments as it might accidentally trigger a race condition with Cloud Controller-induced updates/deletes or result in ODB overriding your [snowflake](http://martinfowler.com/bliki/SnowflakeServer.html) changes at the next deploy. All updates to the service instances must be done using the [errand to upgrade existing service instances](#upgrading-existing-service-instances).
 
-
-### <a id="upgrade-broker" /></a>Upgrading the broker
+### <a id="upgrade-broker"></a>Upgrade the Broker
 
 The broker is upgraded in a similar manner to all BOSH releases:
 
@@ -342,7 +341,7 @@ The broker is upgraded in a similar manner to all BOSH releases:
 
 Often, a broker upgrade will involve an upgrading of the service release(s). In this case, upload the new version of the service release(s) and change the broker manifest properties to deploy these newer versions. Any new instances will use the new versions, but you must use an [errand to upgrade existing service instances](#upgrading-existing-service-instances).
 
-### <a id="upgrade-instances" /></a>Upgrading existing service instances
+### <a id="upgrade-instances"></a>Upgrade Existing Service Instances
 
 1. Ensure you have the `upgrade-sub-deployments` errand instance group on the broker manifest
 
@@ -364,7 +363,7 @@ Often, a broker upgrade will involve an upgrading of the service release(s). In 
 
 Note that if a developer runs `cf update-service` on an outdated instance, they will have their instance upgraded regardless of whether or not the operator ran the errand.
 
-### <a id="delete-instances"></a>Deleting all service instances
+### <a id="delete-instances"></a>Delete Service Instances
 
 This errand deletes all service instances of your broker's service offering in every org and space of Cloud Foundry. It uses the Cloud Controller API to do this, and therefore only deletes instances the Cloud Controller knows about. It will not help you terminate "rogue" BOSH deployments, those that don't correspond to a known instance (this *should* never happen, but in practice it might).
 
@@ -394,11 +393,13 @@ Add the following instance group to your manifest:
 
 Run the errand with `bosh run errand delete-sub-deployments`.
 
-### <a id="update-plans"></a>Updating service plans
+### <a id="updating-service-plans"></a>Update Service Plans
+
 
 Service plans can be updated by changing the plan properties in the `service_catalog` for the broker. All service plan properties except the `service_id` and `plan_id` are modifiable. After the changing the catalog, you should update the cf marketplace using the `cf update-service-broker` command. The updated plan properties would be applied to newly created instances. To apply the plan properties to already provisioned instances, the [update sub-deployments errand](#upgrading-existing-service-instances) has to be run.
 
-### <a id="disable-plans"></a>Disabling service plans
+
+### <a id="disabling-service-plans"></a>Disable Service Plans
 
 Access to a service plan can be disabled by using the cloudfoundry api.
 
@@ -407,7 +408,7 @@ On the cli you can use
 cf disable-service-access <service-name-from-catalog> -p <plan-name>
 ```
 
-### <a id="remove-plans"></a>Removing service plans
+### <a id="remove-plans"></a>Remove Service Plans
 
 A service plans can be removed if there are no instances using the plan. To remove the a plan, remove it from the broker manifest and update the cf marketplace by using the `cf update-service-broker` command. If a plan with deployed service instances from the broker manifest, the broker will fail to startup.
 
@@ -428,7 +429,7 @@ The ODB accesses the following [BOSH API](https://bosh.io/docs/director-api-v1.h
 | `GET /tasks/<task_ID>`                                           | poll the BOSH director until a task finishes, e.g. create, update, or delete a deployment                                                                    |
 | `GET /tasks?deployment=<deployment_name>`                        | determine the last operation status and message for a service instance, e.g. 'create in progress' - used when creating, updating, deleting service instances |
 
-### <a id="bosh-uaa"></a>BOSH UAA permissions
+### <a id="bosh-uaa"></a>BOSH UAA Permissions
 
 The actions that the ODB needs to be able to perform are:
 
@@ -493,7 +494,7 @@ origin:"<broker deployment name>" eventType:ValueMetric timestamp:<timestamp> de
 origin:"<broker deployment name>" eventType:ValueMetric timestamp:<timestamp> deployment:"<broker deployment name>" job:"broker" index:"<bosh job index>" ip:"<IP>" valueMetric:<name:"/on-demand-broker/<service offering name>/<plan name>/quota_remaining" value:<quota remaining> unit:"count" >
 ```
 
-### <a id="id-deploys"></a>Identifying deployments in BOSH
+### <a id="identifying-deployments"></a>Identify Deployments in BOSH
 
 There is a one to one mapping between the service instance id from CF and the deployment name in BOSH. The convention is the bosh deployment name would be the service instance id prepended by `service-instance_`. To identify the bosh deployment for a service instance you can.
 
@@ -511,7 +512,7 @@ There is a one to one mapping between the service instance id from CF and the de
     bosh tasks --deployment service-instance_<GUID>
     ```
 
-### <a id="id-tasks"></a>Identifying tasks in BOSH
+### <a id="id-tasks"></a>Identify Tasks in BOSH
 
 Most operations on the on demand service broker API are implemented by launching BOSH tasks. If an operation fails, it may be useful to investigate the corresponding BOSH task. To do this:
 
@@ -547,7 +548,7 @@ Most operations on the on demand service broker API are implemented by launching
     bosh task <task_ID>
     ```
 
-### <a id="id-uaa-issues"></a>Identifying issues with connecting to BOSH and/or UAA
+### <a id="id-uaa-issues"></a>Identify Issues When Connecting to BOSH or UAA
 
 The ODB interacts with the BOSH director to provision and deprovision instances, and is authenticated via the director's UAA. See [Core Broker Configuration](#core-broker-configuration) for an example configuration.
 
@@ -559,7 +560,7 @@ For example
 on-demand-service-broker: [on-demand-service-broker] [575afbc1-b541-481d-9cde-b3d3e67e87bf] 2016/05/18 15:56:40 Error authenticating (401): {"error":"unauthorized","error_description":"Bad credentials"}, please ensure that properties.<broker-job>.bosh.authentication.uaa is correct and try again.
 ```
 
-### <a id="list-instances"></a>Listing service instances
+### <a id="listing-instances"></a>List Service Instances
 
 The ODB persists the list of ODB-deployed service instances and provides an endpoint to retrieve them. This endpoint requires basic authentication.
 

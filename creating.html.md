@@ -3,16 +3,7 @@ title: Creating the Service Author Deliverables
 owner: London Services Enablement
 ---
 
-- <a href="#what-is-required-of-the-service-authors">What is required of the Service Authors?</a>
-- <a href="#creating-a-service-release">Creating a Service Release</a>
-- <a href="#creating-a-service-adapter">Creating a Service Adapter</a>
-- <a href="#inputs-for-manifest-generation">Inputs for manifest generation</a>
-- <a href="#service-adapter-interface">Service adapter interface</a>
-- <a href="#sub-commands">Subcommands</a>
-- <a href="#packaging">Packaging</a>
-- <a href="#sdk">Golang SDK</a>
-
-## <a id="required"></a>What is required of the Service Authors?
+##<a id="what-is-required-of-the-service-authors"></a>Service Author Requirements
 The following deliverables are required from the service authors:
 
 - Service release(s)
@@ -23,7 +14,7 @@ The following deliverables are required from the service authors:
 
 For information about what is required of the Operator, see [Responsibilities of the Operator](operating.html#responsibility-of-the-operator).
 
-## <a id="create-release"></a>Creating a Service Release
+## <a id="create-a-service-release"></a>Create a Service Release
 
 A service release is a BOSH release that is deployed at instance creation time, once for each service instance, by the On-demand Service Broker (ODB). We have created two examples:
   * [Redis](https://github.com/pivotal-cf-experimental/redis-example-service-release)
@@ -35,7 +26,7 @@ See the [BOSH docs](http://bosh.io/docs) for help creating a BOSH release. We re
 When generating a manifest, we recommend not using static IPs as this makes network IP management very complex. Instead, we recommend using [BOSH's job links feature](https://bosh.io/docs/links.html).
 There are two types of job links, implicit and explicit. The [example Kafka release](https://github.com/pivotal-cf-experimental/kafka-example-service-release/blob/master/jobs/kafka_server/spec#L15) uses implicit job links to get the IPs of the brokers and the zookeeper. Details on how to use the links feature are available [here](https://bosh.io/docs/links.html).
 
-## <a id="create-adapter"></a>Creating a Service Adapter
+## <a id="create-a-service-adapter"></a>Create a Service Adapter
 
 A Service Adapter is an executable invoked by ODB. It is expected to respond to these subcommands:
 
@@ -57,7 +48,7 @@ A Service Adapter is an executable invoked by ODB. It is expected to respond to 
 
 The parameters, and expected output from these subcommands will be explained in detail below. For each of these subcommands, exit status 0 indicates that the command succeeded exit status 10 indicates not implemented, and any non-zero status indicates failure.
 
-### <a id="handling-errors"></a>Handling errors
+<a id="handling-errors"></a>### Handle Errors
 
 If a subcommand fails, the adapter must return a non-zero exit status, and may optionally print to stdout and/or stderr.
 
@@ -81,7 +72,7 @@ For example:
 
 - the [Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go) supports the `auto_create_topics` arbitrary parameter to configure auto-creation of topics on the cluster.
 
-### <a id="prev-props"></a>Previous manifest properties
+### <a id="prev-props"></a>Previous Manifest Properties
 
 Service authors can choose to migrate certain properties for the service from the previous manifest when updating a service instance. If the previous manifest is ignored then any properties configured using arbitrary parameters will not be migrated when a service instance is updated.
 
@@ -91,7 +82,7 @@ For example:
 
 - the [Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go) supports migration of the `auto_create_topics` previous plan property to configure auto-creation of topics on the cluster.
 
-### <a id="plan-props"></a>Service plan properties
+### <a id="plan-props"></a>Service Plan Properties
 
 Service authors can choose to support certain properties for the service in the adapter code. These properties are service-specific traits used to customize the service. They do not necessarily map to jobs one to one; a plan property may affect multiple jobs in the deployment. Plan properties are a mechanism for the operator to define different plans.
 
@@ -102,7 +93,7 @@ For example:
 - the [Redis service adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_manifest_generator.go) supports the `persistence` property which can be used to attach a disk to the vm.
 - the [Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go) supports the `auto_create_topics` property to enable auto-creation of topics on the cluster.
 
-### <a id="precedence"></a>Order of precedence
+### <a id="precedence"></a>Order of Precedence
 
 Note, we recommend service authors use the following order of precedence in their service adapters when generating manifests:
 
@@ -112,7 +103,8 @@ Note, we recommend service authors use the following order of precedence in thei
 
 For example, see `auto_create_topics` in the [example Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go#L68-L77).
 
-## <a id="interface"></a>Service adapter interface
+## <a id="interface"></a>Service Adapter Interface
+
 A service adapter is expected to be implemented as a binary with the interface
 
 ```
@@ -138,7 +130,7 @@ The generate-manifest subcommand takes in 4 arguments and returns a BOSH deploym
 
 The following table describes the supported exit codes and output for the `generate-manifest` subcommand:
 
-#### Supported exit codes for generate-manifest
+#### Supported Exit Codes for generate-manifest
 | exit code     | Description     | Output                                                                                                                           |
 |:--------------|:----------------|:---------------------------------------------------------------------------------------------------------------------------------|
 | 0             | success         | Stdout: BOSH manifest YAML                                                                                                       |
@@ -257,7 +249,7 @@ For example
 
 Plans are composed by the operator and consist of resource mappings, properties and an optional update block:
 
-* **Resource mappings**
+* **Resource Mappings**
 
   The `instance_groups` section of the plan JSON. This maps service deployment instance groups (defined by the service author) to resources (defined by the operator). The service developers should document the list of instance group names required for their deployment (e.g. "redis-server") and any constraints they recommend on resources (e.g. operator must add a persistent disk if persistence property is enabled). These constraints can of course be enforced in code. The `instance_groups` section also contains a field for `lifecycle`, which can be set by the operator. The service adapter will add a lifecycle field to the instance group within the bosh manifest when specified.
 
@@ -265,7 +257,7 @@ Plans are composed by the operator and consist of resource mappings, properties 
 
   Properties are service-specific parameters chosen by the service author. The Redis example exposes a property `persistence`, which takes a boolean value and toggles disk persistence for Redis. These should be documented by the service developers for the operator.
 
-* **Update block (optional)**
+* **Update Block (optional)**
 
   This block defines a plan-specific configuration for BOSH's update instance operation. Although the ODB considers this block optional, the service adapter must output an update block in every manifest it generates. Some ways to achieve that are:
 
@@ -412,11 +404,11 @@ This is a JSON object that holds the entire body of the [service binding](http:/
 
 The field `parameters` contains arbitrary key-value pairs which were passed by the application developer as a `cf` CLI parameter when creating, or updating the service instance.
 
-#### Credentials for bindings
+#### Credentials for Bindings
 
 We have identified three approaches to credentials for a service binding.
 
-##### 1. Static credentials
+##### Static Credentials
 
 In this case, the same credentials are used for all bindings. One option is to define these credentials in the service instance manifest.
 
@@ -428,7 +420,7 @@ properties:
     password: <same-for-all-bindings>
 ```
 
-##### 2. Credentials unique to each binding
+##### Credentials Unique to Each Binding
 
 In this case, when the adapter `generate-manifest` subcommand is invoked, it generates random admin credentials and returns them as part of the service instance manifest. When the `create-binding` subcommand is invoked, the adapter can use the admin credentials from the manifest to create unique credentials for the binding. Subsequent `create-binding`s create new credentials.
 
@@ -439,7 +431,7 @@ properties:
   admin_password: <use-to-create-credentials>
 ```
 
-##### 3. Using an agent
+##### Using an Agent
 
 In this case, the author defines an agent responsible for handling creation of credentials unique to each binding. The agent must be added as a BOSH release in the service manifest. Moreover, the service and agent jobs should be co-located in the same instance group.
 
@@ -523,13 +515,15 @@ The field `parameters` contains arbitrary key-value pairs which were passed by t
 
 ## <a id="packaging"></a>Packaging
 
+This topic describes workflows for setting up and maintaining of a service instance. The diagrams show which tasks are undertaken by the ODB and which require interaction with the Service Adapter.
+
 The adapter should be packaged as a BOSH release, which should be co-located with the ODB release in a BOSH manifest by the operator. This is only done in order to place the adapter executable on the same VM as the ODB server, therefore the adapter BOSH job's `monit` file should probably have no processes defined.
 
 Example service adapter releases:
 - <a href="https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release">kafka</a>
 - <a href="https://github.com/pivotal-cf-experimental/redis-example-service-adapter-release">redis</a>
 
-## <a id="sdk"></a>Golang SDK
+## <a id="sdk"></a> Golang SDK
 
 We have published a [SDK](https://github.com/pivotal-cf/on-demand-service-broker-sdk) for teams writing their service adapters in Golang. It encapsulates the command line invocation handling, parameter parsing, response serialization and error handling so the adapter authors can focus on the service-specific logic in the adapter.
 

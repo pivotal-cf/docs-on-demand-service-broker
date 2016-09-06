@@ -31,11 +31,11 @@ Notes:
 1. The ELBs created by CloudFormation are both for CF, not Ops Manager. One of them will be configured with your wildcard certificate. This takes the place of HAProxy in AWS PCF deployments, and is therefore not used until you deploy the ERT tile.
 1. To target the bosh director from the Ops Manager VM: `bosh --ca-cert /var/tempest/workspaces/default/root_ca_certificate target 10.0.16.10`
 
-## <a id="building"></a>Building a tile
+## <a id="building"></a>Build a Tile
 
-Follow the build your own [tile documentation](https://docs.pivotal.io/partners/deploying-with-ops-man-tile.html#build-your-own). Then enhance the `handcraft.yml` with the accessors listed below.
+Follow the default build your own [Product tile documentation](https://docs.pivotal.io/partners/deploying-with-ops-man-tile.html#build-your-own), enhance the `handcraft.yml` with the accessors listed below. To access the `$self` accessors, the `service-broker` flag must be `true` in the handcraft.
 
-## <a id="accessors"></a>Non-exhaustive accessors reference
+## <a id="accessors"></a>Non-Exhaustive Accessors Reference
 
 #### director
 
