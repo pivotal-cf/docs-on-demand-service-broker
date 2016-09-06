@@ -1,5 +1,5 @@
 ---
-title: Deploying an On-demand Service Broker
+title: Deploying an On-Demand Service Broker
 owner: London Services Enablement
 ---
 
@@ -29,7 +29,7 @@ Dependencies for the On-Demand Service Broker:
 
 ### SSL certificates
 
-If the On-Demand Service Broker (ODB) is configured to communicate with BOSH on the director's private IP you can probably get away with insecure HTTP.
+If the on-demand service Broker (ODB) is configured to communicate with BOSH on the director's private IP you can probably get away with insecure HTTP.
 
 If ODB is configured to communicate with BOSH on the director's public IP you will probably be using a self-signed certificate unless you have a domain for your BOSH director. ODB does not ignore TLS certificate validation errors by default (as expected). You have two options to configure certificate-based authentication between the BOSH director and the ODB:
 

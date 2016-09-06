@@ -109,7 +109,7 @@ cf:
 
 For more accessors you can see the [ops-manager-example product](https://github.com/pivotal-cf-experimental/ops-manager-example)
 
-## <a id="errands"></a>On-demand broker errands
+## <a id="errands"></a>On-Demand Service Broker errands
 
 In the reference [Kafka tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile) we have demonstrated how the errands in the on-demand broker release can be used.
 

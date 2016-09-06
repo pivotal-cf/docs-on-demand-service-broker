@@ -3,7 +3,7 @@ title: Setting Up a Local Development Environment
 owner: London Services Enablement
 ---
 
-To get started using BOSH Lite and PCF Dev, you can create and manage an On-Demand Service Broker (ODB) on your local development environment. The procedures below use the following Apache Kafka examples to demonstrate how to use ODB:
+To get started using BOSH Lite and PCF Dev, you can create and manage an on-demand service broker (ODB) on your local development environment. The procedures below use the following Apache Kafka examples to demonstrate how to use ODB:
 
 * [Kafka Service Adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter)
 * [Kafka Service Release](https://github.com/pivotal-cf-experimental/kafka-example-service-release)
@@ -260,7 +260,7 @@ Before setting up and using ODB on your local development environment, install a
 
     This command produces output similar to the following:
 
-    <pre>
+    <pre class="terminal">
     Acting as client 'admin' on deployment 'kafka-on-demand-broker' on 'Bosh Lite Director'
 
     Director task 147

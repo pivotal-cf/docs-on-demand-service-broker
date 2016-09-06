@@ -1,5 +1,5 @@
 ---
-title: About the On-demand Service Broker SDK
+title: About the On-Demand Service Broker SDK
 owner: London Services Enablement
 ---
 
@@ -9,7 +9,7 @@ A Cloud Foundry service broker allows application developers to provision servic
 
 ## <a id="odb"></a>About On-Demand Service Brokers
 
-An on-demand Cloud Foundry service broker is a service broker that provisions IAAS resources at service instance creation time, as opposed to pre-provisioning a fixed quantity of these resources at broker deployment time. The **On-demand Service Broker (ODB)** is an SDK that you can use to create generic, on-demand, service brokers for single service offerings where one service instance corresponds to one BOSH deployment. Single tenant means a dedicated service process/cluster for each Cloud Foundry service instance.
+An on-demand Cloud Foundry service broker is a service broker that provisions IAAS resources at service instance creation time, as opposed to pre-provisioning a fixed quantity of these resources at broker deployment time. The **on-demand service broker (ODB)** is an SDK that you can use to create generic, on-demand, service brokers for single service offerings where one service instance corresponds to one BOSH deployment. Single tenant means a dedicated service process/cluster for each Cloud Foundry service instance.
 
 Service-specific functionality is plugged in by the service author via an executable called a **Service Adapter**. For more information about the responsibilities of Service Authors, please see [Creating the Service Author Deliverables](creating.html).
 
