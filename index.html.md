@@ -52,5 +52,5 @@ LINKS TK
 * <a href="getting-started.html" class="subnav">Setting up a Local Environment</a>
 * <a href="creating.html" class="subnav">Creating a Service Adapter</a>
 * <a href="operating.html" class="subnav">Operating the On-demand Service Broker</a>
-* <a href="tile.html" class="subnav">Creating a PCF OpsMan Tile</a>
+* <a href="tile.html" class="subnav">Creating a PCF Ops Manager Tile</a>
 * <a href="concepts.html" class="subnav">On-Demand Service Broker Concepts/Reference</a>
