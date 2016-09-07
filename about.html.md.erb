@@ -50,27 +50,6 @@ The service author can focus on building the BOSH release of their service and p
 
 The operator then configures a range of plans for the service in the ODB BOSH manifest. This gives the operator control of what service configurations to offer their app developers. It also gives operators a consistent experience installing, configuring, and upgrading Pivotal products.
 
-## <a id="why-od"></a>Benefits of ODB
-
-The benefits of provisioning IaaS resources on-demand are:
-
-* Scale resource consumption linearly with need, without having to plan for pre-provisioning.
-* App developers get more control over resources, and do not have to do acquire them through the operator.
-
-## <a id="why-use-odb"></a>The benefits of using ODB to develop on-demand service offerings are:
-
-* ODB reduces the amount of code service developers have to write by abstracting away functionality common to most single-tenant on-demand service brokers.
-* ODB uses BOSH to deploy service instances, so anything that is BOSH-deployable can integrate with Cloud Foundry's services marketplace.
-
-### <a id="bosh-v2"></a>BOSH v2 Features Used
-
-ODB uses the following BOSH features:
-
-* Dynamic IP management
-* Availability zones
-* Globally-defined resources (**Cloud Config**). This results in manifests that are portable across BOSH CPIs, and are substantially smaller than old-style manifests.
-* Links between deployed BOSH instances consuming information, e.g. IP addresses, of other instances.
-
 ## <a id="steps"></a>Procedures for Using ODB
 
 The following procedures outline how to set up, create and maintain a service tile based on the ODB SDK:
@@ -79,4 +58,3 @@ The following procedures outline how to set up, create and maintain a service ti
 * [Creating the Service Author Deliverables](creating.html) — The service authors provide their deliverables.
 * [Deploying an On-Demand Service Broker](operating.html) — The operators upload their releases and write a manifest.
 
-**[Back to Contents Page](index.html)**
