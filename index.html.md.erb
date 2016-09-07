@@ -7,7 +7,9 @@ This guide is intended for people who want to author service tiles for PCF using
 
 ## <a id='overview'></a>Overview
 
-Pivotal Cloud Foundry operators make software services such as databases available to developers by using the Ops Manager **Installation Dashboard** to install service tiles. Before Bosh 2.0, operators had to assign specific resource levels &en; CPU, hard disk, and RAM &en; that applied uniformly to all instances of the service. Now services can be provisioned more flexibly. With an on-demand service, the operator can specify an allowable range of resource levels, and leave it up to the developers how to provision the instances they create. With an on-demand service, developers can create instances dynamically, as they always have, and they can also provision them dynamically. They can individually configure the resources  for each instance when they create it.
+Pivotal Cloud Foundry operators make software services such as databases available to developers by using the Ops Manager **Installation Dashboard** to install service tiles. Before Bosh 2.0, operators configured a service tile by pre-assigning a block of VMs with fixed CPU, hard disk, and RAM levels to allocate as instances for each service. This limited the possible number of instances and demanded wasteful one-size-fits-all resource provisioning.
+
+On-demand services let you provision instances more flexibly. The operator does not pre-allocate a block of VMs for the instance pool. Instead, they can specify an allowable range rather than fixed settings for instance resource levels. When a developer creates an on-demand service instance, they then provision it at creation time.
 
 The on-demand service broker SDK makes it easy to create PCF tiles for on-demand services. Whether you're an in Independent Software Vendor (ISV) plugging into the growing PCF community or an internal development team at Pivotal, the on-demand service broker offers an easy way to create a dynamically-provisionable service tile.
 

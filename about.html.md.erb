@@ -3,29 +3,48 @@ title: About the On-Demand Service Broker SDK
 owner: London Services Enablement
 ---
 
-## <a id="cf-broker"></a>About Cloud Foundry Service Brokers
+## <a id="cf-broker"></a>Cloud Foundry Service Tiles and Brokers
 
-A Cloud Foundry service broker allows application developers to provision services to be used by their Cloud Foundry apps. They are implemented as HTTP servers that conform to the [service broker API](http://docs.cloudfoundry.org/services/api.html). These brokers are registered with Cloud Controller in order to populate a service marketplace.
+PCF cloud operators make software services available to PCF developers by finding them on [Pivotal Network](https://network.pivotal.io/) and then installing and configuring them through a tile interface in the Ops Manager **Installation Dashboard**. Developers then create instances of the service to run within their spaces, bind these instances to their apps, and call the services from their application code.
 
-## <a id="odb"></a>About On-Demand Service Brokers
+The software behind the tiles includes everything needed to make the service easy for operators to install and maintain, and easy for developers to use. Tile software components include configuration layouts, Bosh manifests for deploying service instances, and a service broker that the Cloud Controller calls to deploy and manage service instances. When an operator installs a service tile they are creating a service broker.
 
-An on-demand Cloud Foundry service broker is a service broker that provisions IAAS resources at service instance creation time, as opposed to pre-provisioning a fixed quantity of these resources at broker deployment time. The **on-demand service broker (ODB)** is an SDK that you can use to create generic, on-demand, service brokers for single service offerings where one service instance corresponds to one BOSH deployment. Single tenant means a dedicated service process/cluster for each Cloud Foundry service instance.
+Cloud Foundry service brokers are implemented as HTTP servers that conform to the [service broker API](http://docs.cloudfoundry.org/services/api.html). In addition to providing an API to the Cloud Controller, a service broker also publishes a catalog that can include multiple service plans, such as a free tier and a metered tier. Brokers register their service plans with the Cloud Controller to populate the services marketplace, and developers access the marketplace with `cf marketpace` or through the Apps Manager.
 
-Service-specific functionality is plugged in by the service author via an executable called a **Service Adapter**. For more information about the responsibilities of Service Authors, please see [Creating the Service Author Deliverables](creating.html).
+## <a id="service-network"></a>Bosh 2.0 and Service Networks
 
-The ODB leverages native platform features, such as BOSH, Pivotal Cloud Foundry Operations Manager, and Pivotal Elastic Runtime. No additional or third-party components other than the service broker and the BOSH release for the service itself are required. This simplifies the setup. Everything is done through the single install process. This approach also simplifies support because there are fewer moving parts, and your customer's network needs less customizing of DNS rules and additional firewall ports.
+Before Bosh 2.0, cloud operators pre-provisioned service instances from Ops Manager. In the Ops Manager Director **Networking** pane, they allocated a block of IP addresses for the service instance pool, and under **Resource Config** they provisioned pool VM resources, specifying the CPU, hard disk, and RAM they would use. All instances had to be provisioned at the same level. With each `create-service` request from a developer, Ops Manager handed out a static IP address from this block, and with each `delete-service` it cleaned up the VM and added it back to the available pool.
 
-The ODB is the standard approach to deploying on-demand services across Pivotal products and the independent software vendor (ISV) ecosystem of partners.
+With Bosh 2.0 dynamic networking and Cloud Foundry asynchronous service provisioning, operators can now define a dynamically-provisioned service network that hosts instances more flexibly. The service network runs separate from the PCF default network. While the default network hosts VMs launched by Ops Manager, VMs running in the service network are created and provisioned on-demand by Bosh.
 
-This approach does not impose any constraints on the service authors' ability to offer new functionality or expose configuration options in their service plans, such as rate limiting and external load balancers.
+To create a service network, you add a network in the Ops Man Director tile **Create Networks** pane and select its **Service Network** checkbox. This prevents Ops Manager from creating VMs in the network, leaving instance creation to the underlying Bosh.
 
-## <a id="adapter"></a>About Service Adapters
+## <a id="on-demand"></a>On-Demand Services
+
+On-demand services use the dynamically-provisioned service network to host the single-tenant worker VMs that run as service instances within development spaces. This architecture lets developers provision IaaS resources for their service instances at creation time, rather than the operator pre-provisioning a fixed quantity of IaaS resources when they deploy the service broker.
+
+By making services single-tenant, where each instance runs on a dedicated VM rather than sharing VMs with unrelated processes, on-demand services eliminate the "noisy neighbor" problem when one application hogs resources on a shared cluster. Single-tenant services can also support regulatory compliance where sensitive data must be compartmentalized.
+
+An on-demand service splits its operations between the default network and the service network. Shared components of the service, such as executive controllers and databases, run centrally on the default network along with the Cloud Controller, UAA, and other PCF components. The space-specific worker pool runs on the service network.
+
+## <a id="odb-sdk"></a>The On-Demand Service Broker SDK
+
+The on-demand service broker SDK (ODB SDK) is an SDK you can use to create on-demand service brokers for single-tenant service offerings.
+
+The ODB SDK simplifies service tile authoring, and is the standard approach for both Pivotal internal services teams and Pivotal partner independent software vendors (ISVs) to develop on-demand services for PCF.
+
+The ODB SDK provides a generic on-demand service broker (ODB) that answers API calls from the Cloud Controller. The service author plugs service-specific functionality into the ODB SDK via an executable called a **Service Adapter**. For more information about the responsibilities of service authors, please see [Creating the Service Author Deliverables](creating.html).
+
+No additional or third-party components other than the service broker and the BOSH release for the service itself are required. This simplifies the setup. Everything is done through the single install process. This approach also simplifies support because there are fewer moving parts, and your customer's network needs less customizing of DNS rules and additional firewall ports.
+
+This approach imposes no constraints on the service authors' ability to offer new functionality or expose configuration options in their service plans, such as rate limiting and external load balancers.
+
+## <a id="adapter"></a>Service Adapters
 
 A service adapter is a binary that is called out by the ODB when it wants to do service-specific tasks.
 
 ![responsibility-diagram](img/responsibility-diagram.png)
 The above diagram shows where responsibility lies for each aspect of the ODB workflow.
-
 
 The service author can focus on building the BOSH release of their service and provide a service adapter binary that manages manifest generation,  binding, and unbinding. The ODB manages all interactions with Cloud Foundry and BOSH.
 
