@@ -3,17 +3,15 @@ title: On-Demand Service Broker SDK
 owner: London Services Enablement
 ---
 
-This guide is intended for people who want to author service tiles for PCF using the On-Demand Service Broker SDK.
+This guide is intended for people who want to author service tiles for PCF using the on-demand service broker SDK.
 
 ## <a id='overview'></a>Overview
 
-TEXT TK - Lifted from ISV Portal: As an Independent Software Vendor (ISV), you are likely to find more and more Pivotal Cloud Foundry (PCF) users among your customers. Many of these will be asking you to integrate your software with PCF to enable use of your software with the applications they are developing on PCF.
+Pivotal Cloud Foundry operators make software services such as databases available to developers by using the Ops Manager **Installation Dashboard** to install service tiles. Before Bosh 2.0, operators had to assign specific resource levels &en; CPU, hard disk, and RAM &en; that applied uniformly to all instances of the service. Now services can be provisioned more flexibly. With an on-demand service, the operator can specify an allowable range of resource levels, and leave it up to the developers how to provision the instances they create. With an on-demand service, developers can create instances dynamically, as they always have, and they can also provision them dynamically. They can individually configure the resources  for each instance when they create it.
 
-Pivotal is very supportive of these types of integrations and is committed to making this process as easy as possible. This site provides a technical overview on how to integrate your software with PCF. You are welcome to start this process on your own, or contact us to ask for our support and/or publish your integration in our marketplace.
+The on-demand service broker SDK makes it easy to create PCF tiles for on-demand services. Whether you're an in Independent Software Vendor (ISV) plugging into the growing PCF community or an internal development team at Pivotal, the on-demand service broker offers an easy way to create a dynamically-provisionable service tile.
 
-There are a lot of things you will have to learn and do to complete an integration with Cloud Foundry. This page attempts to lay out a typical progression of an integration with PCF.
-
-The [About the On-Demand Service Broker SDK](./about.html) topic describes how service brokers work and why on-demand services are best, and explains that the On-Demand Service Broker SDK is the simplest and best way to develop an on-demand service for PCF.
+The [About the On-Demand Service Broker SDK](./about.html) topic describes in greater detail how the on-demand service broker SDK works.
 
 ## <a id='product-snapshot'></a>Product Snapshot
 
