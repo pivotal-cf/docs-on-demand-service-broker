@@ -1,15 +1,19 @@
 ---
-title: About the On-Demand Service Broker SDK
+title: About the On-Demand Services SDK
 owner: London Services Enablement
 ---
 
-## <a id="cf-broker"></a>Cloud Foundry Service Tiles and Brokers
+## <a id="cf-broker"></a>Cloud Foundry Service Brokers and PCF Tiles
 
-PCF cloud operators make software services available to PCF developers by finding them on [Pivotal Network](https://network.pivotal.io/) and then installing and configuring them through a tile interface in the Ops Manager **Installation Dashboard**. Developers then create instances of the service to run within their spaces, bind these instances to their apps, and call the services from their application code.
+Service brokers let developers create service instances in their development spaces that they can call from their code. To do this, the brokers provide an interface between the Cloud Controller and the add-on software service that they represent. The service can run internal or external to a CF deployment, but the service broker always runs inside the cloud.
 
-The software behind the tiles includes everything needed to make the service easy for operators to install and maintain, and easy for developers to use. Tile software components include configuration layouts, Bosh manifests for deploying service instances, and a service broker that the Cloud Controller calls to deploy and manage service instances. When an operator installs a service tile they are creating a service broker.
+The service broker works by providing an API which the Cloud Controller can call to create service instances, bind them to apps, and perform other basic operations. Cloud Foundry service brokers are implemented as HTTP servers that conform to the [service broker API](http://docs.cloudfoundry.org/services/api.html).
 
-Cloud Foundry service brokers are implemented as HTTP servers that conform to the [service broker API](http://docs.cloudfoundry.org/services/api.html). In addition to providing an API to the Cloud Controller, a service broker also publishes a catalog that can include multiple service plans, such as a free tier and a metered tier. Brokers register their service plans with the Cloud Controller to populate the services marketplace, and developers access the marketplace with `cf marketpace` or through the Apps Manager.
+In addition to providing an API, a service broker also publishes a service catalog that can include multiple plans, such as a free tier and a metered tier. Brokers register their service plans with the Cloud Controller to populate the services marketplace. Developers access this marketplace with `cf marketpace` or through the Pivotal Cloud Foundry (PCF) Apps Manager.
+
+On PCF, cloud operators make software services available to developers by finding them on [Pivotal Network](https://network.pivotal.io/) and then installing and configuring them through a tile interface in the Ops Manager **Installation Dashboard**. Installing a service tile creates a service broker, registers it with the Cloud Controller, and publishes the service plans that the broker offers. Developers can then create service instances in their spaces and bind them to their apps.
+
+The central element within a service tile is the service broker, but the tile software includes other components that make the service easy for operators to install and maintain, and easy for developers to use. These components include configuration layouts, upgrade rules, lifecycle errands, and Bosh manifests for deploying the service instances.
 
 ## <a id="service-network"></a>Bosh 2.0 and Service Networks
 
@@ -27,11 +31,11 @@ By making services single-tenant, where each instance runs on a dedicated VM rat
 
 An on-demand service splits its operations between the default network and the service network. Shared components of the service, such as executive controllers and databases, run centrally on the default network along with the Cloud Controller, UAA, and other PCF components. The space-specific worker pool runs on the service network.
 
-## <a id="odb-sdk"></a>The On-Demand Service Broker SDK
+## <a id="odb-sdk"></a>On-Demand Services SDK and the On-Demand Broker
 
-The on-demand service broker SDK (ODB SDK) is an SDK you can use to create on-demand service brokers for single-tenant service offerings.
+The on-demand services SDK is an SDK you can use to create on-demand brokers for single-tenant service offerings.
 
-The ODB SDK simplifies service tile authoring, and is the standard approach for both Pivotal internal services teams and Pivotal partner independent software vendors (ISVs) to develop on-demand services for PCF.
+The on-demand services SDK simplifies broker and tile authoring, and is the standard approach for both Pivotal internal services teams and Pivotal partner independent software vendors (ISVs) to develop on-demand services for PCF.
 
 The ODB SDK provides a generic on-demand service broker (ODB) that answers API calls from the Cloud Controller. The service author plugs service-specific functionality into the ODB SDK via an executable called a **Service Adapter**. For more information about the responsibilities of service authors, please see [Creating the Service Author Deliverables](creating.html).
 
@@ -56,5 +60,5 @@ The following procedures outline how to set up, create and maintain a service ti
 
 * [Setting up your BOSH director](operating.html#configure-bosh) — The operators ensure that minimum versions of Cloud Foundry and BOSH are available.
 * [Creating the Service Author Deliverables](creating.html) — The service authors provide their deliverables.
-* [Deploying an On-Demand Service Broker](operating.html) — The operators upload their releases and write a manifest.
+* [Deploying an On-Demand Broker](operating.html) — The operators upload their releases and write a manifest.
 

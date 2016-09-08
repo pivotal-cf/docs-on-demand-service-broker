@@ -3,7 +3,7 @@ title: Setting Up a Local Development Environment
 owner: London Services Enablement
 ---
 
-To get started using BOSH Lite and PCF Dev, you can create and manage an on-demand service broker (ODB) on your local development environment. The procedures below use the following Apache Kafka examples to demonstrate how to use ODB:
+To get started using BOSH Lite and PCF Dev, you can create and manage an on-demand  broker (ODB) on your local development environment. The procedures below use the following Apache Kafka examples to demonstrate how to use ODB:
 
 * [Kafka Service Adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter)
 * [Kafka Service Release](https://github.com/pivotal-cf-experimental/kafka-example-service-release)
@@ -72,9 +72,9 @@ Before setting up and using ODB on your local development environment, install a
     $ bosh upload release
   </pre>
 
-## <a id="set_up_odb"></a> Step 4: Set Up the On-Demand Service Broker Release
+## <a id="set_up_odb"></a> Step 4: Set Up the On-Demand Broker Release
 
-1. Clone the [on-demand service broker release](https://github.com/pivotal-cf/on-demand-service-broker-release)
+1. Clone the [on-demand broker release](https://github.com/pivotal-cf/on-demand-service-broker-release)
   <pre class="terminal">
     $ git clone https://github.com/pivotal-cf/on-demand-service-broker-release.git
   </pre>
@@ -312,7 +312,7 @@ Before setting up and using ODB on your local development environment, install a
     p-redis                  shared-vm    Redis service to provide a key-value store
     </pre>
 
-1. Create a service instance using the Kafka on-demand service broker.
+1. Create a service instance using the Kafka on-demand broker.
 
     <pre class="terminal">
     $ cf create-service kafka-service-with-odb small k1

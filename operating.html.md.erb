@@ -1,5 +1,5 @@
 ---
-title: Deploying an On-Demand Service Broker
+title: Deploying an On-Demand Broker
 owner: London Services Enablement
 ---
 
@@ -22,14 +22,14 @@ For an example manifest for a Kafka service, see [kafka-example-service-adapter-
 
 ## <a id="configure-bosh"></a>Set Up Your BOSH Director
 
-Dependencies for the On-Demand Service Broker:
+Dependencies for the On-Demand Broker:
 
 - BOSH director v257 or later
 - Cloud Foundry v238 or later
 
 ### SSL certificates
 
-If the on-demand service Broker (ODB) is configured to communicate with BOSH on the director's private IP you can probably get away with insecure HTTP.
+If the on-demand broker (ODB) is configured to communicate with BOSH on the director's private IP you can probably get away with insecure HTTP.
 
 If ODB is configured to communicate with BOSH on the director's public IP you will probably be using a self-signed certificate unless you have a domain for your BOSH director. ODB does not ignore TLS certificate validation errors by default (as expected). You have two options to configure certificate-based authentication between the BOSH director and the ODB:
 
@@ -467,7 +467,7 @@ The ODB has been tested with the [PCF IPsec Add-On](https://docs.pivotal.io/addo
 
 ### <a id="logs"></a>Logs
 
-The on-demand service broker writes logs to a log file, and to syslog.
+The on-demand broker writes logs to a log file, and to syslog.
 
 The broker log contains error messages and non-zero exit codes returned by the service adapter, as well as the stdout and stderr streams of the adapter.
 
