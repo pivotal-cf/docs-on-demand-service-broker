@@ -13,6 +13,9 @@ In addition to providing an API, a service broker also publishes a service catal
 
 On PCF, cloud operators make software services available to developers by finding them on [Pivotal Network](https://network.pivotal.io/) and then installing and configuring them through a tile interface in the Ops Manager **Installation Dashboard**. Installing a service tile creates a service broker, registers it with the Cloud Controller, and publishes the service plans that the broker offers. Developers can then create service instances in their spaces and bind them to their apps.
 
+![Your Service Tile in Ops Manager](img/your-service-here.png)
+
+
 The central element within a service tile is the service broker, but the tile software includes other components that make the service easy for operators to install and maintain, and easy for developers to use. These components include configuration layouts, upgrade rules, lifecycle errands, and Bosh manifests for deploying the service instances.
 
 ## <a id="service-network"></a>Bosh 2.0 and Service Networks
@@ -30,6 +33,8 @@ On-demand services use the dynamically-provisioned service network to host the s
 By making services single-tenant, where each instance runs on a dedicated VM rather than sharing VMs with unrelated processes, on-demand services eliminate the "noisy neighbor" problem when one application hogs resources on a shared cluster. Single-tenant services can also support regulatory compliance where sensitive data must be compartmentalized.
 
 An on-demand service splits its operations between the default network and the service network. Shared components of the service, such as executive controllers and databases, run centrally on the default network along with the Cloud Controller, UAA, and other PCF components. The space-specific worker pool runs on the service network.
+
+![Default Network and Service Network](img/ODB-create-service.png)
 
 ## <a id="odb-sdk"></a>On-Demand Services SDK and the On-Demand Broker
 
