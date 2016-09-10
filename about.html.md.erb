@@ -9,7 +9,7 @@ Service brokers let developers create service instances in their development spa
 
 The service broker works by providing an API which the Cloud Controller calls to create service instances, bind them to apps, and perform other operations. Cloud Foundry service brokers are implemented as HTTP servers that conform to the [service broker API](http://docs.cloudfoundry.org/services/api.html).
 
-In addition to providing an API, a service broker publishes a service catalog that may include multiple service plans, such as a free tier and a metered tier. Brokers register their service plans with the Cloud Controller to populate the services marketplace, which developers access with `cf marketpace` or through the Pivotal Cloud Foundry (PCF) Apps Manager.
+In addition to providing an API, a service broker publishes a service catalog that may include multiple service plans, such as a free tier and a metered tier. Brokers register their service plans with the Cloud Controller to populate the services marketplace, which developers access with `cf marketplace` or through the Pivotal Cloud Foundry (PCF) Apps Manager.
 
 On PCF, cloud operators make software services available to developers by finding them on [Pivotal Network](https://network.pivotal.io/) and then installing and configuring them through a tile interface in the Ops Manager **Installation Dashboard**. Installing a service tile creates a service broker, registers it with the Cloud Controller, and publishes the service plans that the broker offers. Developers can then create service instances in their spaces and bind them to their apps.
 
