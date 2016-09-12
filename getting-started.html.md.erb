@@ -96,39 +96,40 @@ Before setting up and using ODB on your local development environment, install a
     $ bosh upload release
   </pre>
 
-## <a id="create_bosh"></a> Step 5: Create a BOSH Deployment 
+## <a id="create_bosh"></a> Step 5: Create a BOSH Deployment
 
 1. Create a new directory in your workspace and a `cloud_config.yml` for the BOSH Lite Director. For example:
-  <pre>
-      vm_types:
-      \- name: container
-        cloud_properties: {}
-      networks:
-      \- name: kafka
-        type: manual
-        subnets:
-        \- range: 192.0.2.0/24
-          gateway: 192.0.2.1
-          az: lite
-          cloud_properties: {}
-      disk_types:
-      \- name: ten
-        disk_size: 10_000
-        cloud_properties: {}
-      azs:
-      \- name: lite
-        cloud_properties: {}
-      compilation:
-        workers: 2
-        reuse_compilation_vms: true
-        network: kafka
+
+    ```yaml
+    vm_types:
+    - name: container
+      cloud_properties: {}
+    networks:
+    - name: kafka
+      type: manual
+      subnets:
+      - range: 192.0.2.0/24
+        gateway: 192.0.2.1
         az: lite
         cloud_properties: {}
-  </pre>
+    disk_types:
+    - name: ten
+      disk_size: 10_000
+      cloud_properties: {}
+    azs:
+    - name: lite
+      cloud_properties: {}
+    compilation:
+      workers: 2
+      reuse_compilation_vms: true
+      network: kafka
+      az: lite
+      cloud_properties: {}
+    ```
 
 1. Update the BOSH Lite cloud config using the deployment manifest created in the previous step:
   <pre class="terminal">
-    $ bosh update cloud-config cloud_config.yml
+    $ bosh update cloud-config cloud\_config.yml
   </pre>
 
 1. Obtain the URL and UUID BOSH Lite director information:
@@ -147,38 +148,45 @@ Before setting up and using ODB on your local development environment, install a
       Version    1.3215.0 (00000000)
       User       admin
       UUID       17a45148-1d00-43bc-af28-9882e5a6535a
-      CPI        warden_cpi
+      CPI        warden\_cpi
       dns        disabled
-      compiled_package_cache enabled (provider: local)
+      compiled\_package\_cache enabled (provider: local)
       snapshots  disabled
   </pre>
   Record the URL and UUID from your output. These are added to the `deployment_manifest.yml` in the next step.
 
-1. Create a BOSH Lite deployment manifest in a file called `deployment_manifest.yml` using the following as a base. 
+1. Create a BOSH Lite deployment manifest in a file called `deployment_manifest.yml` using the following as a base.
 <p class="note">Replace `BOSH_LITE_UUID` and `BOSH_LITE_IP` with the value obtained in the previous step.</p>
-<pre>
+
+    ```yaml
     name: kafka-on-demand-broker
 
-    director_uuid: fb70f16a-4d6f-41f8-bc2e-0181a03dff18
+    director_uuid: <BOSH_LITE_UUID>
 
     releases:
-      \- name: &;broker-release on-demand-service-broker
+      - name: &broker-release on-demand-service-broker
         version: latest
-      \- name: &;service-adapter-release kafka-example-service-adapter
+      - name: &service-adapter-release kafka-example-service-adapter
         version: latest
-      \- name: &service-release kafka-example-service
+      - name: &service-release kafka-example-service
         version: latest
 
     stemcells:
-      \- alias: trusty
+      - alias: trusty
         os: ubuntu-trusty
         version: latest
 
     instance_groups:
-      \- name: broker
+      - name: broker
         instances: 1
+        vm_type: container
+        persistent_disk_type: ten
+        stemcell: trusty
+        azs: [lite]
+        networks:
+          - name: kafka
         jobs:
-          \- name: broker
+          - name: broker
             release: *broker-release
             properties:
               port: 8080
@@ -186,7 +194,7 @@ Before setting up and using ODB on your local development environment, install a
               password: password #or replace with your own
               disable_ssl_cert_verification: true
               bosh:
-                url: https://192.168.50.4:25555
+                url: <BOSH_LITE_IP>
                 authentication:
                   basic:
                     username: admin
@@ -228,26 +236,19 @@ Before setting up and using ODB on your local development environment, install a
                     properties:
                       auto_create_topics: true
                       default_replication_factor: 1
-          \- name: kafka-service-adapter
+          - name: kafka-service-adapter
             release: *service-adapter-release
-
-        vm_type: container
-        persistent_disk_type: ten
-        stemcell: trusty
-        azs: [lite]
-        networks:
-          \- name: kafka
 
     update:
       canaries: 1
       canary_watch_time: 30000-180000
       update_watch_time: 30000-180000
       max_in_flight: 4
-</pre>
+    ```
 
 1. Change the BOSH deployment to use the deployment manifest created in the previous step:
     <pre class="terminal">
-    $ bosh deployment deployment_manifest.yml
+    $ bosh deployment deployment\_manifest.yml
     </pre>
 
 1. Deploy the manifest:
@@ -279,14 +280,15 @@ Before setting up and using ODB on your local development environment, install a
 
     Instances total: 1
     </pre>
-    
+
     Record the address of the broker. This address is used in the next step to create a service broker.
 
 ## <a id="create_service"></a> Step 6: Create a Service Broker on PCF Dev
 
 1. Create a service broker on PCF dev and enable access to its service offering. You will need the broker's credentials set in the deployment manifest and the IP of the broker VM.
+<p class="note">Replace `BROKER_IP` with the value obtained in the previous step.</p>
     <pre class="terminal">
-    $ cf create-service-broker kafka-broker broker password http://<REPLACE_WITH_BROKER_IP>:8080
+    $ cf create-service-broker kafka-broker broker password http://\<BROKER\_IP\>:8080
     </pre>
 
     For more details on service brokers see [here](http://docs.cloudfoundry.org/services/api.html).
@@ -339,10 +341,10 @@ Before setting up and using ODB on your local development environment, install a
     +-------------------------------------------------------+---------------------------------------+--------------------------------------------------+--------------+
     | Name                                                  | Release(s)                            | Stemcell(s)                                      | Cloud Config |
     +-------------------------------------------------------+---------------------------------------+--------------------------------------------------+--------------+
-    | kafka-on-demand-broker                                | kafka-example-service-adapter/0+dev.2 | bosh-warden-boshlite-ubuntu-trusty-go_agent/3147 | latest       |
+    | kafka-on-demand-broker                                | kafka-example-service-adapter/0+dev.2 | bosh-warden-boshlite-ubuntu-trusty-go\_agent/3147 | latest       |
     |                                                       | on-demand-service-broker/0.2.0+dev.1  |                                                  |              |
     +-------------------------------------------------------+---------------------------------------+--------------------------------------------------+--------------+
-    | service-instance_2715262c-8564-4cd9-b629-0ae99e6aa4b9 | kafka-example-service/0+dev.2         | bosh-warden-boshlite-ubuntu-trusty-go_agent/3147 | latest       |
+    | service-instance\_2715262c-8564-4cd9-b629-0ae99e6aa4b9 | kafka-example-service/0+dev.2         | bosh-warden-boshlite-ubuntu-trusty-go\_agent/3147 | latest       |
     +-------------------------------------------------------+---------------------------------------+--------------------------------------------------+--------------+
     </pre>
 
