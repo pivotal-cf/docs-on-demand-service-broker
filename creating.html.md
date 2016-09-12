@@ -3,15 +3,6 @@ title: Creating the Service Author Deliverables
 owner: London Services Enablement
 ---
 
-- <a href="#what-is-required-of-the-service-authors">What is required of the Service Authors?</a>
-- <a href="#creating-a-service-release">Creating a Service Release</a>
-- <a href="#creating-a-service-adapter">Creating a Service Adapter</a>
-- <a href="#inputs-for-manifest-generation">Inputs for manifest generation</a>
-- <a href="#service-adapter-interface">Service adapter interface</a>
-- <a href="#sub-commands">Subcommands</a>
-- <a href="#packaging">Packaging</a>
-- <a href="#sdk">Golang SDK</a>
-
 ## <a id="required"></a>What is required of the Service Authors?
 The following deliverables are required from the service authors:
 
