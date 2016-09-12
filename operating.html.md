@@ -589,5 +589,3 @@ Example JSON body:
     }
   ]
   ```
-
-**[Back to Contents Page](index.html)**

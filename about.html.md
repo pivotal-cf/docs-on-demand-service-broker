@@ -53,5 +53,3 @@ The follow steps are required to create and maintain an ODB:
 
 * [The Service Authors provide their deliverables](creating.html)
 * [The Operators upload their releases and write a manifest](operating.html)
-
-**[Back to Contents Page](index.html)**

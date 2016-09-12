@@ -40,5 +40,3 @@ ODB provides BOSH errand to upgrade all the instances managed by the broker. Thi
 ### <a id="delete-all"></a>Delete all instances
 
 ODB provides BOSH errand to delete all the instances managed by the broker. ![delete-all-instances-workflow](img/delete_all_instances_workflow.mmd.png)
-
-**[Back to Contents Page](index.html)**
