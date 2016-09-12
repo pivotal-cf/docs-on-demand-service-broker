@@ -1,5 +1,5 @@
 ---
-title: On-demand Service Broker SDK Concepts
+title: On-demand Service Broker Concepts
 owner: London Services Enablement
 ---
 

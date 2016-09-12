@@ -1,5 +1,5 @@
 ---
-title: About the On-demand Service Broker SDK
+title: About the On-demand Service Broker
 owner: London Services Enablement
 ---
 

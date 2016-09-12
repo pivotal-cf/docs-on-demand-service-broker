@@ -1,9 +1,9 @@
 ---
-title: On-Demand Services SDK
+title: On-demand Service Broker
 owner: London Services Enablement
 ---
 
-This guide is intended for people who want to author service tiles for Pivotal Cloud Foundry (PCF) using the on-demand services SDK.
+This guide is intended for people who want to author service tiles for Pivotal Cloud Foundry (PCF) using the On-demand Service Broker.
 
 ## <a id='overview'></a>Overview
 
@@ -11,14 +11,14 @@ PCF operators make software services such as databases available to developers b
 
 On-demand services let you provision instances more flexibly. The operator does not pre-allocate a block of VMs for the instance pool, and they can specify an allowable range rather than fixed settings for instance resource levels. When a developer creates an on-demand service instance, they then provision it at creation time.
 
-The on-demand services SDK simplifies broker and tile authoring, and is the standard approach for both Pivotal internal services teams and Pivotal partner independent software vendors (ISVs) to develop on-demand services for PCF.
+The on-demand services broker simplifies tile authoring, and is the standard approach for both Pivotal internal services teams and Pivotal partner independent software vendors (ISVs) to develop on-demand services for PCF.
 
-The [About the On-Demand Services SDK](./about.html) topic describes in greater detail how the on-demand broker works within PCF.
+The [About the On-demand Service Broker](./about.html) topic describes in greater detail how the on-demand service broker works within PCF.
 
 ## <a id='product-snapshot'></a>Product Snapshot
 
 <dl>
-<dt>Current On-Demand Services SDK details:</dt>
+<dt>Current On-demand Service Broker details:</dt>
 <dd><strong>Version</strong>: 0.9.0</dd>
 <dd><strong>Release date</strong>: 6 September 2016</dd>
 <dd><strong>Compatible Ops Manager Version(s)</strong>: v1.8</dd>

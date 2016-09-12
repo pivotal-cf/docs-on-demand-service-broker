@@ -22,14 +22,14 @@ For an example manifest for a Kafka service, see [kafka-example-service-adapter-
 
 ## <a id="configure-bosh"></a>Setting up your BOSH director
 
-Dependencies for the On-Demand Service Broker:
+Dependencies for the On-demand Service Broker:
 
 - BOSH director v257 or later
 - Cloud Foundry v238 or later
 
 ### SSL certificates
 
-If the On-Demand Service Broker (ODB) is configured to communicate with BOSH on the director's private IP you can probably get away with insecure HTTP.
+If the On-demand Service Broker (ODB) is configured to communicate with BOSH on the director's private IP you can probably get away with insecure HTTP.
 
 If ODB is configured to communicate with BOSH on the director's public IP you will probably be using a self-signed certificate unless you have a domain for your BOSH director. ODB does not ignore TLS certificate validation errors by default (as expected). You have two options to configure certificate-based authentication between the BOSH director and the ODB:
 
