@@ -378,8 +378,7 @@ The [Kafka Example App](https://github.com/pivotal-cf-experimental/kafka-example
     $ cf start kafka-example-app
     </pre>
 
-Now the app runs at `https:/kafka-example-app.example.com`, and you can use it to read and write to your on-demand Kafka service instance. For example:
+Now the app runs at `https:/kafka-example-app.local.pcfdev.io`, and you can use it to read and write to your on-demand Kafka service instance. For example:
 
-* To write data, run `curl -XPOST http://kafka-example-app.example.com/queues/my-queue -d SOME-DATA`
-* To read data, run `curl  http://kafka-example-app.example.com/queues/my-queue`
-
+* To write data, run `curl -XPOST http://kafka-example-app.local.pcfdev.io/queues/my-queue -d SOME-DATA`
+* To read data, run `curl  http://kafka-example-app.local.pcfdev.io/queues/my-queue`
