@@ -1,3 +1,4 @@
+<div class="mermaid">  
 sequenceDiagram
   User->>CloudFoundry:delete-service
   CloudFoundry->>ODB:remove-instance
@@ -14,3 +15,4 @@ sequenceDiagram
   ODB->>BOSH:get task state
   BOSH->>ODB:done
   ODB->>CloudFoundry:completed
+</div>

@@ -1,3 +1,4 @@
+<div class="mermaid">  
 sequenceDiagram
   User->> CloudFoundry: cf create service
   CloudFoundry->> ODB: provision instance
@@ -16,3 +17,4 @@ sequenceDiagram
   ODB->>BOSH:get task state
   BOSH->>ODB:done
   ODB->>CloudFoundry:completed
+</div>
