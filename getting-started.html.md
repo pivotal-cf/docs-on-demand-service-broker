@@ -9,7 +9,7 @@ This guide describes how to create and manage an on-demand service broker using 
 
 ## Prerequisites
 
-- [PCF Dev](https://docs.pivotal.io/pcf-dev/#installing)
+- [PCF Dev](https://docs.pivotal.io/pcf-dev/#installing) - *[pcfdev-v0.19.1-rc.46](https://network.pivotal.io/products/pcfdev#/releases/1811)*
 - [BOSH lite](https://github.com/cloudfoundry/bosh-lite#install-bosh-lite) - *min version v9000.131.0*
 
 > _NB: In order for PCFDev to route requests to the deployments on BOSH lite ensure you run the script `bin/add-route` in the BOSH lite repository. You may need to run this again if your networking is reset (e.g. reboot, or connecting to a different network)._
