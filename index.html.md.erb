@@ -7,7 +7,7 @@ This guide is intended for people who want to author service tiles for Pivotal C
 
 ## <a id='overview'></a>Overview
 
-PCF operators make software services such as databases available to developers by using the Ops Manager **Installation Dashboard** to install service tiles. Before Bosh 2.0, operators configured a service tile by pre-assigning a block of VMs with fixed CPU, hard disk, and RAM levels to allocate as instances for each service. This limited the possible number of instances and demanded wasteful one-size-fits-all resource provisioning.
+PCF operators make software services such as databases available to developers by using the Ops Manager **Installation Dashboard** to install service tiles. Before BOSH 2.0, operators configured a service tile by pre-assigning a block of VMs with fixed CPU, hard disk, and RAM levels to allocate as instances for each service. This limited the possible number of instances and demanded wasteful one-size-fits-all resource provisioning.
 
 On-demand services let you provision instances more flexibly. The operator does not pre-allocate a block of VMs for the instance pool, and they can specify an allowable range rather than fixed settings for instance resource levels. When a developer creates an on-demand service instance, they then provision it at creation time.
 

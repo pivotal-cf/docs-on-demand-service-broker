@@ -144,7 +144,7 @@ The following table describes the supported exit codes and output for the `gener
 
 #### <a id="service-deployment"></a>service-deployment-JSON
 
-Provides information regarding the bosh director
+Provides information regarding the BOSH director
 
 | field                     | Type              | Description                                                            |
 |:--------------------------|:------------------|:-----------------------------------------------------------------------|
@@ -252,7 +252,7 @@ Plans are composed by the operator and consist of resource mappings, properties 
 
 * **Resource Mappings**
 
-  The `instance_groups` section of the plan JSON. This maps service deployment instance groups (defined by the service author) to resources (defined by the operator). The service developers should document the list of instance group names required for their deployment (e.g. "redis-server") and any constraints they recommend on resources (e.g. operator must add a persistent disk if persistence property is enabled). These constraints can of course be enforced in code. The `instance_groups` section also contains a field for `lifecycle`, which can be set by the operator. The service adapter will add a lifecycle field to the instance group within the bosh manifest when specified.
+  The `instance_groups` section of the plan JSON. This maps service deployment instance groups (defined by the service author) to resources (defined by the operator). The service developers should document the list of instance group names required for their deployment (e.g. "redis-server") and any constraints they recommend on resources (e.g. operator must add a persistent disk if persistence property is enabled). These constraints can of course be enforced in code. The `instance_groups` section also contains a field for `lifecycle`, which can be set by the operator. The service adapter will add a lifecycle field to the instance group within the BOSH manifest when specified.
 
 * **Properties**
 
@@ -276,7 +276,7 @@ Note: when updating existing service instances, any arbitrary parameters passed 
 
 #### <a id="previous-manifest"></a>previous-manifest-YAML
 
-The previous manifest as YAML. The previous manifest is nil if this is a new deployment. The format of the manifest should match the [bosh v2 manifest](https://bosh.io/docs/manifest-v2.html).
+The previous manifest as YAML. The previous manifest is nil if this is a new deployment. The format of the manifest should match the [BOSH v2 manifest](https://bosh.io/docs/manifest-v2.html).
 
 It is up to the service author to perform any necessary service-specific migration logic here, if previous manifest is non-nil.
 
@@ -331,7 +331,7 @@ Current plan for the service instance as JSON. The structure should be the same 
 
 #### <a id="dashboard-url-manifest"></a>manifest-YAML
 
-The current manifest as YAML. The format of the manifest should match the [bosh v2 manifest](https://bosh.io/docs/manifest-v2.html)
+The current manifest as YAML. The format of the manifest should match the [BOSH] v2 manifest](https://bosh.io/docs/manifest-v2.html)
 
 ---
 
@@ -397,7 +397,7 @@ This can be used to connect to the instance deployment if required, to create a 
 
 #### <a id="create-binding-manifest"></a>manifest-YAML
 
-The current manifest as YAML. This is used to extract information about the deployment that is necessary for the binding (e.g. admin credentials with which to create users). The format of the manifest should match the [bosh v2 manifest](https://bosh.io/docs/manifest-v2.html)
+The current manifest as YAML. This is used to extract information about the deployment that is necessary for the binding (e.g. admin credentials with which to create users). The format of the manifest should match the [BOSH v2 manifest](https://bosh.io/docs/manifest-v2.html)
 
 #### <a id="create-request-params-JSON"></a>request-params-JSON
 
@@ -504,7 +504,7 @@ This can be used to connect to the actual VMs if required, to delete a service s
 
 #### <a id="delete-binding-manifest"></a>manifest-YAML
 
-The current manifest as YAML. This is used to extract information about the deployment that is necessary for the binding (e.g. credentials). The format of the manifest should match the [bosh v2 manifest](https://bosh.io/docs/manifest-v2.html)
+The current manifest as YAML. This is used to extract information about the deployment that is necessary for the binding (e.g. credentials). The format of the manifest should match the [BOSH v2 manifest](https://bosh.io/docs/manifest-v2.html)
 
 For example see the [kafka delete binding](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/delete_binding.go)
 

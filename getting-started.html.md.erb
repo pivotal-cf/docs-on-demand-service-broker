@@ -3,7 +3,7 @@ title: Getting Started&#58; ODB on a Local Development Environment
 owner: London Services Enablement
 ---
 
-This guide describes how to create and manage an on-demand service using PCF Dev and BOSH lite, which are tools that allow you run Bosh and Pivotal Cloud Foundry on a local development machine. This tutorial bases its example service on [Kafka open source messaging](http://kafka.apache.org) and uses the following sample code directories:
+This guide describes how to create and manage an on-demand service using PCF Dev and BOSH lite, which are tools that allow you run BOSH and Pivotal Cloud Foundry on a local development machine. This tutorial bases its example service on [Kafka open source messaging](http://kafka.apache.org) and uses the following sample code directories:
 
 * [Kafka example service](https://github.com/pivotal-cf-experimental/kafka-example-service-release)
 * [Kafka example service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter)
@@ -15,7 +15,7 @@ Before setting up and using ODB on your local development environment, install a
 
 - [BOSH Lite](https://github.com/cloudfoundry/bosh-lite#install-bosh-lite) - *min version v9000.131.0*
 
- <p class="note">**Note**: For PCFDev to route requests to the deployments on BOSH Lite ensure you run the script `bin/add-route` in the BOSH Lite repository. You may need to run this again if your networking is reset (e.g. reboot, or connecting to a different network).</p>
+ <p class="note">**Note**: For PCF Dev to route requests to the deployments on BOSH Lite ensure you run the script `bin/add-route` in the BOSH Lite repository. You may need to run this again if your networking is reset (e.g. reboot, or connecting to a different network).</p>
 
 - [PCF Dev](https://docs.pivotal.io/pcf-dev/#installing) - *[pcfdev-v0.19.1-rc.46](https://network.pivotal.io/products/pcfdev#/releases/1811)*
 
@@ -285,7 +285,7 @@ Before setting up and using ODB on your local development environment, install a
 
 ## <a id="create_service"></a> Step 6: Create a Service Broker on PCF Dev
 
-1. Create a service broker on PCF dev and enable access to its service offering. You will need the broker's credentials set in the deployment manifest and the IP of the broker VM.
+1. Create a service broker on PCF Dev and enable access to its service offering. You will need the broker's credentials set in the deployment manifest and the IP of the broker VM.
 <p class="note">Replace `BROKER_IP` with the value obtained in the previous step.</p>
     <pre class="terminal">
     $ cf create-service-broker kafka-broker broker password http://\<BROKER\_IP\>:8080
