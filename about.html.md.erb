@@ -15,15 +15,15 @@ On PCF, cloud operators make software services available to developers by findin
 
 ![Your Service Tile in Ops Manager](img/your-service-here.png)
 
-The central element behind a service tile is the service broker, but the tile software includes other components that make the service easy for operators to install and maintain, and easy for developers to use. These components include configuration layouts, upgrade rules, lifecycle errands, and Bosh manifests for deploying the service instances.
+The central element behind a service tile is the service broker, but the tile software includes other components that make the service easy for operators to install and maintain, and easy for developers to use. These components include configuration layouts, upgrade rules, lifecycle errands, and BOSH manifests for deploying the service instances.
 
-## <a id="service-network"></a>Bosh 2.0 and Service Networks
+## <a id="service-network"></a>BOSH 2.0 and Service Networks
 
-Before Bosh 2.0, cloud operators pre-provisioned service instances from Ops Manager. In the Ops Manager Director **Networking** pane, they allocated a block of IP addresses for the service instance pool, and under **Resource Config** they provisioned pool VM resources, specifying the CPU, hard disk, and RAM they would use. All instances had to be provisioned at the same level. With each `create-service` request from a developer, Ops Manager handed out a static IP address from this block, and with each `delete-service` it cleaned up the VM and returned it to the available pool.
+Before BOSH 2.0, cloud operators pre-provisioned service instances from Ops Manager. In the Ops Manager Director **Networking** pane, they allocated a block of IP addresses for the service instance pool, and under **Resource Config** they provisioned pool VM resources, specifying the CPU, hard disk, and RAM they would use. All instances had to be provisioned at the same level. With each `create-service` request from a developer, Ops Manager handed out a static IP address from this block, and with each `delete-service` it cleaned up the VM and returned it to the available pool.
 
-With Bosh 2.0 dynamic networking and Cloud Foundry asynchronous service provisioning, operators can now define a dynamically-provisioned service network that hosts instances more flexibly. The service network runs separate from the PCF default network. While the default network hosts VMs launched by Ops Manager, the VMs running in the service network are created and provisioned on-demand by Bosh, and Bosh lets the IaaS assign IP addresses to the service instance VMs. Each dynamic network attached to a job instance is typically represented as its own NIC in the IaaS layer.
+With BOSH 2.0 dynamic networking and Cloud Foundry asynchronous service provisioning, operators can now define a dynamically-provisioned service network that hosts instances more flexibly. The service network runs separate from the PCF default network. While the default network hosts VMs launched by Ops Manager, the VMs running in the service network are created and provisioned on-demand by BOSH, and BOSH lets the IaaS assign IP addresses to the service instance VMs. Each dynamic network attached to a job instance is typically represented as its own NIC in the IaaS layer.
 
-To create a service network, you add a network in the Ops Man Director tile **Create Networks** pane and select its **Service Network** checkbox. This prevents Ops Manager from creating VMs in the network, leaving instance creation to the underlying Bosh.
+To create a service network, you add a network in the Ops Man Director tile **Create Networks** pane and select its **Service Network** checkbox. This prevents Ops Manager from creating VMs in the network, leaving instance creation to the underlying BOSH.
 
 ![Service Network checkbox](img/service-network-checkbox.png)
 
@@ -58,7 +58,9 @@ The above diagram shows where responsibility lies for each aspect of the ODB wor
 
 The service author can focus on building the BOSH release of their service and provide a service adapter binary that manages manifest generation,  binding, and unbinding. The ODB manages all interactions with Cloud Foundry and BOSH.
 
-The operator then configures a range of plans for the service in the ODB BOSH manifest. This gives the operator control of what service configurations to offer their app developers. It also gives operators a consistent experience installing, configuring, and upgrading Pivotal products.
+Thanks to BOSH v2, service authors can define resources globally (in **Cloud Config**). This makes manifests portable across BOSH CPIs and lets them be substantially smaller than old-style manifests. The ODB takes advantage of other BOSH v2 features as well, including dynamic IP management, availability zones, and links through which deployed BOSH instances can access IP addresses and other information from other instances.
+
+Once an on-demand tile is authored and distributed, the operator installs and configures it the same way they do with any other Pivotal products. In the process, they select which of the tile's available service plans to offer their developers.
 
 ## <a id="steps"></a>Procedures for Using ODB
 

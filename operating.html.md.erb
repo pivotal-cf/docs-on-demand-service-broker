@@ -357,7 +357,7 @@ Often, a broker upgrade will involve an upgrading of the service release(s). In 
       networks: [{name: <network>}]
     ```
 1. Update the broker properties under `service_deployment/releases` to the required service release versions and `service_deployment/stemcell` has the required stemcell version
-1. Upload the releases and stem cells specified in the `service_deployment` section of properties to the bosh director
+1. Upload the releases and stem cells specified in the `service_deployment` section of properties to the BOSH director
 1. Ensure latest broker manifest is deployed.
 1. Run the errand with `bosh run errand upgrade-sub-deployments`.
 
@@ -498,7 +498,7 @@ origin:"<broker deployment name>" eventType:ValueMetric timestamp:<timestamp> de
 
 ### <a id="identifying-deployments"></a>Identify Deployments in BOSH
 
-There is a one to one mapping between the service instance id from CF and the deployment name in BOSH. The convention is the bosh deployment name would be the service instance id prepended by `service-instance_`. To identify the bosh deployment for a service instance you can.
+There is a one to one mapping between the service instance id from CF and the deployment name in BOSH. The convention is the BOSH deployment name would be the service instance id prepended by `service-instance_`. To identify the BOSH deployment for a service instance you can.
 
 1. Determine the GUID of the service
 

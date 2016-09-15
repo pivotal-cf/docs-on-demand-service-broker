@@ -60,14 +60,14 @@ Used to provide fields that belong to the specific tile (in this case, the broke
 
 | Accessor                  | Description                                                     |
 |:--------------------------|:----------------------------------------------------------------|
-| $self.uaa\_client_name    | UAA client name, that can authenticate with the bosh director   |
-| $self.uaa\_client\_secret | UAA client secret, that can authenticate with the bosh director |
+| $self.uaa\_client_name    | UAA client name, that can authenticate with the BOSH director   |
+| $self.uaa\_client\_secret | UAA client secret, that can authenticate with the BOSH director |
 | $self.service\_network    | Service network configured for the on-demand instances          |
 
 
 The service network has to be created manually. Create a subnet on AWS and then add it to the director. In the director tile, under Create Networks > ADD network > fill in the subnet/vpc details.
 
-`$self` accessors are enabled by setting `service_broker: true` at the top level of `handcraft.yml`. Please note that, at the time of writing this, setting `service_broker: true` will cause a redeployment of the bosh director when installing or uninstalling the tile.
+`$self` accessors are enabled by setting `service_broker: true` at the top level of `handcraft.yml`. Please note that, at the time of writing this, setting `service_broker: true` will cause a redeployment of the BOSH director when installing or uninstalling the tile.
 
 For example
 
