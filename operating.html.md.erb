@@ -478,12 +478,10 @@ If you want to forward syslog to a syslog aggregator, we recommend co-locating [
 The ODB generates a UUID for each request and prefixes all the logs for that request, e.g.
 
 ```
-on-demand-service-broker: [on-demand-service-broker] [4d63080d-e038-45a3-85f9-93910f6b40b1] 2016/09/05 16:43:26.123456 a valid UAA token was found in cache, will not obtain a new one
+on-demand-service-broker: [on-demand-service-broker] [4d63080d-e038-45a3-85f9-93910f6b40b1] 2016/09/05 16:43:26 a valid UAA token was found in cache, will not obtain a new one
 ```
 
 NB: The ODB's negroni server and start up logs are not prefixed with a request ID.
-
-All ODB's logs have a UTC timestamp.
 
 ### <a id="metrics"></a>Metrics
 
@@ -534,14 +532,14 @@ Most operations on the on demand service broker API are implemented by launching
 1. In the broker log, look for lines relating to the service, identified by the service ID. Lines recording the starting and finishing of BOSH tasks will also have the BOSH task ID:
 
     ```
-    on-demand-service-broker: [on-demand-service-broker] [4d63080d-e038-45a3-85f9-93910f6b40b1] 2016/04/13 09:01:50.793965 Bosh task id for Create instance 30d4a67f-d220-4d06-9989-58a976b86b35 was 11470
-    on-demand-service-broker: [on-demand-service-broker] [4d63080d-e038-45a3-85f9-93910f6b40b1] 2016/04/13 09:06:55.793976 task 11470 success creating deployment for instance 30d4a67f-d220-4d06-9989-58a976b86b35: create deployment
+    on-demand-service-broker: [on-demand-service-broker] [4d63080d-e038-45a3-85f9-93910f6b40b1] 2016/04/13 09:01:50 Bosh task id for Create instance 30d4a67f-d220-4d06-9989-58a976b86b35 was 11470
+    on-demand-service-broker: [on-demand-service-broker] [4d63080d-e038-45a3-85f9-93910f6b40b1] 2016/04/13 09:06:55 task 11470 success creating deployment for instance 30d4a67f-d220-4d06-9989-58a976b86b35: create deployment
 
-    on-demand-service-broker: [on-demand-service-broker] [8bf5c9f6-7acd-4ab4-9214-363a6f6bef79] 2016/04/13 09:16:20.795035 Bosh task id for Update instance 30d4a67f-d220-4d06-9989-58a976b86b35 was 11473
-    on-demand-service-broker: [on-demand-service-broker] [8bf5c9f6-7acd-4ab4-9214-363a6f6bef79] 2016/04/13 09:17:20.795181 task 11473 success updating deployment for instance 30d4a67f-d220-4d06-9989-58a976b86b35: create deployment
+    on-demand-service-broker: [on-demand-service-broker] [8bf5c9f6-7acd-4ab4-9214-363a6f6bef79] 2016/04/13 09:16:20 Bosh task id for Update instance 30d4a67f-d220-4d06-9989-58a976b86b35 was 11473
+    on-demand-service-broker: [on-demand-service-broker] [8bf5c9f6-7acd-4ab4-9214-363a6f6bef79] 2016/04/13 09:17:20 task 11473 success updating deployment for instance 30d4a67f-d220-4d06-9989-58a976b86b35: create deployment
 
-    on-demand-service-broker: [on-demand-service-broker] [af6fab15-c95e-438b-aa6b-bc4329d4154f] 2016/04/13 09:17:52.803824 Bosh task id for Delete instance 30d4a67f-d220-4d06-9989-58a976b86b35 was 11474
-    on-demand-service-broker: [on-demand-service-broker] [af6fab15-c95e-438b-aa6b-bc4329d4154f] 2016/04/13 09:19:56.803938 task 11474 success deleting deployment for instance 30d4a67f-d220-4d06-9989-58a976b86b35: delete deployment service-instance_30d4a67f-d220-4d06-9989-58a976b86b35
+    on-demand-service-broker: [on-demand-service-broker] [af6fab15-c95e-438b-aa6b-bc4329d4154f] 2016/04/13 09:17:52 Bosh task id for Delete instance 30d4a67f-d220-4d06-9989-58a976b86b35 was 11474
+    on-demand-service-broker: [on-demand-service-broker] [af6fab15-c95e-438b-aa6b-bc4329d4154f] 2016/04/13 09:19:56 task 11474 success deleting deployment for instance 30d4a67f-d220-4d06-9989-58a976b86b35: delete deployment service-instance_30d4a67f-d220-4d06-9989-58a976b86b35
     ```
 
 1. Use the task ID to obtain the task log from BOSH (adding flags such as `--debug` or `--cpi` as necessary):
@@ -559,7 +557,7 @@ If BOSH and/or UAA are wrongly configured in the broker's manifest, then meaning
 For example
 
 ```
-on-demand-service-broker: [on-demand-service-broker] [575afbc1-b541-481d-9cde-b3d3e67e87bf] 2016/05/18 15:56:40.100579 Error authenticating (401): {"error":"unauthorized","error_description":"Bad credentials"}, please ensure that properties.<broker-job>.bosh.authentication.uaa is correct and try again.
+on-demand-service-broker: [on-demand-service-broker] [575afbc1-b541-481d-9cde-b3d3e67e87bf] 2016/05/18 15:56:40 Error authenticating (401): {"error":"unauthorized","error_description":"Bad credentials"}, please ensure that properties.<broker-job>.bosh.authentication.uaa is correct and try again.
 ```
 
 ### <a id="listing-instances"></a>List Service Instances
