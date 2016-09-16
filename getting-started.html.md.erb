@@ -13,11 +13,11 @@ This guide describes how to create and manage an on-demand service using PCF Dev
 
 Before setting up and using ODB on your local development environment, install and configure the following components:
 
-- [BOSH Lite](https://github.com/cloudfoundry/bosh-lite#install-bosh-lite) - *min version v9000.131.0*
+- [BOSH Lite](https://github.com/cloudfoundry/bosh-lite#install-bosh-lite) - *min version <%= vars.odb_bosh_lite_version %>*
 
  <p class="note">**Note**: For PCF Dev to route requests to the deployments on BOSH Lite ensure you run the script `bin/add-route` in the BOSH Lite repository. You may need to run this again if your networking is reset (e.g. reboot, or connecting to a different network).</p>
 
-- [PCF Dev](https://docs.pivotal.io/pcf-dev/#installing) - *[pcfdev-v0.19.1-rc.46](https://network.pivotal.io/products/pcfdev#/releases/1811)*
+- [PCF Dev](https://docs.pivotal.io/pcf-dev/#installing) - *[<%= vars.odb_pcfdev_version %>](https://network.pivotal.io/products/pcfdev#/releases/<%= vars.odb_pcfdev_version_pivnet %>)*
 
 ## <a id="set_up_bosh"></a>Step 1: Set Up BOSH Lite
 
@@ -29,7 +29,7 @@ Before setting up and using ODB on your local development environment, install a
 
 1. Upload the [BOSH Lite stemcell](http://bosh.cloudfoundry.org/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent):
    <pre class="terminal">
-    $ bosh upload stemcell https<span>:</span>//bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent?v=3147
+    $ bosh upload stemcell https<span>:</span>//bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent?v=<%= vars.odb_warden_stemcell_version %>
    </pre>
 
 ## <a id="set_up_kafka_sr"></a> Step 2: Set Up the Kafka Example Service
@@ -348,10 +348,10 @@ Before setting up and using ODB on your local development environment, install a
     +-------------------------------------------------------+---------------------------------------+--------------------------------------------------+--------------+
     | Name                                                  | Release(s)                            | Stemcell(s)                                      | Cloud Config |
     +-------------------------------------------------------+---------------------------------------+--------------------------------------------------+--------------+
-    | kafka-on-demand-broker                                | kafka-example-service-adapter/0+dev.2 | bosh-warden-boshlite-ubuntu-trusty-go\_agent/3147 | latest       |
+    | kafka-on-demand-broker                                | kafka-example-service-adapter/0+dev.2 | bosh-warden-boshlite-ubuntu-trusty-go\_agent/<%= vars.odb_warden_stemcell_version %> | latest       |
     |                                                       | on-demand-service-broker/0.2.0+dev.1  |                                                  |              |
     +-------------------------------------------------------+---------------------------------------+--------------------------------------------------+--------------+
-    | service-instance\_2715262c-8564-4cd9-b629-0ae99e6aa4b9 | kafka-example-service/0+dev.2         | bosh-warden-boshlite-ubuntu-trusty-go\_agent/3147 | latest       |
+    | service-instance\_2715262c-8564-4cd9-b629-0ae99e6aa4b9 | kafka-example-service/0+dev.2         | bosh-warden-boshlite-ubuntu-trusty-go\_agent/<%= vars.odb_warden_stemcell_version %> | latest       |
     +-------------------------------------------------------+---------------------------------------+--------------------------------------------------+--------------+
     </pre>
 
