@@ -24,7 +24,7 @@ Before setting up and using ODB on your local development environment, install a
 1. Target your BOSH Lite installation:
    <pre class="terminal">
     $ bosh target
-    Current target is https<span>:</span>//192.0.2.4:25555 (Bosh Lite Director)
+    Current target is https<span>:</span>//192.168.50.4:25555 (Bosh Lite Director)
    </pre>
 
 1. Upload the [BOSH Lite stemcell](http://bosh.cloudfoundry.org/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent):
@@ -108,8 +108,8 @@ Before setting up and using ODB on your local development environment, install a
     - name: kafka
       type: manual
       subnets:
-      - range: 192.0.2.0/24
-        gateway: 192.0.2.1
+      - range: 10.244.0.0/30
+        reserved: [10.244.0.1]
         az: lite
         cloud_properties: {}
     disk_types:
@@ -144,7 +144,7 @@ Before setting up and using ODB on your local development environment, install a
 
     Director
       Name       Bosh Lite Director
-      URL        https://192.0.2.4:25555
+      URL        https://192.168.50.4:25555
       Version    1.3215.0 (00000000)
       User       admin
       UUID       17a45148-1d00-43bc-af28-9882e5a6535a
@@ -273,7 +273,7 @@ Before setting up and using ODB on your local development environment, install a
     +--------------------------------------------------+---------+-----+-----------+------------+
     | Instance                                         | State   | AZ  | VM Type   | IPs        |
     +--------------------------------------------------+---------+-----+-----------+------------+
-    | broker/0 (59231277-d7b8-46bb-8bbb-8154b6bae347)* | running | n/a | container | 192.0.2.2 |
+    | broker/0 (59231277-d7b8-46bb-8bbb-8154b6bae347)* | running | n/a | container | 10.244.0.2 |
     +--------------------------------------------------+---------+-----+-----------+------------+
 
     (*) Bootstrap node
