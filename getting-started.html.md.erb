@@ -185,22 +185,29 @@ Before setting up and using ODB on your local development environment, install a
         azs: [lite]
         networks:
           - name: kafka
-        jobs:
-          - name: broker
-            release: *broker-release
-            properties:
-              port: 8080
-              username: broker #or replace with your own
-              password: password #or replace with your own
-              disable_ssl_cert_verification: true
-              bosh:
-                url: <BOSH_LITE_IP>
-                authentication:
-                  basic:
-                    username: admin
-                    password: admin
-              service_adapter:
-                path: /var/vcap/packages/kafka-service-adapter/bin/service-adapter
+          jobs:
+            - name: broker
+              release: *broker-release
+              properties:
+                port: 8080
+                username: broker #or replace with your own
+                password: password #or replace with your own
+                disable_ssl_cert_verification: true
+                bosh:
+                  url: <BOSH_LITE_IP>
+                  authentication:
+                    basic:
+                      username: admin
+                      password: admin
+                cf:
+                  url: https://api.local.pcfdev.io
+                  authentication:
+                    url: https://uaa.local.pcfdev.io
+                    user_credentials:
+                      username: admin
+                      password: admin
+                service_adapter:
+                  path: /var/vcap/packages/odb-service-adapter/bin/service-adapter
               service_deployment:
                 releases:
                   - name: *service-release
