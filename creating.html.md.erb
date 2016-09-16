@@ -91,7 +91,7 @@ Service authors must document the usage of plan properties for the operator.
 
 For example:
 
-- the [Redis service adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_manifest_generator.go) supports the `persistence` property which can be used to attach a disk to the vm.
+- the [Redis service adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/<%= vars.odb_example_redis_service_adapter_version %>/adapter/redis_manifest_generator.go) supports the `persistence` property which can be used to attach a disk to the vm.
 - the [Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go) supports the `auto_create_topics` property to enable auto-creation of topics on the cluster.
 
 ### <a id="precedence"></a>Order of Precedence
