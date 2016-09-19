@@ -178,7 +178,7 @@ For example
 
 ODB only supports injecting one stemcell into each service deployment (different instance groups cannot have different stemcells).
 
-Your Service Adapter should be opinionated about which jobs it requires to generate its manifest. For example, the Kafka example requires `kafka_node` and `zookeeper`. It should not be opinionated about the mapping of BOSH release to job. The jobs can all be provided by one release, or across many. The SDK provides the helper function [`GenerateInstanceGroupsWithNoProperties`](https://github.com/pivotal-cf/on-demand-service-broker-sdk/blob/master/serviceadapter/instance_group_mapping.go) for generating instance groups without any properties. The Kafka example service adapter [uses this helper function](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/adapter.go) and [invokes it](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go) to map the service releases parameter to the BOSH manifest `releases` and `instance_groups` sections.
+Your Service Adapter should be opinionated about which jobs it requires to generate its manifest. For example, the Kafka example requires `kafka_node` and `zookeeper`. It should not be opinionated about the mapping of BOSH release to job. The jobs can all be provided by one release, or across many. The SDK provides the helper function [`GenerateInstanceGroupsWithNoProperties`](https://github.com/pivotal-cf/on-demand-services-sdk/blob/master/serviceadapter/instance_group_mapping.go) for generating instance groups without any properties. The Kafka example service adapter [uses this helper function](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/adapter.go) and [invokes it](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go) to map the service releases parameter to the BOSH manifest `releases` and `instance_groups` sections.
 
 You should provide documentation about which jobs are required by your Service Adapter, and which BOSH releases operators should get these jobs from.
 
@@ -525,7 +525,7 @@ Example service adapter releases:
 
 ## <a id="sdk"></a> Golang SDK
 
-We have published a [SDK](https://github.com/pivotal-cf/on-demand-service-broker-sdk) for teams writing their service adapters in Golang. It encapsulates the command line invocation handling, parameter parsing, response serialization and error handling so the adapter authors can focus on the service-specific logic in the adapter.
+We have published a [SDK](https://github.com/pivotal-cf/on-demand-services-sdk) for teams writing their service adapters in Golang. It encapsulates the command line invocation handling, parameter parsing, response serialization and error handling so the adapter authors can focus on the service-specific logic in the adapter.
 
 You should use the same version of the SDK as your ODB release. For example if you are using v0.8.0 of the ODB BOSH release you should checkout the v0.8.0 tag of the SDK.
 
@@ -536,7 +536,7 @@ For the generated BOSH manifest the SDK supports properties in two levels: manif
 Get the SDK:
 
 ```sh
-go get github.com/pivotal-cf/on-demand-service-broker-sdk
+go get github.com/pivotal-cf/on-demand-services-sdk
 ```
 
 In the main function for the service adapter, call the `HandleCommandLineInvocation` function:
@@ -549,7 +549,7 @@ import (
 	"os"
 
 	"github.com/bar-org/foo-service-adapter/adapter"
-	"github.com/pivotal-cf/on-demand-service-broker-sdk/serviceadapter"
+	"github.com/pivotal-cf/on-demand-services-sdk/serviceadapter"
 )
 
 func main() {
@@ -599,4 +599,3 @@ serviceadapter.NewAppGuidNotProvidedError()
 ```
 
 For more complete code examples please take a look at the [kafka adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter) or the [redis adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter).
-
