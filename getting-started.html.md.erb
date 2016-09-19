@@ -19,6 +19,24 @@ Before setting up and using ODB on your local development environment, install a
 
 - [PCF Dev](https://docs.pivotal.io/pcf-dev/#installing) - *[<%= vars.odb_pcfdev_version %>](https://network.pivotal.io/products/pcfdev#/releases/<%= vars.odb_pcfdev_version_pivnet %>)*
 
+- Once PCF Dev has finished installing, you should see some output like this...
+  ```sh
+      _______  _______  _______    ______   _______  __   __
+    |       ||       ||       |  |      | |       ||  | |  |
+    |    _  ||       ||    ___|  |  _    ||    ___||  |_|  |
+    |   |_| ||       ||   |___   | | |   ||   |___ |       |
+    |    ___||      _||    ___|  | |_|   ||    ___||       |
+    |   |    |     |_ |   |      |       ||   |___  |     |
+    |___|    |_______||___|      |______| |_______|  |___|
+    is now running.
+    To begin using PCF Dev, please run:
+       cf login -a https://api.local.pcfdev.io --skip-ssl-validation
+    Apps Manager URL: https://local.pcfdev.io
+    Admin user => Email: admin / Password: admin
+  ```
+
+  Make a note of the <CF_DOMAIN>, you will need this later on. It is usually `local.pcfdev.io`
+
 ## <a id="set_up_bosh"></a>Step 1: Set Up BOSH Lite
 
 1. Target your BOSH Lite installation:
@@ -156,7 +174,7 @@ Before setting up and using ODB on your local development environment, install a
   Record the URL and UUID from your output. These are added to the `deployment_manifest.yml` in the next step.
 
 1. Create a BOSH Lite deployment manifest in a file called `deployment_manifest.yml` using the following as a base.
-<p class="note">Replace `BOSH_LITE_UUID` and `BOSH_LITE_IP` with the value obtained in the previous step.</p>
+<p class="note">Replace `BOSH_LITE_UUID` and `BOSH_LITE_IP` with the value obtained in the previous step. Also replace `<CF_DOMAIN>` with your pcf dev domain.</p>
 
     ```yaml
     name: kafka-on-demand-broker
@@ -199,8 +217,15 @@ Before setting up and using ODB on your local development environment, install a
                   basic:
                     username: admin
                     password: admin
+              cf:
+                url: https://api.<CF_DOMAIN>
+                authentication:
+                  url: https://uaa.<CF_DOMAIN>
+                  user_credentials:
+                    username: admin
+                    password: admin
               service_adapter:
-                path: /var/vcap/packages/kafka-service-adapter/bin/service-adapter
+                path: /var/vcap/packages/odb-service-adapter/bin/service-adapter
               service_deployment:
                 releases:
                   - name: *service-release
@@ -238,6 +263,8 @@ Before setting up and using ODB on your local development environment, install a
                       default_replication_factor: 1
           - name: kafka-service-adapter
             release: *service-adapter-release
+          - name: admin_tools
+            release: *service-release
 
     update:
       canaries: 1
@@ -369,7 +396,7 @@ The [Kafka Example App](https://github.com/pivotal-cf-experimental/kafka-example
 
 1. Bind the app to your service instance:
     <pre class="terminal">
-    $ cf bind-service kafka-example-app kafka-service-with-odb
+    $ cf bind-service kafka-example-app k1
     </pre>
     <p class="note"><strong>Note</strong>: You can use <code>cf bs</code> as an alias for <code>cf bind-service</code></p>
 
@@ -381,4 +408,4 @@ The [Kafka Example App](https://github.com/pivotal-cf-experimental/kafka-example
 Now the app runs at `https:/kafka-example-app.local.pcfdev.io`, and you can use it to read and write to your on-demand Kafka service instance. For example:
 
 * To write data, run `curl -XPOST http://kafka-example-app.local.pcfdev.io/queues/my-queue -d SOME-DATA`
-* To read data, run `curl  http://kafka-example-app.local.pcfdev.io/queues/my-queue`
+* To read data, run `curl http://kafka-example-app.local.pcfdev.io/queues/my-queue`
