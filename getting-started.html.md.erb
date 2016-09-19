@@ -43,7 +43,7 @@ Before setting up and using ODB on your local development environment, install a
 1. Target your BOSH Lite installation:
    <pre class="terminal">
     $ bosh target
-    Current target is https<span>:</span>//192.0.2.4:25555 (Bosh Lite Director)
+    Current target is https<span>:</span>//192.168.50.4:25555 (Bosh Lite Director)
    </pre>
 
 1. Upload the [BOSH Lite stemcell](http://bosh.cloudfoundry.org/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent):
@@ -127,8 +127,8 @@ Before setting up and using ODB on your local development environment, install a
     - name: kafka
       type: manual
       subnets:
-      - range: 192.0.2.0/24
-        gateway: 192.0.2.1
+      - range: 10.244.0.0/30
+        reserved: [10.244.0.1]
         az: lite
         cloud_properties: {}
     disk_types:
@@ -163,7 +163,7 @@ Before setting up and using ODB on your local development environment, install a
 
     Director
       Name       Bosh Lite Director
-      URL        https://192.0.2.4:25555
+      URL        https://192.168.50.4:25555
       Version    1.3215.0 (00000000)
       User       admin
       UUID       17a45148-1d00-43bc-af28-9882e5a6535a
@@ -227,45 +227,45 @@ Before setting up and using ODB on your local development environment, install a
                     password: admin
               service_adapter:
                 path: /var/vcap/packages/odb-service-adapter/bin/service-adapter
-              service_deployment:
-                releases:
-                  - name: *service-release
-                    version: latest
-                    jobs: [kafka_server, zookeeper_server]
-                stemcell:
-                  os: ubuntu-trusty
+            service_deployment:
+              releases:
+                - name: *service-release
                   version: latest
-              service_catalog:
-                id: D94A086D-203D-4966-A6F1-60A9E2300F72
-                service_name: kafka-service-with-odb
-                service_description: Kafka Service
-                bindable: true
-                plan_updatable: true
-                tags: [kafka]
-                plans:
-                  - name: small
-                    plan_id: 11789210-D743-4C65-9D38-C80B29F4D9C8
-                    description: A Kafka deployment with a single instance of each job and persistent disk
-                    instance_groups:
-                      - name: kafka_server
-                        vm_type: container
-                        instances: 1
-                        persistent_disk_type: ten
-                        azs: [lite]
-                        networks: [kafka]
-                      - name: zookeeper_server
-                        vm_type: container
-                        instances: 1
-                        persistent_disk_type: ten
-                        azs: [lite]
-                        networks: [kafka]
-                    properties:
-                      auto_create_topics: true
-                      default_replication_factor: 1
-          - name: kafka-service-adapter
-            release: *service-adapter-release
-          - name: admin_tools
-            release: *service-release
+                  jobs: [kafka_server, zookeeper_server]
+              stemcell:
+                os: ubuntu-trusty
+                version: latest
+            service_catalog:
+              id: D94A086D-203D-4966-A6F1-60A9E2300F72
+              service_name: kafka-service-with-odb
+              service_description: Kafka Service
+              bindable: true
+              plan_updatable: true
+              tags: [kafka]
+              plans:
+                - name: small
+                  plan_id: 11789210-D743-4C65-9D38-C80B29F4D9C8
+                  description: A Kafka deployment with a single instance of each job and persistent disk
+                  instance_groups:
+                    - name: kafka_server
+                      vm_type: container
+                      instances: 1
+                      persistent_disk_type: ten
+                      azs: [lite]
+                      networks: [kafka]
+                    - name: zookeeper_server
+                      vm_type: container
+                      instances: 1
+                      persistent_disk_type: ten
+                      azs: [lite]
+                      networks: [kafka]
+                  properties:
+                    auto_create_topics: true
+                    default_replication_factor: 1
+        - name: kafka-service-adapter
+          release: *service-adapter-release
+        - name: admin_tools
+          release: *service-release
 
     update:
       canaries: 1
@@ -301,7 +301,7 @@ Before setting up and using ODB on your local development environment, install a
     +--------------------------------------------------+---------+-----+-----------+------------+
     | Instance                                         | State   | AZ  | VM Type   | IPs        |
     +--------------------------------------------------+---------+-----+-----------+------------+
-    | broker/0 (59231277-d7b8-46bb-8bbb-8154b6bae347)* | running | n/a | container | 192.0.2.2 |
+    | broker/0 (59231277-d7b8-46bb-8bbb-8154b6bae347)* | running | n/a | container | 10.244.0.2 |
     +--------------------------------------------------+---------+-----+-----------+------------+
 
     (*) Bootstrap node
