@@ -1,0 +1,8 @@
+<div class="mermaid">  
+sequenceDiagram
+  User->>CloudFoundry:bind-service
+  CloudFoundry->>ODB:bind-service-instance
+  ODB->>ServiceAdapter:create-binding
+  ServiceAdapter->>ODB:binding info
+  ODB->>CloudFoundry:binding info
+</div>

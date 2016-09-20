@@ -1,0 +1,8 @@
+<div class="mermaid">  
+sequenceDiagram
+  User->>CloudFoundry:unbind-service
+  CloudFoundry->>ODB:unbind-service-instance
+  ODB->>ServiceAdapter:delete-binding
+  ServiceAdapter->>ODB:done
+  ODB->>CloudFoundry:OK
+</div>
