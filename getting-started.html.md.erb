@@ -36,7 +36,7 @@ Before setting up and using ODB on your local development environment, install a
     Admin user => Email: admin / Password: admin
   ```
 
-  Make a note of the <CF_DOMAIN>, you will need this later on. It is usually `local.pcfdev.io`
+  Make a note of the PCF Dev domain, you will need this later on. The default is `local.pcfdev.io`.
 
 ## <a id="set_up_bosh"></a>Step 1: Set Up BOSH Lite
 
@@ -123,21 +123,25 @@ Before setting up and using ODB on your local development environment, install a
     vm_types:
     - name: container
       cloud_properties: {}
+
     networks:
     - name: kafka
       type: manual
       subnets:
-      - range: 10.244.0.0/30
-        reserved: [10.244.0.1]
+      - range: 10.244.0.0/24
+        gateway: 10.244.0.1
         az: lite
         cloud_properties: {}
+
     disk_types:
     - name: ten
       disk_size: 10_000
       cloud_properties: {}
+
     azs:
     - name: lite
       cloud_properties: {}
+
     compilation:
       workers: 2
       reuse_compilation_vms: true
@@ -172,10 +176,10 @@ Before setting up and using ODB on your local development environment, install a
       compiled\_package\_cache enabled (provider: local)
       snapshots  disabled
   </pre>
-  Record the URL and UUID from your output. These are added to the `deployment_manifest.yml` in the next step.
+  Record the URL and UUID from your output. You will add them to the `deployment_manifest.yml` in the next step.
 
 1. Create a BOSH Lite deployment manifest in a file called `deployment_manifest.yml` using the following as a base.
-<p class="note">Replace `BOSH_LITE_UUID` and `BOSH_LITE_IP` with the value obtained in the previous step. Also replace `<CF_DOMAIN>` with your pcf dev domain.</p>
+<p class="note">Replace `BOSH_LITE_UUID`, `BOSH_LITE_URL` and `PCF_DEV_DOMAIN` with the values obtained in the previous steps.</p>
 
     ```yaml
     name: kafka-on-demand-broker
@@ -183,89 +187,89 @@ Before setting up and using ODB on your local development environment, install a
     director_uuid: <BOSH_LITE_UUID>
 
     releases:
-      - name: &broker-release on-demand-service-broker
-        version: latest
-      - name: &service-adapter-release kafka-example-service-adapter
-        version: latest
-      - name: &service-release kafka-example-service
-        version: latest
+    - name: &broker-release on-demand-service-broker
+      version: latest
+    - name: &service-adapter-release kafka-example-service-adapter
+      version: latest
+    - name: &service-release kafka-example-service
+      version: latest
 
     stemcells:
-      - alias: trusty
-        os: ubuntu-trusty
-        version: latest
+    - alias: trusty
+      os: ubuntu-trusty
+      version: latest
 
     instance_groups:
+    - name: broker
+      instances: 1
+      vm_type: container
+      persistent_disk_type: ten
+      stemcell: trusty
+      azs: [lite]
+      networks:
+      - name: kafka
+      jobs:
+      - name: kafka-service-adapter
+        release: *service-adapter-release
+      - name: admin_tools
+        release: *service-release
       - name: broker
-        instances: 1
-        vm_type: container
-        persistent_disk_type: ten
-        stemcell: trusty
-        azs: [lite]
-        networks:
-          - name: kafka
-        jobs:
-          - name: broker
-            release: *broker-release
-            properties:
-              port: 8080
-              username: broker #or replace with your own
-              password: password #or replace with your own
-              disable_ssl_cert_verification: true
-              bosh:
-                url: <BOSH_LITE_IP>
-                authentication:
-                  basic:
-                    username: admin
-                    password: admin
-              cf:
-                url: https://api.<CF_DOMAIN>
-                authentication:
-                  url: https://uaa.<CF_DOMAIN>
-                  user_credentials:
-                    username: admin
-                    password: admin
-              service_adapter:
-                path: /var/vcap/packages/odb-service-adapter/bin/service-adapter
-            service_deployment:
-              releases:
-                - name: *service-release
-                  version: latest
-                  jobs: [kafka_server, zookeeper_server]
-              stemcell:
-                os: ubuntu-trusty
-                version: latest
-            service_catalog:
-              id: D94A086D-203D-4966-A6F1-60A9E2300F72
-              service_name: kafka-service-with-odb
-              service_description: Kafka Service
-              bindable: true
-              plan_updatable: true
-              tags: [kafka]
-              plans:
-                - name: small
-                  plan_id: 11789210-D743-4C65-9D38-C80B29F4D9C8
-                  description: A Kafka deployment with a single instance of each job and persistent disk
-                  instance_groups:
-                    - name: kafka_server
-                      vm_type: container
-                      instances: 1
-                      persistent_disk_type: ten
-                      azs: [lite]
-                      networks: [kafka]
-                    - name: zookeeper_server
-                      vm_type: container
-                      instances: 1
-                      persistent_disk_type: ten
-                      azs: [lite]
-                      networks: [kafka]
-                  properties:
-                    auto_create_topics: true
-                    default_replication_factor: 1
-        - name: kafka-service-adapter
-          release: *service-adapter-release
-        - name: admin_tools
-          release: *service-release
+        release: *broker-release
+        properties:
+          port: 8080
+          username: broker #or replace with your own
+          password: password #or replace with your own
+          disable_ssl_cert_verification: true
+          bosh:
+            url: <BOSH_LITE_URL>
+            authentication:
+              basic:
+                username: admin
+                password: admin
+          cf:
+            url: https://api.<PCF_DEV_DOMAIN>
+            authentication:
+              url: https://uaa.<PCF_DEV_DOMAIN>
+              user_credentials:
+                username: admin
+                password: admin
+          service_adapter:
+            path: /var/vcap/packages/odb-service-adapter/bin/service-adapter
+          service_deployment:
+            releases:
+            - name: *service-release
+              version: latest
+              jobs: [kafka_server, zookeeper_server]
+            stemcell:
+              os: ubuntu-trusty
+              version: latest
+          service_catalog:
+            id: D94A086D-203D-4966-A6F1-60A9E2300F72
+            service_name: kafka-service-with-odb
+            service_description: Kafka Service
+            bindable: true
+            plan_updatable: true
+            tags: [kafka]
+            plans:
+            - name: small
+              plan_id: 11789210-D743-4C65-9D38-C80B29F4D9C8
+              description: A Kafka deployment with a single instance of each job and persistent disk
+              instance_groups:
+              - name: kafka_server
+                vm_type: container
+                instances: 1
+                persistent_disk_type: ten
+                azs: [lite]
+                networks: [kafka]
+              - name: zookeeper_server
+                vm_type: container
+                instances: 1
+                persistent_disk_type: ten
+                azs: [lite]
+                networks: [kafka]
+              properties:
+                auto_create_topics: true
+                default_replication_factor: 1
 
     update:
       canaries: 1
@@ -309,7 +313,7 @@ Before setting up and using ODB on your local development environment, install a
     Instances total: 1
     </pre>
 
-    Record the address of the broker. This address is used in the next step to create a service broker.
+    Record the IP address of the broker. You will use this in the next step to create a service broker.
 
 ## <a id="create_service"></a> Step 6: Create a Service Broker on PCF Dev
 
@@ -384,14 +388,13 @@ Before setting up and using ODB on your local development environment, install a
 The [Kafka Example App](https://github.com/pivotal-cf-experimental/kafka-example-app) shows how you can use the service instance that you created with `cf create-service`.
 
 1. Clone the [Kafka example app](https://github.com/pivotal-cf-experimental/kafka-example-app) in your workspace:
-   <pre class="terminal">
+    <pre class="terminal">
     $ git clone https<span>:</span>//github.com/pivotal-cf-experimental/kafka-example-app.git
-   </pre>
+    </pre>
 
 1. Push the app.
-   <pre class="terminal">
+    <pre class="terminal">
     $ cd kafka-example-app
-      ...
     $ cf push --no-start
     </pre>
 
@@ -406,7 +409,7 @@ The [Kafka Example App](https://github.com/pivotal-cf-experimental/kafka-example
     $ cf start kafka-example-app
     </pre>
 
-Now the app runs at `https:/kafka-example-app.local.pcfdev.io`, and you can use it to read and write to your on-demand Kafka service instance. For example:
+Now the app runs at `https:/kafka-example-app.<PCF_DEV_DOMAIN>`, and you can use it to read and write to your on-demand Kafka service instance. For example:
 
-* To write data, run `curl -XPOST http://kafka-example-app.local.pcfdev.io/queues/my-queue -d SOME-DATA`
-* To read data, run `curl http://kafka-example-app.local.pcfdev.io/queues/my-queue`
+* To write data, run `curl -XPOST http://kafka-example-app.<PCF_DEV_DOMAIN>/queues/my-queue -d SOME-DATA`
+* To read data, run `curl http://kafka-example-app.<PCF_DEV_DOMAIN>/queues/my-queue`
