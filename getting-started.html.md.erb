@@ -92,27 +92,13 @@ Before setting up and using ODB on your local development environment, install a
     $ bosh upload release
   </pre>
 
-## <a id="set_up_odb"></a> Step 4: Set Up the On-Demand Broker
+## <a id="set_up_odb"></a> Step 4: Set Up the On-Demand Service Broker
 
-1. Clone the [on-demand broker](https://github.com/pivotal-cf/on-demand-service-broker-release)
-  <pre class="terminal">
-    $ git clone https://github.com/pivotal-cf/on-demand-service-broker-release.git
-  </pre>
+1. Download the [on-demand service broker from PivNet](https://network.pivotal.io/products/pivotal-cloud-foundry-services-sdk)
 
-1. Update submodule dependencies:
+1. Upload the `on-demand-service-broker` release (replace X.Y.Z with the ODB release version):
   <pre class="terminal">
-    $ cd on-demand-service-broker-release
-    $ git submodule update --init --recursive
-  </pre>
-
-1. Create the `on-demand-service-broker` release:
-  <pre class="terminal">
-    $ bosh create release --name on-demand-service-broker
-  </pre>
-
-1. Upload the `on-demand-service-broker` release:
-  <pre class="terminal">
-    $ bosh upload release
+    $ bosh upload release on-demand-service-broker-X.Y.Z.tgz
   </pre>
 
 ## <a id="create_bosh"></a> Step 5: Create a BOSH Deployment
