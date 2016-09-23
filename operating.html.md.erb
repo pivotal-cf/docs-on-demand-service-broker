@@ -228,9 +228,11 @@ To do this, upload the release to your BOSH director and [configure the job prop
 
 Remember to set the `broker_uri` property in the [register-broker errand](#register-broker) if you configure a route.
 
-## <a id="metrics"></a>Broker Metrics
+## <a id="broker-metrics"></a>Broker Metrics
 
-The ODB bosh release contains a metrics job, that can be used to emit metrics when colocated with [service metrics](https://github.com/pivotal-cf-experimental/service-metrics-release). You must include the loggregator release in order to do this.
+The ODB bosh release contains a metrics job, that can be used to emit metrics when colocated with [service metrics](https://network.pivotal.io/products/pivotal-cloud-foundry-services-sdk). You must include the loggregator release in your manifest order to do this.
+
+Use [loggregator v58+](https://bosh.io/d/github.com/cloudfoundry/loggregator?v=58) and [service-metrics v1.4.3+](https://network.pivotal.io/products/pivotal-cloud-foundry-services-sdk).
 
 Add the following jobs to the broker instance group:
 
@@ -259,8 +261,6 @@ Add the following jobs to the broker instance group:
 - name: odb-metrics
   release: <ODB release>
 ```
-
-We have tested this example configuration with loggregator v58 and service-metrics v1.4.3.
 
 Please see the [service metrics docs](http://docs.pivotal.io/service-metrics) for more details on service metrics.
 
@@ -493,6 +493,8 @@ For each plan, the metrics will report how many instances there are of that plan
 origin:"<broker deployment name>" eventType:ValueMetric timestamp:<timestamp> deployment:"<broker deployment name>" job:"broker" index:"<bosh job index>" ip:"<IP>" valueMetric:<name:"/on-demand-broker/<service offering name>/<plan name>/total_instances" value:<instance count> unit:"count" >
 origin:"<broker deployment name>" eventType:ValueMetric timestamp:<timestamp> deployment:"<broker deployment name>" job:"broker" index:"<bosh job index>" ip:"<IP>" valueMetric:<name:"/on-demand-broker/<service offering name>/<plan name>/quota_remaining" value:<quota remaining> unit:"count" >
 ```
+
+If `quota_remaining` is `0` then you need to increase your plan quota in the BOSH manifest.
 
 ### <a id="identifying-deployments"></a>Identify Deployments in BOSH
 
