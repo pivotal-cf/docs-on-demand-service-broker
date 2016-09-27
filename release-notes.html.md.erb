@@ -4,11 +4,47 @@ owner: London Services Enablement
 ---
 
 # <a id="release-notes"></a>Release Notes
+This release enables the On-Demand Broker to emit metrics to the Cloud Foundry Loggregator system. For each plan, the metrics will report how many instances there are of that plan and if a quota is set how much of that quota is remaining.
+
+Services adapters have an optional default location, meaning if the service adapter is in a specific location it does not need to be specified in the BOSH manifest for the ODB.
 
 ## <a id="minimum-version-requirements"></a>Minimum Version Requirements
+- BOSH 257+ / BOSH lite [v9000.131.0](https://github.com/cloudfoundry/bosh-lite/releases/tag/9000.131.0)
+- CF 238+
 
 ## <a id="new-features"></a>New Features
+- Request identifier now in ODB logs to help correlate request workflows
+- Specify a global block of properties that all plans inherit from
+  - Global properties are to be merged into plan properties, with plan properties winning if there is a conflict
+
+    ```yaml
+    service_catalog:
+      id: 12345
+      service_description: Kafka Service
+      bindable: true
+      plan_updatable: true
+      global_properties: #optional
+        auto_create_topics: true
+      plans:
+        - name: small
+          plan_id: 105ea492-ebcf-4bf2-a475-409f45667c03
+          description: A Kafka deployment with a single instance of each job and persistent disk
+          instance_groups:
+            ....
+          properties:
+            auto_create_topics: false
+            default_replication_factor: 1
+    ```
+
+- Service Adapter Go SDK enhancements
+  - Specify dns/gateway defaults for a bosh network
+  - Helper functions for providing / consuming links in a manifest
+- Support for 410 gone delete-binding response via service-adapter
 
 ## <a id="breaking-changes"></a>Breaking Changes
+- Service Adapter Go SDK
+  - Arbitrary parameters renamed to request parameters
+  - `persistent_disk` renamed to `persistent_disk_type` to match BOSH manifest spec
 
 ## <a id="bug-fixes"></a>Bug fixes
+- None
