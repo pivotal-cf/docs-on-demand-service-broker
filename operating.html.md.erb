@@ -20,6 +20,7 @@ For an example manifest for a Redis service, see [redis-example-service-adapter-
 
 For an example manifest for a Kafka service, see [kafka-example-service-adapter-release](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml).
 
+
 ## <a id="configure-bosh"></a>Set Up Your BOSH Director
 
 Dependencies for the On-Demand Broker:
@@ -230,9 +231,7 @@ Remember to set the `broker_uri` property in the [register-broker errand](#regis
 
 ## <a id="broker-metrics"></a>Broker Metrics
 
-The ODB bosh release contains a metrics job, that can be used to emit metrics when colocated with [service metrics](https://network.pivotal.io/products/pivotal-cloud-foundry-services-sdk). You must include the loggregator release in your manifest order to do this.
-
-Use [loggregator v58+](https://bosh.io/d/github.com/cloudfoundry/loggregator?v=58) and [service-metrics v1.4.3+](https://network.pivotal.io/products/pivotal-cloud-foundry-services-sdk).
+The ODB bosh release contains a metrics job, that can be used to emit metrics when colocated with [service metrics](https://github.com/pivotal-cf-experimental/service-metrics-release). You must include the [loggregator release](https://github.com/cloudfoundry/loggregator) in order to do this.
 
 Add the following jobs to the broker instance group:
 
@@ -261,6 +260,10 @@ Add the following jobs to the broker instance group:
 - name: odb-metrics
   release: <ODB release>
 ```
+
+An example of how the service metrics can be configured for an on-demand-broker deployment can be seen in the [kafka-example-service-adapter-release](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml#L106) manifest.
+
+We have tested this example configuration with loggregator v58 and service-metrics v1.4.3.
 
 Please see the [service metrics docs](http://docs.pivotal.io/service-metrics) for more details on service metrics.
 
