@@ -274,11 +274,11 @@ Management tasks on the broker are performed with BOSH errands.
 
 ### <a id="register"></a>register-broker
 
-This errand registers the broker with Cloud Foundry and enables access for all orgs and spaces to the active plans of the service. The errand should be run whenever the broker is re-deployed with new catalog metadata to update the Cloud Foundry catalog.
+This errand registers the broker with Cloud Foundry and enables access to plans in the service catalog. The errand should be run whenever the broker is re-deployed with new catalog metadata to update the Cloud Foundry catalog.
 
 Please note that if the `broker_uri` property is set, then you should also register a route for your broker with Cloud Foundry. See [Route registration](#route-registration) section for more details.
 
-Plans can be disabled by setting `active: false` in the `plan` section of the broker job properties. See [catalog](#catalog) for details.
+When `enable_service_access: false` is set the errand will disable service access for all plans. Individual plans can be disabled by setting `active: false` in the `plan` section of the broker job properties. See [catalog](#catalog) for details.
 
 Add the following instance group to your manifest:
 
@@ -293,7 +293,7 @@ Add the following instance group to your manifest:
         broker_name: <broker-name>
         broker_uri: <broker URI, only required when a route has been registered> # optional
         disable_ssl_cert_verification: <true|false> # defaults to false
-        enable_service_access: <true|false> #defaults to true - set to false the service plans will not be exposed to CF marketplace
+        enable_service_access: <true|false> # defaults to true
         cf:
           api_url: <cf-api-url>
           admin_username: <cf-api-admin-username>
