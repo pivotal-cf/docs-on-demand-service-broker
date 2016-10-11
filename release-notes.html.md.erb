@@ -3,12 +3,47 @@ title: On-Demand Services SDK Release Notes
 owner: London Services Enablement
 ---
 
-# <a id="release-notes"></a>Release Notes
+# <a id="release-notes"></a>v0.11.0 Release Notes
 
 ## <a id="minimum-version-requirements"></a>Minimum Version Requirements
 
+- BOSH 257+ / BOSH lite v9000.131.0
+- CF 238+
+
 ## <a id="new-features"></a>New Features
+
+- Ability to mark a plan as inactive. This will disable service access to all orgs / space in the CF marketplace for this plan. Run the [register-broker](https://docs.pivotal.io/on-demand-service-broker/operating.html#register) errand after deploying the ODB with this flag set for a given plan.
+
+Manifest example:
+
+```
+        plans:
+        - name: dedicated-vm
+          plan_id: 34170567-e1e3-46b8-af64-bf7556563cd2
+          active: false #defaults to true
+```
+
+- Broker register errand now has option to not enable service access in CF marketplace
+  - On the errand set the property `enable_service_access`
+
+- Fast operator feedback if CF / BOSH minimum versions are not met. Broker will fail to start and error message found in `/var/vcap/sys/log/broker/broker.log`
+
+- Ascii art on startup, disabled by default
+
+Manifest example:
+
+```
+    jobs:
+      - name: broker
+        release: *broker-release
+        properties:
+          startup_banner: true #default false
+```
 
 ## <a id="breaking-changes"></a>Breaking Changes
 
+- None
+
 ## <a id="bug-fixes"></a>Bug fixes
+
+- None
