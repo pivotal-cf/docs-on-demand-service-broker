@@ -293,6 +293,7 @@ Add the following instance group to your manifest:
         broker_name: <broker-name>
         broker_uri: <broker URI, only required when a route has been registered> # optional
         disable_ssl_cert_verification: <true|false> # defaults to false
+        enable_service_access: <true|false> #defaults to true - set to false the service plans will not be exposed to CF marketplace
         cf:
           api_url: <cf-api-url>
           admin_username: <cf-api-admin-username>
