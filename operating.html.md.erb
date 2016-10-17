@@ -243,8 +243,6 @@ Add the following jobs to the broker instance group:
     service_metrics:
       execution_interval_seconds: <interval between successive metrics collections>
       origin: <origin tag for metrics>
-      metrics_command: /var/vcap/jobs/odb-metrics/bin/gather-metrics.sh # hardcode this
-      metrics_command_args: [] # hardcode this
       monit_dependencies: [broker] # hardcode this
 - name: metron_agent
   release: loggregator
@@ -258,13 +256,13 @@ Add the following jobs to the broker instance group:
         machines: [<CF etcd IPs>]
     loggregator_endpoint:
       shared_secret: <loggregator secret>
-- name: odb-metrics
+- name: service-metrics-adapter
   release: <ODB release>
 ```
 
 An example of how the service metrics can be configured for an on-demand-broker deployment can be seen in the [kafka-example-service-adapter-release](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml#L106) manifest.
 
-We have tested this example configuration with loggregator v58 and service-metrics v1.4.3.
+We have tested this example configuration with loggregator v58 and service-metrics v1.5.0.
 
 Please see the [service metrics docs](http://docs.pivotal.io/service-metrics) for more details on service metrics.
 
