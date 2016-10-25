@@ -193,6 +193,7 @@ Plan for which the manifest is supposed to be generated
 | instance_groups                       | array of instance groups | instance groups configured for the plan                                                                                                |
 | instance_group.name                   | string                   | name of the instance group                                                                                                             |
 | instance_group.vm\_type               | string                   | the vm_type configured for the instance group, matches one in the cloud config on the director                                         |
+| instance_group.vm\_extensions         | array of strings         | Optional, the vm_extensions configured for the instance group, must be present in the cloud config on the director                     |
 | instance_group.persistent\_disk\_type | string                   | Optional, the persistent\_disk\_type configured for the instance group, matches one in the cloud config on the director                |
 | instance_group.networks               | array of strings         | the networks the instance group is supposed to be in                                                                                   |
 | instance_group.instances              | int                      | number of instances for the instance group                                                                                             |
@@ -214,6 +215,7 @@ For example
       {
          "name": "example-server",
          "vm_type": "small",
+         "vm_extensions": ["some", "extensions"],
          "persistent_disk_type": "ten",
          "networks": [
             "example-network"

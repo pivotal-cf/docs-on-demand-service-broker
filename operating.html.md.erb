@@ -206,6 +206,7 @@ service_catalog:
       instance_groups: # resource mapping for the instance groups defined by the Service Author
         - name: <service author provided instance group name>
           vm_type: <vm type>
+          vm_extensions: [<vm extensions>] # optional
           instances: <instance count>
           networks: [<network>]
           azs: [<az>]
