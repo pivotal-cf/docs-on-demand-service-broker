@@ -30,11 +30,9 @@ Dependencies for the On-Demand Broker:
 
 ### SSL certificates
 
-If the on-demand broker (ODB) is configured to communicate with BOSH on the director's private IP you can probably get away with insecure HTTP.
+If ODB is configured to communicate with BOSH on the director's public IP you may be using a self-signed certificate unless you have a domain for your BOSH director. ODB does not ignore TLS certificate validation errors by default (as expected). You have two options to configure certificate-based authentication between the BOSH director and the ODB:
 
-If ODB is configured to communicate with BOSH on the director's public IP you will probably be using a self-signed certificate unless you have a domain for your BOSH director. ODB does not ignore TLS certificate validation errors by default (as expected). You have two options to configure certificate-based authentication between the BOSH director and the ODB:
-
-1. Add the BOSH director's root certificate to ODB's trusted pool (**recommended**):
+1. Add the BOSH director's root certificate to ODB's trusted pool in the ODB manifest:
 
     ```yaml
     bosh:
