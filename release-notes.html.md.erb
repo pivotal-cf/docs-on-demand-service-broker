@@ -3,12 +3,24 @@ title: On-Demand Services SDK Release Notes
 owner: London Services Enablement
 ---
 
-# <a id="release-notes"></a>Release Notes
+# <a id="release-notes"></a>v0.12.0
 
 ## <a id="minimum-version-requirements"></a>Minimum Version Requirements
 
+- BOSH 257+ / BOSH lite v9000.131.0
+- CF 238+
+
 ## <a id="new-features"></a>New Features
+
+- [Support for BOSH VM Extensions](https://bosh.io/docs/cloud-config.html#vm-extensions)
+ - Add `vm_extensions` to the `instance_groups` in your adapter code
+ - Go SDK also supports this new field
+ - If supplied, you should add this field to service instance manifests
 
 ## <a id="breaking-changes"></a>Breaking Changes
 
+- None
+
 ## <a id="bug-fixes"></a>Bug fixes
+
+- None
