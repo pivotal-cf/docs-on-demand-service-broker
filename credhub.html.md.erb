@@ -1,0 +1,64 @@
+---
+title: Deploying On-Demand Broker with Credhub
+owner: London Services Enablement
+---
+
+# </a>Deploying On Demand Broker with Credhub
+
+On-Demand Broker can be configured to store secrets into Credhub.
+
+## Enabling/Disabling Credhub support
+
+First ensure that your bosh director has Credhub configured as its config server.
+[See this guide for details](https://github.com/pivotal-cf/credhub-release/wiki/CredHub-Integration-with-BOSH-Director-Configuration-Guide)
+
+To enable Credhub support in ODB you can configure a new Credhub property in the broker manifest.
+
+```yaml
+instance_groups:
+  - name: broker
+    instances: 1
+    jobs:
+    - name: broker
+      release: on-demand-service-broker
+      properties:
+        credhub: #Optional
+          api_url: <Credhub URL>
+          client_id: <Credhub UAA client id>
+          client_secert: <Credhub UAA client secret>
+        ...
+```
+
+Removing this property disables Credhub.
+
+## Service Bindings
+
+When a service is bound using On-Demand Broker the resulting credentials block will be stored
+in Credhub before being bound to an application.
+
+Any binding credential will be stored in Credhub under the path `service_id/binding_id`.
+
+For example:
+##### Returned by Service Adapter
+```json
+{
+  credentials: {
+     "host":"<host>",
+     "password":"<password>",
+     "port":<port>
+  }
+}
+```
+
+##### Stored in Credhub
+At path `/16c86121-9796-4f12-8a1b-59a7ec268d38/9ef642a5-2cfb-42f3-8795-0d91b4c7d2f7`
+```json
+{
+  "value": "{\"host\":\"<host>\",\"password\":\"<password>\",\"port\":<port>}",
+  "type": "password",
+  "updated_at": "2016-11-11T12:30:51Z"
+}
+```
+
+
+
