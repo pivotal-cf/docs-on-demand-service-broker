@@ -5,14 +5,189 @@ owner: London Services Enablement
 
 # </a>Deploying On Demand Broker with Credhub
 
-On-Demand Broker can be configured to store secrets into Credhub.
 
-## Enabling/Disabling Credhub support
-
-First ensure that your bosh director has Credhub configured as its config server.
+Ensure that your BOSH director has Credhub configured as its config server.
 [See this guide for details](https://github.com/pivotal-cf/credhub-release/wiki/CredHub-Integration-with-BOSH-Director-Configuration-Guide)
 
-To enable Credhub support in ODB you can configure a new Credhub property in the broker manifest.
+## An ODB manifest with no secrets
+
+The BOSH-Credhub integration allows an operator to version control deployment manifests, since all secrets required for the deployment are hidden.
+
+An ODB deployment manifest can contain releases which [auto generate credentials in credhub](https://github.com/pivotal-cf/credhub-release/wiki/CredHub-Credential-Types-and-How-to-Use-Them-in-a-Release#enabling-credhub-automatic-generation-in-releases).
+For releases that do not do this, you will need to the put static credentials into credhub manually.
+
+An example of this is:
+
+```yaml
+---
+name: &name kafka-on-demand-broker
+
+director_uuid: <uuid>
+
+releases:
+  - name: &broker-release on-demand-service-broker
+    version: latest
+  - name: &service-adapter-release kafka-example-service-adapter
+    version: latest
+  - name: &kafka-service-release kafka-service
+    version: latest
+  - name: syslog
+    version: latest
+  - name: routing
+    version: latest
+  - name: service-metrics
+    version: 1.5.0
+  - name: loggregator
+    version: latest
+
+stemcells:
+  - alias: trusty
+    os: ubuntu-trusty
+    version: latest
+
+instance_groups:
+  - name: broker
+    instances: 1
+    jobs:
+      - name: broker
+        release: *broker-release
+        properties:
+          credhub:
+            api_url: https://credhub.example.com
+            client_id: ((credhub-client-id))
+            client_secret: ((credhub-client-secret)
+          startup_banner: true
+          port: &broker_port 8080
+          username: ((broker-username))
+          password: ((broker-password))
+          disable_ssl_cert_verification: true
+          bosh:
+            url: <bosh_url>
+            authentication:
+              basic:
+                username: ((director-username))
+                password: ((director-password))
+          cf:
+            url: https://api.example.com
+            authentication:
+              url: https://uaa.example.com
+              client_credentials:
+                client_id: ((cf-admin-client-id))
+                secret: ((cf-admin-client-secret))
+          service_deployment:
+            releases:
+              - name: *kafka-service-release
+                version: latest
+                jobs: [kafka_server, zookeeper_server]
+              - name: loggregator
+                version: latest
+                jobs: [metron_agent]
+            stemcell:
+              os: ubuntu-trusty
+              version: latest
+          service_catalog:
+            id: kafka
+            service_name: kafka
+            service_description: Kafka Service
+            bindable: true
+            plan_updatable: true
+            tags: [kafka]
+            plans:
+              - name: small
+                plan_id: kafka-small
+                description: A Kafka deployment with a single instance of each job and persistent disk
+                instance_groups:
+                  - name: kafka_server
+                    vm_type: container
+                    instances: 1
+                    persistent_disk_type: 10GB
+                    networks: [services]
+                    azs: [lite]
+                  - name: zookeeper_server
+                    vm_type: container
+                    instances: 1
+                    persistent_disk_type: 10GB
+                    networks: [services]
+                    azs: [lite]
+                properties:
+                  auto_create_topics: true
+                  default_replication_factor: 1
+                  logging:
+                    syslog_address: logs4.papertrailapp.com
+                    syslog_port: 37620
+                    loggregator_etcd_addresses: [<etcd_address>]
+                    loggregator_shared_secret: loggregator-secret
+
+      - name: syslog_forwarder
+        release: syslog
+        properties:
+          syslog:
+            address: logs4.papertrailapp.com
+            port: 37620
+            transport: udp
+
+      - name: kafka-service-adapter
+        release: *service-adapter-release
+
+      - name: admin_tools
+        release: *kafka-service-release
+
+      - name: route_registrar
+        release: routing
+        properties:
+          nats:
+            machines: []
+            port: 4222
+            user: ((nats-username))
+            password: ((nats-password))
+          route_registrar:
+            routes:
+              - name: kafka-odb
+                registration_interval: 20s
+                port: *broker_port
+                uris: [kafka-service-broker.example.com]
+
+      - name: service-metrics
+        release: service-metrics
+        properties:
+          service_metrics:
+            execution_interval_seconds: 10
+            origin: *name
+            monit_dependencies: [broker]
+
+      - name: metron_agent
+        release: loggregator
+        properties:
+          metron_agent:
+            deployment: *name
+            protocols:
+              - tls
+            tls:
+              client_cert: ((metron_tls_crt))
+              client_key: ((metron_tls_key))
+          metron_endpoint:
+            shared_secret: loggregator-secret
+          loggregator:
+            etcd:
+              machines: [<etc_address>]
+            tls:
+              ca_cert: ((metron_tls_ca_cert))
+          loggregator_endpoint:
+            shared_secret: loggregator-secret
+      - name: service-metrics-adapter
+        release: *broker-release
+
+    vm_type: container
+    stemcell: trusty
+    networks:
+      - name: services
+    azs: [lite]
+
+```
+
+## Enabling/Disabling Credhub support for service bindings
+
+To enable Credhub support for service binding credentials you can configure a new Credhub property in the broker manifest.
 
 ```yaml
 instance_groups:
@@ -25,13 +200,9 @@ instance_groups:
         credhub: #Optional
           api_url: <Credhub URL>
           client_id: <Credhub UAA client id>
-          client_secert: <Credhub UAA client secret>
+          client_secret: <Credhub UAA client secret>
         ...
 ```
-
-Removing this property disables Credhub.
-
-## Service Bindings
 
 When a service is bound using On-Demand Broker the resulting credentials block will be stored
 in Credhub before being bound to an application.
