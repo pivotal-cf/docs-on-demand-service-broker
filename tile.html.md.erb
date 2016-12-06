@@ -109,6 +109,46 @@ cf:
 
 For more accessors you can see the [ops-manager-example product](https://github.com/pivotal-cf-experimental/ops-manager-example)
 
+## <a id="public-ip"></a>Public IP address for on-demand service instance groups
+
+Ops Manager 1.9 RC1+ provides a VM extension called `public_ip` in the BOSH Director's cloud config. This can be used in the on-demand service broker's manifest to give instance groups a public IP address.
+
+Here is an example showing how to make assigning a public IP address to an on-demand service instance group configurable in the tile handcraft:
+
+```yaml
+form_types:
+- name: example_form
+  property_inputs:
+  - reference: .broker.example_instance_group_public_ip
+    label: Assign public IP address to example instance group
+
+job_types:
+- name: broker
+  templates:
+  - name: broker
+    release: on-demand-service-broker
+    manifest: |
+      service_catalog:
+        plans:
+        - name: example-plan
+          instance_groups:
+          - name: example-instance-group
+            vm_extensions:  ["(( .broker.example_instance_group_public_ip.value ? .broker.properties.public_ip_string.value : .broker.properties.null_string.value ))"]
+  property_blueprints:
+  - name: example_instance_group_public_ip
+    type: boolean
+    configurable: true
+    default: false
+  - name: null_string
+    type: string
+    configurable: false
+    default: ~
+  - name: public_ip_string
+    type: string
+    configurable: false
+    default: "public_ip"
+```
+
 ## <a id="errands"></a>On-Demand Broker errands
 
 In the reference [Kafka tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile) we have demonstrated how the errands in the on-demand broker release can be used.
