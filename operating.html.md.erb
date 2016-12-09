@@ -417,6 +417,35 @@ cf disable-service-access <service-name-from-catalog> -p <plan-name>
 
 A service plans can be removed if there are no instances using the plan. To remove the a plan, remove it from the broker manifest and update the cf marketplace by using the `cf update-service-broker` command. If a plan with deployed service instances from the broker manifest, the broker will fail to startup.
 
+### <a id="orphan-deployments"></a>Delete Orphaned Deployments
+
+The deployment for a service instance is defined as 'Orphaned' when the Bosh
+deployment is still running, but the service is no longer registered in
+Cloud Foundry.
+
+The `orphan-deployments` errand will collate a list of service deployments that
+have no matching service instances in Cloud Foundry and return the list to the
+operator. It is then up to the operator to remove the orphaned bosh deployments.
+
+Run the errand with `bosh run errand orphan-deployments`.
+
+If orphan deployments are present, the errand will output a list of deployment
+names
+
+```shell
+[stdout]
+[{"deployment_name":"service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3"}]
+
+[stderr]
+None
+
+Errand 'orphan-deployments' completed successfully (exit code 0)
+```
+**Warning:**
+  Deleting the bosh deployment will destroy the vm, any data present will be lost.
+
+To delete the orphan deployment run `bosh delete deployment service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3`.
+
 ## <a id="security"></a>Security
 
 ### <a id="bosh-endpoints"></a>BOSH API Endpoints
@@ -577,7 +606,7 @@ During disaster recovery this endpoint could be used to assess the situation.
 
 **Request**
 
-`GET http://username:password@<REPLACE_WITH_BROKER_IP>:8080/mgmt/service_instances`
+`GET http://username:password@<ON_DEMAND_BROKER_IP>:8080/mgmt/service_instances`
 
 **Response**
 
@@ -599,3 +628,29 @@ Example JSON body:
     }
   ]
   ```
+
+### <a id="listing-orphans"></a>List Orphan Deployments
+
+The On-Demand Broker provides an endpoint that compares the list of service instance
+deployments against the service instances registered in Cloud Foundry. When called,
+the endpoint will return a list of orphaned deployments, if any are present.
+
+This endpoint is exercised in the [`orhpaned-deployments`](#orphan-deployments) errand. To call this endpoint
+without  running the errand, use curl
+
+**Request**
+`GET http://username:password@<ON_DEMAND_BROKER_IP>:8080/mgmt/orphan_deployments`
+
+**Response**
+
+200 OK
+
+Example JSON body:
+
+```json
+[
+  {
+	  "deployment_name": "service-instance_d482abd3-8051-48d2-8067-9ccdf02327f3"
+  }
+]
+```
