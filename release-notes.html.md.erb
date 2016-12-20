@@ -3,14 +3,31 @@ title: On-Demand Services SDK Release Notes
 owner: London Services Enablement
 ---
 
-# <a id="release-notes"></a>Release Notes
+# <a id="release-notes"></a>v0.14.1 Release Notes
 
 ## <a id="minimum-version-requirements"></a>Minimum Version Requirements
 
+- BOSH 257+ / BOSH lite v9000.131.0
+- CF 238+
+
 ## <a id="new-features"></a>New Features
+
+- Open Service Broker API v2.11 support
+ - Bindable can now be set at the plan level
+- Golang 1.7.4 now used to resolve security issues in the Golang 1.7 series
 
 ## <a id="breaking-changes"></a>Breaking Changes
 
-## <a id="bug-fixes"></a>Bug Fixes
+- ODB errands have been renamed to be clearer. You must update your manifests.
+ - `upgrade-all-service-instances`
+ - `delelte-all-service-instances`
 
-## <a id="known-issues"></a>Known Issues
+## <a id="bug-fixes"></a>Bug fixes
+
+- The ODB BOSH deployment would deploy successfully even if the broker was not accepting requests
+
+# <a id="known-issues"></a>Known Issues
+
+On PCF for GCP deployments, Ops Manager service network VMs are not assigned the correct firewall rules. As a result, these VMs cannot communicate with the BOSH Director and service tiles that use the On-Demand Service Broker (ODB) fail to create service instances.
+
+As a workaround, if you are deploying a service network in GCP, modify your firewall to use subnet CIDR-based rules.
