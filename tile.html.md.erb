@@ -111,7 +111,7 @@ For more accessors you can see the [ops-manager-example product](https://github.
 
 ## <a id="public-ip"></a>Public IP address for on-demand service instance groups
 
-Ops Manager 1.9 RC1+ provides a VM extension called `public_ip` in the BOSH Director's cloud config. This can be used in the on-demand service broker's manifest to give instance groups a public IP address.
+Ops Manager 1.9 RC1+ provides a VM extension called `public_ip` in the BOSH Director's cloud config. This can be used in the on-demand service broker's manifest to give instance groups a public IP address. This IP is only used for outgoing traffic to the internet from VMs with the `public_ip` extension. All internal traffic / incoming connections need to go over the private IP.
 
 Here is an example showing how to make assigning a public IP address to an on-demand service instance group configurable in the tile handcraft:
 
