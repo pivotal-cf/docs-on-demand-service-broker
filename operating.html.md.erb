@@ -46,7 +46,7 @@ You can also configure a separate root CA certificate that is used when ODB comm
 
 ### <a id="bosh-teams"></a>BOSH teams
 
-BOSH has a teams feature that allows you to further control how BOSH operations are available to different clients. We recommend using it to ensure that your on-demand service broker client can only see deployments it is allowed to. For example, if you [use uaac](https://docs.cloudfoundry.org/adminguide/uaa-user-management.html) to create the client like this:
+BOSH has a teams feature that allows you to further control how BOSH operations are available to different clients. We strongly recommend using it to ensure that your on-demand service broker client can only modify deployments it created. For example, if you [use uaac](https://docs.cloudfoundry.org/adminguide/uaa-user-management.html) to create the client like this:
 
 ```bash
 uaac client add <client-id> \
