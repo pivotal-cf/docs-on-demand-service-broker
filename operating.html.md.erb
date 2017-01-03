@@ -294,6 +294,7 @@ Add the following instance group to your manifest:
   vm_type: <vm-type>
   stemcell: <stemcell>
   networks: [{name: <network>}]
+  azs: [<az>]
 ```
 
 Run the errand with `bosh run errand register-broker`.
@@ -321,6 +322,7 @@ Add the following instance group to your manifest:
   vm_type: <vm-type>
   stemcell: <stemcell>
   networks: [{name: <service-network>}]
+  azs: [<az>]
 ```
 
 Run the errand with `bosh run errand deregister-broker`.
@@ -355,6 +357,7 @@ Often, a broker upgrade will involve an upgrading of the service release(s). In 
       vm_type: <vm>
       stemcell: <stemcell>
       networks: [{name: <network>}]
+      azs: [<az>]
     ```
 1. Update the broker properties under `service_deployment/releases` to the required service release versions and `service_deployment/stemcell` has the required stemcell version
 1. Upload the releases and stem cells specified in the `service_deployment` section of properties to the BOSH director
@@ -389,6 +392,7 @@ Add the following instance group to your manifest:
   vm_type: small
   stemcell: trusty
   networks: [{name: redis}]
+  azs: [<az>]
 ```
 
 Run the errand with `bosh run errand delete-sub-deployments`.
