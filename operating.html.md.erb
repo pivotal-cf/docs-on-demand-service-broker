@@ -199,6 +199,7 @@ service_catalog:
       plan_id: <CF marketplace plan id>
       description: <CF marketplace description>
       active: <true|false> # optional, true by default. The register-broker errand will enable service access for active plans only.
+      bindable: <true|false> # optional. If specified, this takes precedence over the bindable attribute of the service
       metadata: # optional
         display_name: <display name>
         bullets: [<bullet1>, <bullet2>]
