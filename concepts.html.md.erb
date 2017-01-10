@@ -6,6 +6,7 @@ owner: London Services Enablement
 These sequence diagrams in this topic show how an on-demand service sets up and maintains service instances, indicating which tasks are undertaken by the on-demand broker (ODB) and which require interaction with the Service Adapter.
 
 ## <a id="catalog"></a>Register Service Broker with Cloud Foundry
+
 <%= partial 'mmd/service_catalog_workflow.mmd' %>
 
 ## <a id="create-service-instance"></a>Create service instance
@@ -15,21 +16,19 @@ Note that there are two ways this can fail: synchronously and asynchronously. Wh
 <%= partial 'mmd/create_service_workflow.mmd' %>
 
 ## <a id="delete-service-instance"></a>Delete Service Instance
-In the delete service workflow the service adapter is not invoked.
 
-<a id="update-service-instance"></a>
-## Update Service Instance
+In the delete service workflow the service adapter is not invoked.
 
 <%= partial 'mmd/delete_service_workflow.mmd' %>
 
-<a id="bind"></a>
-## Bind
+## <a id="update-service-instance"></a>Update Service Instance
 
+<%= partial 'mmd/update_service_workflow.mmd' %>
+
+## <a id="bind"></a>Bind
 <%= partial 'mmd/bind_service_workflow.mmd' %>
 
-<a id="unbind"></a>
-## Unbind
-
+## <a id="unbind"></a>Unbind
 <%= partial 'mmd/unbind_service_workflow.mmd' %>
 
 ## <a id="upgrade-all-instances"></a>Upgrade Instances
