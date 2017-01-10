@@ -179,7 +179,13 @@ service_catalog:
   service_name: <CF marketplace service offering name>
   service_description: <CF marketplace description>
   bindable: <true|false>
-  plan_updatable: <true|false>
+  plan_updatable: <true|false> # optional
+  tags: [<tags>] # optional
+  requires: [<required permissions] # optional
+  dashboard_client: # optional
+    id: <dashboard OAuth client ID>
+    secret: <dashboard OAuth client secret>
+    redirect_uri: <dashboard OAuth redirect URI>
   metadata: # optional
     display_name: <display name>
     image_url: <image url>
