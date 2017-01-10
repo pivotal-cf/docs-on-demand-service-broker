@@ -1,0 +1,21 @@
+---
+title: Backup and Restore Considerations
+owner: London Services Enablement
+---
+
+## <a id="odb"></a>On-Demand Service Broker
+
+The on-demand service broker is stateless, so there is nothing to backup or restore.
+
+## <a id="service-instances"></a>On-Demand Service Instances
+
+Service instances created by the on-demand service broker may have state that needs to be backed up, e.g. data services.
+
+It is the responsibility of the Service Author to provide documentation for the operator to backup and restore on-demand service instances. For a list of deliverables provided by the Service Author, see [Required Deliverables](creating.html#what-is-required-of-the-service-authors).
+
+## <a id="disaster-recovery"></a>Disaster Recovery
+
+The on-demand service broker fetches the state of service instances and their deployments from the Cloud Foundry API and BOSH Director respectively. Therefore, to recover on-demand service instances in a disaster both the Cloud Controller database and BOSH Director database must be restored from a backup.
+
+- [Backing Up and Restoring Pivotal Cloud Foundry](http://docs.pivotal.io/pivotalcf/1-8/customizing/backup-restore/)
+- [How to backup and restore a BOSH Director deployment](http://bosh.io/docs/director-backup.html)
