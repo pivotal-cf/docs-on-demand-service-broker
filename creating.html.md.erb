@@ -48,7 +48,7 @@ A Service Adapter is an executable invoked by ODB. It is expected to respond to 
 
 The parameters, and expected output from these subcommands will be explained in detail below. For each of these subcommands, exit status 0 indicates that the command succeeded exit status 10 indicates not implemented, and any non-zero status indicates failure.
 
-<a id="handling-errors"></a>### Handle Errors
+### <a id="handling-errors"></a>Handle Errors
 
 If a subcommand fails, the adapter must return a non-zero exit status, and may optionally print to stdout and/or stderr.
 
@@ -56,7 +56,7 @@ Anything printed to stdout will be returned to the CF CLI user.
 
 Both the stdout and stderr streams will be printed in the broker log for the operator. For that reason, we recommend not printing the manifest or other sensitive details to stdout/stderr, as the ODB does no validation on this output.
 
-See an example implementation [here](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/07c38cff05d1a772f299fbac9ace393a77cbaa35/adapter/create_binding.go#L27-L29).
+See an example implementation [here](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/892d48b066c9b1d2651080484a53531001e9e920/adapter/create_binding.go#L27-L29).
 
 ## <a id="manifest"></a>Inputs for manifest generation
 
@@ -123,7 +123,7 @@ Examples are provided for [Redis](https://github.com/pivotal-cf-experimental/red
 service-adapter generate-manifest [service-deployment-JSON] [plan-JSON] [request-params-JSON] [previous-manifest-YAML] [previous-plan-JSON]
 ```
 
-The generate-manifest subcommand takes in 4 arguments and returns a BOSH deployment manifest YAML.
+The generate-manifest subcommand takes in 5 arguments and returns a BOSH deployment manifest YAML.
 
 <a id="generate-manifest-output"></a>
 #### Output

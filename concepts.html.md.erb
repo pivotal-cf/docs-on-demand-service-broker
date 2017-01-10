@@ -5,8 +5,7 @@ owner: London Services Enablement
 
 These sequence diagrams in this topic show how an on-demand service sets up and maintains service instances, indicating which tasks are undertaken by the on-demand broker (ODB) and which require interaction with the Service Adapter.
 
-<a id="catalog"></a>
-## Register Service Broker with Cloud Foundry
+## <a id="catalog"></a>Register Service Broker with Cloud Foundry
 <%= partial 'mmd/service_catalog_workflow.mmd' %>
 
 ## <a id="create-service-instance"></a>Create service instance
@@ -15,16 +14,13 @@ Note that there are two ways this can fail: synchronously and asynchronously. Wh
 
 <%= partial 'mmd/create_service_workflow.mmd' %>
 
-<a id="delete-service-instance"></a>
-## Delete Service Instance
+## <a id="delete-service-instance"></a>Delete Service Instance
 In the delete service workflow the service adapter is not invoked.
-
-<%= partial 'mmd/delete_service_workflow.mmd' %>
 
 <a id="update-service-instance"></a>
 ## Update Service Instance
 
-<%= partial 'mmd/update_service_workflow.mmd' %>
+<%= partial 'mmd/delete_service_workflow.mmd' %>
 
 <a id="bind"></a>
 ## Bind
@@ -36,14 +32,14 @@ In the delete service workflow the service adapter is not invoked.
 
 <%= partial 'mmd/unbind_service_workflow.mmd' %>
 
-<a id="upgrade-all-instances"></a>
-## Upgrade Instances
+## <a id="upgrade-all-instances"></a>Upgrade Instances
+
 ODB provides BOSH errand to upgrade all the instances managed by the broker. This can also be used in the scenario when a plan changes; this errand will update all instances that implement the plan with the new plan definition.
 
 <%= partial 'mmd/upgrade_all_instances_workflow.mmd' %>
 
-<a id="delete-all-instances"></a>
-## Delete Instances
+## <a id="delete-all-instances"></a>Delete Instances
+
 ODB provides BOSH errand to delete all the instances managed by the broker.
 
 <%= partial 'mmd/delete_all_instances_workflow.mmd' %>

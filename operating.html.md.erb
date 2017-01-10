@@ -20,6 +20,7 @@ For an example manifest for a Redis service, see [redis-example-service-adapter-
 
 For an example manifest for a Kafka service, see [kafka-example-service-adapter-release](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml).
 
+
 ## <a id="configure-bosh"></a>Set Up Your BOSH Director
 
 Dependencies for the On-Demand Broker:
@@ -29,11 +30,9 @@ Dependencies for the On-Demand Broker:
 
 ### SSL certificates
 
-If the on-demand broker (ODB) is configured to communicate with BOSH on the director's private IP you can probably get away with insecure HTTP.
+If ODB is configured to communicate with BOSH on the director's public IP you may be using a self-signed certificate unless you have a domain for your BOSH director. ODB does not ignore TLS certificate validation errors by default (as expected). You have two options to configure certificate-based authentication between the BOSH director and the ODB:
 
-If ODB is configured to communicate with BOSH on the director's public IP you will probably be using a self-signed certificate unless you have a domain for your BOSH director. ODB does not ignore TLS certificate validation errors by default (as expected). You have two options to configure certificate-based authentication between the BOSH director and the ODB:
-
-1. Add the BOSH director's root certificate to ODB's trusted pool (**recommended**):
+1. Add the BOSH director's root certificate to ODB's trusted pool in the ODB manifest:
 
     ```yaml
     bosh:
@@ -192,6 +191,7 @@ service_catalog:
     - name: <CF marketplace plan name>
       plan_id: <CF marketplace plan id>
       description: <CF marketplace description>
+      active: <true|false> # optional, true by default. The register-broker errand will enable service access for active plans only.
       metadata: # optional
         display_name: <display name>
         bullets: [<bullet1>, <bullet2>]
@@ -270,9 +270,11 @@ Management tasks on the broker are performed with BOSH errands.
 
 ### <a id="register"></a>register-broker
 
-This errand registers the broker with Cloud Foundry and enables access for all orgs and spaces to the defined plans of the service. The errand should be run whenever the broker is re-deployed with new catalog metadata to update the Cloud Foundry catalog.
+This errand registers the broker with Cloud Foundry and enables access to plans in the service catalog. The errand should be run whenever the broker is re-deployed with new catalog metadata to update the Cloud Foundry catalog.
 
 Please note that if the `broker_uri` property is set, then you should also register a route for your broker with Cloud Foundry. See [Route registration](#route-registration) section for more details.
+
+When `enable_service_access: false` is set the errand will disable service access for all plans. Individual plans can be disabled by setting `active: false` in the `plan` section of the broker job properties. See [catalog](#catalog) for details.
 
 Add the following instance group to your manifest:
 
@@ -287,6 +289,7 @@ Add the following instance group to your manifest:
         broker_name: <broker-name>
         broker_uri: <broker URI, only required when a route has been registered> # optional
         disable_ssl_cert_verification: <true|false> # defaults to false
+        enable_service_access: <true|false> # defaults to true
         cf:
           api_url: <cf-api-url>
           admin_username: <cf-api-admin-username>
@@ -294,6 +297,7 @@ Add the following instance group to your manifest:
   vm_type: <vm-type>
   stemcell: <stemcell>
   networks: [{name: <network>}]
+  azs: [<az>]
 ```
 
 Run the errand with `bosh run errand register-broker`.
@@ -321,6 +325,7 @@ Add the following instance group to your manifest:
   vm_type: <vm-type>
   stemcell: <stemcell>
   networks: [{name: <service-network>}]
+  azs: [<az>]
 ```
 
 Run the errand with `bosh run errand deregister-broker`.
@@ -355,6 +360,7 @@ Often, a broker upgrade will involve an upgrading of the service release(s). In 
       vm_type: <vm>
       stemcell: <stemcell>
       networks: [{name: <network>}]
+      azs: [<az>]
     ```
 1. Update the broker properties under `service_deployment/releases` to the required service release versions and `service_deployment/stemcell` has the required stemcell version
 1. Upload the releases and stem cells specified in the `service_deployment` section of properties to the BOSH director
@@ -389,6 +395,7 @@ Add the following instance group to your manifest:
   vm_type: small
   stemcell: trusty
   networks: [{name: redis}]
+  azs: [<az>]
 ```
 
 Run the errand with `bosh run errand delete-sub-deployments`.
