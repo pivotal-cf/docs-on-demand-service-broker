@@ -277,7 +277,7 @@ Please see the [service metrics docs](http://docs.pivotal.io/service-metrics) fo
 
 Management tasks on the broker are performed with BOSH errands.
 
-### <a id="register"></a>register-broker
+### <a id="register"></a>Register Broker
 
 This errand registers the broker with Cloud Foundry and enables access to plans in the service catalog. The errand should be run whenever the broker is re-deployed with new catalog metadata to update the Cloud Foundry catalog.
 
@@ -311,7 +311,7 @@ Add the following instance group to your manifest:
 
 Run the errand with `bosh run errand register-broker`.
 
-### <a id="deregister-broker"></a>deregister-broker
+### <a id="deregister-broker"></a>Deregister Broker
 
 This errand deregisters a broker from Cloud Foundry. It requires that there are no existing service instances.
 
@@ -343,7 +343,7 @@ Run the errand with `bosh run errand deregister-broker`.
 
 We recommend using the [bosh cli gem](https://bosh.io/docs/bosh-cli.html) for administering the deployments created by ODB; for example for checking VMs, ssh, viewing logs.
 
-We **recommend against** using the bosh cli for updating/deleting ODB service deployments as it might accidentally trigger a race condition with Cloud Controller-induced updates/deletes or result in ODB overriding your [snowflake](http://martinfowler.com/bliki/SnowflakeServer.html) changes at the next deploy. All updates to the service instances must be done using the [errand to upgrade existing service instances](#upgrading-existing-service-instances).
+We **recommend against** using the bosh cli for updating/deleting ODB service deployments as it might accidentally trigger a race condition with Cloud Controller-induced updates/deletes or result in ODB overriding your [snowflake](http://martinfowler.com/bliki/SnowflakeServer.html) changes at the next deploy. All updates to the service instances must be done using the [errand to upgrade all service instances](#upgrade-instances).
 
 ### <a id="upgrade-broker"></a>Upgrade the Broker
 
@@ -353,20 +353,20 @@ The broker is upgraded in a similar manner to all BOSH releases:
 * make any necessary manifest changes
 * deploy the manifest
 
-Often, a broker upgrade will involve an upgrading of the service release(s). In this case, upload the new version of the service release(s) and change the broker manifest properties to deploy these newer versions. Any new instances will use the new versions, but you must use an [errand to upgrade existing service instances](#upgrading-existing-service-instances).
+Often, a broker upgrade will involve an upgrading of the service release(s). In this case, upload the new version of the service release(s) and change the broker manifest properties to deploy these newer versions. Any new instances will use the new versions, but you must use an [errand to upgrade all service instances](#upgrade-instances).
 
-### <a id="upgrade-instances"></a>Upgrade Existing Service Instances
+### <a id="upgrade-instances"></a>Upgrade All Service Instances
 
-1. Ensure you have the `upgrade-sub-deployments` errand instance group on the broker manifest
+1. Add the following instance group to your manifest:
 
     ```yaml
-    - name: upgrade-sub-deployments
+    - name: upgrade-all-service-instances
       lifecycle: errand
       instances: 1
       jobs:
-        - name: upgrade-sub-deployments
+        - name: upgrade-all-service-instances
           release: <odb-release-name>
-      vm_type: <vm>
+      vm_type: <vm-type>
       stemcell: <stemcell>
       networks: [{name: <network>}]
       azs: [<az>]
@@ -374,24 +374,24 @@ Often, a broker upgrade will involve an upgrading of the service release(s). In 
 1. Update the broker properties under `service_deployment/releases` to the required service release versions and `service_deployment/stemcell` has the required stemcell version
 1. Upload the releases and stem cells specified in the `service_deployment` section of properties to the BOSH director
 1. Ensure latest broker manifest is deployed.
-1. Run the errand with `bosh run errand upgrade-sub-deployments`.
+1. Run the errand with `bosh run errand upgrade-all-service-instances`.
 
 Note that if a developer runs `cf update-service` on an outdated instance, they will have their instance upgraded regardless of whether or not the operator ran the errand.
 
-### <a id="delete-instances"></a>Delete Service Instances
+### <a id="delete-instances"></a>Delete All Service Instances
 
-This errand deletes all service instances of your broker's service offering in every org and space of Cloud Foundry. It uses the Cloud Controller API to do this, and therefore only deletes instances the Cloud Controller knows about. It will not help you terminate "rogue" BOSH deployments, those that don't correspond to a known instance (this *should* never happen, but in practice it might).
+This errand deletes all service instances of your broker's service offering in every org and space of Cloud Foundry. It uses the Cloud Controller API to do this, and therefore only deletes instances the Cloud Controller knows about. It will not delete orphan BOSH deployments: those that don't correspond to a known service instance. This *should* never happen, but in practice it might. Use the [orphan-deployments errand](#listing-orphans) to identify them.
 
-**This should only be done with extreme caution, when you want to totally destroy an environment.**
+**This should only be done with extreme caution, when you want to totally destroy all the on-demand service instances in an environment.**
 
 Add the following instance group to your manifest:
 
 ```yaml
-- name: delete-sub-deployments
+- name: delete-all-service-instances
   lifecycle: errand
   instances: 1
   jobs:
-    - name: <delete-sub-deployments>
+    - name: delete-all-service-instances
       release: *broker-release
       properties:
         timeout_minutes: <time to wait for all instances to be deleted> # defaults to 60
@@ -401,25 +401,23 @@ Add the following instance group to your manifest:
           admin_username: <cf-api-admin-username>
           admin_password: <cf-api-admin-password>
 
-  vm_type: small
-  stemcell: trusty
-  networks: [{name: redis}]
+  vm_type: <vm-type>
+  stemcell: <stemcell>
+  networks: [{name: <network>}]
   azs: [<az>]
 ```
 
-Run the errand with `bosh run errand delete-sub-deployments`.
+Run the errand with `bosh run errand delete-all-service-instances`.
 
 ### <a id="updating-service-plans"></a>Update Service Plans
 
-
-Service plans can be updated by changing the plan properties in the `service_catalog` for the broker. All service plan properties except the `service_id` and `plan_id` are modifiable. After the changing the catalog, you should update the cf marketplace using the `cf update-service-broker` command. The updated plan properties would be applied to newly created instances. To apply the plan properties to already provisioned instances, the [update sub-deployments errand](#upgrading-existing-service-instances) has to be run.
-
+Service plans can be updated by changing the plan properties in the `service_catalog` for the broker. All service plan properties except the `service_id` and `plan_id` are modifiable. After the changing the catalog, you should update the cf marketplace using the `cf update-service-broker` command. The updated plan properties would be applied to newly created instances. To apply the plan properties to already provisioned instances, the [upgrade-all-service-instances errand](#upgrade-instances) has to be run.
 
 ### <a id="disabling-service-plans"></a>Disable Service Plans
 
-Access to a service plan can be disabled by using the cloudfoundry api.
+Access to a service plan can be disabled by using the Cloud Foundry API.
 
-On the cli you can use
+On the CLI you can use
 ```
 cf disable-service-access <service-name-from-catalog> -p <plan-name>
 ```

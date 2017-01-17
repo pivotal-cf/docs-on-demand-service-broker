@@ -1,7 +1,7 @@
-<div class="mermaid">  
+<div class="mermaid">
 sequenceDiagram
-  operator->>DeleteErrand:start delete all instances
-  loop for all instances deployed by odb
+  operator->>DeleteErrand:start delete all service instances
+  loop for all instances deployed by ODB
     DeleteErrand->>CF:unbind service via API
     loop for bindings for the service instance
       CF->>ODB:unbind
