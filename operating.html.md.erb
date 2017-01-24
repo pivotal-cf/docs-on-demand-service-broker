@@ -339,12 +339,6 @@ Add the following instance group to your manifest:
 
 Run the errand with `bosh run errand deregister-broker`.
 
-### <a id="admin-instances"></a>Administer Service Instances
-
-We recommend using the [bosh cli gem](https://bosh.io/docs/bosh-cli.html) for administering the deployments created by ODB; for example for checking VMs, ssh, viewing logs.
-
-We **recommend against** using the bosh cli for updating/deleting ODB service deployments as it might accidentally trigger a race condition with Cloud Controller-induced updates/deletes or result in ODB overriding your [snowflake](http://martinfowler.com/bliki/SnowflakeServer.html) changes at the next deploy. All updates to the service instances must be done using the [errand to upgrade all service instances](#upgrade-instances).
-
 ### <a id="upgrade-broker"></a>Upgrade the Broker
 
 The broker is upgraded in a similar manner to all BOSH releases:
@@ -508,6 +502,12 @@ The ODB has been tested with the [PCF IPsec Add-On](https://docs.pivotal.io/addo
 
 ## <a id="troubleshooting"></a>Troubleshooting
 
+### <a id="admin-instances"></a>Administer Service Instances
+
+We recommend using the [bosh cli gem](https://bosh.io/docs/bosh-cli.html) for administering the deployments created by ODB; for example for checking VMs, ssh, viewing logs.
+
+We **recommend against** using the bosh cli for updating/deleting ODB service deployments as it might accidentally trigger a race condition with Cloud Controller-induced updates/deletes or result in ODB overriding your [snowflake](http://martinfowler.com/bliki/SnowflakeServer.html) changes at the next deploy. All updates to the service instances must be done using the [errand to upgrade all service instances](#upgrade-instances).
+
 ### <a id="logs"></a>Logs
 
 The on-demand broker writes logs to a log file, and to syslog.
@@ -644,7 +644,7 @@ The On-Demand Broker provides an endpoint that compares the list of service inst
 deployments against the service instances registered in Cloud Foundry. When called,
 the endpoint will return a list of orphaned deployments, if any are present.
 
-This endpoint is exercised in the [`orhpaned-deployments`](#orphan-deployments) errand. To call this endpoint
+This endpoint is exercised in the [`orphan-deployments`](#orphan-deployments) errand. To call this endpoint
 without  running the errand, use curl
 
 **Request**
