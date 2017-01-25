@@ -339,39 +339,6 @@ Add the following instance group to your manifest:
 
 Run the errand with `bosh run errand deregister-broker`.
 
-### <a id="upgrade-broker"></a>Upgrade the Broker
-
-The broker is upgraded in a similar manner to all BOSH releases:
-
-* upload relevant releases (typically ODB and a Service Adapter)
-* make any necessary manifest changes
-* deploy the manifest
-
-Often, a broker upgrade will involve an upgrading of the service release(s). In this case, upload the new version of the service release(s) and change the broker manifest properties to deploy these newer versions. Any new instances will use the new versions, but you must use an [errand to upgrade all service instances](#upgrade-instances).
-
-### <a id="upgrade-instances"></a>Upgrade All Service Instances
-
-1. Add the following instance group to your manifest:
-
-    ```yaml
-    - name: upgrade-all-service-instances
-      lifecycle: errand
-      instances: 1
-      jobs:
-        - name: upgrade-all-service-instances
-          release: <odb-release-name>
-      vm_type: <vm-type>
-      stemcell: <stemcell>
-      networks: [{name: <network>}]
-      azs: [<az>]
-    ```
-1. Update the broker properties under `service_deployment/releases` to the required service release versions and `service_deployment/stemcell` has the required stemcell version
-1. Upload the releases and stem cells specified in the `service_deployment` section of properties to the BOSH director
-1. Ensure latest broker manifest is deployed.
-1. Run the errand with `bosh run errand upgrade-all-service-instances`.
-
-Note that if a developer runs `cf update-service` on an outdated instance, they will have their instance upgraded regardless of whether or not the operator ran the errand.
-
 ### <a id="delete-instances"></a>Delete All Service Instances
 
 This errand deletes all service instances of your broker's service offering in every org and space of Cloud Foundry. It uses the Cloud Controller API to do this, and therefore only deletes instances the Cloud Controller knows about. It will not delete orphan BOSH deployments: those that don't correspond to a known service instance. This *should* never happen, but in practice it might. Use the [orphan-deployments errand](#listing-orphans) to identify them.
@@ -403,23 +370,6 @@ Add the following instance group to your manifest:
 
 Run the errand with `bosh run errand delete-all-service-instances`.
 
-### <a id="updating-service-plans"></a>Update Service Plans
-
-Service plans can be updated by changing the plan properties in the `service_catalog` for the broker. All service plan properties except the `service_id` and `plan_id` are modifiable. After the changing the catalog, you should update the cf marketplace using the `cf update-service-broker` command. The updated plan properties would be applied to newly created instances. To apply the plan properties to already provisioned instances, the [upgrade-all-service-instances errand](#upgrade-instances) has to be run.
-
-### <a id="disabling-service-plans"></a>Disable Service Plans
-
-Access to a service plan can be disabled by using the Cloud Foundry API.
-
-On the CLI you can use
-```
-cf disable-service-access <service-name-from-catalog> -p <plan-name>
-```
-
-### <a id="remove-plans"></a>Remove Service Plans
-
-A service plans can be removed if there are no instances using the plan. To remove the a plan, remove it from the broker manifest and update the cf marketplace by using the `cf update-service-broker` command. If a plan with deployed service instances from the broker manifest, the broker will fail to startup.
-
 ### <a id="orphan-deployments"></a>Delete Orphaned Deployments
 
 The deployment for a service instance is defined as 'Orphaned' when the Bosh
@@ -444,10 +394,108 @@ None
 
 Errand 'orphan-deployments' completed successfully (exit code 0)
 ```
-**Warning:**
-  Deleting the bosh deployment will destroy the vm, any data present will be lost.
+
+**Warning:** Deleting the bosh deployment will destroy the vm, any data present will be lost.
 
 To delete the orphan deployment run `bosh delete deployment service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3`.
+
+## <a id="updates"></a>Updates
+
+### <a id="update-broker"></a>Update Broker
+
+To update the [core broker configuration](#core-broker-config):
+
+* make any necessary changes to the core broker configuration in the broker manifest
+* deploy the broker
+
+### <a id="updating-service-offering"></a>Update Service Offering
+
+To update the service offering:
+
+* make any changes to properties in the `service_catalog` of the broker manifest. For example, update the service metadata.
+* make any changes to properties in the `service_deployment` of the broker manifest. For example, update the jobs used from a service release.
+* deploy the broker
+
+**Warning:** Once the broker has been registered with Cloud Foundry do not change the `service_id` or the `plan_id` for any plan. When the ODB starts it checks that all existing service instances in Cloud Foundy have a `plan_id` that exists in the `service_catalog`.
+
+After changing the `service_catalog`, you should run the [register-broker errand](#register) to update the Cloud Foundry marketplace.
+
+When the plans are updated in the `service_catalog`, then you need to upgrade all the existing service instances. To apply these changes run the [upgrade-all-service-instances errand](#upgrade-instances).
+
+**Warning:** Until the upgrade has been run, `cf update-service` operations will be blocked and an error will be shown:<pre class="terminal">
+$ cf update-service my-redis -c '{"maxclients": 10000}'
+Updating service instance my-redis as admin...
+FAILED
+Server error, status code: 502, error code: 10001, message: Service broker error: There is a pending change to your service instance that the service operations team need to apply. Please contact your service provider or try again later.
+</pre>
+
+### <a id="disabling-service-plans"></a>Disable Service Plans
+
+Access to a service plan can be disabled by using the Cloud Foundry CLI:<pre class="terminal">
+$ cf disable-service-access \<service-name-from-catalog\> -p \<plan-name\>
+</pre>
+
+Also, when a plan has the property `active: false` in the `service_catalog` then the [register-broker errand](#register) errand will disable service access to the inactive plan.
+
+### <a id="remove-plans"></a>Remove Service Plans
+
+A service plans can be removed if there are no instances using the plan. To remove the a plan, remove it from the broker manifest and update the Cloud Foundry marketplace by running the [register-broker errand](#register).
+
+**Warning:** If any service instances remain on a plan that has been removed from the catalog then the ODB will fail to start.
+
+## <a id="upgrades"></a>Upgrades
+
+### <a id="upgrade-broker"></a>Upgrade the Broker
+
+The broker is upgraded in a similar manner to all BOSH releases:
+
+* upload new version of `on-demand-service-broker-release` BOSH release to the BOSH Director
+* make any necessary changes to the core broker configuration in the broker manifest
+* deploy the broker
+
+### <a id="upgrade-service-offering"></a>Upgrade Service Offering
+
+The service offering consists of:
+
+* service catalog
+* service adapter BOSH release
+* service BOSH release(s)
+* service stemcell
+
+To upgrade a service offering:
+
+* make any changes to the service catalog in the broker manifest
+* upload any new service BOSH release(s) to the BOSH Director
+* make any changes to service release(s) in the broker manifest
+* upload any new service stemcell to the BOSH Director
+* make any changes to the service stemcell in the `service_deployment` broker manifest
+* deploy the broker
+
+Any new service instances will be created using the latest service offering. To upgrade existing instances you must run the [upgrade-all-service-instances errand](#upgrade-instances).
+
+**Warning:** Until a service instance has been upgraded, `cf update-service` operations will be blocked and an error will be shown, see [updating service offering](#updating-service-offering).
+
+### <a id="upgrade-instances"></a>Upgrade All Service Instances
+
+To upgrade all existing service instances after the service offering has been updated or upgraded:
+
+1. Add the following instance group to your broker manifest:
+
+    ```yaml
+    - name: upgrade-all-service-instances
+      lifecycle: errand
+      instances: 1
+      jobs:
+        - name: upgrade-all-service-instances
+          release: <odb-release-name>
+      vm_type: <vm-type>
+      stemcell: <stemcell>
+      networks: [{name: <network>}]
+      azs: [<az>]
+    ```
+
+1. Deploy the broker manifest.
+1. Run the errand with `bosh run errand upgrade-all-service-instances`.
 
 ## <a id="security"></a>Security
 
@@ -546,35 +594,31 @@ If `quota_remaining` is `0` then you need to increase your plan quota in the BOS
 There is a one to one mapping between the service instance id from CF and the deployment name in BOSH. The convention is the BOSH deployment name would be the service instance id prepended by `service-instance_`. To identify the BOSH deployment for a service instance you can.
 
 1. Determine the GUID of the service
+   <pre class="terminal">
+    $ cf service --guid \<service-name\>
+   </pre>
 
-    ```
-    cf service --guid <service-name>
-    ```
+1. Identify deployment in `bosh deployments` by looking for `service-instance_<GUID>`
 
-2. Identify deployment in `bosh deployments` by looking for `service-instance_`GUID
-
-3. Get current tasks for the deployment by using
-
-    ```
-    bosh tasks --deployment service-instance_<GUID>
-    ```
+1. Get current tasks for the deployment by using
+   <pre class="terminal">
+    $ bosh tasks --deployment service-instance_\<GUID\>
+   </pre>
 
 ### <a id="id-tasks"></a>Identify Tasks in BOSH
 
 Most operations on the on demand service broker API are implemented by launching BOSH tasks. If an operation fails, it may be useful to investigate the corresponding BOSH task. To do this:
 
 1. Determine the ID of the service for which an operation failed. You can do this using the Cloud Foundry CLI:
-
-    ```
-    cf service --guid <service name>
-    ```
+   <pre class="terminal">
+    $ cf service --guid \<service name\>
+   </pre>
 
 1. SSH on to the service broker VM:
-
-    ```
-    bosh deployment <path to broker manifest>
-    bosh ssh
-    ```
+   <pre class="terminal">
+    $ bosh deployment \<path to broker manifest\>
+    $ bosh ssh
+   </pre>
 
 1. In the broker log, look for lines relating to the service, identified by the service ID. Lines recording the starting and finishing of BOSH tasks will also have the BOSH task ID:
 
@@ -590,10 +634,9 @@ Most operations on the on demand service broker API are implemented by launching
     ```
 
 1. Use the task ID to obtain the task log from BOSH (adding flags such as `--debug` or `--cpi` as necessary):
-
-    ```
-    bosh task <task_ID>
-    ```
+   <pre class="terminal">
+    $ bosh task \<task\_ID\>
+   </pre>
 
 ### <a id="id-uaa-issues"></a>Identify Issues When Connecting to BOSH or UAA
 
