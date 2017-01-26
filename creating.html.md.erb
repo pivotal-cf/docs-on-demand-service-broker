@@ -18,8 +18,9 @@ For information about what is required of the Operator, see [Responsibilities of
 ## <a id="create-a-service-release"></a>Create a Service Release
 
 A service release is a BOSH release that is deployed at instance creation time, once for each service instance, by the on-demand broker (ODB). We have created two examples:
-  * [Redis](https://github.com/pivotal-cf-experimental/redis-example-service-release)
-  * [Kafka](https://github.com/pivotal-cf-experimental/kafka-example-service-release)
+
+* [Redis](https://github.com/pivotal-cf-experimental/redis-example-service-release)
+* [Kafka](https://github.com/pivotal-cf-experimental/kafka-example-service-release)
 
 See the [BOSH docs](http://bosh.io/docs) for help creating a BOSH release. We recommend creating sample manifests that deploy the service release(s), as this will help you write the `generate-manifest` component of the Service Adapter later.
 
@@ -523,8 +524,9 @@ This topic describes workflows for setting up and maintaining of a service insta
 The adapter should be packaged as a BOSH release, which should be co-located with the ODB release in a BOSH manifest by the operator. This is only done in order to place the adapter executable on the same VM as the ODB server, therefore the adapter BOSH job's `monit` file should probably have no processes defined.
 
 Example service adapter releases:
-- <a href="https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release">kafka</a>
-- <a href="https://github.com/pivotal-cf-experimental/redis-example-service-adapter-release">redis</a>
+
+- <a href="https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release">Kafka</a>
+- <a href="https://github.com/pivotal-cf-experimental/redis-example-service-adapter-release">Redis</a>
 
 ## <a id="sdk"></a> Golang SDK
 
