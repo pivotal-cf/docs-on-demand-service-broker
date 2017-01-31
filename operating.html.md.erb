@@ -420,7 +420,7 @@ To update the service offering:
 
 After changing the `service_catalog`, you should run the [register-broker errand](#register) to update the Cloud Foundry marketplace.
 
-When the plans are updated in the `service_catalog`, then you need to upgrade all the existing service instances. To apply these changes run the [upgrade-all-service-instances errand](#upgrade-instances).
+When the plans are updated in the `service_catalog`, then upgrades will need to be applied to existing service instances. See [upgrading individual service instances](#upgrade-individual-instances) and [upgrading all service instances](#upgrade-all-instances).
 
 **Warning:** Until the upgrade has been run, `cf update-service` operations will be blocked and an error will be shown:<pre class="terminal">
 $ cf update-service my-redis -c '{"maxclients": 10000}'
@@ -471,11 +471,21 @@ To upgrade a service offering:
 * make any changes to the service stemcell in the `service_deployment` broker manifest
 * deploy the broker
 
-Any new service instances will be created using the latest service offering. To upgrade existing instances you must run the [upgrade-all-service-instances errand](#upgrade-instances).
+Any new service instances will be created using the latest service offering. 
+
+To upgrade all existing instances you can run the [upgrade-all-service-instances errand](#upgrade-instances).
+
 
 **Warning:** Until a service instance has been upgraded, `cf update-service` operations will be blocked and an error will be shown, see [updating service offering](#updating-service-offering).
 
-### <a id="upgrade-instances"></a>Upgrade All Service Instances
+### <a id="upgrade-individual-instances"></a>Upgrade an Individual Service Instance (Experimental)
+
+When the service offering has been updated or upgraded then Cloud Foundry users can trigger an upgrade of their service instance.
+They do this using the Cloud Foundry CLI and issuing the command `cf update-service -c '{"apply-changes": true}'`.
+
+**Warning:** When using the `apply-changes` flag, users will be unable to set any other parameters on the request. The instance must first be upgraded before additional parameters can be set.
+
+### <a id="upgrade-all-instances"></a>Upgrade All Service Instances
 
 To upgrade all existing service instances after the service offering has been updated or upgraded:
 

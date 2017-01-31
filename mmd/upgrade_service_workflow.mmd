@@ -1,12 +1,7 @@
 <div class="mermaid">  
 sequenceDiagram
-User->> CloudFoundry: cf update service
+User->> CloudFoundry: cf update service -c '{"apply-changes":true}'
   CloudFoundry->> ODB: update instance
-  ODB->>ServiceAdapter: generate manifest with the old manifest & no request parameters
-  ServiceAdapter->>ODB:regenerated deployment manifest
-  alt instance outdated
-    ODB->>CloudFoundry: Update failed: pending changes detected
-  else instance up-to-date
  ODB->>ServiceAdapter: generate manifest with the old manifest & request parameters
   ServiceAdapter->>ODB: an updated deployment manifest
   ODB->>BOSH: bosh deploy with manifest
@@ -22,5 +17,4 @@ User->> CloudFoundry: cf update service
   ODB->>BOSH:get task state
   BOSH->>ODB:done
   ODB->>CloudFoundry:completed
-  end
 </div>

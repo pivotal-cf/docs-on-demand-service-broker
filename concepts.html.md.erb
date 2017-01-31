@@ -21,7 +21,16 @@ In the delete service workflow the service adapter is not invoked.
 <%= partial './mmd/delete_service_workflow.mmd' %>
 
 ## <a id="update-service-instance"></a>Update Service Instance
+
+When updating a service instance, ODB will make two generate manifest calls to the service adapter. This allows us to check whether the existing service instance is on the latest service offering. Updates can only proceed if the existing service instance is on the latest offering.
+
 <%= partial './mmd/update_service_workflow.mmd' %>
+
+## <a id="upgrade-service-instance"></a>Upgrade Service Instance
+
+In the upgrade service instance workflow the service adapter is invoked once to generate the updated manifest.
+
+<%= partial './mmd/upgrade_service_workflow.mmd' %>
 
 ## <a id="bind"></a>Bind
 <%= partial './mmd/bind_service_workflow.mmd' %>
