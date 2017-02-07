@@ -422,11 +422,11 @@ After changing the `service_catalog`, you should run the [register-broker errand
 
 When the plans are updated in the `service_catalog`, then upgrades will need to be applied to existing service instances. See [upgrading individual service instances](#upgrade-individual-instances) and [upgrading all service instances](#upgrade-all-instances).
 
-**Warning:** Until the upgrade has been run, `cf update-service` operations will be blocked and an error will be shown:<pre class="terminal">
+**Warning:** Until the upgrade has been run, `cf update-service` operations to update parameters, or change plan will be rejected and an error will be shown:<pre class="terminal">
 $ cf update-service my-redis -c '{"maxclients": 10000}'
 Updating service instance my-redis as admin...
 FAILED
-Server error, status code: 502, error code: 10001, message: Service broker error: There is a pending change to your service instance that the service operations team need to apply. Please contact your service provider or try again later.
+Server error, status code: 502, error code: 10001, message: Service broker error: There are pending changes to your service instance, you must first run cf update-service \<service-name\> -c '{"apply-changes": true}', no other arbitrary parameters or plan changes are allowed.
 </pre>
 
 ### <a id="disabling-service-plans"></a>Disable Service Plans
@@ -471,19 +471,19 @@ To upgrade a service offering:
 * make any changes to the service stemcell in the `service_deployment` broker manifest
 * deploy the broker
 
-Any new service instances will be created using the latest service offering. 
+Any new service instances will be created using the latest service offering.
 
 To upgrade all existing instances you can run the [upgrade-all-service-instances errand](#upgrade-instances).
-
 
 **Warning:** Until a service instance has been upgraded, `cf update-service` operations will be blocked and an error will be shown, see [updating service offering](#updating-service-offering).
 
 ### <a id="upgrade-individual-instances"></a>Upgrade an Individual Service Instance (Experimental)
 
 When the service offering has been updated or upgraded then Cloud Foundry users can trigger an upgrade of their service instance.
-They do this using the Cloud Foundry CLI and issuing the command `cf update-service -c '{"apply-changes": true}'`.
+They do this using the Cloud Foundry CLI and issuing the command `cf update-service SERVICE_NAME -c '{"apply-changes": true}'`.
 
-**Warning:** When using the `apply-changes` flag, users will be unable to set any other parameters on the request. The instance must first be upgraded before additional parameters can be set.
+**Warning:** When using the `apply-changes` flag, Cloud Foundry users will be unable to set any other parameters. The instance must be upgraded before other parameters can be updated.
+In addition, the instance must be upgraded before changing plan.
 
 ### <a id="upgrade-all-instances"></a>Upgrade All Service Instances
 
