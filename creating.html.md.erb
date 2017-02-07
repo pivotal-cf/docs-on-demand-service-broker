@@ -180,6 +180,8 @@ For example
 
 ODB only supports injecting one stemcell into each service deployment (different instance groups cannot have different stemcells).
 
+ODB only supports using exact release and stemcell versions. The use of `latest` and floating stemcells are not supported.
+
 Your Service Adapter should be opinionated about which jobs it requires to generate its manifest. For example, the Kafka example requires `kafka_node` and `zookeeper`. It should not be opinionated about the mapping of BOSH release to job. The jobs can all be provided by one release, or across many. The SDK provides the helper function [`GenerateInstanceGroupsWithNoProperties`](https://github.com/pivotal-cf/on-demand-services-sdk/blob/master/serviceadapter/instance_group_mapping.go) for generating instance groups without any properties. The Kafka example service adapter [uses this helper function](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/adapter.go) and [invokes it](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go) to map the service releases parameter to the BOSH manifest `releases` and `instance_groups` sections.
 
 You should provide documentation about which jobs are required by your Service Adapter, and which BOSH releases operators should get these jobs from.
@@ -446,9 +448,9 @@ For example:
 ```yaml
 releases:
   - name: service-release
-    version: latest
+    version: 1.5.7
   - name: credentials-agent-release
-    version: latest
+    version: 4.2.0
 
 instance_groups:
   - name: service-group

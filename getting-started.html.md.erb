@@ -183,7 +183,7 @@ Before setting up and using ODB on your local development environment, install a
     stemcells:
     - alias: trusty
       os: ubuntu-trusty
-      version: latest
+      version: <STEMCELL_VERSION>
 
     instance_groups:
     - name: broker
@@ -224,11 +224,11 @@ Before setting up and using ODB on your local development environment, install a
           service_deployment:
             releases:
             - name: *service-release
-              version: latest
+              version: <SERVICE_RELEASE_VERSION>
               jobs: [kafka_server, zookeeper_server]
             stemcell:
               os: ubuntu-trusty
-              version: latest
+              version: <STEMCELL_VERSION>
           service_catalog:
             id: D94A086D-203D-4966-A6F1-60A9E2300F72
             service_name: kafka-service-with-odb

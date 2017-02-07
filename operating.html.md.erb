@@ -149,6 +149,7 @@ The operator must:
 
 1. Supply each release job specified by the Service Author exactly once. You can include releases that provide many jobs, as long as each required job is provided by exactly one release.
 1. Supply one stemcell that is used on each VM in the service deployments. ODB does not currently support service instance deployments that use a different stemcell for different instance groups.
+1. Use exact versions for releases and stemcells. The use of `latest` and floating stemcells are not supported.
 1. Create Cloud Foundry [service metadata](https://docs.pivotal.io/pivotalcf/services/catalog-metadata.html#services-metadata-fields) in the catalog for the service offering. This metadata will be aggregated in the Cloud Foundry marketplace and displayed in Apps Manager and the `cf` CLI.
 1. Compose plans. In ODB, service authors do not define plans but instead expose plan properties. The operator's role is to compose combinations of these properties, along with IAAS resources and catalog metadata into as many plans as they like.
   1. Create Cloud Foundry [service plan metadata](https://docs.pivotal.io/pivotalcf/services/catalog-metadata.html#plan-metadata-fields) in the service catalog for each plan.
@@ -169,11 +170,11 @@ Add the snippet below to your broker job properties section:
 service_deployment:
   releases:
     - name: <service-release>
-      version: <service-release-version>
+      version: <service-release-version> # Exact release version
       jobs: [<release-jobs-needed-for-deployment>] # Service Author will specify list of jobs required
   stemcell: # every instance group in the service deployment has the same stemcell
     os: <service-stemcell>
-    version: <service-stemcell-version>
+    version: <service-stemcell-version> # Exact stemcell version
 service_catalog:
   id: <CF marketplace ID>
   service_name: <CF marketplace service offering name>
