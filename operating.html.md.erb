@@ -95,7 +95,13 @@ An example snippet is shown below:
 instance_groups:
   - name: broker # this can be anything
     instances: 1
+    vm_type: <vm type>
+    stemcell: <stemcell>
+    networks:
+      - name: <network>
     jobs:
+      - name: <service adapter job name>
+        release: <service adapter release>
       - name: broker
         release: on-demand-service-broker
         properties:
@@ -128,15 +134,10 @@ instance_groups:
                 client_secret: <bosh client secret>
           service_adapter:
             path: <path to service adapter binary> # optional, provided by the Service Author. Defaults to /var/vcap/packages/odb-service-adapter/bin/service-adapter
-          # There are more properties here, that will be discussed below
+          features: # optional
+            cf_user_triggered_upgrades: <true|false> # optional, defaults to false.
 
-      - name: <service adapter job name>
-        release: <service adapter release>
-
-    vm_type: <vm type>
-    stemcell: <stemcell>
-    networks:
-      - name: <network>
+          # There are more broker properties that are discussed below
 ```
 
 This snippet is using the BOSH v2 syntax, and making use of global cloud config and job-level properties.
@@ -423,13 +424,6 @@ After changing the `service_catalog`, you should run the [register-broker errand
 
 When the plans are updated in the `service_catalog`, then upgrades will need to be applied to existing service instances. See [upgrading individual service instances](#upgrade-individual-instances) and [upgrading all service instances](#upgrade-all-instances).
 
-**Warning:** Until the upgrade has been run, `cf update-service` operations to update parameters, or change plan will be rejected and an error will be shown:<pre class="terminal">
-$ cf update-service my-redis -c '{"maxclients": 10000}'
-Updating service instance my-redis as admin...
-FAILED
-Server error, status code: 502, error code: 10001, message: Service broker error: There are pending changes to your service instance, you must first run cf update-service \<service-name\> -c '{"apply-changes": true}', no other arbitrary parameters or plan changes are allowed.
-</pre>
-
 ### <a id="disabling-service-plans"></a>Disable Service Plans
 
 Access to a service plan can be disabled by using the Cloud Foundry CLI:<pre class="terminal">
@@ -480,11 +474,29 @@ To upgrade all existing instances you can run the [upgrade-all-service-instances
 
 ### <a id="upgrade-individual-instances"></a>Upgrade an Individual Service Instance (Experimental)
 
-When the service offering has been updated or upgraded then Cloud Foundry users can trigger an upgrade of their service instance.
-They do this using the Cloud Foundry CLI and issuing the command `cf update-service SERVICE_NAME -c '{"apply-changes": true}'`.
+By default, Cloud Foundry users cannot upgrade their service instances to the latest service offering.
 
-**Warning:** When using the `apply-changes` flag, Cloud Foundry users will be unable to set any other parameters. The instance must be upgraded before other parameters can be updated.
-In addition, the instance must be upgraded before changing plan.
+Until a service instance has been upgraded, Cloud Foundry users cannot set parameters, or change plan until the service instance has been upgraded by an operator:<pre class="terminal">
+$ cf update-service my-redis -c '{"maxclients": 10000}'
+Updating service instance my-redis as admin...
+FAILED
+Server error, status code: 502, error code: 10001, message: Service broker error: Service cannot be updated at this time, please try again later or contact your operator for more information.
+</pre>
+
+Operators should run the [upgrade-all-service-instances errand](#upgrade-instances) to upgrade all service instances to the latest service offering.
+
+#### Enabling CF User Triggered Upgrades
+
+Set the `cf_user_triggered_upgrades` feature to `true` in the [core broker configuration](#core-broker-config), to allow Cloud Foundry users to upgrade their service instances to the latest service offering.
+
+Then, users can upgrade with this command: `cf update-service SERVICE_NAME -c '{"apply-changes": true}'`.
+
+Cloud Foundry users cannot set any other parameters, or change plan until the service instance has been upgraded:<pre class="terminal">
+$ cf update-service my-redis -c '{"maxclients": 10000}'
+Updating service instance my-redis as admin...
+FAILED
+Server error, status code: 502, error code: 10001, message: Service broker error: There are pending changes to your service instance, you must first run cf update-service \<service-name\> -c '{"apply-changes": true}', no other arbitrary parameters or plan changes are allowed.
+</pre>
 
 ### <a id="upgrade-all-instances"></a>Upgrade All Service Instances
 
