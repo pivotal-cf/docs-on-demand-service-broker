@@ -127,6 +127,8 @@ service-adapter generate-manifest [service-deployment-JSON] [plan-JSON] [request
 
 The generate-manifest subcommand takes in 5 arguments and returns a BOSH deployment manifest YAML.
 
+  <p class="note">**Note**: The ODB requires generate-manifest to be a pure function: given the same arguments the command should always output the same BOSH manifest.</p>
+
 <a id="generate-manifest-output"></a>
 #### Output
 
