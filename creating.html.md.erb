@@ -24,6 +24,20 @@ A service release is a BOSH release that is deployed at instance creation time, 
 
 See the [BOSH docs](http://bosh.io/docs) for help creating a BOSH release. We recommend creating sample manifests that deploy the service release(s), as this will help you write the `generate-manifest` component of the Service Adapter later.
 
+### Service Instance Lifecycle Errands
+
+A service release can provide job errands that can be used by ODB during the management of an instance lifecycle. Service instance lifecycle errands may be [configured by the operator](./operating.html#lifecycle-errands).
+
+ODB supports the following service instance lifecycle errands:
+
+- `post-deploy` - Runs after the creation or updating of a service instance. See the workflow [here.](./concepts.html#post-deploy)
+
+A deployment is only considered successful if along with the deployment the lifecycle errand completes successfully.
+
+See an example implementation of a health check post-deploy job in the [example redis release](https://github.com/pivotal-cf-experimental/redis-example-service-release/tree/b0405ebec76928a83a2d34261403bcbe230168fb/jobs/health-check).
+
+In the [generate-manifest](#generate-manifest) command ensure to validate and include any supported errands that are specified in the instance groups array.
+
 ### Job links
 When generating a manifest, we recommend not using static IPs as this makes network IP management very complex. Instead, we recommend using [BOSH's job links feature](https://bosh.io/docs/links.html).
 There are two types of job links, implicit and explicit. The [example Kafka release](https://github.com/pivotal-cf-experimental/kafka-example-service-release/blob/master/jobs/kafka_server/spec#L15) uses implicit job links to get the IPs of the brokers and the zookeeper. Details on how to use the links feature are available [here](https://bosh.io/docs/links.html).

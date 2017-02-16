@@ -18,6 +18,12 @@ Note that there are two ways this can fail: synchronously and asynchronously. Wh
 
 In the delete service workflow the service adapter is not invoked.
 
+## <a id="post-deploy"></a>Create/Update Service Instance With Post Deploy Errand
+
+ODB will not report success to Cloud Controller until BOSH reports both have completed without error.
+
+<%= partial './mmd/create_deploy_deploy_workflow.mmd' %>
+
 <%= partial './mmd/delete_service_workflow.mmd' %>
 
 ## <a id="update-service-instance"></a>Update Service Instance
