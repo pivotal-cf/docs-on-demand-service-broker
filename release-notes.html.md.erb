@@ -12,9 +12,10 @@ owner: London Services Enablement
 
 ## <a id="new-features"></a>New Features
 
-- Operator can turn on application developer triggered upgrade via the cf cli
-  - ODB manifest flag `features.cf_user_triggered_upgrades` - default is to false
-  - Operators can make any change to the service plan (stemcell, releases, properties)
+- Operator can turn on application developer triggered upgrades.
+  - To enable set ODB manifest flag `features.cf_user_triggered_upgrades` to `true` - default is to false.
+  - Operators can make any change to the service plan (stemcell, releases, properties) and the ODB will detect a `pending-change`
+  - ODB only detects manifest changes, not Cloud Config or Runtime Config changes.
   - Once a pending change has been detected the cf cli user will need to trigger the change by passing the `apply-changes: true` paramater.
   - When the feature is disabled, application developers will not be able to make changes to service instances with pending changes until the operator runs the `upgrade-all-service-instances` errand.
 - For create/update/delete operations that fail, the cf user will now be presented with a detailed error messagee that includes: odb-request-id, service-name, service-instance-guid, bosh-task-id, operator-type. 
