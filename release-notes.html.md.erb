@@ -3,7 +3,7 @@ title: On-Demand Services SDK Release Notes
 owner: London Services Enablement
 ---
 
-# <a id="release-notes"></a>v0.14.1 Release Notes
+# <a id="release-notes"></a>v0.15.0-alpha-1 Release Notes
 
 ## <a id="minimum-version-requirements"></a>Minimum Version Requirements
 
@@ -12,19 +12,21 @@ owner: London Services Enablement
 
 ## <a id="new-features"></a>New Features
 
-- Open Service Broker API v2.11 support
- - Bindable can now be set at the plan level
-- Golang 1.7.4 now used to resolve security issues in the Golang 1.7 series
+- Operator can turn on application developer triggered upgrade via the cf cli
+  - ODB manifest flag `features.cf_user_triggered_upgrades` - default is to false
+  - Operators can make any change to the service plan (stemcell, releases, properties)
+  - Once a pending change has been detected the cf cli user will need to trigger the change by passing the `apply-changes: true` paramater.
+  - When the feature is disabled, application developers will not be able to make changes to service instances with pending changes until the operator runs the `upgrade-all-service-instances` errand.
+- For create/update/delete operations that fail, the cf user will now be presented with a detailed error messagee that includes: odb-request-id, service-name, service-instance-guid, bosh-task-id, operator-type. 
+  - This should allow for quicker debugging interactions between the app developer and the operator
 
 ## <a id="breaking-changes"></a>Breaking Changes
 
-- ODB errands have been renamed to be clearer. You must update your manifests.
- - `upgrade-all-service-instances`
- - `delelte-all-service-instances`
+- `lastest` no longer permitted as an accepted value for `broker.service_deployment` stemcell and release versions.
 
 ## <a id="bug-fixes"></a>Bug fixes
 
-- The ODB BOSH deployment would deploy successfully even if the broker was not accepting requests
+- ODB pre-start no longer changes ownership of co-located jobs packages
 
 # <a id="known-issues"></a>Known Issues
 
