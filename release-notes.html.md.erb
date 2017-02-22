@@ -24,6 +24,7 @@ owner: London Services Enablement
 ## <a id="breaking-changes"></a>Breaking Changes
 
 - `lastest` no longer permitted as an accepted value for `broker.service_deployment` stemcell and release versions.
+- `generate-manifest` is now called twice by the ODB as part of the update service instance lifecyle. This means `generate-manifest` should be a pure function, respecting any previously set arbitary paramerteres in the `old-manifest` field.
 
 ## <a id="bug-fixes"></a>Bug fixes
 
