@@ -1,19 +1,26 @@
 <div class="mermaid">
 sequenceDiagram
-  operator->>DeleteErrand:start delete all service instances
-  loop for all instances deployed by ODB
-    DeleteErrand->>CF:unbind service via API
-    loop for bindings for the service instance
-      CF->>ODB:unbind
-      ODB->>ServiceAdapter:delete a binding
-      ServiceAdapter-\->>ODB: deleted
-      ODB-\->>CF: OK
+  Operator->>Delete Errand:bosh run errand delete-all-service-instances
+  Delete Errand->>CF:GET instances
+  CF->>Delete Errand:instances
+  loop for all instances
+    Delete Errand->>CF:GET bindings
+    CF->>Delete Errand:bindings
+    loop for all bindings
+    Delete Errand->>CF:cf unbind-service
+      CF->>ODB: DELETE binding
+      ODB->>Service Adapter:delete-binding
+      Service Adapter->>ODB:exit code 0
+      ODB->>CF:OK
+      CF->>Delete Errand:OK
     end
-    DeleteErrand->>CF:delete service via API
-    CF->>ODB:delete-service-instance
+    Delete Errand->>CF:cf delete-service
+    CF->>ODB:DELETE instance
     ODB->>BOSH:delete deployment
-    BOSH-\->>ODB: accepted
-    ODB-\->>CF: accepted
-    Note over CF,BOSH: Polling till operation is complete
+    BOSH->>ODB:accepted
+    ODB->>CF:accepted
+    Note over CF,BOSH:CF polls ODB for last operation until complete
+    CF->>Delete Errand:completed
   end
+  Delete Errand->>Operator:completed successfully
 </div>

@@ -1,6 +1,7 @@
-<div class="mermaid">  
+<div class="mermaid">
 sequenceDiagram
-  User->>CloudFoundry:create-service-broker
-  CloudFoundry->>ODB:get-catalog
-  ODB->>CloudFoundry:list of available plans for the service
+  User->>Cloud Foundry:cf create-service-broker
+  Cloud Foundry->>ODB:GET catalog
+  ODB->>Cloud Foundry:catalog
+  Cloud Foundry->>User:OK
 </div>

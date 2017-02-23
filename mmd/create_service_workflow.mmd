@@ -1,20 +1,23 @@
-<div class="mermaid">  
+<div class="mermaid">
 sequenceDiagram
-  User->> CloudFoundry: cf create service
-  CloudFoundry->> ODB: provision instance
-  ODB->>ServiceAdapter: generate manifest
-  ServiceAdapter->>ODB: a deployment manifest
-  ODB->>BOSH: bosh deploy with manifest
-  BOSH->>ODB: deploying
-  ODB->>CloudFoundry: accepted
-  loop Until bosh task state is 'done'
-    CloudFoundry->>ODB:last operation
-    ODB->>BOSH:get task state
-    BOSH->>ODB:queued/processing
-    ODB->>CloudFoundry:in progress
+  User->> Cloud Foundry: cf create-service
+  Cloud Foundry->> ODB: POST instance (create)
+  ODB->>Service Adapter: generate-manifest
+  Service Adapter->>ODB: manifest
+  ODB->>BOSH: deploy
+  BOSH->>ODB: accepted
+  ODB->>Cloud Foundry: accepted
+  Cloud Foundry->>User: OK
+  loop until bosh task is complete
+    Cloud Foundry->>ODB: GET last operation
+    ODB->>BOSH: GET deploy task
+    BOSH->>ODB: task in progress
+    ODB->>Cloud Foundry: create in progress
   end
-  CloudFoundry->>ODB:last operation
-  ODB->>BOSH:get task state
-  BOSH->>ODB:done
-  ODB->>CloudFoundry:completed
+  Cloud Foundry->>ODB: GET last operation
+  ODB->>BOSH: GET task
+  BOSH->>ODB: task done
+  ODB->>Cloud Foundry: create succeeded
+  User->>Cloud Foundry:cf service
+  Cloud Foundry->>User: create succeeded
 </div>
