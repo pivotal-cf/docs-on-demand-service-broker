@@ -1,8 +1,9 @@
-<div class="mermaid">  
+<div class="mermaid">
 sequenceDiagram
-  User->>CloudFoundry:bind-service
-  CloudFoundry->>ODB:bind-service-instance
-  ODB->>ServiceAdapter:create-binding
-  ServiceAdapter->>ODB:binding info
-  ODB->>CloudFoundry:binding info
+  User->>Cloud Foundry:cf bind-service
+  Cloud Foundry->>ODB:PUT binding
+  ODB->>Service Adapter:create-binding
+  Service Adapter->>ODB:binding credentials
+  ODB->>Cloud Foundry:binding credentials
+  Cloud Foundry->>User:OK
 </div>

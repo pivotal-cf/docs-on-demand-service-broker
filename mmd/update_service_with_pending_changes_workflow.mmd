@@ -1,0 +1,11 @@
+<div class="mermaid">
+  sequenceDiagram
+  User->> Cloud Foundry: cf update-service -c '{"some":"config"}'
+  Cloud Foundry->> ODB: PATCH instance (update)
+  ODB->>BOSH:GET manifest
+  BOSH->>ODB:deployed manifest
+  ODB->>Service Adapter: generate-manifest (without request parameters)
+  Service Adapter->>ODB: manifest
+  ODB->>Cloud Foundry: update failed, pending changes detected
+  Cloud Foundry->>User: update failed, pending changes detected
+</div>

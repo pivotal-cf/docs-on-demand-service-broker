@@ -1,10 +1,12 @@
 <div class="mermaid">
   sequenceDiagram
-  User->> Cloud Foundry: cf update-service -c '{"apply-changes":true}'
+  User->> Cloud Foundry: cf update-service -c '{"some":"config"}'
   Cloud Foundry->> ODB: PATCH instance (update)
   ODB->>BOSH:GET manifest
-  BOSH->>ODB:manifest
-  ODB->>Service Adapter: generate-manifest
+  BOSH->>ODB:deployed manifest
+  ODB->>Service Adapter: generate-manifest (without request parameters)
+  Service Adapter->>ODB: manifest
+  ODB->>Service Adapter: generate-manifest (with request parameters)
   Service Adapter->>ODB: manifest
   ODB->>BOSH: deploy
   BOSH->>ODB: accepted

@@ -1,8 +1,9 @@
-<div class="mermaid">  
+<div class="mermaid">
 sequenceDiagram
-  User->>CloudFoundry:unbind-service
-  CloudFoundry->>ODB:unbind-service-instance
-  ODB->>ServiceAdapter:delete-binding
-  ServiceAdapter->>ODB:done
-  ODB->>CloudFoundry:OK
+  User->>Cloud Foundry:cf unbind-service
+  Cloud Foundry->>ODB:DELETE binding
+  ODB->>Service Adapter:delete-binding
+  Service Adapter->>ODB:exit 0
+  ODB->>Cloud Foundry:OK
+  Cloud Foundry->>User:OK
 </div>
