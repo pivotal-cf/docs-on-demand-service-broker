@@ -196,6 +196,8 @@ service_catalog:
     documentation_url: <documentation url>
     support_url: <support url>
   global_properties: {} # optional, applied to every plan.
+  global_quotas: # optional
+    service_instance_limit: <instance limit> # the maximum number of service instances across all plans
   plans:
     - name: <CF marketplace plan name>
       plan_id: <CF marketplace plan id>
@@ -210,7 +212,7 @@ service_catalog:
               <currency code>: <currency amount (float)>
             unit: <frequency of cost>
       quotas: # optional
-        service_instance_limit: <instance limit>
+        service_instance_limit: <instance limit> # the maximum number of service instances for this plan
       instance_groups: # resource mapping for the instance groups defined by the Service Author
         - name: <service author provided instance group name>
           vm_type: <vm type>
@@ -246,6 +248,18 @@ You can optionally colocate the `route_registrar` job from the [routing release]
 To do this, upload the release to your BOSH director and [configure the job properties](http://bosh.io/jobs/route_registrar?source=github.com/cloudfoundry-incubator/cf-routing-release&version=0.136.0), replacing the version in that docs URL query string as appropriate.
 
 Remember to set the `broker_uri` property in the [register-broker errand](#register-broker) if you configure a route.
+
+## <a id="service-instance-quotas"></a>Service Instance Quotas
+
+ODB offers global and plan level service quotas to set service instance limits.
+
+Plan quotas restrict the number of service instances for a given plan, while
+the global limit restricts the number of service instances across all plans.
+
+When creating a service instance, ODB will check the global service instance limit.
+If it has not been reached, it will check the plan service instance limit.
+
+Note: These limits do not include orphans. See [listing](#listing-orphans) and [deleting](#orphan-deployments) orphans.
 
 ## <a id="broker-metrics"></a>Broker Metrics
 
