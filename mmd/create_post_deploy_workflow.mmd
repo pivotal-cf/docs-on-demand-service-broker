@@ -7,7 +7,7 @@ sequenceDiagram
   ODB->>BOSH: deploy
   BOSH->>ODB: accepted
   ODB->>Cloud Foundry: accepted
-  Cloud Foundry->>User: OK
+  Cloud Foundry->>User: create in progress
   loop until bosh task is complete
     Cloud Foundry->>ODB: GET last operation
     ODB->>BOSH: GET deploy task

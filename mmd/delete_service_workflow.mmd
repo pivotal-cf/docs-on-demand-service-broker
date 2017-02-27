@@ -5,7 +5,7 @@ sequenceDiagram
   ODB->>BOSH:delete deployment
   BOSH->>ODB:accepted
   ODB->>Cloud Foundry:accepted
-  Cloud Foundry->>User: OK
+  Cloud Foundry->>User: delete in progress
   loop until bosh task is complete
     Cloud Foundry->>ODB: GET last operation
     ODB->>BOSH: GET task
