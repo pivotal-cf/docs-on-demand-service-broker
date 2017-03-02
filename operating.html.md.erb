@@ -236,6 +236,7 @@ service_catalog:
         serial: true # optional
       lifecycle_errands: #optional
         post_deploy: <errand name> #optional
+        pre_delete: <errand name> #optional
 ```
 
 ## <a id="route"></a>Route Registration
@@ -307,6 +308,7 @@ The service adapter must offer this errand as part of the service instance deplo
 ODB supports the following lifecycle errands:
 
 - `post-deploy` - Runs after the creation or updating of a service instance. An example use case is running a health check to ensure the service instance is functioning. See the workflow [here](./concepts.html#post-deploy)
+- `pre-delete` - Runs before the deletion of a service instance. An example use case is cleaning up data prior to a service shutdown. See the workflow [here](./concepts.html#pre-delete)
 
 Service Instance lifecycle errands are configured on a per-plan basis. To enable lifecycle errands, the errand job must be:
 
@@ -314,7 +316,7 @@ Service Instance lifecycle errands are configured on a per-plan basis. To enable
 - Added to the plan's instance groups.
 - Set in the plan's lifecycle errands configuration.
 
-An example manifest snippet:
+An example manifest snippet configuring a post-deploy lifecycle errand for service instances:
 
 ```yaml
 service_deployment:
