@@ -5,5 +5,8 @@ DIR=$(dirname $0)
 for file in $(ls ${DIR}/../mmd/*.mmd)
 do
   filename=$(basename $file)
-  mv $file $(dirname $file)/${filename#_}
+  firstchar=${filename:0:1}
+  if [ $firstchar == "_" ]; then
+    mv $file $(dirname $file)/${filename#_}
+  fi
 done

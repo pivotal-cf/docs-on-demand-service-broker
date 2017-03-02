@@ -5,5 +5,3 @@ In order to display our mermaid templates locally (whilst running through `bookb
 To help with this we have two scripts to localise, and then revert these diagram files:
 * `./scripts/mmd-localise` will prepend each mermaid file with an underscore
 * `./scripts/mmd-globalise` will remove the first underscore from each mermaid file
-
-These scripts aren't very smart - so please only run them when they're in an expected state, or you'll start renaming files by removing underscores in the middle of filenames.
