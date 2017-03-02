@@ -202,7 +202,7 @@ service_catalog:
     - name: <CF marketplace plan name>
       plan_id: <CF marketplace plan id>
       description: <CF marketplace description>
-      active: <true|false> # optional, true by default. The register-broker errand will enable service access for active plans only.
+      cf_service_access: <enable|disable|manual> # optional, enable by default.
       bindable: <true|false> # optional. If specified, this takes precedence over the bindable attribute of the service
       metadata: # optional
         display_name: <display name>
@@ -354,7 +354,15 @@ This errand registers the broker with Cloud Foundry and enables access to plans 
 
 Please note that if the `broker_uri` property is set, then you should also register a route for your broker with Cloud Foundry. See [Route registration](#route-registration) section for more details.
 
-When `enable_service_access: false` is set the errand will disable service access for all plans. Individual plans can be disabled by setting `active: false` in the `plan` section of the broker job properties. See [catalog](#catalog) for details.
+When `enable_service_access: false` is set the errand will disable service access for all plans.
+
+Individual plans can be enabled via the optional `cf_service_access` property. This property accepts three values: `enable`, `disable`, `manual`.
+
+* `cf_service_access: enable`: register-broker errand will enable access for that plan
+* `cf_service_access: disable`: register broker errand will disable access for that plan
+* `cf_service_access: manual`: register-broker errand perform no action.
+
+If the `cf_service_access` property is not set at all, the register-broker errand will enable access for that plan.
 
 Add the following instance group to your manifest:
 
@@ -499,7 +507,7 @@ Access to a service plan can be disabled by using the Cloud Foundry CLI:<pre cla
 $ cf disable-service-access \<service-name-from-catalog\> -p \<plan-name\>
 </pre>
 
-Also, when a plan has the property `active: false` in the `service_catalog` then the [register-broker errand](#register) errand will disable service access to the inactive plan.
+Also, when a plan has the property `cf_service_access: disable` in the `service_catalog` then the [register-broker errand](#register) errand will disable service access to that plan.
 
 ### <a id="remove-plans"></a>Remove Service Plans
 
