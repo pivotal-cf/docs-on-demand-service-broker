@@ -1,8 +1,0 @@
-#!/bin/bash -e
-
-DIR=$(dirname $0)
-
-for file in $(ls ${DIR}/../mmd/*.mmd)
-do
-  mv $file $(dirname $file)/_$(basename $file)
-done

@@ -26,12 +26,6 @@ ODB will not report create/update succeeded to Cloud Foundry until both the depl
 
 <%= partial './mmd/create_post_deploy_workflow.mmd' %>
 
-## <a id="pre-delete"></a>Delete Service Instance with Pre-Delete Errand
-
-ODB will not report delete succeeded to Cloud Foundry until both the pre-delete errand and delete deployment have completed successfully.
-
-<%= partial './mmd/pre_delete_workflow.mmd' %>
-
 ## <a id="update-service-instance"></a>Update Service Instance
 
 Updates can only proceed if the existing service instance is up-to-date. ODB calls `generate-manifest` on service adapter to determine whether there are any pending changes for the instance.
