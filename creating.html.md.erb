@@ -30,7 +30,8 @@ A service release can provide job errands that can be used by ODB during the man
 
 ODB supports the following service instance lifecycle errands:
 
-- `post-deploy` - Runs after the creation or updating of a service instance. See the workflow [here.](./concepts.html#post-deploy)
+- `post-deploy` - Runs after the creation or updating of a service instance. See the workflow [here](./concepts.html#post-deploy).
+- `pre-delete` - Runs before the deletion of a service instance. See the workflow [here](./concepts.html#pre-delete).
 
 A deployment is only considered successful if along with the deployment the lifecycle errand completes successfully.
 
