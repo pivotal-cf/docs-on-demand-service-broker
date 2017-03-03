@@ -29,6 +29,8 @@ Dependencies for the On-Demand Broker:
 - BOSH director v257 or later
 - Cloud Foundry v238 or later
 
+ <p class="note">**Note**: [Service instance lifecycle errands](#lifecycle-errands) require BOSH director v261 or later.</p>
+
 ### SSL certificates
 
 If ODB is configured to communicate with BOSH on the director's public IP you may be using a self-signed certificate unless you have a domain for your BOSH director. ODB does not ignore TLS certificate validation errors by default (as expected). You have two options to configure certificate-based authentication between the BOSH director and the ODB:
@@ -299,7 +301,8 @@ We have tested this example configuration with loggregator v58 and service-metri
 Please see the [service metrics docs](http://docs.pivotal.io/service-metrics) for more details on service metrics.
 
 ## <a id="lifecycle-errands"></a>Service Instance Lifecycle Errands
- <p class="note">**Note**: This feature is only supported when using Bosh version 261 or above.</p>
+
+ <p class="note">**Note**: This feature requires BOSH director v261 or later.</p>
 
 Service Instance lifecycle errands allow additional short lived jobs to be run as part of service instance deployment. A deployment is only considered successful if the lifecycle errand successfully exits.
 
