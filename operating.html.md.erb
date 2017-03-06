@@ -236,9 +236,9 @@ Remember to set the `broker_uri` property in the [register-broker errand](#regis
 
 ## <a id="broker-metrics"></a>Broker Metrics
 
-The ODB bosh release contains a metrics job, that can be used to emit metrics when colocated with [service metrics](https://network.pivotal.io/products/pivotal-cloud-foundry-services-sdk). You must include the loggregator release in your manifest order to do this.
+The ODB bosh release contains a metrics job, that can be used to emit metrics when colocated with [service metrics](https://network.pivotal.io/products/service-metrics-sdk/). You must include the loggregator release in your manifest order to do this.
 
-Use [loggregator v58+](https://bosh.io/d/github.com/cloudfoundry/loggregator?v=58) and [service-metrics v1.4.3+](https://network.pivotal.io/products/pivotal-cloud-foundry-services-sdk).
+Use [loggregator v58+](https://bosh.io/d/github.com/cloudfoundry/loggregator?v=58) and [service-metrics v1.4.3+](https://network.pivotal.io/products/service-metrics-sdk/).
 
 Add the following jobs to the broker instance group:
 
