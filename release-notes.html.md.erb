@@ -3,7 +3,7 @@ title: On-Demand Services SDK Release Notes
 owner: London Services Enablement
 ---
 
-# <a id="release-notes"></a>v0.15.0-alpha-2 Release Notes
+# <a id="release-notes"></a>v0.15.0-rc-1 Release Notes
 
 ## <a id="minimum-version-requirements"></a>Minimum Version Requirements
 
@@ -12,22 +12,37 @@ owner: London Services Enablement
 
 ## <a id="new-features"></a>New Features
 
+### Application Developer Triggered Upgrades
+
 - Operator can turn on application developer triggered upgrades. [Docs](./operating.html#upgrade-individual-instances)
-  - To enable set ODB manifest flag `features.cf_user_triggered_upgrades` to `true` - default is to false.
+  - To enable set ODB manifest flag `features.cf_user_triggered_upgrades` to `true` - default is to `false`.
   - Operators can make any change to the service plan (stemcell, releases, properties) and the ODB will detect a `pending-change`
   - ODB only detects manifest changes, not Cloud Config or Runtime Config changes.
   - Once a pending change has been detected the cf cli user will need to trigger the change by passing the `apply-changes: true` paramater.
   - When the feature is disabled, application developers will not be able to make changes to service instances with pending changes until the operator runs the `upgrade-all-service-instances` errand.
-- For create/update/delete operations that fail, the cf user will now be presented with a detailed error messagee that includes: odb-request-id, service-name, service-instance-guid, bosh-task-id, operator-type. 
+- For create/update/delete operations that fail, the cf user will now be presented with a detailed error message that includes: odb-request-id, service-name, service-instance-guid, bosh-task-id, operator-type.
   - This should allow for quicker debugging interactions between the app developer and the operator
-- Lifecycle errands for service instances deployments. [Docs](./operating.html#lifecycle-errands)
+
+### Service Instance Lifecycle Errands
+
+- Lifecycle errands (post-deploy & pre-delete) for service instances deployments. [Docs](./operating.html#lifecycle-errands)
   - Service authors can now add errands to their service instance deployments manifests.
-  - Operators can configure the ODB to run an errand that is present in a service instance after a deployment.
+  - Post-Deploy: Operators can configure the ODB to run an errand that is present in a service instance after a deployment.
+  - Pre-Delete: Operators can configure the ODB to run an errand that is present in a service instance before a deployment is deleted.
+
+### Other Enhancements
+
+- Operator can enable/disable service access for plans or opt to manually manage service access. [Docs](./operating.html#register)
+  - To disable service access, set `plan.cf_service_access` to `disable` - default is to `enable`.
+  - To manually manage service access, set `plan.cf_service_access` to `manual`. You must then enable access via the cf cli.
+- Operators can set a global quota to limit the total number of service instances that can be created across all plans. [Docs](./operating.html#service-instance-quotas)
+  - To set a global quota, set `service_catalog.global_quotas.service_instance_limit` to the total number of instances (recommended maximum is 500).
 
 ## <a id="breaking-changes"></a>Breaking Changes
 
-- `lastest` no longer permitted as an accepted value for `broker.service_deployment` stemcell and release versions.
+- `lastest` no longer permitted as an accepted value for `broker.service_deployment` stemcell and release versions as exact versions are required for the new cf update-service ODB workflow.
 - `generate-manifest` is now called twice by the ODB as part of the update service instance lifecyle. This means `generate-manifest` should be a pure function, respecting any previously set arbitary paramerteres in the `old-manifest` field.
+- `active` flag for plans has been replaced with `cf_service_access`. [Docs](./operating.html#register)
 
 ## <a id="bug-fixes"></a>Bug fixes
 
