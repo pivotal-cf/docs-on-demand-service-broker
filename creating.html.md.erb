@@ -26,11 +26,14 @@ See the [BOSH docs](http://bosh.io/docs) for help creating a BOSH release. We re
 
 ### Service Instance Lifecycle Errands
 
+ <p class="note">**Note**: This feature requires BOSH director v261 or later.</p>
+
 A service release can provide job errands that can be used by ODB during the management of an instance lifecycle. Service instance lifecycle errands may be [configured by the operator](./operating.html#lifecycle-errands).
 
 ODB supports the following service instance lifecycle errands:
 
-- `post-deploy` - Runs after the creation or updating of a service instance. See the workflow [here.](./concepts.html#post-deploy)
+- `post-deploy` - Runs after the creation or updating of a service instance. See the workflow [here](./concepts.html#post-deploy).
+- `pre-delete` - Runs before the deletion of a service instance. See the workflow [here](./concepts.html#pre-delete).
 
 A deployment is only considered successful if along with the deployment the lifecycle errand completes successfully.
 
