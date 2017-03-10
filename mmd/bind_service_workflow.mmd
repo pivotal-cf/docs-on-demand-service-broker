@@ -1,9 +1,9 @@
 <div class="mermaid">
 sequenceDiagram
-  User->>Cloud Foundry:cf bind-service
-  Cloud Foundry->>ODB:PUT binding
-  ODB->>Service Adapter:create-binding
-  Service Adapter->>ODB:binding credentials
-  ODB->>Cloud Foundry:binding credentials
-  Cloud Foundry->>User:OK
+  User->>Cloud Controller:cf bind-service
+  Cloud Controller->>On Demand Broker:PUT binding
+  On Demand Broker->>Service Adapter:create-binding
+  Service Adapter->>On Demand Broker:binding credentials
+  On Demand Broker->>Cloud Controller:binding credentials
+  Cloud Controller->>User:OK
 </div>

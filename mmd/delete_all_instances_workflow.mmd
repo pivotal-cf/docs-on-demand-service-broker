@@ -1,26 +1,26 @@
 <div class="mermaid">
 sequenceDiagram
   Operator->>Delete Errand:bosh run errand delete-all-service-instances
-  Delete Errand->>CF:GET instances
-  CF->>Delete Errand:instances
+  Delete Errand->>Cloud Foundry:GET instances
+  Cloud Foundry->>Delete Errand:instances
   loop for all instances
-    Delete Errand->>CF:GET bindings
-    CF->>Delete Errand:bindings
+    Delete Errand->>Cloud Foundry:GET bindings
+    Cloud Foundry->>Delete Errand:bindings
     loop for all bindings
-    Delete Errand->>CF:cf unbind-service
-      CF->>ODB: DELETE binding
-      ODB->>Service Adapter:delete-binding
-      Service Adapter->>ODB:exit code 0
-      ODB->>CF:OK
-      CF->>Delete Errand:OK
+    Delete Errand->>Cloud Foundry:cf unbind-service
+      Cloud Foundry->>On Demand Broker: DELETE binding
+      On Demand Broker->>Service Adapter:delete-binding
+      Service Adapter->>On Demand Broker:exit code 0
+      On Demand Broker->>Cloud Foundry:OK
+      Cloud Foundry->>Delete Errand:OK
     end
-    Delete Errand->>CF:cf delete-service
-    CF->>ODB:DELETE instance
-    ODB->>BOSH:delete deployment
-    BOSH->>ODB:accepted
-    ODB->>CF:accepted
-    Note over CF,BOSH:CF polls ODB for last operation until complete
-    CF->>Delete Errand:completed
+    Delete Errand->>Cloud Foundry:cf delete-service
+    Cloud Foundry->>On Demand Broker:DELETE instance
+    On Demand Broker->>BOSH:delete deployment
+    BOSH->>On Demand Broker:accepted
+    On Demand Broker->>Cloud Foundry:accepted
+    Note over Cloud Foundry,BOSH:Cloud Foundry polls On Demand Broker for last operation until complete
+    Cloud Foundry->>Delete Errand:completed
   end
   Delete Errand->>Operator:completed successfully
 </div>

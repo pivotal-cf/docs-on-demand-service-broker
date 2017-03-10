@@ -1,21 +1,21 @@
 <div class="mermaid">
 sequenceDiagram
-  User->>Cloud Foundry:cf delete-service
-  Cloud Foundry->>ODB:DELETE instance
-  ODB->>BOSH:delete deployment
-  BOSH->>ODB:accepted
-  ODB->>Cloud Foundry:accepted
-  Cloud Foundry->>User: delete in progress
+  User->>Cloud Controller:cf delete-service
+  Cloud Controller->>On Demand Broker:DELETE instance
+  On Demand Broker->>BOSH:delete deployment
+  BOSH->>On Demand Broker:accepted
+  On Demand Broker->>Cloud Controller:accepted
+  Cloud Controller->>User: delete in progress
   loop until bosh task is complete
-    Cloud Foundry->>ODB: GET last operation
-    ODB->>BOSH: GET task
-    BOSH->>ODB: task in progress
-    ODB->>Cloud Foundry: delete in progress
+    Cloud Controller->>On Demand Broker: GET last operation
+    On Demand Broker->>BOSH: GET task
+    BOSH->>On Demand Broker: task in progress
+    On Demand Broker->>Cloud Controller: delete in progress
   end
-  Cloud Foundry->>ODB: GET last operation
-  ODB->>BOSH: GET task
-  BOSH->>ODB: task done
-  ODB->>Cloud Foundry: delete succeeded
-  User->>Cloud Foundry:cf service
-  Cloud Foundry->>User: not found
+  Cloud Controller->>On Demand Broker: GET last operation
+  On Demand Broker->>BOSH: GET task
+  BOSH->>On Demand Broker: task done
+  On Demand Broker->>Cloud Controller: delete succeeded
+  User->>Cloud Controller:cf service
+  Cloud Controller->>User: not found
 </div>

@@ -1,7 +1,7 @@
 <div class="mermaid">
 sequenceDiagram
-  User->>Cloud Foundry:cf create-service-broker
-  Cloud Foundry->>ODB:GET catalog
-  ODB->>Cloud Foundry:catalog
-  Cloud Foundry->>User:OK
+  User->>Cloud Controller:cf create-service-broker
+  Cloud Controller->>On Demand Broker:GET catalog
+  On Demand Broker->>Cloud Controller:catalog
+  Cloud Controller->>User:OK
 </div>

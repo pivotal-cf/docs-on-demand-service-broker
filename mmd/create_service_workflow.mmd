@@ -1,23 +1,23 @@
 <div class="mermaid">
 sequenceDiagram
-  User->> Cloud Foundry: cf create-service
-  Cloud Foundry->> ODB: POST instance (provision)
-  ODB->>Service Adapter: generate-manifest
-  Service Adapter->>ODB: manifest
-  ODB->>BOSH: deploy
-  BOSH->>ODB: accepted
-  ODB->>Cloud Foundry: accepted
-  Cloud Foundry->>User: create in progress
+  User->> Cloud Controller: cf create-service
+  Cloud Controller->> On Demand Broker: POST instance (provision)
+  On Demand Broker->>Service Adapter: generate-manifest
+  Service Adapter->>On Demand Broker: manifest
+  On Demand Broker->>BOSH: deploy
+  BOSH->>On Demand Broker: accepted
+  On Demand Broker->>Cloud Controller: accepted
+  Cloud Controller->>User: create in progress
   loop until bosh task is complete
-    Cloud Foundry->>ODB: GET last operation
-    ODB->>BOSH: GET deploy task
-    BOSH->>ODB: task in progress
-    ODB->>Cloud Foundry: create in progress
+    Cloud Controller->>On Demand Broker: GET last operation
+    On Demand Broker->>BOSH: GET deploy task
+    BOSH->>On Demand Broker: task in progress
+    On Demand Broker->>Cloud Controller: create in progress
   end
-  Cloud Foundry->>ODB: GET last operation
-  ODB->>BOSH: GET task
-  BOSH->>ODB: task done
-  ODB->>Cloud Foundry: create succeeded
-  User->>Cloud Foundry:cf service
-  Cloud Foundry->>User: create succeeded
+  Cloud Controller->>On Demand Broker: GET last operation
+  On Demand Broker->>BOSH: GET task
+  BOSH->>On Demand Broker: task done
+  On Demand Broker->>Cloud Controller: create succeeded
+  User->>Cloud Controller:cf service
+  Cloud Controller->>User: create succeeded
 </div>
