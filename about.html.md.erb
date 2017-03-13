@@ -19,23 +19,11 @@ The central element behind a service tile is the service broker, but the tile so
 
 ## <a id="service-network"></a>BOSH 2.0 and Service Networks
 
-Before BOSH 2.0, cloud operators pre-provisioned service instances from Ops Manager. In the Ops Manager Director **Networking** pane, they allocated a block of IP addresses for the service instance pool, and under **Resource Config** they provisioned pool VM resources, specifying the CPU, hard disk, and RAM they would use. All instances had to be provisioned at the same level. With each `create-service` request from a developer, Ops Manager handed out a static IP address from this block, and with each `delete-service` it cleaned up the VM and returned it to the available pool.
-
-With BOSH 2.0 dynamic networking and Cloud Foundry asynchronous service provisioning, operators can now define a dynamically-provisioned service network that hosts instances more flexibly. The service network runs separate from the PCF default network. While the default network hosts VMs launched by Ops Manager, the VMs running in the service network are created and provisioned on-demand by BOSH, and BOSH lets the IaaS assign IP addresses to the service instance VMs. Each dynamic network attached to a job instance is typically represented as its own NIC in the IaaS layer.
-
-To create a service network, you add a network in the Ops Man Director tile **Create Networks** pane and select its **Service Network** checkbox. This prevents Ops Manager from creating VMs in the network, leaving instance creation to the underlying BOSH.
-
-![Service Network checkbox](img/service-network-checkbox.png)
+<%= partial 'service_networks' %>
 
 ## <a id="on-demand"></a>On-Demand Services
 
-On-demand services use the dynamically-provisioned service network to host the single-tenant worker VMs that run as service instances within development spaces. This architecture lets developers provision IaaS resources for their service instances at creation time, rather than the operator pre-provisioning a fixed quantity of IaaS resources when they deploy the service broker.
-
-By making services single-tenant, where each instance runs on a dedicated VM rather than sharing VMs with unrelated processes, on-demand services eliminate the "noisy neighbor" problem when one application hogs resources on a shared cluster. Single-tenant services can also support regulatory compliance where sensitive data must be compartmentalized across separate machines.
-
-An on-demand service splits its operations between the default network and the service network. Shared components of the service, such as executive controllers and databases, run centrally on the default network along with the Cloud Controller, UAA, and other PCF components. The worker pool deployed to specific spaces runs on the service network.
-
-![Default Network and Service Network](img/ODB-create-service.png)
+<%= partial 'on_demand_architecture' %>
 
 ## <a id="odb-sdk"></a>On-Demand Services SDK and the On-Demand Broker
 
