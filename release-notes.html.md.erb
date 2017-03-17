@@ -55,7 +55,7 @@ On PCF for GCP deployments, Ops Manager service network VMs are not assigned the
 ## <a id="breaking-changes"></a>Breaking Changes
 
 - `lastest` no longer permitted as an accepted value for `broker.service_deployment` stemcell and release versions as exact versions are required for the new cf update-service ODB workflow.
-- `generate-manifest` is now called twice by the ODB as part of the update service instance lifecyle. This means `generate-manifest` should be a pure function, respecting any previously set arbitary paramerteres in the `old-manifest` field.
+- `generate-manifest` is now called twice by the ODB as part of the update service instance lifecyle. This means `generate-manifest` should be a pure function, respecting any previously set arbitary parameters in the `old-manifest` field.
 - `active` flag for plans has been replaced with `cf_service_access`. [Docs](./operating.html#register)
 
 ## <a id="bug-fixes"></a>Bug fixes
