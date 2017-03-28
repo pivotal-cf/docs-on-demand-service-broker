@@ -423,9 +423,9 @@ Run the errand with `bosh run errand deregister-broker`.
 
 ### <a id="delete-instances"></a>Delete All Service Instances
 
-This errand deletes all service instances of your broker's service offering in every org and space of Cloud Foundry. It uses the Cloud Controller API to do this, and therefore only deletes instances the Cloud Controller knows about. It will not delete orphan BOSH deployments: those that don't correspond to a known service instance. This *should* never happen, but in practice it might. Use the [orphan-deployments errand](#listing-orphans) to identify them.
+This errand deletes all service instances of your broker's service offering in every org and space of Cloud Foundry. It uses the Cloud Controller API to do this, and therefore only deletes instances the Cloud Controller knows about. It will not delete orphan BOSH deployments: those that don't correspond to a known service instance. Orphan BOSH deployments *should* never happen, but in practice they might. Use the [orphan-deployments errand](#listing-orphans) to identify them.
 
-**This should only be done with extreme caution, when you want to totally destroy all the on-demand service instances in an environment.**
+**This errand should only be used with extreme caution when you want to totally destroy all of the on-demand service instances in an environment.**
 
 Add the following instance group to your manifest:
 
@@ -437,18 +437,15 @@ Add the following instance group to your manifest:
     - name: delete-all-service-instances
       release: *broker-release
       properties:
-        timeout_minutes: <time to wait for all instances to be deleted> # defaults to 60
-        disable_ssl_cert_verification: <true|false> # defaults to false
-        cf:
-          api_url: <cf-api-url>
-          admin_username: <cf-api-admin-username>
-          admin_password: <cf-api-admin-password>
+        polling_interval: <interval in seconds when waiting for service instance to be deleted> # defaults to 60
 
   vm_type: <vm-type>
   stemcell: <stemcell>
   networks: [{name: <network>}]
   azs: [<az>]
 ```
+
+ <p class="note">**Note**: The `polling_interval` default is set to 60 seconds because the Cloud Controller itself polls the on-demand broker every 60 seconds. Setting your polling interval to anything lower than 60 seconds will not speed up the errand.
 
 Run the errand with `bosh run errand delete-all-service-instances`.
 

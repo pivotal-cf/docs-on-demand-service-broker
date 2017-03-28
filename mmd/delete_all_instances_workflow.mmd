@@ -14,13 +14,29 @@ sequenceDiagram
       ODB->>CF:OK
       CF->>Delete Errand:OK
     end
+    Delete Errand->>CF:GET service keys
+    CF->>Delete Errand:service keys
+    loop for all service keys
+    Delete Errand->>CF:cf delete-service-key
+      CF->>ODB: DELETE binding
+      ODB->>Service Adapter:delete-binding
+      Service Adapter->>ODB:exit code 0
+      ODB->>CF:OK
+      CF->>Delete Errand:OK
+    end
     Delete Errand->>CF:cf delete-service
     CF->>ODB:DELETE instance
     ODB->>BOSH:delete deployment
     BOSH->>ODB:accepted
     ODB->>CF:accepted
-    Note over CF,BOSH:CF polls ODB for last operation until complete
-    CF->>Delete Errand:completed
+    CF->>Delete Errand:accepted
+    loop until DELETE completes
+      Delete Errand->>CF:GET instance
+      CF->>Delete Errand:delete instance in progress
+      Note over CF,BOSH: CF asynchronously polls ODB, which in turn polls BOSH for last operation status
+    end
+    Delete Errand->>CF:GET instance
+    CF->>Delete Errand:instance not found
   end
   Delete Errand->>Operator:completed successfully
 </div>
