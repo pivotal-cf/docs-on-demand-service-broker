@@ -113,14 +113,15 @@ For more accessors you can see the [ops-manager-example product](https://github.
 
 Ops Manager 1.9 RC1+ provides a VM extension called `public_ip` in the BOSH Director's cloud config. This can be used in the on-demand service broker's manifest to give instance groups a public IP address. This IP is only used for outgoing traffic to the internet from VMs with the `public_ip` extension. All internal traffic / incoming connections need to go over the private IP.
 
-Here is an example showing how to make assigning a public IP address to an on-demand service instance group configurable in the tile handcraft:
+Here is an example showing how to allow operators to assign a public IP address to an on-demand service instance group in the tile handcraft:
 
 ```yaml
 form_types:
 - name: example_form
   property_inputs:
-  - reference: .broker.example_instance_group_public_ip
-    label: Assign public IP address to example instance group
+  - reference: .broker.example_vm_extensions
+    label: VM options
+    description: List of VM options for Service Instances
 
 job_types:
 - name: broker
@@ -133,20 +134,15 @@ job_types:
         - name: example-plan
           instance_groups:
           - name: example-instance-group
-            vm_extensions:  ["(( .broker.example_instance_group_public_ip.value ? .broker.properties.public_ip_string.value : .broker.properties.null_string.value ))"]
+            vm_extensions: (( .broker.example_vm_extensions.value ))
   property_blueprints:
-  - name: example_instance_group_public_ip
-    type: boolean
+  - name: example_vm_extensions
+    type: multi_select_options
     configurable: true
-    default: false
-  - name: null_string
-    type: string
-    configurable: false
-    default: ~
-  - name: public_ip_string
-    type: string
-    configurable: false
-    default: "public_ip"
+    optional: true
+    options:
+    - name: "public_ip"
+      label: "Internet Connected VMs (on supported IaaS providers)"
 ```
 
 ## <a id="errands"></a>On-Demand Broker errands
