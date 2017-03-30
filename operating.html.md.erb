@@ -667,9 +667,18 @@ All ODB's logs have a UTC timestamp.
 
 ### <a id="metrics"></a>Metrics
 
-If you have [configured service metrics](#broker-metrics), then metrics should be visible from loggregator. You can consume these by using the [CF CLI firehose plugin](https://github.com/cloudfoundry/firehose-plugin).
+If you have [configured broker metrics](#broker-metrics), the broker will emit metrics to the CF firehose. You can, for example, consume these metrics by using the [CF CLI firehose plugin](https://github.com/cloudfoundry/firehose-plugin).
 
-For each plan, the metrics will report how many instances there are of that plan and if a quota is set how much of that quota is remaining. The metrics are in the format shown below.
+#### Service-level Metrics
+The broker will emit a metric indicating the total number of instances across all plans. In addition, if there is a global quota set for the service, a metric showing how much of that quota is remaining will be emitted. Service-level metrics use the format shown below.
+
+```
+origin:"<broker deployment name>" eventType:ValueMetric timestamp:<timestamp> deployment:"<broker deployment name>" job:"broker" index:"<bosh job index>" ip:"<IP>" valueMetric:<name:"/on-demand-broker/<service offering name>/total_instances" value:<instance count> unit:"count" >
+origin:"<broker deployment name>" eventType:ValueMetric timestamp:<timestamp> deployment:"<broker deployment name>" job:"broker" index:"<bosh job index>" ip:"<IP>" valueMetric:<name:"/on-demand-broker/<service offering name>/quota_remaining" value:<quota remaining> unit:"count" >
+```
+
+#### Plan-level Metrics
+For each service plan, the metrics will report the total number of instances for that plan. If there is a quota set for the plan, the metrics will also report how much of that quota is remaining. Plan-level metrics are emitted in the following format.
 
 ```
 origin:"<broker deployment name>" eventType:ValueMetric timestamp:<timestamp> deployment:"<broker deployment name>" job:"broker" index:"<bosh job index>" ip:"<IP>" valueMetric:<name:"/on-demand-broker/<service offering name>/<plan name>/total_instances" value:<instance count> unit:"count" >
