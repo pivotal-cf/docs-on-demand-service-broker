@@ -3,7 +3,7 @@ title: On-Demand Services SDK Release Notes
 owner: London Services Enablement
 ---
 
-# <a id="release-notes"></a>v0.15.0 Release Notes
+# <a id="release-notes"></a>v0.15.1 Release Notes
 
 ## <a id="minimum-version-requirements"></a>Minimum Version Requirements
 
@@ -14,25 +14,15 @@ owner: London Services Enablement
 # <a id="known-issues"></a>Known Issues
 
 <p class="note">
-ODB errands can only delete/upgrade the first 50 instances created. Advice is to configure the `global-quota` to `50` instances.
-</p>
-<p class="note">
-The `delete-all-service-instances` errand has a default timeout of 60 minutes which causes issues when uninstalling tiles with a large number of instances. This feature will be removed in 0.15.1. Please set this value to `10000` to avoid uninstall issues.
-</p>
-<p class="note">
 On PCF for GCP deployments, Ops Manager service network VMs are not assigned the correct firewall rules. As a result, these VMs cannot communicate with the BOSH Director and service tiles that use the On-Demand Service Broker (ODB) fail to create service instances. As a workaround, if you are deploying a service network in GCP, modify your firewall to use subnet CIDR-based rules.
 </p>
 
 ## <a id="new-features"></a>New Features
 
-### Application Developer Triggered Upgrades
+### Service Instance Locking Before Upgrades
 
-- Operator can turn on application developer triggered upgrades. [Docs](./operating.html#upgrade-individual-instances)
-  - To enable set ODB manifest flag `features.cf_user_triggered_upgrades` to `true` - default is to `false`.
-  - Operators can make any change to the service plan (stemcell, releases, properties) and the ODB will detect a `pending-change`
-  - ODB only detects manifest changes, not Cloud Config or Runtime Config changes.
-  - Once a pending change has been detected the cf cli user will need to trigger the change by passing the `apply-changes: true` paramater.
-  - When the feature is disabled, application developers will not be able to make changes to service instances with pending changes until the operator runs the `upgrade-all-service-instances` errand.
+- Operators can make any change to the service plan (stemcell, releases, properties) and the ODB will detect a `pending-change`. Once an instance has a pending change only the operator can upgrade it via the `upgrade-all-service-instances` errand. The CF user will be shown an error when they try to update an instance with pending-changes. 
+  - ODB only detects service instance deployment manifest changes, not Cloud Config or Runtime Config changes.
 - For create/update/delete operations that fail, the cf user will now be presented with a detailed error message that includes: odb-request-id, service-name, service-instance-guid, bosh-task-id, operator-type.
   - This should allow for quicker debugging interactions between the app developer and the operator
 
@@ -50,16 +40,19 @@ On PCF for GCP deployments, Ops Manager service network VMs are not assigned the
   - To disable service access, set `plan.cf_service_access` to `disable` - default is to `enable`.
   - To manually manage service access, set `plan.cf_service_access` to `manual`. You must then enable access via the cf cli.
 - Operators can set a global quota to limit the total number of service instances that can be created across all plans. [Docs](./operating.html#service-instance-quotas)
-  - To set a global quota, set `service_catalog.global_quotas.service_instance_limit` to the total number of instances (recommended maximum is 500).
+  - To set a global quota, set `service_catalog.global_quotas.service_instance_limit` to the total number of instances (recommended maximum is 50 for support reasons).
+- Support null objects in the plan array. ODB still requires at least one plan to be configured.
 
 ## <a id="breaking-changes"></a>Breaking Changes
 
 - `lastest` no longer permitted as an accepted value for `broker.service_deployment` stemcell and release versions as exact versions are required for the new cf update-service ODB workflow.
 - `generate-manifest` is now called twice by the ODB as part of the update service instance lifecyle. This means `generate-manifest` should be a pure function when call with a manifest in `previous-manifest-YAML` argument, respecting any previously set arbitary parameters in the `previous-manifest-YAML` object.
 - `active` flag for plans has been replaced with `cf_service_access`. [Docs](./operating.html#register)
+- `timeout_minutes` removed from the `delete-all-service-instances` job spec.
 
 ## <a id="bug-fixes"></a>Bug fixes
 
+- Resolves issues with ODB upgrade/delete errands not being able to work with over 50 service instances.
 - `pre-start` no longer changes ownership of co-located jobs packages.
 - Handle `null` for `vm_extensions` array. OpsManager can provide a `null` value for this field.
 - Reject requests to modify instances that have ongoing BOSH operations.
