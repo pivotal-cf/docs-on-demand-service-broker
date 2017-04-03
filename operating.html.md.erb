@@ -425,6 +425,14 @@ Run the errand with `bosh run errand deregister-broker`.
 
 This errand deletes all service instances of your broker's service offering in every org and space of Cloud Foundry. It uses the Cloud Controller API to do this, and therefore only deletes instances the Cloud Controller knows about. It will not delete orphan BOSH deployments: those that don't correspond to a known service instance. Orphan BOSH deployments *should* never happen, but in practice they might. Use the [orphan-deployments errand](#listing-orphans) to identify them.
 
+The errand will do the following operaitons:
+
+1. Unbind all applications from the service instances
+1. Delete all service instances sequentially
+1. Check if any instances have been created while the errand was running
+ 1. If instances are detected the errand will fail
+ 1. Re-run the errand
+
 **This errand should only be used with extreme caution when you want to totally destroy all of the on-demand service instances in an environment.**
 
 Add the following instance group to your manifest:
