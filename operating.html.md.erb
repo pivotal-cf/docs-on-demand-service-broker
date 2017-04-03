@@ -136,8 +136,6 @@ instance_groups:
                 client_secret: <bosh client secret>
           service_adapter:
             path: <path to service adapter binary> # optional, provided by the Service Author. Defaults to /var/vcap/packages/odb-service-adapter/bin/service-adapter
-          features: # optional
-            cf_user_triggered_upgrades: <true|false> # optional, defaults to false.
 
           # There are more broker properties that are discussed below
 ```
@@ -425,9 +423,17 @@ Run the errand with `bosh run errand deregister-broker`.
 
 ### <a id="delete-instances"></a>Delete All Service Instances
 
-This errand deletes all service instances of your broker's service offering in every org and space of Cloud Foundry. It uses the Cloud Controller API to do this, and therefore only deletes instances the Cloud Controller knows about. It will not delete orphan BOSH deployments: those that don't correspond to a known service instance. This *should* never happen, but in practice it might. Use the [orphan-deployments errand](#listing-orphans) to identify them.
+This errand deletes all service instances of your broker's service offering in every org and space of Cloud Foundry. It uses the Cloud Controller API to do this, and therefore only deletes instances the Cloud Controller knows about. It will not delete orphan BOSH deployments: those that don't correspond to a known service instance. Orphan BOSH deployments *should* never happen, but in practice they might. Use the [orphan-deployments errand](#listing-orphans) to identify them.
 
-**This should only be done with extreme caution, when you want to totally destroy all the on-demand service instances in an environment.**
+The errand will do the following operaitons:
+
+1. Unbind all applications from the service instances
+1. Delete all service instances sequentially
+1. Check if any instances have been created while the errand was running
+ 1. If instances are detected the errand will fail
+ 1. Re-run the errand
+
+**This errand should only be used with extreme caution when you want to totally destroy all of the on-demand service instances in an environment.**
 
 Add the following instance group to your manifest:
 
@@ -439,18 +445,15 @@ Add the following instance group to your manifest:
     - name: delete-all-service-instances
       release: *broker-release
       properties:
-        timeout_minutes: <time to wait for all instances to be deleted> # defaults to 60
-        disable_ssl_cert_verification: <true|false> # defaults to false
-        cf:
-          api_url: <cf-api-url>
-          admin_username: <cf-api-admin-username>
-          admin_password: <cf-api-admin-password>
+        polling_interval: <interval in seconds when waiting for service instance to be deleted> # defaults to 60
 
   vm_type: <vm-type>
   stemcell: <stemcell>
   networks: [{name: <network>}]
   azs: [<az>]
 ```
+
+ <p class="note">**Note**: The `polling_interval` default is set to 60 seconds because the Cloud Controller itself polls the on-demand broker every 60 seconds. Setting your polling interval to anything lower than 60 seconds will not speed up the errand.
 
 Run the errand with `bosh run errand delete-all-service-instances`.
 
@@ -504,7 +507,7 @@ To update the service offering:
 
 After changing the `service_catalog`, you should run the [register-broker errand](#register) to update the Cloud Foundry marketplace.
 
-When the plans are updated in the `service_catalog`, then upgrades will need to be applied to existing service instances. See [upgrading individual service instances](#upgrade-individual-instances) and [upgrading all service instances](#upgrade-all-instances).
+When the plans are updated in the `service_catalog`, then upgrades will need to be applied to existing service instances. See [upgrading all service instances](#upgrade-all-instances).
 
 ### <a id="disabling-service-plans"></a>Disable Service Plans
 
@@ -556,7 +559,7 @@ To upgrade all existing instances you can run the [upgrade-all-service-instances
 
 ### <a id="upgrade-individual-instances"></a>Upgrade an Individual Service Instance
 
-By default, Cloud Foundry users cannot upgrade their service instances to the latest service offering.
+Cloud Foundry users cannot upgrade their service instances to the latest service offering.
 
 Until a service instance has been upgraded, Cloud Foundry users cannot set parameters, or change plan until the service instance has been upgraded by an operator:<pre class="terminal">
 $ cf update-service my-redis -c '{"maxclients": 10000}'
@@ -566,19 +569,6 @@ Server error, status code: 502, error code: 10001, message: Service broker error
 </pre>
 
 Operators should run the [upgrade-all-service-instances errand](#upgrade-instances) to upgrade all service instances to the latest service offering.
-
-#### Enabling CF User Triggered Upgrades
-
-Set the `cf_user_triggered_upgrades` feature to `true` in the [core broker configuration](#core-broker-config), to allow Cloud Foundry users to upgrade their service instances to the latest service offering.
-
-Then, users can upgrade with this command: `cf update-service SERVICE_NAME -c '{"apply-changes": true}'`.
-
-Cloud Foundry users cannot set any other parameters, or change plan until the service instance has been upgraded:<pre class="terminal">
-$ cf update-service my-redis -c '{"maxclients": 10000}'
-Updating service instance my-redis as admin...
-FAILED
-Server error, status code: 502, error code: 10001, message: Service broker error: There are pending changes to your service instance, you must first run cf update-service \<service-name\> -c '{"apply-changes": true}', no other arbitrary parameters or plan changes are allowed.
-</pre>
 
 ### <a id="upgrade-all-instances"></a>Upgrade All Service Instances
 
@@ -593,6 +583,8 @@ To upgrade all existing service instances after the service offering has been up
       jobs:
         - name: upgrade-all-service-instances
           release: <odb-release-name>
+          properties:
+            polling_interval: <interval in seconds when waiting for service instance to be upgraded> # defaults to 60
       vm_type: <vm-type>
       stemcell: <stemcell>
       networks: [{name: <network>}]
