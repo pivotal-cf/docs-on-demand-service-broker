@@ -64,6 +64,7 @@ A Service Adapter is an executable invoked by ODB. It is expected to respond to 
 - `delete-binding`
   Invalidate the created credentials, if possible. Some services (e.g. Redis) are single-user, and this endpoint will do nothing.
 
+<p class="note">**Note**: The ODB requires generate-manifest to be a pure function when a previous manifest is supplied (updating a deployment scenario): given the same arguments the command should always output the same BOSH manifest.</p>
 
 The parameters, and expected output from these subcommands will be explained in detail below. For each of these subcommands, exit status 0 indicates that the command succeeded exit status 10 indicates not implemented, and any non-zero status indicates failure.
 
@@ -144,7 +145,7 @@ service-adapter generate-manifest [service-deployment-JSON] [plan-JSON] [request
 
 The generate-manifest subcommand takes in 5 arguments and returns a BOSH deployment manifest YAML.
 
-  <p class="note">**Note**: The ODB requires generate-manifest to be a pure function: given the same arguments the command should always output the same BOSH manifest.</p>
+<p class="note">**Note**: The ODB requires generate-manifest to be a pure function when a previous manifest is supplied (updating a deployment scenario): given the same arguments the command should always output the same BOSH manifest.</p>
 
 <a id="generate-manifest-output"></a>
 #### Output
