@@ -594,10 +594,11 @@ Any error returned by the interface functions is considered to be for the Cloud 
 
 The adapter code is responsible for performing any error logging to stderr that the authors think is relevant for the operator logs.
 
-There are two specialised errors for the `CreateBinding` function, which allow the adapter to exit with the appropriate code:
+There are three specialised errors for the `CreateBinding` function, which allow the adapter to exit with the appropriate code:
 
 ```go
 serviceadapter.NewBindingAlreadyExistsError()
+serviceadapter.NewBindingNotFoundError()
 serviceadapter.NewAppGuidNotProvidedError()
 ```
 
