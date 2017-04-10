@@ -72,7 +72,7 @@ The parameters, and expected output from these subcommands will be explained in 
 
 If a subcommand fails, the adapter must return a non-zero exit status, and may optionally print to stdout and/or stderr.
 
-Anything printed to stdout will be returned to the CF CLI user.
+When a subcommand exits with an unrecognized exit code anything printed to stdout will be returned to the CF CLI user.
 
 Both the stdout and stderr streams will be printed in the broker log for the operator. For that reason, we recommend not printing the manifest or other sensitive details to stdout/stderr, as the ODB does no validation on this output.
 
