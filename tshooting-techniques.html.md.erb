@@ -123,7 +123,7 @@ To reinstall a tile in the same environment where it was previously uninstalled:
 1. `bosh login` as an admin user
 1. `bosh deployments` does not show a deployment for the service. For example no `p-concourse-$guid` deployment exists
 1. Before reinstalling a tile all previous service instances and service brokers must be deleted from the BOSH director
-1. If the service broker still exists then run the [Delete All Service Instances errand](./techniques.html#delete-all) and then [degregister-broker errand]()
+1. If the service broker still exists then run the [Delete All Service Instances errand](#delete-all) and then [degregister-broker errand]()
 1. Next delete the service broker BOSH deployment
 1. Finally install the tile again
 
@@ -150,7 +150,7 @@ bosh run errand register-broker
 
 ### <a id="deregister-broker"></a>Deregister Broker
 
-This errand deregisters a broker from Cloud Foundry. It requires that there are no existing service instances. You can use the [Delete All Service Instances errand](./techniques.html#delete-all) to delete any existing service instances that are problematic.
+This errand deregisters a broker from Cloud Foundry. It requires that there are no existing service instances. You can use the [Delete All Service Instances errand](#delete-all) to delete any existing service instances that are problematic.
 
 The errand will do the following operations:
 
@@ -294,11 +294,11 @@ Quota saturation and total number of service instances are available via ODB met
 
 ## <a id="support"></a>File a Support Ticket
 
-You can file a support ticket [here](https://support.pivotal.io/). Please be sure to provide the [error message](./techniques.html#parse-error) from 
+You can file a support ticket [here](https://support.pivotal.io/). Please be sure to provide the [error message](#parse-error) from 
 ```
 $ cf service <your-service>
 ``` 
-Please also provide your [service broker logs](./techniques.html#access-broker), your [service instance logs](./techniques.html#access-instance) and [BOSH task output](./techniques.html./techniques.html#parse-error), if a `task-id` is provided as part of the `cf service <your-service>` output, to help expedite troubleshooting.
+Please also provide your [service broker logs](#access-broker), your [service instance logs](#access-instance) and [BOSH task output](#parse-error), if a `task-id` is provided as part of the `cf service <your-service>` output, to help expedite troubleshooting.
 
 ## <a id="kb"></a>Knowledge Base (Community)
 

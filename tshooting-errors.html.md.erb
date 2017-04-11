@@ -24,8 +24,8 @@ Start here if you're responding to a specific errors or error messages.
 	- CF cannot reach the service broker
 	- CF cannot reach the service instances
 	- The service network cannot access the BOSH director	
-1. [Register broker errand](./techniques.html#register-broker) fails
-1. The [Smoke test errand](./techniques.html#smoke-test) failed
+1. [Register broker errand](./tshooting-techniques.html#register-broker) fails
+1. The [Smoke test errand](./tshooting-techniques.html#smoke-test) failed
 1. Resource sizing issues - These occur when the resource sizes selected for a given plan are less than the service requires to function. Check your resource configuration in Ops Manager and ensure that the configuration matches that recommended by the service.
 1. Service specific issues
 
@@ -109,12 +109,12 @@ Make sure that these networks can access each other.
 
 ## <a id="support"></a>File a Support Ticket
 
-You can file a support ticket [here](https://support.pivotal.io/). Please be sure to provide the [error message](./techniques.html#parse-error) from 
+You can file a support ticket [here](https://support.pivotal.io/). Please be sure to provide the [error message](./tshooting-techniques.html#parse-error) from 
 <pre class="terminal">
 $ cf service my-service
 </pre>
 
-Please also provide your [service broker logs](./techniques.html#access-broker), your [service instance logs](./techniques.html#access-instance) and [BOSH task output](./techniques.html./techniques.html#parse-error), if a `task-id` is provided as part of the `cf service <your-service>` output, to help expedite troubleshooting.
+Please also provide your [service broker logs](./tshooting-techniques.html#access-broker), your [service instance logs](./tshooting-techniques.html#access-instance) and [BOSH task output](./tshooting-techniques.html./tshooting-techniques.html#parse-error), if a `task-id` is provided as part of the `cf service <your-service>` output, to help expedite troubleshooting.
 
 ## <a id="kb"></a>Knowledge Base (Community)
 
