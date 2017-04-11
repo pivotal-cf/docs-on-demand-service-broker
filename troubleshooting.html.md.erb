@@ -1,0 +1,30 @@
+---
+title: On-Demand Services Troubleshooting Guide
+owner: London Services Enablement
+---
+
+To get started, click on one of the links below:
+
+## [Errors](./tshooting-errors.html)
+
+Start here if you're responding to a specific errors or error messages.
+
+## [Components](./tshooting-components.html)
+
+Guidance on checking for and fixing issues in the ODB components
+
+## [Techniques](./tshooting-techniques.html)
+
+Instructions on interacting with the on-demand service broker and on-demand service instance BOSH deployments, and on performing general maintenance and housekeeping tasks
+
+### File a Support Ticket
+
+You can file a support ticket [here](https://support.pivotal.io/). Please be sure to provide the [error message](./techniques.html#parse-error) from 
+```
+$ cf service <your-service>
+``` 
+Please also provide your [service broker logs](./techniques.html#access-broker), your [service instance logs](./techniques.html#access-instance) and [BOSH task output](./techniques.html./techniques.html#parse-error), if a `task-id` is provided as part of the `cf service <your-service>` output, to help expedite troubleshooting.
+
+### Knowledge Base (Community)
+
+Imagine a world where we autopopulate the first 10 hits from http://discuss.pivotal.io . For now, you'll just have to click on the link.

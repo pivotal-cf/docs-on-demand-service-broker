@@ -1,0 +1,305 @@
+---
+title: Troubleshooting Techniques
+owner: London Services Enablement
+---
+
+<style>
+    .note.warning {
+        background-color: #fdd;
+        border-color: #fbb
+    }
+
+    .note.warning:before {
+        color: #f99;
+    }
+</style>
+
+Instructions on interacting with the on-demand service broker and on-demand service instance BOSH deployments, and on performing general maintenance and housekeeping tasks
+
+## <a id="bosh-cf-access"></a>Use BOSH and CF to access logs and SSH
+
+1. Follow the steps described here to [target your BOSH CLI](https://docs.pivotal.io/pivotalcf/1-9/customizing/trouble-advanced.html#prepare) and [log-in to your CF CLI](https://docs.cloudfoundry.org/cf-cli/getting-started.html)
+
+### <a id="access-broker"></a>Access Broker Logs and VM(s)
+
+1. Identify the ODB deployment using 
+```
+$ bosh deployments
+```
+1. Download the ODB manifest using 
+```
+$ bosh download manifest ODB-DEPLOYMENT-NAME odb.yml
+```
+1. Select the ODB deployment using 
+```
+$ bosh deployment odb.yml
+```
+1. View VMs in the deployment using 
+```
+$ bosh instances
+```
+1. Download broker logs by using the 
+```
+$ bosh logs INSTANCE-ID
+```
+1. To ssh onto the VM use 
+```
+$ bosh ssh INSTANCE-ID
+```
+
+### <a id="access-instance"></a>Access Service Instance Logs and VMs
+
+1. To target an individual service instance deployment, retrieve the 
+the guid of your service instance with the CF CLI command 
+```
+$ cf service MY-SERVICE --guid
+```
+
+1. Pre-pend the text `service_instance-` to the guid you just obtained to create the ID that BOSH uses for your service instance (e.g. if your guid is `1Hy6H`, this becomes `service_instance-1Hy6H`).
+
+1. Download your bosh manifest for the service using 
+```
+$ bosh download manifest SERVICE-INSTANCE-GUID MY-SERVICE.yml
+```
+1. Select the deployment using 
+```
+$ bosh deployment MY-SERVICE.yml
+```
+1. View VMs in the deployment using 
+```
+$ bosh instances
+```
+1. Download instance logs by using the 
+```
+$ bosh logs INSTANCE-ID
+```
+1. To ssh onto the VM use 
+```
+$ bosh ssh INSTANCE-ID
+```
+
+## <a id="parse-error"></a>Parse a CF error message
+
+Failed operations (create, update, bind, unbind, delete) will result in an error message that can be retrieved using the CF cli
+
+<pre class="terminal">
+$ cf service myservice
+
+Service instance: myservice
+Service: super-db
+Bound apps:
+Tags:
+Plan: dedicated-vm
+Description: Dedicated Instance
+Documentation url:
+Dashboard: 
+
+Last Operation
+Status: create failed
+Message: Instance provisioning failed: There was a problem completing your request. 
+		 Please contact your operations team providing the following information: 
+		 service: redis-acceptance, 
+		 service-instance-guid: ae9e232c-0bd5-4684-af27-1b08b0c70089,
+		 broker-request-id: 63da3a35-24aa-4183-aec6-db8294506bac, 
+		 task-id: 442, 
+		 operation: create
+Started: 2017-03-13T10:16:55Z
+Updated: 2017-03-13T10:17:58Z
+</pre>
+
+The information under the "Message" field can be used to debug further. Please provide this information to Pivotal Support when filing a ticket.
+
+The `task-id` field maps to the BOSH task id. For further information on a failed BOSH task, use the `bosh task <task-id>` command in the BOSH CLI.
+
+The `broker-request-guid` maps to the portion of the On-Demand Broker log containing the failed step. Access the broker log via your syslog aggregator, or access bosh logs for the broker by typing `bosh logs broker 0`. If you have more than one broker instance, you will need to repeat this process for each instance.
+
+## <a id="reinstall"></a>Reinstall a Tile
+
+To reinstall a tile in the same environment where it was previously uninstalled:
+
+1. Ensure that the previous tile was correctly uninstalled
+1. `cf login` as an admin user
+1. `cf m` does not list the service
+1. `bosh login` as an admin user
+1. `bosh deployments` does not show a deployment for the service. For example no `p-concourse-$guid` deployment exists
+1. Before reinstalling a tile all previous service instances and service brokers must be deleted from the BOSH director
+1. If the service broker still exists then run the [Delete All Service Instances errand](./techniques.html#delete-all) and then [degregister-broker errand]()
+1. Next delete the service broker BOSH deployment
+1. Finally install the tile again
+
+## <a id="broker-errands"></a>Service Broker Errands
+
+### <a id="register-broker"></a>Register Broker
+
+This errand registers the broker with Cloud Foundry and enables access to plans in the service catalog. The errand should be run whenever the broker is re-deployed with new catalog metadata to update the Cloud Foundry catalog.
+
+Plans with disabled service access will not be visible to non-admin Cloud Foundry users (including Org Managers and Space Managers). Admin Cloud Foundry users can see all plans including those with disabled service access.
+
+The errand will do the following operaitons:
+
+- Register the service broker with Cloud Controller
+- Enable service access for any plans that have the radio button set to `enabled` in the tile plan page.
+- Disable service access for any plans that have the radio button set to `disabled` in the tile plan page.
+- Do nothing for any for any plans that have the radio button set to `manual`
+
+To run this errand use the following BOSH command against the on-demand service broker deployment:
+
+```
+bosh run errand register-broker
+```
+
+### <a id="deregister-broker"></a>Deregister Broker
+
+This errand deregisters a broker from Cloud Foundry. It requires that there are no existing service instances. You can use the [Delete All Service Instances errand](./techniques.html#delete-all) to delete any existing service instances that are problematic.
+
+The errand will do the following operations:
+
+- Delete the service broker from Cloud Controller
+- Fail if there are any service instances, with or without bindings
+
+To run this errand use the following BOSH command against the on-demand service broker deployment:
+
+```
+bosh run errand deregister-broker
+```
+
+### <a id="upgrade-all"></a>Upgrade All Service Instances
+
+If you have made changes to the plan defintion or uploaded a new tile into OpsManager you may want to upgrade all the services to the latest software / plan definition. 
+
+To do this you can either select the errand through the OpsManager UI and have this happen along with the `apply-changes` action or run the errand directly.
+
+The errand will do the following operaitons:
+
+- Collect all of the service instances the on-demand broker has registered
+- For each instance the errand will serially:
+	- Issue an upgrade command to the on-demand broker 
+	- The on-demand broker will re-generate the service instance manifest based on its latest configuration from the tile.
+	- The on-demand broker will deploy the new mainfest for the service instance.
+	- The errand will wait for this operation to complete, then proceed to the next instance.
+- Any instances that have ongoing BOSH tasks at the time of upgrade will be added to a retry list.
+- Any instances in the retry list will be retried at the end of the errand until all are upgraded.
+- If any instance fails to upgrade the errand will fail immediately.
+	- This prevents any systemic problem from spreading to the rest of your service instances. 
+
+### <a id="detect-orphans"></a>Detect Orphaned Service Instances 
+
+A service instance is defined as ‘Orphaned’ when the BOSH deployment for the instance is still running, but the service is no longer registered in Cloud Foundry.
+
+The orphan-deployments errand will collate a list of service deployments that have no matching service instances in Cloud Foundry and return the list to the operator. It is then up to the operator to remove the orphaned bosh deployments.
+
+To run this errand use the following BOSH command against the on-demand service broker deployment:
+
+```
+bosh run errand orphan-deployments
+```
+
+If orphan deployments are present, the errand will output a list of deployment names:
+
+```
+[stdout]
+[{"deployment_name":"service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3"}]
+
+[stderr]
+None
+
+Errand 'orphan-deployments' completed successfully (exit code 0)
+```
+
+To cleanup orphaned instances you can perform the following actions:
+
+<p class="note warning">
+<strong>WARNING: </strong> Deleting the bosh deployment will destroy the vm, any data present will be lost.
+</p>
+
+To delete the orphan deployment run the following BOSH command:
+```
+bosh delete deployment service-instance_$GUID
+```
+
+### <a id="delete-all"></a>Delete All Service Instances
+
+This errand deletes all service instances of your broker’s service offering in every org and space of Cloud Foundry. It uses the Cloud Controller API to do this, and therefore only deletes instances the Cloud Controller knows about. It will not delete orphan BOSH deployments: those that don’t correspond to a known service instance. Orphan BOSH deployments should never happen, but in practice they might. Use the orphan-deployments errand to identify them.
+
+The errand will do the following operations:
+
+- Unbind all applications from the service instances
+- Delete all service instances sequentially
+- Check if any instances have been created while the errand was running
+- If instances are detected the errand will fail 
+
+<p class="note warning">
+<strong>WARNING: </strong> This errand should only be used with extreme caution when you want to totally destroy all of the on-demand service instances in an environment.
+</p>
+
+To run this errand use the following BOSH command against the on-demand service broker deployment:
+
+```
+bosh run errand delete-all-service-instances
+```
+
+## <a id="view-resources"></a>View Resource Saturation and Scaling
+
+Once a deployment has been selected, you can use the `bosh vms --vitals` or the `bosh instances --vitals` commands to view current resource utilization. You can also view process level information by using `bosh instances --ps`.
+
+## <a id="id-instance-owner"></a>Identify Service Instance Owner
+If you have spotted a failing deployment, you can identify which org/space owns this service instance, as well as retrieve a list of apps bound to it by following the steps below: 
+
+1. `bosh vms $deployment` shows a vm in failing state
+1. Take the deployment name and strip the `service-instance_` leaving you with a `guid`
+1. Login to CF using a CF Admin user
+1. Run 
+```
+$ cf curl /v2/service_instances/:guid | grep "space_url"
+"space_url": "/v2/spaces/$space_guid"
+```
+2. Take the space url and run 
+```
+$ cf curl /v2/spaces/$space_guid | grep -E "name|organization_url"
+"name": "myspace",
+"organization_url": "/v2/organizations/$org_guid"
+```
+
+3. Take the organization_url and run 
+```
+cf curl /v2/organizations/$org_guid | grep “name”
+"name": "myorg"
+```
+
+4. Combine the output of the names to give you the org and space of the service instance. 
+From here run:
+```
+cf target -o $org -s $space
+``` 
+5. `cf services` shows you all the services and bound apps
+6. To find who is the space manger run:
+```
+cf curl /v2/spaces/$space_guid/managers
+```
+7. Use this information to contact the manager if needed 
+
+## <a id="monitor-quota"></a>Monitor Quota Saturation and Service Instance Count
+
+Quota saturation and total number of service instances are available via ODB metrics emitted to loggregator. The metric names are shown below:
+
+| **Metric Name**                                                           | **Description**                                           |
+|---------------------------------------------------------------------------|-----------------------------------------------------------|
+| `on-demand-broker/{service-name-marketplace}/quota_remaining`             | global quota remaining for all instances across all plans |
+| `on-demand-broker/{service-name-marketplace}/{plan_name}/quota_remaining` | quota remaining for a particular plan                     |
+| `on-demand-broker/{service-name-marketplace}/total_instances`             | total instances created across all plans                  |
+| `on-demand-broker/{service-name-marketplace}/{plan_name}/total_instances` | total instances created for a given plan                  |
+
+!!! note
+	Quota metrics are not emitted if no quota has been set.
+
+## <a id="support"></a>File a Support Ticket
+
+You can file a support ticket [here](https://support.pivotal.io/). Please be sure to provide the [error message](./techniques.html#parse-error) from 
+```
+$ cf service <your-service>
+``` 
+Please also provide your [service broker logs](./techniques.html#access-broker), your [service instance logs](./techniques.html#access-instance) and [BOSH task output](./techniques.html./techniques.html#parse-error), if a `task-id` is provided as part of the `cf service <your-service>` output, to help expedite troubleshooting.
+
+## <a id="kb"></a>Knowledge Base (Community)
+
+Imagine a world where we autopopulate the first 10 hits from http://discuss.pivotal.io . For now, you'll just have to click on the link.

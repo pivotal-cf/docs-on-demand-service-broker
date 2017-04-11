@@ -1,0 +1,179 @@
+---
+title: Troubleshooting Components
+owner: London Services Enablement
+---
+
+<style>
+    .note.warning {
+        background-color: #fdd;
+        border-color: #fbb
+    }
+
+    .note.warning:before {
+        color: #f99;
+    }
+</style>
+
+Guidance on checking for and fixing issues in the ODB components.
+
+## <a id="bosh"></a>BOSH problems
+
+### <a id="no-bosh-uuid"></a>Missing BOSH Director UUID
+
+If using the BOSH v1 CLI you need to re-add the director\_uuid to the manifest
+```
+bosh status --uuid
+```
+Edit the manifest and add the `director_uuid: ` from the previous command at the top of the manifest. For more, see https://bosh.io/docs/manifest-v2.html#deployment 
+
+### <a id="large-queue"></a>Large BOSH Queue
+
+OpsManager currently deploys two BOSH workers. On-demand service brokers will add tasks to the BOSH queue. Until the workers reach the queued items the application developer will see `create in progess` in the CF CLI. 
+
+The number of BOSH workers will become configurable in future version of OpsManager.
+
+## <a id="bosh-config"></a>Configuration
+
+### <a id="bosh-instance-fail"></a>Service instances in failing state
+
+You may have configured a VM / Disk type in tile plan page in OpsManager that is too low for the service instance to start. Please see tile specific guideance on resource requirements.
+
+## <a id="auth"></a>Authentication
+
+### <a id="uaa-change"></a>UAA Changes
+
+If you have rotated any UAA users credentials then you may see authenticiatin issues in the service broker logs. 
+
+To resolve this you should redeloy the service tile in OpsManager, which will provide the broker with the latest configuration.
+
+!!! note
+	You must ensure that any changes to UAA credentials are reflected in the OpsManager `credentials` tab of the Elastic Runtime Tile.
+
+## <a id="network"></a>Networking
+
+Common issues include:
+
+1. Network latency issues when connecting to the service instance to create or delete a binding. Solution is to try again or improve network performance
+1. Network firewall rules are blocking connections from the service broker to the service instance. In OpsManager go into the tile and see the two networks that are configured in the networks tab. Ensure that these networks allow access to each other.
+1. Network firewall rules are blocking connections from the service network to the BOSH director network. Service instances must have access to the director so that the BOSH agents can report in.
+1. Cloud Foundry application security groups may not be configured to allow access to the service network. This is required to allow applications on the runtime to connect to services.
+1. There could also be a problem accessing BOSH’s UAA or the BOSH director. Follow network troubleshooting and check BOSH director is online
+
+### <a id="broker-to-instances"></a>Validate Service Broker Connectivity to Service Instances
+
+To validate you can `bosh ssh` onto the service broker by first downloading the broker manifest and targeting the deployment, and try to reach the service instance. If no BOSH task-id is in the error message, then look in the broker log using the broker-request-id from the task.
+
+### <a id="app-to-instances"></a>Validate App Access to Service Instance
+
+You can use `cf ssh` to gain access to the application container and then attempt to connect to the service instance using the binding detailed in the `VCAP_SERVICES` environment variable.
+
+## <a id="quotas"></a>Quotas
+
+### <a id="plan-quotas"></a>Plan Quota issues
+
+If you see the following error:
+
+```
+Message: Service broker error: The quota for this service plan has been exceeded. 
+Please contact your Operator for help.
+```
+
+1. Check your current plan quota - TODO - write operator facing docs for ODB metrics 
+1. Increase the plan quota
+1. Log into ops manager
+1. Reconfigure the quota on the plan page
+1. Deploy the tile
+1. Find who is using the plan quota and take the appropriate action - TODO CF workflow
+
+### <a id="global-quotas"></a>Global Quota Issues
+
+If you see this error:
+
+```
+Message: Service broker error: The quota for this service has been exceeded. 
+Please contact your Operator for help.
+```
+
+1. Check your current global quota - TODO OpsManager workflow
+1. Increase the global quota 
+1. Log into ops manager
+1. Reconfigure the quota on the on-demand settings page
+1. Deploy the tile
+1. Find out who is using the quota and take the appropriate action - TODO CF workflow
+
+### <a id="failing-jobs"></a>Failing jobs and unhealthy instances
+
+To determine whether there is an issue with the service deployment
+
+<pre class="terminal">
+$ bosh vms --vitals service-instance_$guid
+</pre>
+
+For additional information
+
+<pre class="terminal">
+$ bosh instances --ps --vitals
+</pre>
+
+If the VM is failing you will need to follow the service specific information, as any unadvised corrective actions (such as running bosh restart on a VM) may cause issues in the service instance.
+
+## <a id="missing-logs"></a>Missing logs and metrics
+
+If no logs are being emitted by the on-demand broker, check that your syslog forwarding address is correct in Ops Manager.
+
+To verify if metrics are being emitted to the firehose:
+
+1. Install the [`cf nozzle` plugin](https://github.com/cloudfoundry/firehose-plugin)
+1. `grep` the output of `cf nozzle` for the name of your service: 
+<pre class="terminal">
+$ cf nozzle -f ValueMetric | grep --line-buffered “on-demand-broker/my-service” 
+</pre>
+
+If no metrics appear within 5 minutes:
+Verify that the broker network has access to the loggregator system, on all required ports. [Contact Pivotal support](#filing-a-support-ticket) if you are unable to resolve the issue. 
+
+## <a id="orphan"></a>Orphaned Instances
+
+If you have orphaned instances (instances that are recognized by CF but not by BOSH or vice versa), you can remove the deployment from BOSH and CF directly:
+
+1. To find orphaned instances, run the `orphan-deployments` bosh errand
+<pre class="terminal">
+$ bosh run errand orphan-deployments
+</pre>
+
+1. Run 
+<pre class="terminal">
+$ cf service --guid
+</pre>
+
+1. Record this guid
+
+1. Run
+<pre class="terminal">
+$ bosh delete deployment service-instance_$guid
+</pre>
+
+1. If this fails, you can ignore any errors while deleting by running 
+<pre class="terminal">
+$ bosh delete deployment service-instance_$guid --force
+</pre>
+<p class="note warning">
+<strong>WARNING: </strong> This may leave IaaS resources in an unusable state.
+</p>
+
+1. Next purge the service instance in CF
+```
+$ cf purge-service-instance myservices
+```
+
+## <a id="support"></a>File a Support Ticket
+
+You can file a support ticket [here](https://support.pivotal.io/). Please be sure to provide the [error message](./techniques.html#parse-error) from 
+```
+$ cf service <your-service>
+``` 
+Please also provide your [service broker logs](./techniques.html#access-broker) and your [service instance logs](./techniques.html#access-instance) to help expedite troubleshooting.
+
+## <a id="kb"></a>Knowledge Base (Community)
+
+Imagine a world where we autopopulate the first 10 hits from http://discuss.pivotal.io . For now, you'll just have to click on the link.

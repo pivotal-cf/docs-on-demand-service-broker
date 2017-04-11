@@ -1,0 +1,121 @@
+---
+title: Troubleshooting Errors
+owner: London Services Enablement
+---
+
+<style>
+    .note.warning {
+        background-color: #fdd;
+        border-color: #fbb
+    }
+
+    .note.warning:before {
+        color: #f99;
+    }
+</style>
+
+Start here if you're responding to a specific errors or error messages.
+
+## <a id="install-fail"></a>Failed Install
+
+1. [Certificate issues]() - (link TK) ODB requires valid certificates. Ensure that your certificates are valid and generate new ones if necessary via Ops Manager 
+1. Deploy fails - Deploys can fail for a variety of reasons. View the logs via Ops Manager to determine why the deploy is failing.
+1. [Networking problems](./components.html#networking) - These can occur when:
+	- CF cannot reach the service broker
+	- CF cannot reach the service instances
+	- The service network cannot access the BOSH director	
+1. [Register broker errand](./techniques.html#register-broker) fails
+1. The [Smoke test errand](./techniques.html#smoke-test) failed
+1. Resource sizing issues - These occur when the resource sizes selected for a given plan are less than the service requires to function. Check your resource configuration in Ops Manager and ensure that the configuration matches that recommended by the service.
+1. Service specific issues
+
+## <a id="upgrade-fail"></a>Failed Upgrade
+
+## <a id="cannot-create-delete"></a>Devs Cannot Create or Delete Service Instances
+
+ 
+```
+Instance provisioning failed: There was a problem completing your request. Please contact your operations team providing the following information: service: redis-acceptance, service-instance-guid: ae9e232c-0bd5-4684-af27-1b08b0c70089, broker-request-id: 63da3a35-24aa-4183-aec6-db8294506bac, task-id: 442, operation: create
+``` 
+Check the BOSH task information:
+Follow the advanced BOSH troubleshooting guide to log in to BOSH and target the service instance using the instructions on parsing an error message.
+
+`bosh task $task-id` from the error above
+
+1. Configuration errors: If the BOSH error shows a problem with the deployment manifest
+
+Get the service-instance-manifest:
+`bosh download manifest service-instance_$guid myservice.yml`
+
+[Access the broker logs]()  and use the `broker-request-id` from the error message above to search the log for more information.
+
+2. [Authentication errors]()
+
+3. [Network errors]()
+
+4. [Quota errors]() 
+
+## <a id="cannot-bind"></a>Devs Cannot Bind to or Unbind from Service Instances
+
+### <a id="instance-not-exist"></a>Instance does not exist
+
+If the error message says “Server error, status code: 502, error code: 10001, message: Service broker error: instance does not exist”
+
+1. Check that the service instance exists in BOSH and CF
+```
+cf service myservice --guid
+```
+2. Record the guid response and run the bosh vms command
+<pre class="terminal">
+bosh vms service-instance_$guid
+</pre>
+If the bosh deployment is not found then it has been deleted from BOSH. Contact Pivotal support for further assistance on recovery steps.
+
+### <a id="other-errors"></a>Other errors
+
+```
+Server error, status code: 502, error code: 10001, message: Service broker error: There was a problem completing your request. Please contact your operations team providing the following information: service: example-service, service-instance-guid: 8d69de6c-88c6-4283-b8bc-1c46103714e2, broker-request-id: 15f4f87e-200a-4b1a-b76c-1c4b6597c2e1, operation: bind
+```
+
+To find out the exact issue with creating the binding [access the service broker logs]()
+
+Use the broker-request-id from the error message above to search the log for more information. 
+
+Contact Pivotal support for further assistance if you are unable to resolve the problem.
+
+2. [Authentication errors]()
+
+3. [Network errors]()
+
+## <a id="cannot-connect"></a>Devs Cannot Connect to a Created Service
+
+Ask the user to send application logs that show the connection error. If the error is originating from the service, then follow service-specific instructions. If the issue appears to be network-related, then:
+
+1. Check that [application security groups](https://docs.cloudfoundry.org/adminguide/app-sec-groups.html) are configured correctly.
+Access should be configured for the service network that the tile is deployed to.
+
+1. Ensure that the network the PCF Elastic Runtime tile is deployed to has network access to the service network.
+
+1. In Ops Manager go into the service tile and see the service network that is configured in the networks tab.
+
+1. In Ops Manager go into the ERT tile and see the network it is assigned to.
+Make sure that these networks can access each other.
+
+## <a id="problem-key"></a>Devs Cannot Create or Use a Service Key
+
+### <a id="create-errors"></a>Create errors
+
+### <a id="use-errors"></a>Use errors
+
+## <a id="support"></a>File a Support Ticket
+
+You can file a support ticket [here](https://support.pivotal.io/). Please be sure to provide the [error message](./techniques.html#parse-error) from 
+<pre class="terminal">
+$ cf service my-service
+</pre>
+
+Please also provide your [service broker logs](./techniques.html#access-broker), your [service instance logs](./techniques.html#access-instance) and [BOSH task output](./techniques.html./techniques.html#parse-error), if a `task-id` is provided as part of the `cf service <your-service>` output, to help expedite troubleshooting.
+
+## <a id="kb"></a>Knowledge Base (Community)
+
+Imagine a world where we autopopulate the first 10 hits from http://discuss.pivotal.io . For now, you'll just have to click on the link.
