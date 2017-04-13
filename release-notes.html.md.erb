@@ -13,6 +13,9 @@ owner: London Services Enablement
 ## <a id="known-issues"></a>Known Issues
 
 <p class="note">
+In PCF 1.10 when using ODB Metrics, there is a race condition between the ODB and Consul starting. This leads to some deployments failing. Solution is to `bosh restart` the ODB.
+</p>
+<p class="note">
 ODB errands can only delete/upgrade the first 50 instances created. Advice is to use plan quotas and set the total across all plans to be less than 50 service instances. 
 </p>
 <p class="note">
