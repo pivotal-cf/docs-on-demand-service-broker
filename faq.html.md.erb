@@ -3,72 +3,73 @@ title: Frequently asked questions
 owner: London Services Enablement
 ---
 
-## <a id="odb_instance_test"></a>What is the number of dedicated service instances that Pivotal has tested managing in a PCF environment?
+## <a id="odb_instance_test"></a>How many dedicated service instances has Pivotal managed in a PCF environment?
 
-On-Demand Broker has been tested with up to 500 service instances using the [example-kafka-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/tree/15-rc1://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/tree/v0.15.1).
-We recorded how long it took to create, upgrade and delete varying numbers of service instances.
+The on-demand broker has been tested with 500 dedicated service instances using the [example Kafka on-demand tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/tree/15-rc1://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/tree/v0.15.1).
 
-#### <a id="test_setup"></a>Test setup
+We recorded how long it took to create, upgrade all and delete all, with 50, 101 and 500 dedicated service instances.
 
-The test environment used:
-- IaaS: Google Cloud Platform
-- PCF: v1.9.7
-- ERT: v1.9.13
-- ODB: v0.15.1
+### <a id="test_setup"></a>Set up
 
-Configuration:
-- BOSH workers: 2
-- BOSH Dedicated Status workers: 1
-- ODB tile: [Example-Kafka-Tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile-/tree/15-rc1://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/tree/v0.15.1)
- - Zookeeper VM small (1 CPU, 2GB RAM, 8GB Disk)
- - Kafka VM small (1 CPU, 2GB RAM, 8GB Disk)
+| Environment                  |                       |
+|:-----------------------------|:----------------------|
+| IaaS                         | Google Cloud Platform |
+| PCF Operations Manager       | v1.9.7                |
+| PCF Elastic Runtime          | v1.9.13               |
+| Example Kafka On-Demand Tile | v0.15.1               |
 
-#### <a id="test_running"></a>Running the test
+| BOSH Director Configuration |         |
+|:----------------------------|:--------|
+| Workers                     | 3       |
+| Dedicated status worker     | enabled |
 
-1. Install an On-Demand tile in PCF
-1. Configure a plan for testing, with appropriate settings, e.g. VM size
-1. Create N number of instances in ERT via the CF CLI
+| On-demand plan configuration |                                  |
+|:-----------------------------|:---------------------------------|
+| Zookeeper VM type            | small (1 CPU, 2GB RAM, 8GB Disk) |
+| Kafka VM type                | small (1 CPU, 2GB RAM, 8GB Disk) |
+
+### <a id="test_running"></a>Test
+
+1. Upload the example Kafka on-demand tile
+1. Configure the on-demand plan
+1. Apply changes to install the on-demand service, ensuring that `Register on-demand broker` is checked
+1. Create N dedicated service instances using the CF CLI
 1. Make a change to the plan configuration
-1. Apply pending changes ensuring that `Upgrade all On-demand Service Instances` is checked
-1. Delete the tile and apply pending changes ensuring that `Delete all Service Instances` is checked
+1. Apply pending changes, ensuring that `Upgrade all on-demand service instances` is checked
+1. Delete the tile and apply changes, ensuring that `Delete all on-demand service instances` is checked
 
-#### <a id="test_results"></a>Results
+### <a id="test_results"></a>Results
 
-Times presented in HH:MM:SS format
+Durations presented in HH:MM:SS format.
 
-| Creation         |          |          |          |
-|:-----------------|:---------|:---------|:---------|
-| instances        | 50       | 101      | 500      |
-| total duration   | 00:51:28 | 01:45:40 | 08:33:37 |
-| average duration | 00:01:02 | 00:01:03 | 00:01:02 |
+| Create         | 50       | 101      | 500      |
+|:---------------|:---------|:---------|:---------|
+| average create | 00:01:02 | 00:01:03 | 00:01:02 |
+| total          | 00:51:28 | 01:45:40 | 08:33:37 |
 
-| Upgrade          |          |          |          |
-|:-----------------|:---------|:---------|:---------|
-| instances        | 50       | 101      | 500      |
-| total duration   | 00:58:37 | 01:49:42 | 08:21:08 |
-| average duration | 00:01:10 | 00:01:05 | 00:01:00 |
+| Upgrade All     | 50       | 101      | 500      |
+|:----------------|:---------|:---------|:---------|
+| average upgrade | 00:01:10 | 00:01:05 | 00:01:00 |
+| total           | 00:58:37 | 01:49:42 | 08:21:08 |
 
-| Delete           |          |          |          |
-|:-----------------|:---------|:---------|:---------|
-| instances        | 50       | 101      | 500      |
-| total duration   | 04:17:38 | 08:31:10 | 41:38:26 |
-| average duration | 00:05:09 | 00:05:04 | 0:05:00  |
+| Delete All     | 50       | 101      | 500      |
+|:---------------|:---------|:---------|:---------|
+| average delete | 00:05:09 | 00:05:04 | 0:05:00  |
+| total          | 04:17:38 | 08:31:10 | 41:38:26 |
 
-These times may vary for a number of reasons including:
-- Number of BOSH workers
+These durations may vary for a number of reasons, for example:
+
+- Number of BOSH director workers
 - IaaS performance
 - Network latency
-- Service instance deployment
-- Size of service instance deployment VMS
-- Activity of ERT
-- Activity of the BOSH director
+- Service instance BOSH release(s)
+- Service instance deployment configuration
+- VM type of service instance
+- Activity of Elastic Runtime
+- Activity of BOSH Director
 
-### <a id="test_notes">Notes
+### <a id="test_notes"></a>Notes
 
-For create operations, ODB issues a bosh task for each create request. Each of
-these bosh tasks create a new bosh deployment. By default the bosh director in
-OM v1.9 has 2 workers, meaning that 2 tasks can be run at the same time.
+For create operations, the on-demand broker creates a BOSH deployment for each service instance. By default, the BOSH Director in Operations Manager v1.9 has three workers with a dedicated status worker, so only two workers are available to process deployment tasks. Therefore, only two service instances can be created at the same time.
 
-For upgrade and delete operations, ODB executes these requests via a bosh errand.
-This bosh errand occupies a bosh worker for the duration of the operation,
-leaving just one worker to be used by the upgrade/delete requests.
+For upgrade all and delete all operations, Operations Manager runs a BOSH errand. This errand task occupies a BOSH Director worker, leaving one worker available to upgrade, or delete deployments.
