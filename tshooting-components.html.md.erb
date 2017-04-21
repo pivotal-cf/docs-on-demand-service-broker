@@ -1,0 +1,139 @@
+---
+title: Troubleshooting Components
+owner: London Services Enablement
+---
+
+<style>
+    .note.warning {
+        background-color: #fdd;
+        border-color: #fbb
+    }
+
+    .note.warning:before {
+        color: #f99;
+    }
+</style>
+
+Guidance on checking for and fixing issues in the ODB components.
+
+## <a id="bosh"></a>BOSH problems
+
+### <a id="no-bosh-uuid"></a>Missing BOSH Director UUID
+
+If using the BOSH v1 CLI you need to re-add the `director_uuid` to the manifest:
+
+1. Run `bosh status --uuid` and record the `director_uuid` value from the output.
+
+1. Edit the manifest and add the `director_uuid: DIRECTOR-UUID` from the last step at the top of the manifest.
+
+For more, see [Deployment Identification](https://bosh.io/docs/manifest-v2.html#deployment) in the BOSH docs.
+
+### <a id="large-queue"></a>Large BOSH Queue
+
+On-demand service brokers add tasks to the BOSH request queue, which can back up and cause delay under heavy loads. An app developer who requests a new service instance sees `create in progress` in the Cloud Foundry Command Line Interface (cf CLI) until BOSH processes the queued request.
+
+Ops Manager currently deploys two BOSH workers to process its queue. Future versions of Ops Manager will let users configure the number of BOSH workers.
+
+## <a id="bosh-config"></a>Configuration
+
+### <a id="bosh-instance-fail"></a>Service instances in failing state
+
+You may have configured a VM / Disk type in tile plan page in Ops Manager that is insufficiently large for the service instance to start. See tile-specific guidance on resource requirements.
+
+## <a id="auth"></a>Authentication
+
+### <a id="uaa-change"></a>UAA Changes
+
+If you have rotated any UAA user credentials then you may see authentication issues in the service broker logs. 
+
+To resolve this, redeploy the service tile in Ops Manager. This provides the broker with the latest configuration.
+
+<p class="note"><strong>Note</strong>: You must ensure that any changes to UAA credentials are reflected in the OpsManager <code>credentials</code> tab of the Elastic Runtime tile.</p>
+
+## <a id="network"></a>Networking
+
+Common issues include:
+
+1. Network latency when connecting to the service instance to create or delete a binding.  
+  - Solution: Try again or improve network performance
+1. Network firewall rules are blocking connections from the service broker to the service instance.  
+  - Solution: Open the service tile in Ops Manager and check the two networks configured in the **Networks** pane. Ensure that these networks allow access to each other.
+1. Network firewall rules are blocking connections from the service network to the BOSH director network.  
+  - Solution: Ensure that service instances can access the Director so that the BOSH agents can report in.
+1. Apps cannot access the service network.  
+  - Solution: Configure Cloud Foundry application security groups to allow runtime access to the service network.
+1. Problems accessing BOSH’s UAA or the BOSH director.  
+  - Solution: Follow network troubleshooting and check that the BOSH director is online.
+
+### <a id="broker-to-instances"></a>Validate Service Broker Connectivity to Service Instances
+
+To validate you can `bosh ssh` onto the service broker, download the broker manifest and target the deployment, then try to reach the service instance.
+
+If no BOSH `task-id` appears in the error message, look in the broker log using the `broker-request-id` from the task.
+
+### <a id="app-to-instances"></a>Validate App Access to Service Instance
+
+Use `cf ssh` to access to the app container, then try connecting to the service instance using the binding included in the `VCAP_SERVICES` environment variable.
+
+## <a id="quotas"></a>Quotas
+
+### <a id="plan-quotas"></a>Plan Quota issues
+
+If developers report errors such as:
+
+<pre class="terminal">
+Message: Service broker error: The quota for this service plan has been exceeded. 
+Please contact your Operator for help.
+</pre>
+
+1. Check your current plan quota.
+1. Increase the plan quota.
+1. Log into Ops Manager.
+1. Reconfigure the quota on the plan page.
+1. Deploy the tile.
+1. Find who is using the plan quota and take the appropriate action.
+
+### <a id="global-quotas"></a>Global Quota Issues
+
+If developers report errors such as:
+
+<pre class="terminal">
+Message: Service broker error: The quota for this service has been exceeded. 
+Please contact your Operator for help.
+</pre>
+
+1. Check your current global quota.
+1. Increase the global quota.
+1. Log into Ops Manager.
+1. Reconfigure the quota on the on-demand settings page.
+1. Deploy the tile.
+1. Find out who is using the quota and take the appropriate action.
+
+### <a id="failing-jobs"></a>Failing jobs and unhealthy instances
+
+To determine whether there is an issue with the service deployment, run `bosh vms`:
+
+<pre class="terminal">
+$ bosh vms --vitals service-instance_$guid
+</pre>
+
+For additional information, run `bosh instances`:
+
+<pre class="terminal">
+$ bosh instances --ps --vitals
+</pre>
+
+If the VM is failing. follow the service-specific information. Any unadvised corrective actions (such as running `bosh restart` on a VM) may cause issues in the service instance.
+
+
+## <a id="support"></a>File a Support Ticket
+
+You can file a support ticket [here](https://support.pivotal.io/). Please be sure to provide the [error message](./tshooting-techniques.html#parse-error) from 
+```
+$ cf service <your-service>
+``` 
+Please also provide your [service broker logs](./tshooting-techniques.html#access-broker) and your [service instance logs](./tshooting-techniques.html#access-instance) to help expedite troubleshooting.
+
+## <a id="kb"></a>Knowledge Base (Community)
+
+Imagine a world where we autopopulate the first 10 hits from http://discuss.pivotal.io . For now, you'll just have to click on the link.
