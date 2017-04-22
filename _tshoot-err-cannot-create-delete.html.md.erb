@@ -1,0 +1,25 @@
+If developers report errors such as the following:
+
+<pre class="terminal">
+Instance provisioning failed: There was a problem completing your request. Please contact your operations team providing the following information: service: redis-acceptance, service-instance-guid: ae9e232c-0bd5-4684-af27-1b08b0c70089, broker-request-id: 63da3a35-24aa-4183-aec6-db8294506bac, task-id: 442, operation: create
+</pre>
+
+[Log in to BOSH](https://docs.pivotal.io/pivotalcf/customizing/trouble-advanced.html#prepare) and target the service instance using the instructions on [parsing a Cloud Foundry error message](#parse-error).
+
+Retrieve the BOSH task ID from the error message and run
+`bosh task TASK-ID`.
+
+If the BOSH error shows a problem with the deployment manifest:
+
+  1. Download the manifest for the service instance by running `bosh download manifest SERVICE-INSTANCE-GUID MY-SERVICE.yml`.
+  1. Check the manifest for configuration errors.
+
+[Access the broker logs](#access-broker)  and use the `broker-request-id` from the error message above to search the log for more information.
+
+Check for:
+
+  - [Authentication errors](#auth)
+
+  - [Network errors](#network)
+
+  - [Quota errors](#quotas) 

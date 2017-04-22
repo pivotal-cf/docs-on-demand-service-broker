@@ -1,0 +1,14 @@
+From the BOSH CLI, you can run service broker errands that manage the service brokers and perform mass operations on the service instances that the brokers created. These service broker errands include:
+
+* [`register-broker`](#register-broker) registers a broker with the Cloud Controller and lists it in the Marketplace
+* [`deregister-broker`](#deregister-broker) deregisters a broker with the Cloud Controller and removes it from the Marketplace
+* [`upgrade-all-service-instances`](#upgrade-all) upgrades existing instances of a service to its latest installed version
+* [`delete-all-service-instances`](#delete-all) deletes all instances of service
+* [`orphan-deployments`](#detect-orphans) detects "orphan" instances that are running on BOSH but not registered with the Cloud Controller
+
+Before running any of these errands, set the service broker manifest in the BOSH CLI by doing the following:
+
+  1. Run `bosh deployments`.
+  1. In the **Name** column of the output, look or `grep` for a string of the form `p-rabbit-GUID`. This is the unique identifier for the broker in BOSH.
+  1. Run `bosh download manifest RABBIT-BROKER-GUID BROKER-MANIFEST.yml` with the unique string from the previous step and any filename you want to give the broker deployment manifest.
+  1. Run `bosh deployment BROKER-MANIFEST.yml` to select the broker deployment as the one to run broker errands against.

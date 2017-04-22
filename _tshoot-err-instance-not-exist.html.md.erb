@@ -1,0 +1,13 @@
+If developers report errors such as:
+
+<pre class="terminal">
+Server error, status code: 502, error code: 10001, message: Service broker error: instance does not exist`
+</pre>
+
+1. Run `cf service MY-INSTANCE --guid` to check that the service instance exists in BOSH and CF.
+
+1. Pre-pend the text `service_instance-` to the GUID you just obtained to create the ID that BOSH uses for your service instance (e.g. if your GUID is `1Hy6H`, this becomes `service_instance-1Hy6H`).
+
+1. Run `bosh vms INSTANCE-GUID` with the service instance ID from the last step.
+
+If the bosh deployment is not found then it has been deleted from BOSH. Contact Pivotal support for further assistance on recovery.

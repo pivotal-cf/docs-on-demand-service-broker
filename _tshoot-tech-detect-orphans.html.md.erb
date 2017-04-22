@@ -1,0 +1,19 @@
+A service instance is defined as ‘orphaned’ when the BOSH deployment for the instance is still running, but the service is no longer registered in Cloud Foundry.
+
+The `orphan-deployments` errand collates a list of service deployments that have no matching service instances in Cloud Foundry and return the list to the operator. It is then up to the operator to remove the orphaned bosh deployments.
+
+Run this errand with the command `bosh run errand orphan-deployments` after you have selected the broker deployment with `bosh deployment`.
+
+If orphan deployments exist, the errand outputs a list of deployment names:
+<pre class="terminal">
+[{"deployment\_name":"service-instance\_aoeu39fgn-8125-05h2-9023-9vbxf7676f3"}]
+Errand 'orphan-deployments' completed successfully (exit code 0)
+</pre>
+
+To clean up orphaned instances, perform the following action on each:
+<pre class="terminal">
+$ bosh delete deployment SERVICE-INSTANCE-GUID
+</pre>
+<p class="note warning">
+<strong>WARNING: </strong> This may leave IaaS resources in an unusable state.
+</p>

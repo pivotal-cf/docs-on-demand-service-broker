@@ -1,0 +1,13 @@
+If developers report that their app cannot use service instances that they have successfully created and bound:
+
+Ask the user to send application logs that show the connection error. If the error is originating from the service, then follow service-specific instructions. If the issue appears to be network-related, then:
+
+1. Check that [application security groups](https://docs.pivotal.io/pivotalcf/adminguide/app-sec-groups.html) are configured correctly.
+Access should be configured for the service network that the tile is deployed to.
+
+1. Ensure that the network the PCF Elastic Runtime tile is deployed to has network access to the service network. You can find the network definition for this service network in the Ops Manager Director tile.
+
+1. In Ops Manager go into the service tile and see the service network that is configured in the networks tab.
+
+1. In Ops Manager go into the ERT tile and see the network it is assigned to.
+Make sure that these networks can access each other.

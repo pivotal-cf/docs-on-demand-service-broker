@@ -1,0 +1,13 @@
+If developers report errors such as:
+
+<pre class="terminal">
+Server error, status code: 504, error code: 10001, message: The request to the service broker timed out: https://BROKER-URL/v2/service_instances/e34046d3-2379-40d0-a318-d54fc7a5b13f/service_bindings/aa635a3b-ef6d-41c3-a23f-55752f3f651b
+</pre>
+
+1. Validate that Cloud Foundry (CF) has [network connectivity to the service broker](#network). 
+1. Check the BOSH queue size:
+    - Log into BOSH as the admin user
+    - Run `bosh tasks`
+1. If there are a large number of queued tasks then the system may be under load. BOSH is configured with two workers and one status worker. Advise app developers to try again later once the system is under less load.
+
+In the future, Ops Manager will support configuring the number of BOSH workers available to the system.
