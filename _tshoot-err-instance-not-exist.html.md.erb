@@ -4,7 +4,7 @@ If developers report errors such as:
 Server error, status code: 502, error code: 10001, message: Service broker error: instance does not exist`
 </pre>
 
-1. Run `cf service MY-INSTANCE --guid` to check that the service instance exists in BOSH and CF.
+1. Run `cf service MY-INSTANCE --guid` to check that <%=vars.service_name_article_full%> instance exists in BOSH and CF.
 
 1. Pre-pend the text `service_instance-` to the GUID you just obtained to create the ID that BOSH uses for your service instance (e.g. if your GUID is `1Hy6H`, this becomes `service_instance-1Hy6H`).
 
