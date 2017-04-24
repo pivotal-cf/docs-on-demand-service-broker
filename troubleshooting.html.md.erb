@@ -3,23 +3,26 @@ title: Troubleshooting On-Demand Services
 owner: London Services Enablement
 ---
 
-
-## Contents
-
 To get started, click on one of the links below:
 
-* <a href="tshooting-errors.html" class="subnav"><strong>Troubleshooting Errors</strong></a> - Start here if you're responding to a specific errors or error messages
-* <a href="tshooting-components.html" class="subnav"><strong>Troubleshooting Components</strong></a> - Guidance on checking for and fixing issues in the ODB components
-* <a href="tshooting-techniques.html" class="subnav"><strong>Techniques for Troubleshooting</strong></a> - Instructions on interacting with the on-demand service broker and on-demand service instance BOSH deployments, and on performing general maintenance and housekeeping tasks
+<h2><a href="./tshooting-errors.html" class="subnav">Troubleshooting Errors</a></h2>
+
+Start here if you're responding to a specific errors or error messages.
+
+<h2><a href="./tshooting-components.html" class="subnav">Troubleshooting Components</a></h2>
+
+Guidance on checking for and fixing issues in the ODB components
+
+<h2><a href="./tshooting-techniques.html" class="subnav">Techniques for Troubleshooting</a></h2>
+
+Instructions on interacting with the on-demand service broker and on-demand service instance BOSH deployments, and on performing general maintenance and housekeeping tasks
 
 ## File a Support Ticket
 
-You can file a support ticket [here](https://support.pivotal.io/). Please be sure to provide the [error message](./tshooting-techniques.html#parse-error) from 
-```
-$ cf service <your-service>
-``` 
-Please also provide your [service broker logs](./tshooting-techniques.html#access-broker), your [service instance logs](./tshooting-techniques.html#access-instance) and [BOSH task output](./tshooting-techniques.html#parse-error), if a `task-id` is provided as part of the `cf service <your-service>` output, to help expedite troubleshooting.
+You can file a support ticket [here](https://support.pivotal.io/). Please be sure to provide the [error message](./tshooting-techniques.html#parse-error) from  from `cf service YOUR-SERVICE-INSTANCE`.
+
+To help expedite troubleshooting, please also provide your [service broker logs](./tshooting-techniques.html#access-broker), your [service instance logs](tshooting-techniques.html#access-instance) and [BOSH task output](./tshooting-techniques.html#parse-error), if your `cf service YOUR-SERVICE-INSTANCE` output includes a `task-id`.
 
 ## Knowledge Base (Community)
 
-Imagine a world where we autopopulate the first 10 hits from http://discuss.pivotal.io . For now, you'll just have to click on the link.
+Find the answer to your question and browse product discussions and solutions by searching the [Pivotal Knowledge Base](http://discuss.pivotal.io).

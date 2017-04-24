@@ -44,6 +44,7 @@ The on-demand services SDK imposes no constraints on the service authors' abilit
 A service adapter is a binary that is called out by the ODB when it wants to do service-specific tasks.
 
 ![responsibility-diagram](img/responsibility-diagram.png)
+
 The above diagram shows where responsibility lies for each aspect of the ODB workflow.
 
 The service author can focus on building the BOSH release of their service and provide a service adapter binary that manages manifest generation,  binding, and unbinding. The ODB manages all interactions with Cloud Foundry and BOSH.
