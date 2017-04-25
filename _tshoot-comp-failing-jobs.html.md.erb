@@ -1,0 +1,13 @@
+To determine whether there is an issue with <%=vars.service_name_article_full%> deployment, run `bosh vms`:
+
+<pre class="terminal">
+$ bosh vms --vitals service-instance_$guid
+</pre>
+
+For additional information, run `bosh instances`:
+
+<pre class="terminal">
+$ bosh instances --ps --vitals
+</pre>
+
+If the VM is failing. follow the service-specific information. Any unadvised corrective actions (such as running `bosh restart` on a VM) may cause issues in the service instance.

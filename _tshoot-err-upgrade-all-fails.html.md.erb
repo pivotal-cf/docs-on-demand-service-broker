@@ -1,0 +1,5 @@
+If the [`upgrade-all-service-instances`](#upgrade-all) errand fails, look at the errand output in the Ops Manager log.
+
+If an instance fails to upgrade, debug and fix it before running the errand again to prevent any failure issues from spreading to other on-demand instances.
+
+Once the Ops Manager log no longer lists the deployment as `failing`, [re-run the errand](#upgrade-all) to upgrade the rest of the instances. 

@@ -1,0 +1,12 @@
+Common issues include:
+
+1. Network latency when connecting to <%=vars.service_name_article_full%> instance to create or delete a binding.  
+  - Solution: Try again or improve network performance
+1. Network firewall rules are blocking connections from <%=vars.service_name_article_full%> broker to the service instance.  
+  - Solution: Open the <%=vars.service_name%> tile in Ops Manager and check the two networks configured in the **Networks** pane. Ensure that these networks allow access to each other.
+1. Network firewall rules are blocking connections from the service network to the BOSH director network.  
+  - Solution: Ensure that service instances can access the Director so that the BOSH agents can report in.
+1. Apps cannot access the service network.  
+  - Solution: Configure Cloud Foundry application security groups to allow runtime access to the service network.
+1. Problems accessing BOSH’s UAA or the BOSH director.  
+  - Solution: Follow network troubleshooting and check that the BOSH director is online.
