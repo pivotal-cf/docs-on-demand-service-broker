@@ -308,8 +308,8 @@ The service adapter must offer this errand as part of the service instance deplo
 
 ODB supports the following lifecycle errands:
 
-- `post-deploy` - Runs after the creation or updating of a service instance. An example use case is running a health check to ensure the service instance is functioning. See the workflow [here](./concepts.html#post-deploy)
-- `pre-delete` - Runs before the deletion of a service instance. An example use case is cleaning up data prior to a service shutdown. See the workflow [here](./concepts.html#pre-delete)
+- `post_deploy` - Runs after the creation or updating of a service instance. An example use case is running a health check to ensure the service instance is functioning. See the workflow [here](./concepts.html#post-deploy)
+- `pre_delete` - Runs before the deletion of a service instance. An example use case is cleaning up data prior to a service shutdown. See the workflow [here](./concepts.html#pre-delete)
 
 Service Instance lifecycle errands are configured on a per-plan basis. To enable lifecycle errands, the errand job must be:
 
@@ -317,30 +317,38 @@ Service Instance lifecycle errands are configured on a per-plan basis. To enable
 - Added to the plan's instance groups.
 - Set in the plan's lifecycle errands configuration.
 
-An example manifest snippet configuring a post-deploy lifecycle errand for service instances:
+An example manifest snippet configuring lifecycle errands for a plan:
 
 ```yaml
 service_deployment:
   releases:
     - name: <service-release>
       version: <service-release-version>
-      jobs: [service_release_job, lifecycle_errand_job] # Errand job from the service release
-..other configuration
+      jobs:
+      - <service_release_job>
+      - <post_deploy_errand_job>
+      - <pre_delete_errand_job>
 service_catalog:
   plans:
       - name: <CF marketplace plan name>
+        lifecycle_errands:
+          post_deploy: <post_deploy_errand_job>
+          pre_delete: <pre_delete_errand_job>
         instance_groups:
-          - name: <service author provided instance group name>
-            ...other configuration
-          - name: <lifecycle_errand_job> # Errand job added to deployment
+          - name: <service_release_job>
+            ...
+          - name: <post_deploy_errand_job>
             lifecycle: errand
             vm_type: <vm type>
             instances: <instance count>
             networks: [<network>]
             azs: [<az>]
-        lifecycle_errands: #optional
-          post_deploy: <lifecycle_errand_job> # Assign errand to run on post-deploy
-        ..other configuration
+          - name: <pre_delete_errand_job>
+            lifecycle: errand
+            vm_type: <vm type>
+            instances: <instance count>
+            networks: [<network>]
+            azs: [<az>]
 ```
 
 Please note that changing a plan's lifecycle errands configuration while an existing deployment is in progress is not supported. Lifecycle errands will not be run.
