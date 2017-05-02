@@ -21,12 +21,10 @@ For an example manifest for a Redis service, see [redis-example-service-adapter-
 
 For an example manifest for a Kafka service, see [kafka-example-service-adapter-release](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml).
 
-
 ## <a id="configure-bosh"></a>Set Up Your BOSH Director
-
 Dependencies for the On-Demand Broker:
 
-- BOSH director v257 or later (PCF 1.8)
+- BOSH director v257 or later (PCF 1.8) **Note:** does not support BOSH Windows
 - Cloud Foundry v238 or later (PCF 1.8)
 
  <p class="note">**Note**: [Service instance lifecycle errands](#lifecycle-errands) require BOSH director v261 (PCF 1.10) or later.</p>
@@ -297,6 +295,19 @@ An example of how the service metrics can be configured for an on-demand-broker 
 We have tested this example configuration with loggregator v58 and service-metrics v1.5.0.
 
 Please see the [service metrics docs](http://docs.pivotal.io/service-metrics) for more details on service metrics.
+
+## <a id="startup-checks"></a>Broker Startup Checks
+
+The following startup checks occur:
+
+* Verify that the CF and BOSH versions satisfy the minimum requirement. **Note**: If your service offering includes lifecycle errands, the minimum requirement for BOSH will be higher. See [Set Up Your BOSH Director](#configure-bosh). If your system does not meet minimum requirements, you will see an insufficient version error. For example:
+```
+CF API error: Cloud Foundry API version is insufficient, ODB requires CF v238+.
+```
+* Verify that, for the service offering, no plan IDs have changed for plans that have existing service instances. If there are instances, you will see following error:
+```
+You cannot change the plan_id of a plan that has existing service instances.
+```
 
 ## <a id="lifecycle-errands"></a>Service Instance Lifecycle Errands
 
