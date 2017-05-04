@@ -2,6 +2,6 @@ Before BOSH 2.0, cloud operators pre-provisioned service instances from Ops Mana
 
 With BOSH 2.0 dynamic networking and Cloud Foundry asynchronous service provisioning, operators can now define a dynamically-provisioned service network that hosts instances more flexibly. The service network runs separate from the PCF default network. While the default network hosts VMs launched by Ops Manager, the VMs running in the service network are created and provisioned on-demand by BOSH, and BOSH lets the IaaS assign IP addresses to the service instance VMs. Each dynamic network attached to a job instance is typically represented as its own Network Interface Controller in the IaaS layer.
 
-When operators deploy PCF, they can create one or more service networks in the the Ops Manager Director **Create Networks** pane, by adding a network and selecting its **Service Network** checkbox. This prevents Ops Manager from creating VMs in the network, leaving instance creation to the underlying BOSH.
+Operators enable on-demand services when they deploy PCF, by creating one or more service networks in the the Ops Manager Director **Create Networks** pane and selecting the **Service Network** checkbox. Designating a network as a service network prevents Ops Manager from creating VMs in the network, leaving instance creation to the underlying BOSH.
 
 ![Service Network checkbox](http://docs.pivotal.io/svc-sdk/odb/img/service-network-checkbox.png)
