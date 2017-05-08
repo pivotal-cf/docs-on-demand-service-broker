@@ -43,14 +43,14 @@ Used to provide fields relating to the BOSH director installation present.
 
 | Accessor                  | Description                                                                                                                    |
 |:--------------------------|:-------------------------------------------------------------------------------------------------------------------------------|
-| $director.deployment\_ip  | The director's IP address                                                                                                      |
+| $director.hostname        | The director's hostname or IP address                                                                                                      |
 | $director.ca\_public\_key | The director's root ca certificate. Related: [how to configure SSL certificates for the ODB](operating.html#ssl-certificates). |
 
 For example
 
 ```yaml
 bosh:
-  url: https://(( $director.deployment_ip )):25555
+  url: https://(( $director.hostname )):25555
   root_ca_cert: (( $director.ca_public_key ))
 ```
 
@@ -75,7 +75,7 @@ For example
 bosh:
   authentication:
     uaa:
-      url: https://(( $director.deployment_ip )):8443
+      url: https://(( $director.hostname )):8443
       client_id: (( $self.uaa_client_name ))
       client_secret: (( $self.uaa_client_secret ))
 ```
