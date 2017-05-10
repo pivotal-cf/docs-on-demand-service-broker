@@ -3,7 +3,7 @@ title: On-Demand Services SDK Release Notes
 owner: London Services Enablement
 ---
 
-# <a id="release-notes"></a>v0.15.1 Release Notes
+# <a id="release-notes"></a>v0.15.3 Release Notes
 
 ## <a id="minimum-version-requirements"></a>Minimum Version Requirements
 
@@ -44,6 +44,7 @@ On PCF for GCP deployments, Ops Manager service network VMs are not assigned the
   - To set a global quota, set `service_catalog.global_quotas.service_instance_limit` to the total number of instances (recommended maximum is 50 for support reasons).
 - Support null objects in the plan array. ODB still requires at least one plan to be configured.
 - Plans and VM extensions can now be configured with `~` or `null` to represent an unused plan. This is to work around OpsManager issues when using certain selectors. 
+- Support "Cross Deploymentment Consumes Links" in the [Go SDK](https://github.com/pivotal-cf/on-demand-services-sdk) [0.15.3]
 
 ## <a id="breaking-changes"></a>Breaking Changes
 
@@ -56,6 +57,9 @@ On PCF for GCP deployments, Ops Manager service network VMs are not assigned the
 
 - Resolves issues with ODB upgrade/delete errands not being able to work with over 50 service instances [0.15.1]
 - `pre-start` no longer changes ownership of co-located jobs packages [0.15.2]
+- Lifecycle errands are transactionally safe when upgrading the on-demand broker [0.15.3]
+- Orphan deployment errand now exits non-zero when the errand detects orphans. This makes it useful in automation workflows [0.15.3]
+- Upgrade-all-service-instances now has summary messages on a single line, making them easily grep-able [0.15.3]
 - Handle `null` for `vm_extensions` array. OpsManager can provide a `null` value for this field.
 - Reject requests to modify instances that have ongoing BOSH operations.
 - Report ODB metrics for quotas when there are `0` service instances.
