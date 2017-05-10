@@ -1,12 +1,12 @@
 If you have spotted a failing service instance deployment, you can identify which org/space owns the instance and list the apps bound to it by following these steps:
 
-1. `bosh vms SERVICE-INSTANCE-GUID` shows a VM in a failing state.
+1. `bosh vms service-instance_SERVICE-INSTANCE-GUID` shows a VM in a failing state.
 1. Take the deployment name and strip the `service-instance_` leaving you with the GUID.
 1. Login to CF as an admin.
 1. Run `cf curl /v2/service_instances/GUID | grep "space_url"` and record the SPACE-GUID field from the output `"space_url": "/v2/spaces/SPACE-GUID"`.
 1. run `cf curl /v2/spaces/SPACE-GUID | grep -E "name|organization_url"` with the SPACE-GUID above and record from the output:
-    1. The SPACE-NAME field from the output `"name": "MY-SPACE",` and
-    1. The ORG-GUID field from the output `"organization_url": "/v2/organizations/ORG-GUID"`.
+  1. The SPACE-NAME field from the output `"name": "MY-SPACE",` and
+  1. The ORG-GUID field from the output `"organization_url": "/v2/organizations/ORG-GUID"`.
 1. Run `cf curl  /v2/organizations/ORG-GUID | grep "name"` with the ORG-GUID above, and record the MY-ORG field from the output `"name": "MY-ORG"`.
 1. Run `cf target -o MY-ORG -s MY-SPACE` with the values above to target the org and space.
 1. Run `cf services` to see all the services and bound apps in the space.

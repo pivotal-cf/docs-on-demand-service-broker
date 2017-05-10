@@ -4,15 +4,62 @@ The `orphan-deployments` errand collates a list of service deployments that have
 
 Run this errand with the command `bosh run errand orphan-deployments` after you have selected the broker deployment with `bosh deployment`.
 
-If orphan deployments exist, the errand outputs a list of deployment names:
+If orphan deployments exist, the errand script will:
+
+- Exit with exit code 10
+- Output a list of deployment names under a `[stdout]` header
+- Provide a detailed error message under a `[stderr]` header
+
+For example:
 <pre class="terminal">
-[{"deployment\_name":"service-instance\_aoeu39fgn-8125-05h2-9023-9vbxf7676f3"}]
+[stdout]
+[{"deployment_name":"service-instance_80e3c5a7-80be-49f0-8512-44840f3c4d1b"}]
+
+[stderr]
+Orphan BOSH deployments detected with no corresponding service instance in Cloud Foundry. Before deleting any deployment it is recommended to verify the service instance no longer exists in Cloud Foundry and any data is safe to delete.
+
+Errand 'orphan-deployments' completed with error (exit code 10)
+</pre>
+
+These details will also be available through the BOSH `/tasks/` API endpoint for use in scripting:
+<pre class="terminal">
+$ curl 'https://bosh-user:bosh-password@bosh-url:25555/tasks/task-id/output?type=result' | jq .
+{
+  "exit_code": 10,
+  "stdout": "[{"deployment_name":"service-instance_80e3c5a7-80be-49f0-8512-44840f3c4d1b"}]\n",
+  "stderr": "Orphan BOSH deployments detected with no corresponding service instance in Cloud Foundry. Before deleting any deployment it is recommended to verify the service instance no longer exists in Cloud Foundry and any data is safe to delete.\n",
+  "logs": {
+    "blobstore_id": "d830c4bf-8086-4bc2-8c1d-54d3a3c6d88d"
+  }
+}
+</pre>
+
+
+If no orphan deployments exist, the errand script will:
+
+- Exit with exit code 0
+- Stdout will be an empty list of deployments
+- Stderr will be `None`
+
+<pre class="terminal">
+[stdout]
+[]
+
+[stderr]
+None
+
 Errand 'orphan-deployments' completed successfully (exit code 0)
 </pre>
 
+If the errand encounters an error during running it will:
+
+- Exit with exit 1
+- Stdout will be empty
+- Any error messages will be under stderr
+
 To clean up orphaned instances, perform the following action on each:
 <pre class="terminal">
-$ bosh delete deployment SERVICE-INSTANCE-GUID
+$ bosh delete deployment service-instance_SERVICE-INSTANCE-GUID
 </pre>
 <p class="note warning">
 <strong>WARNING: </strong> This may leave IaaS resources in an unusable state.

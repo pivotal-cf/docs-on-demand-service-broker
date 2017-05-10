@@ -1,9 +1,9 @@
 1. Certificate issues: The on-demand broker (ODB) requires valid certificates. Ensure that your certificates are valid and [generate new ones](http://docs.pivotal.io/p-mysql/credential-rotation.html) if necessary. 
 1. Deploy fails: Deploys can fail for a variety of reasons. View the logs using Ops Manager to determine why the deploy is failing.
 1. [Networking problems](#network): 
-    - Cloud Foundry cannot reach <%=vars.service_name_article_full%> broker
-    - Cloud Foundry cannot reach the service instances
-    - The service network cannot access the BOSH director 
+  - Cloud Foundry cannot reach <%=vars.service_name_article_full%> broker
+  - Cloud Foundry cannot reach the service instances
+  - The service network cannot access the BOSH director 
 1. [Register broker errand](#register-broker) fails.
 1. The smoke test errand fails.
 1. Resource sizing issues: These occur when the resource sizes selected for a given plan are less than <%=vars.service_name_article_full%> requires to function. Check your resource configuration in Ops Manager and ensure that the configuration matches that recommended by the service.
