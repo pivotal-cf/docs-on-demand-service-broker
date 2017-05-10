@@ -22,7 +22,7 @@ On PCF for GCP deployments, Ops Manager service network VMs are not assigned the
 
 - Operators can make any change to the service plan (stemcell, releases, properties) and the ODB will detect a `pending-change`. Once an instance has a pending change only the operator can upgrade it via the `upgrade-all-service-instances` errand. The CF user will be shown an error when they try to update an instance with pending-changes. 
   - ODB only detects service instance deployment manifest changes, not Cloud Config or Runtime Config changes.
-- This feature protects application developers from accidently triggering an upgrade that may contain breaking changes.
+- This feature protects application developers from accidently triggering an upgrade that might contain breaking changes.
 - The platform operator should still roll out the upgrade by using the upgrade errand.
 
 ### Service Instance Lifecycle Errands

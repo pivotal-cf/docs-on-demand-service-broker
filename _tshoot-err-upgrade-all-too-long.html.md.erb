@@ -1,6 +1,6 @@
 1. Depending on your IaaS and the number of service instances, the [`upgrade-all-service-instances`](#upgrade-all) task takes 15-20 minutes per instance if you changed IaaS resources and 5-10 minutes per instance if you reconfigured BOSH releases.
 1. To calculate how long the errand should take, multiply the number of instances by 20 minutes. 
-1. If the errand goes on for much longer than this, you may want to:
+1. If the errand goes on for much longer than this, you might want to:
    - `ssh` onto the errand VM
    - `cd /var/vcap/sys/log` and look for the errand output log
    - `tail -f LOG` and see if the errand is still attempting to upgrade instances. If it is, then allow the errand to continue. If it appears to be stuck:

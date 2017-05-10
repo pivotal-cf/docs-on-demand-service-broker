@@ -8,6 +8,6 @@ Server error, status code: 504, error code: 10001, message: The request to the s
 1. Check the BOSH queue size:
   - Log into BOSH as the admin user
   - Run `bosh tasks`
-1. If there are a large number of queued tasks then the system may be under load. BOSH is configured with two workers and one status worker. Advise app developers to try again later once the system is under less load.
+1. If there are a large number of queued tasks then the system might be under load. BOSH is configured with two workers and one status worker. Advise app developers to try again later once the system is under less load.
 
 In the future, Ops Manager will support configuring the number of BOSH workers available to the system.
