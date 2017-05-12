@@ -114,8 +114,8 @@ Before setting up and using ODB on your local development environment, install a
     - name: kafka
       type: manual
       subnets:
-      - range: 10.244.0.0/24
-        gateway: 10.244.0.1
+      - range: 10.244.1.0/24
+        gateway: 10.244.1.1
         az: lite
         cloud_properties: {}
 
@@ -291,7 +291,7 @@ Before setting up and using ODB on your local development environment, install a
     +--------------------------------------------------+---------+-----+-----------+------------+
     | Instance                                         | State   | AZ  | VM Type   | IPs        |
     +--------------------------------------------------+---------+-----+-----------+------------+
-    | broker/0 (59231277-d7b8-46bb-8bbb-8154b6bae347)* | running | n/a | container | 10.244.0.2 |
+    | broker/0 (59231277-d7b8-46bb-8bbb-8154b6bae347)* | running | n/a | container | 10.244.1.2 |
     +--------------------------------------------------+---------+-----+-----------+------------+
 
     (*) Bootstrap node
