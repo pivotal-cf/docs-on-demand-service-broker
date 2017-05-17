@@ -374,7 +374,7 @@ This errand registers the broker with Cloud Foundry and enables access to plans 
 
 Please note that if the `broker_uri` property is set, then you should also register a route for your broker with Cloud Foundry. See [Route registration](#route-registration) section for more details.
 
-When `cf_service_access: false` is set the errand will disable service access for all plans.
+When `enable_service_access: false` is set, the errand will not change service access for any plan.
 
 Individual plans can be enabled via the optional `cf_service_access` property. This property accepts three values: `enable`, `disable`, `manual`.
 
