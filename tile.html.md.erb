@@ -145,6 +145,43 @@ job_types:
       label: "Internet Connected VMs (on supported IaaS providers)"
 ```
 
+## <a id="floating-stemcell"></a>Floating stemcells
+
+Ops Manager provides a feature called [Floating Stemcells](https://docs.pivotal.io/pivotalcf/1-9/customizing/understanding-stemcells.html) that allows PCF to quickly propagate a patched stemcell to all VMs in the deployment that have the same compatible stemcell. Both the broker deployment and the service instances deployed by the On-Demand Broker can make use of this feature. Enabling this feature can help ensure that all of your service instances are patched to the latest stemcell.
+
+In order for the service instances to be installed automatically with the latest stemcell, you will need to make sure the `upgrade-all-service-instances` errand is ticked.
+
+Here is an example of how to implement floating stemcells in `handcraft.yml`:
+
+```yaml
+job_types:
+  templates:
+  - name: broker
+    manifest: |
+      service_deployment:
+        releases:
+        - name: release-name
+          version: 1.0.0
+          jobs: [job_server]
+        stemcell:
+          os: ubuntu-trusty
+          version: (( $self.stemcell_version ))
+```
+
+Here is an example of how to configure the `stemcell_criteria` in `binaries.yml`:
+
+```
+---
+name: example-on-demand-service
+product_version: 1.0.0
+stemcell_criteria:
+  os: ubuntu-trusty
+  version: '3312'
+  enable_patch_security_updates: true
+```
+
+Please note, configuring this value to `false` will disable this feature.
+
 ## <a id="errands"></a>On-Demand Broker errands
 
 In the reference [Kafka tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile) we have demonstrated how the errands in the on-demand broker release can be used.
