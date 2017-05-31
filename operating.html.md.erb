@@ -412,6 +412,43 @@ Add the following instance group to your manifest:
 
 Run the errand with `bosh run errand register-broker`.
 
+### <a id="delete-instances-and-deregister"></a>Delete All Service Instances and Deregister Broker
+
+This errand performs a similar operation to the errand [delete-all-service-instances](#delete-instances) and [deregister-broker](#deregister-broker). In addition, it will also disable service access to the service offering before deleting all the instances, and then deregister the broker after all instances have been successfully deleted. We disable service access to ensure that new instances cannot be provisioned during the lifetime of the errand.
+
+The errand will do the following operations:
+
+1. Disable service access to the service offering for all orgs and spaces.
+1. Unbind all applications from the service instances
+1. Delete all service instances sequentially
+1. Deregister the broker from Cloud Foundry
+
+**This errand should only be used with extreme caution when you want to totally destroy all of the on-demand service instances and deregister the broker from the Cloud Foundry.**
+
+Add the following instance group to your manifest:
+
+```yaml
+- name: delete-all-service-instances-and-deregister-broker
+  lifecycle: errand
+  instances: 1
+  jobs:
+    - name: delete-all-service-instances-and-deregister-broker
+      release: <odb-release-name>
+      properties:
+        broker_name: <broker-name>
+        polling_interval: <interval in seconds when waiting for service instance to be deleted> # defaults to 60
+        polling_initial_offset: <offset in seconds before starting to poll Cloud Foundry to check if the instance has been deleted> # defaults to 5
+
+  vm_type: <vm-type>
+  stemcell: <stemcell>
+  networks: [{name: <network>}]
+  azs: [<az>]
+```
+
+ <p class="note">**Notes**: <br/>The `polling_interval` default is set to 60 seconds because the Cloud Controller itself polls the on-demand broker every 60 seconds. Setting your polling interval to anything lower than 60 seconds will not speed up the errand.<br/>The `polling_initial_offset` default is set to 5 seconds because we don't want the delete all errand to start polling cloudfoundry before cloudfoundry has finished processing the delete request and has contacted the broker. In systems with more load on cloudfoundry, this process could take a longer, in which case you might consider increasing the polling offset.
+
+Run the errand with `bosh run errand delete-all-service-instances-and-deregister-broker`.
+
 ### <a id="deregister-broker"></a>Deregister Broker
 
 This errand deregisters a broker from Cloud Foundry. It requires that there are no existing service instances.
@@ -444,7 +481,7 @@ Run the errand with `bosh run errand deregister-broker`.
 
 This errand deletes all service instances of your broker's service offering in every org and space of Cloud Foundry. It uses the Cloud Controller API to do this, and therefore only deletes instances the Cloud Controller knows about. It will not delete orphan BOSH deployments: those that don't correspond to a known service instance. Orphan BOSH deployments *should* never happen, but in practice they might. Use the [orphan-deployments errand](#listing-orphans) to identify them.
 
-The errand will do the following operaitons:
+The errand will do the following operations:
 
 1. Unbind all applications from the service instances
 1. Delete all service instances sequentially
@@ -452,7 +489,7 @@ The errand will do the following operaitons:
  1. If instances are detected the errand will fail
  1. Re-run the errand
 
-**This errand should only be used with extreme caution when you want to totally destroy all of the on-demand service instances in an environment.**
+**This errand should only be used with extreme caution when you want to totally destroy all of the on-demand service instances from Cloud Foundry.**
 
 Add the following instance group to your manifest:
 
@@ -462,7 +499,7 @@ Add the following instance group to your manifest:
   instances: 1
   jobs:
     - name: delete-all-service-instances
-      release: *broker-release
+      release: <odb-release-name>
       properties:
         polling_interval: <interval in seconds when waiting for service instance to be deleted> # defaults to 60
         polling_initial_offset: <offset in seconds before starting to poll Cloud Foundry to check if the instance has been deleted> # defaults to 5
