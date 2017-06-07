@@ -169,7 +169,7 @@ Provides information regarding the BOSH director
 
 | field                     | Type              | Description                                                            |
 |:--------------------------|:------------------|:-----------------------------------------------------------------------|
-| deployment_name           | string            | name of the deployment on the director                                 |
+| deployment_name           | string            | name of the deployment on the director, in the format `service-instance_$guid`|
 | releases                  | array of releases | list of service releases configured for the deployment by the operator |
 | release.name              | string            | name of the release on the director                                    |
 | release.version           | string            | version of the release                                                 |
