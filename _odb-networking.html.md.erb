@@ -18,7 +18,7 @@ The following is a recommended network configuration, though you may have a diff
 		<td>Network C</td>
 	</tr>
 	<tr>
-		<td>Service tile instances</td>
+		<td>Service instances (such as Redis for PCF)</td>
 		<td>Network D</td>
 	</tr>
 </table>
@@ -52,10 +52,10 @@ Regardless of the specific networks configured, the operator must ensure network
 	</tr>
 	<tr>
 		<td><strong>ODB</strong></td>
-		<td><strong>Deployed service tile instances</strong><br><br>
+		<td><strong>Deployed service instances</strong><br><br>
 		One-way communication
 		</td>
-		<td>Specific to the service tile. May be one or more ports.</td>
+		<td>Specific to the service (such as RabbitMQ for PCF). May be one or more ports.</td>
 		<td>This connection is for administrative tasks. Avoid opening general use, app-specific ports for this connection.</td>
 	</tr>
 	<tr>
@@ -64,7 +64,7 @@ Regardless of the specific networks configured, the operator must ensure network
 		    <ul>
 		    	<li><strong>ERT</strong></li>
 		    	<li><strong>ODB</strong></li>
-		    	<li><strong>ODB service instances</strong></li>
+		    	<li><strong>Service instances</strong></li>
 		    </ul>
 		Two-way communication
 		</td>
@@ -74,10 +74,10 @@ Regardless of the specific networks configured, the operator must ensure network
 	</tr>
 	<tr>
 		<td><strong>Deployed apps on ERT</strong></td>
-		<td><strong>Deployed service tile instances</strong><br><br>
+		<td><strong>Deployed service instances</strong><br><br>
 		One-way communication
 		</td>
-		<td>Specific to the service tile. May be one or more ports.</td>
+		<td>Specific to the service. May be one or more ports.</td>
 		<td>This connection is for general use, app-specific tasks. Avoid opening administrative ports for this connection.</td>
 	</tr>
 	<tr>
@@ -86,6 +86,6 @@ Regardless of the specific networks configured, the operator must ensure network
 		One-way communication
 		</td>
 		<td>8080</td>
-		<td>This port may be different for individual service tiles. This port may also be configurable by the operator if allowed by the tile developer.</td>
+		<td>This port may be different for individual services. This port may also be configurable by the operator if allowed by the tile developer.</td>
 	</tr>
 </table>
