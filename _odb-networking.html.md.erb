@@ -1,0 +1,91 @@
+Prior to installing any service tile that uses the on-demand broker (ODB), the operator must request the network connections needed to allow various components of the on-demand architecture to communicate with each other. The specifics of how to open those connections varies for each IaaS.
+
+The following is a recommended network configuration, though you may have a different one based on specific requirements.
+
+<table class="nice">
+	<th>Component</th>
+	<th>Deploy to</th>
+	<tr>
+		<td>BOSH Director</td>
+		<td>Network A</td>
+	</tr>
+	<tr>
+		<td>ERT</td>
+		<td>Network B</td>
+	</tr>
+	<tr>
+		<td>ODB</td>
+		<td>Network C</td>
+	</tr>
+	<tr>
+		<td>Service tile instances</td>
+		<td>Network D</td>
+	</tr>
+</table>
+
+Regardless of the specific networks configured, the operator must ensure network rules are set up so that connections are open as described in the table below. 
+
+<table class="nice">
+	<th>This component...</th>
+	<th>Must communicate with...</th>
+	<th>Default Port</th>
+	<th>Notes</th>
+	<tr>
+		<td><strong>ODB</strong></td>
+		<td>
+		    <ul>
+		        <li><strong>BOSH Director</strong></li>
+		    <li><strong>UAA</strong></li>
+		    </ul>
+		One-way communication
+		</td>
+		<td>443</td>
+		<td>The default port is not configurable.</td>
+	</tr>
+	<tr>
+		<td><strong>ODB and Errand VMs</strong></td>
+		<td><strong>ERT</strong><br><br>
+		One-way communication
+		</td>
+		<td>443</td>
+		<td>The default port is not configurable.</td>
+	</tr>
+	<tr>
+		<td><strong>ODB</strong></td>
+		<td><strong>Deployed service tile instances</strong><br><br>
+		One-way communication
+		</td>
+		<td>Specific to the service tile. May be one or more ports.</td>
+		<td>This connection is for administrative tasks. Avoid opening general use, app-specific ports for this connection.</td>
+	</tr>
+	<tr>
+		<td><strong>BOSH agent</strong></td>
+		<td>
+		    <ul>
+		    	<li><strong>ERT</strong></li>
+		    	<li><strong>ODB</strong></li>
+		    	<li><strong>ODB service instances</strong></li>
+		    </ul>
+		Two-way communication
+		</td>
+		<td>6868</td>
+		<td>The BOSH agent runs on every VM in the system, and on the BOSH director. <br><br>
+		The default port is not configurable.</td>
+	</tr>
+	<tr>
+		<td><strong>Deployed apps on ERT</strong></td>
+		<td><strong>Deployed service tile instances</strong><br><br>
+		One-way communication
+		</td>
+		<td>Specific to the service tile. May be one or more ports.</td>
+		<td>This connection is for general use, app-specific tasks. Avoid opening administrative ports for this connection.</td>
+	</tr>
+	<tr>
+		<td><strong>ERT</strong></td>
+		<td><strong>ODB</strong><br><br>
+		One-way communication
+		</td>
+		<td>8080</td>
+		<td>This port may be different for individual service tiles. This port may also be configurable by the operator if allowed by the tile developer.</td>
+	</tr>
+</table>
