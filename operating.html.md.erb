@@ -6,6 +6,7 @@ owner: London Services Enablement
 ## <a id="operator"></a>Operator Responsibilities
 The operator is responsible for performing the following:
 
+* Request appropriate networking rules for on-demand service tiles.
 * Configure the BOSH director
 * Upload the required releases for the broker deployment and service instance deployments.
 * Write a broker manifest
@@ -20,6 +21,10 @@ For a list of deliverables provided by the Service Author, see [Required Deliver
 For an example manifest for a Redis service, see [redis-example-service-adapter-release](https://github.com/pivotal-cf-experimental/redis-example-service-adapter-release/blob/master/docs/example-manifest.yml).
 
 For an example manifest for a Kafka service, see [kafka-example-service-adapter-release](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml).
+
+## <a id="networking"></a>Set up Networking
+
+<%= partial 'odb-networking' %>
 
 ## <a id="configure-bosh"></a>Set Up Your BOSH Director
 Dependencies for the On-Demand Broker:
