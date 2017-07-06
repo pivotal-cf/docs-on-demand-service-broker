@@ -1,29 +1,29 @@
 Prior to installing any service tile that uses the on-demand broker (ODB), the operator must request the network connections needed to allow various components of the on-demand architecture to communicate with each other. The specifics of how to open those connections varies for each IaaS.
 
-The following is a recommended network configuration, though you may have a different one based on specific requirements.
+The following table shows the responsibilities of the key components in an on-demand architecture.
 
 <table class="nice">
-	<th>Component</th>
-	<th>Deploy to</th>
+	<th>Key Components</th>
+	<th>Their Responsibility</th>
 	<tr>
 		<td>BOSH Director</td>
-		<td>Network A</td>
+		<td>Creates and updates service instances as instructed by ODB</td>
 	</tr>
 	<tr>
 		<td>ERT</td>
-		<td>Network B</td>
+		<td>Contains the apps that are consuming services</td>
 	</tr>
 	<tr>
 		<td>ODB</td>
-		<td>Network C</td>
+		<td>Instructs BOSH to create and updated services, and connects to services to create bindings</td>
 	</tr>
 	<tr>
 		<td>Service instances (such as Redis for PCF)</td>
-		<td>Network D</td>
+		<td>Instances of services as deployed by BOSH</td>
 	</tr>
 </table>
 
-Regardless of the specific networks configured, the operator must ensure network rules are set up so that connections are open as described in the table below. 
+Regardless of the specific network layout, the operator must ensure network rules are set up so that connections are open as described in the table below. 
 
 <table class="nice">
 	<th>This component...</th>
