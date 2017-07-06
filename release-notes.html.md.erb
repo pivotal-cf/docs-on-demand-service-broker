@@ -3,7 +3,7 @@ title: On-Demand Services SDK Release Notes
 owner: London Services Enablement
 ---
 
-# <a id="release-notes"></a>v0.16.0 Release Notes
+# <a id="release-notes"></a>v0.16.1 Release Notes
 
 ## <a id="minimum-version-requirements"></a>Minimum Version Requirements
 
@@ -28,8 +28,8 @@ On PCF for GCP deployments, Ops Manager service network VMs are not assigned the
 
 ### Other Enhancements
 
-- Broker API supports custom response codes and error messages for create/update/bind/unbind/delete.
-
+- Broker API supports custom response codes and error messages for create/update/bind/unbind/delete. syslog-migration
+- Use Golang 1.8.3 in the ODB BOSH Release
 
 ## <a id="breaking-changes"></a>Breaking Changes
 
@@ -39,3 +39,6 @@ No breaking changes.
 
 - Updating a service instance will now return an HTTP 422 error when there is a pending change on the service instance.
 - The `upgrade-all-service-instances` errand now exits with a non-zero status code if upgrading any instances fails.
+- When co-locating [syslog-migration-release](https://github.com/pivotal-cf/syslog-migration-release) or [syslog-release](https://github.com/cloudfoundry/syslog-release)
+there would be duplicate log entries, as ODB was also writing it's logs to syslog. Now ODB only writes it's logs to `/var/vcap/sys/log`, and anything syslog related
+is handled by syslog-release or syslog-migration-release. [0.16.1]
