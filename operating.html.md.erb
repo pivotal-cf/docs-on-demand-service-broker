@@ -22,7 +22,7 @@ For an example manifest for a Redis service, see [redis-example-service-adapter-
 
 For an example manifest for a Kafka service, see [kafka-example-service-adapter-release](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml).
 
-## <a id="networking"></a>Set up Networking
+## <a id="networking"></a>Set Up Networking
 
 <%= partial 'odb-networking' %>
 
@@ -47,7 +47,9 @@ If ODB is configured to communicate with BOSH on the director's public IP you ma
 
 1. Use BOSH's `trusted_certs` feature to add a self-signed CA certificate to each VM BOSH deploys. For more details on how to generate and use self-signed certificates for BOSH director and UAA, see [Director SSL Certificate Configuration](https://bosh.io/docs/director-certs.html).
 
-You can also configure a separate root CA certificate that is used when ODB communicates with the Cloud Foundry API (Cloud Controller). This is done in a similar way to above. Please see [manifest snippets below](#core-broker-configuration) for details.
+You can also configure a separate root CA certificate that is used when ODB communicates with the Cloud Foundry API (Cloud Controller).
+This is done in a similar way to above.
+For more information, see [manifest snippets below](#core-broker-configuration).
 
 ### <a id="bosh-teams"></a>BOSH teams
 
@@ -143,9 +145,9 @@ instance_groups:
           # There are more broker properties that are discussed below
 ```
 
-This snippet is using the BOSH v2 syntax, and making use of global cloud config and job-level properties.
+This snippet is using the BOSH v2 syntax and making use of global cloud config and job-level properties.
 
-Please note that the `disable_ssl_cert_verification` option is dangerous and **should not be used in production**.
+<p class="note"><strong>Note</strong>: The <code>disable_ssl_cert_verification</code> option is dangerous and <strong>should not be used in production</srong>.</p>
 
 ### <a id="catalog"></a>Service Catalog and Plan Composition
 
@@ -154,7 +156,8 @@ The operator must:
 1. Supply each release job specified by the Service Author exactly once. You can include releases that provide many jobs, as long as each required job is provided by exactly one release.
 1. Supply one stemcell that is used on each VM in the service deployments. ODB does not currently support service instance deployments that use a different stemcell for different instance groups.
 1. Use exact versions for releases and stemcells. The use of `latest` and floating stemcells are not supported.
-1. Create Cloud Foundry [service metadata](https://docs.pivotal.io/pivotalcf/services/catalog-metadata.html#services-metadata-fields) in the catalog for the service offering. This metadata will be aggregated in the Cloud Foundry marketplace and displayed in Apps Manager and the `cf` CLI.
+1. Create Cloud Foundry [service metadata](https://docs.pivotal.io/pivotalcf/services/catalog-metadata.html#services-metadata-fields) in the catalog for the service offering.
+   This metadata will be aggregated in the Cloud Foundry marketplace and displayed in Apps Manager and the `cf` CLI.
 1. Compose plans. In ODB, service authors do not define plans but instead expose plan properties. The operator's role is to compose combinations of these properties, along with IAAS resources and catalog metadata into as many plans as they like.
   1. Create Cloud Foundry [service plan metadata](https://docs.pivotal.io/pivotalcf/services/catalog-metadata.html#plan-metadata-fields) in the service catalog for each plan.
   1. Provide resource mapping for each instance group specified by the Service Author for each plan.
@@ -299,7 +302,7 @@ An example of how the service metrics can be configured for an on-demand-broker 
 
 We have tested this example configuration with loggregator v58 and service-metrics v1.5.0.
 
-Please see the [service metrics docs](http://docs.pivotal.io/service-metrics) for more details on service metrics.
+For more information about service metrics, see [Service Metrics for Pivotal Cloud Foundry](http://docs.pivotal.io/service-metrics).
 
 ## <a id="startup-checks"></a>Broker Startup Checks
 
@@ -367,7 +370,8 @@ service_catalog:
             azs: [<az>]
 ```
 
-Please note that changing a plan's lifecycle errands configuration while an existing deployment is in progress is not supported. Lifecycle errands will not be run.
+Changing a plan's lifecycle errands configuration while an existing deployment is in progress is not supported.
+Lifecycle errands will not be run.
 
 ## <a id="management"></a>Broker Management
 
@@ -377,7 +381,7 @@ Management tasks on the broker are performed with BOSH errands.
 
 This errand registers the broker with Cloud Foundry and enables access to plans in the service catalog. The errand should be run whenever the broker is re-deployed with new catalog metadata to update the Cloud Foundry catalog.
 
-Please note that if the `broker_uri` property is set, then you should also register a route for your broker with Cloud Foundry. See [Route registration](#route-registration) section for more details.
+If the `broker_uri` property is set, then you should also register a route for your broker with Cloud Foundry. See [Route registration](#route-registration) section for more details.
 
 When `enable_service_access: false` is set, the errand will not change service access for any plan.
 
@@ -450,7 +454,7 @@ Add the following instance group to your manifest:
   azs: [<az>]
 ```
 
- <p class="note">**Notes**: <br/>The `polling_interval` default is set to 60 seconds because the Cloud Controller itself polls the on-demand broker every 60 seconds. Setting your polling interval to anything lower than 60 seconds will not speed up the errand.<br/>The `polling_initial_offset` default is set to 5 seconds because we don't want the delete all errand to start polling cloudfoundry before cloudfoundry has finished processing the delete request and has contacted the broker. In systems with more load on cloudfoundry, this process could take a longer, in which case you might consider increasing the polling offset.
+ <p class="note">**Note**: The `polling_interval` default is set to 60 seconds because the Cloud Controller itself polls the on-demand broker every 60 seconds. Setting your polling interval to anything lower than 60 seconds will not speed up the errand.<br/>The `polling_initial_offset` default is set to 5 seconds because we don't want the delete all errand to start polling cloudfoundry before cloudfoundry has finished processing the delete request and has contacted the broker. In systems with more load on cloudfoundry, this process could take a longer, in which case you might consider increasing the polling offset.
 
 Run the errand with `bosh run errand delete-all-service-instances-and-deregister-broker`.
 
@@ -486,7 +490,7 @@ Run the errand with `bosh run errand deregister-broker`.
 
 This errand deletes all service instances of your broker's service offering in every org and space of Cloud Foundry. It uses the Cloud Controller API to do this, and therefore only deletes instances the Cloud Controller knows about. It will not delete orphan BOSH deployments: those that don't correspond to a known service instance. Orphan BOSH deployments *should* never happen, but in practice they might. Use the [orphan-deployments errand](#listing-orphans) to identify them.
 
-The errand will do the following operations:
+The errand does the following:
 
 1. Unbind all applications from the service instances
 1. Delete all service instances sequentially
@@ -515,7 +519,14 @@ Add the following instance group to your manifest:
   azs: [<az>]
 ```
 
- <p class="note">**Notes**: <br/>The `polling_interval` default is set to 60 seconds because the Cloud Controller itself polls the on-demand broker every 60 seconds. Setting your polling interval to anything lower than 60 seconds will not speed up the errand.<br/>The `polling_initial_offset` default is set to 5 seconds because we don't want the delete all errand to start polling cloudfoundry before cloudfoundry has finished processing the delete request and has contacted the broker. In systems with more load on cloudfoundry, this process could take a longer, in which case you might consider increasing the polling offset.
+ <p class="note"><strong>Note</strong>: The `polling_interval` default is set to 60 seconds
+    because the Cloud Controller itself polls the on-demand broker every 60 seconds.
+    Setting your polling interval to anything lower than 60 seconds will not speed up the errand.<br/>
+    The `polling_initial_offset` default is set to 5 seconds
+    because we don't want the delete all errand to start polling cloudfoundry before
+    cloudfoundry has finished processing the delete request and has contacted the broker.
+    In systems with more load on cloudfoundry, this process could take a longer,
+    in which case you might consider increasing the polling offset.</p>
 
 Run the errand with `bosh run errand delete-all-service-instances`.
 
@@ -817,7 +828,7 @@ If BOSH and/or UAA are wrongly configured in the broker's manifest, then meaning
 For example
 
 ```
-on-demand-service-broker: [on-demand-service-broker] [575afbc1-b541-481d-9cde-b3d3e67e87bf] 2016/05/18 15:56:40.100579 Error authenticating (401): {"error":"unauthorized","error_description":"Bad credentials"}, please ensure that properties.<broker-job>.bosh.authentication.uaa is correct and try again.
+on-demand-service-broker: [on-demand-service-broker] [575afbc1-b541-481d-9cde-b3d3e67e87bf] 2016/05/18 15:56:40.100579 Error authenticating (401): {"error":"unauthorized","error_description":"Bad credentials"}, ensure that properties.<broker-job>.bosh.authentication.uaa is correct and try again.
 ```
 
 ### <a id="listing-instances"></a>List Service Instances
