@@ -300,7 +300,7 @@ Add the following jobs to the broker instance group:
 
 An example of how the service metrics can be configured for an on-demand-broker deployment can be seen in the [kafka-example-service-adapter-release](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml#L106) manifest.
 
-We have tested this example configuration with loggregator v58 and service-metrics v1.5.0.
+Pivotal have tested this example configuration with loggregator v58 and service-metrics v1.5.0.
 
 For more information about service metrics, see [Service Metrics for Pivotal Cloud Foundry](http://docs.pivotal.io/service-metrics).
 
@@ -423,14 +423,17 @@ Run the errand with `bosh run errand register-broker`.
 
 ### <a id="delete-instances-and-deregister"></a>Delete All Service Instances and Deregister Broker
 
-This errand performs a similar operation to the errand [delete-all-service-instances](#delete-instances) and [deregister-broker](#deregister-broker). In addition, it will also disable service access to the service offering before deleting all the instances, and then deregister the broker after all instances have been successfully deleted. We disable service access to ensure that new instances cannot be provisioned during the lifetime of the errand.
+This errand performs a similar operation to the errand [delete-all-service-instances](#delete-instances) and [deregister-broker](#deregister-broker).
+In addition, it also disables service access to the service offering before deleting all the instances,
+and then deregisters the broker after all instances have been successfully deleted. 
+Pivotal disables service access to ensure that new instances cannot be provisioned during the lifetime of the errand.
 
-The errand will do the following operations:
+The errand does the following:
 
-1. Disable service access to the service offering for all orgs and spaces.
-1. Unbind all applications from the service instances
-1. Delete all service instances sequentially
-1. Deregister the broker from Cloud Foundry
+1. Disables service access to the service offering for all orgs and spaces
+1. Unbinds all applications from the service instances
+1. Deletes all service instances sequentially
+1. Deregisters the broker from Cloud Foundry
 
 **This errand should only be used with extreme caution when you want to totally destroy all of the on-demand service instances and deregister the broker from the Cloud Foundry.**
 
@@ -454,7 +457,11 @@ Add the following instance group to your manifest:
   azs: [<az>]
 ```
 
- <p class="note">**Note**: The `polling_interval` default is set to 60 seconds because the Cloud Controller itself polls the on-demand broker every 60 seconds. Setting your polling interval to anything lower than 60 seconds will not speed up the errand.<br/>The `polling_initial_offset` default is set to 5 seconds because we don't want the delete all errand to start polling cloudfoundry before cloudfoundry has finished processing the delete request and has contacted the broker. In systems with more load on cloudfoundry, this process could take a longer, in which case you might consider increasing the polling offset.
+ <p class="note">**Note**: The `polling_interval` default is set to 60 seconds
+    because the Cloud Controller itself polls the on-demand broker every 60 seconds.
+    Setting your polling interval to anything lower than 60 seconds will not speed up the errand.<br/>
+    The `polling_initial_offset` default is set to 5 seconds.
+    In systems with more load, consider increasing the polling offset.
 
 Run the errand with `bosh run errand delete-all-service-instances-and-deregister-broker`.
 
@@ -488,15 +495,19 @@ Run the errand with `bosh run errand deregister-broker`.
 
 ### <a id="delete-instances"></a>Delete All Service Instances
 
-This errand deletes all service instances of your broker's service offering in every org and space of Cloud Foundry. It uses the Cloud Controller API to do this, and therefore only deletes instances the Cloud Controller knows about. It will not delete orphan BOSH deployments: those that don't correspond to a known service instance. Orphan BOSH deployments *should* never happen, but in practice they might. Use the [orphan-deployments errand](#listing-orphans) to identify them.
+This errand deletes all service instances of your broker's service offering in every org and space of Cloud Foundry.
+It uses the Cloud Controller API to do this, and therefore only deletes instances the Cloud Controller knows about.
+It does not delete orphan BOSH deployments: those that don't correspond to a known service instance.
+Orphan BOSH deployments *should* never happen, but in practice they might.
+Use the [orphan-deployments errand](#listing-orphans) to identify them.
 
 The errand does the following:
 
-1. Unbind all applications from the service instances
-1. Delete all service instances sequentially
-1. Check if any instances have been created while the errand was running
- 1. If instances are detected the errand will fail
- 1. Re-run the errand
+1. Unbinds all applications from the service instances
+1. Deletes all service instances sequentially
+1. Checks if any instances have been created while the errand was running
+1. If instances are detected the errand fails
+1. Re-runs the errand
 
 **This errand should only be used with extreme caution when you want to totally destroy all of the on-demand service instances from Cloud Foundry.**
 
