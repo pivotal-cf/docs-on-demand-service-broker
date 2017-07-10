@@ -10,7 +10,7 @@ The operator is responsible for performing the following:
 * Configure the BOSH director
 * Upload the required releases for the broker deployment and service instance deployments.
 * Write a broker manifest
-  * See [v2-style manifest docs](http://bosh.io/docs/manifest-v2.html) if unfamiliar with writing BOSH v2 manifests
+  * If you are unfamiliar with writing BOSH v2 manifests, see [Manifest v2 Schema](http://bosh.io/docs/manifest-v2.html).
   * Core broker configuration
   * Service catalog and plan composition
 * Manage brokers
@@ -64,7 +64,7 @@ uaac client add <client-id> \
 
 Then when you [configure the broker's BOSH authentication](#core-broker-configuration), you can use this client ID and secret. The broker will then only be able to perform BOSH operations on deployments it has created itself.
 
-For more details on how to set up and use BOSH teams, see [Director teams and permissions configuration](https://bosh.io/docs/director-users-uaa-perms.html).
+For how to set up and use BOSH teams, see [Director teams and permissions configuration](https://bosh.io/docs/director-users-uaa-perms.html).
 
 For more details on securing how ODB uses BOSH, see [Security](#security).
 
@@ -266,7 +266,8 @@ the global limit restricts the number of service instances across all plans.
 When creating a service instance, ODB will check the global service instance limit.
 If it has not been reached, it will check the plan service instance limit.
 
-Note: These limits do not include orphans. See [listing](#listing-orphans) and [deleting](#orphan-deployments) orphans.
+<p class="note"><strong>Note</strong>: These limits do not include orphans. See <a href="#listing-orphans">List Orphan Deployments</a>
+   and <a href="#orphan-deployments">Delete Orphaned Deployments</a>.</p>
 
 ## <a id="broker-metrics"></a>Broker Metrics
 
