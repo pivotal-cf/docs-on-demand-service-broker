@@ -70,19 +70,20 @@ Regardless of the specific network layout, the operator must ensure network rule
 				<li><strong>ERT</strong></li>
 				<li><strong>ODB</strong></li>
 				<li><strong>Deployed Service Instances</strong></li>
+			</ul>
 		</td>
-		<td>443</td>
+		<td>
+			<ul>
+				<li>443</li>
+				<li>8080</li>
+				<li>Specific to the service. May be one or more ports.</li>
+			</ul>
+		</td>
 		<td>One-way communication. <br>The default port is not configurable.</td>
 	</tr>
 	<tr>
-		<td><strong>BOSH agent</strong></td>
-		<td>
-		    <ul>
-		    	<li><strong>ERT</strong></li>
-		    	<li><strong>ODB</strong></li>
-		    	<li><strong>Deployed service instances</strong></li>
-		    </ul>
-		
+		<td><strong>BOSH Agent</strong></td>
+		<td><strong>BOSH Director</strong>
 		</td>
 		<td>6868</td>
 		<td>Two-way communication. <br>The BOSH agent runs on every VM in the system and on the BOSH director. <br><br>
