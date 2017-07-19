@@ -9,4 +9,4 @@ If you want to identify which apps are using a specific service instance from th
   1. `cf curl <space_url>` to obtain the space, using the `entity.space_url` from the above curl. Note the space name under `entity.name`
   1. `cf curl <organization_url>` to obtain the org, using the `entity.organization_url` from the above curl. Note the organization name under `entity.name`
 
-<p class="note"><strong>Note</strong>: When running <code>cf curl</code> ensure that you query all pages, as the responses are limited to a 100 bindings per page. To find the next page simply curl the value under <code>next_url</code></p>
+<p class="note"><strong>Note</strong>: When running <code>cf curl</code> ensure that you query all pages, as the responses are limited to a certain number of bindings per page (default is 50). To find the next page simply curl the value under <code>next_url</code></p>
