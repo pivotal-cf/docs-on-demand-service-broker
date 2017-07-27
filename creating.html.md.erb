@@ -368,8 +368,6 @@ service-adapter create-binding [binding-ID] [bosh-VMs-JSON] [manifest-YAML] [req
 
 Binding credentials for a service instance should share a namespace, and should be unique if possible. E.g. for MySQL, two bindings could include a different username/password pairs, but share the same MySQL database tables and data. The first step is to determine which credentials are best to supply in the context of your service. We recommend that users can be identified statelessly from the binding ID, and the simplest way to do this is to name the user after the binding ID.
 
-Note that at this time ODB does not support syslog drains or route services, so bindings are only a map of credentials.
-
 #### <a id="create-binding-output"></a>Output
 
 If the `create-binding` command is successful, it should return an exit code of 0 and print a [service broker API binding JSON response](http://docs.cloudfoundry.org/services/api.html#binding) on stdout. An example response is shown below. If the command failed, it should return any non-zero exit code, see the [supported exit code table](#create-binding-exit-codes) for details of supported failure cases. Stdout and stderr from the command will be logged by the ODB.
