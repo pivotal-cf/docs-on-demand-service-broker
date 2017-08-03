@@ -223,6 +223,8 @@ Plan for which the manifest is supposed to be generated
 | instance_group.instances              | int                      | number of instances for the instance group                                                                                             |
 | instance_group.lifecycle              | string                   | Optional, specifies the kind of workload the instance group represents. Valid values are `service` and `errand`; defaults to `service` |
 | instance_group.azs                    | array of strings         | a list of availability zones that the instance groups should be striped across                                                         |
+| instance_group.migrated\_from         | array of migrations      | Optional, list of [bosh migrations](https://bosh.io/docs/migrated-from.html)                                                           |
+| migration.name                        | string                   | Optional, name of the instance group to be migrated from                                                                               |
 | properties                            | map                      | properties which the operator has configured for deployments of the current plan                                                       |
 | update                                | map                      | update block which the operator has configured for deployments of the current plan                                                     |
 | update.canaries                       | int                      | plan-specific number of canary instances                                                                                               |
@@ -247,7 +249,10 @@ For example
          "azs": [
             "example-az"
          ],
-         "instances": 1
+         "instances": 1,
+         "migrated_from": [{
+           "name": "old-example-server"
+         }]
       },
       {
          "name": "example-migrations",
