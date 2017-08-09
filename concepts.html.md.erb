@@ -38,6 +38,8 @@ Updates can only proceed if the existing service instance is up-to-date. ODB cal
 
 ### <a id="update-service-instance-with-changes"></a>When There Are Pending Changes
 
+<p class="note"><strong>Note</strong>: When determing whether there are pending changes for an instance during an update, ODB <em>ignores</em> any configuration supplied in the <a href="https://bosh.io/docs/deployment-manifest.html#update" target="_blank">update block of the manifest</a> returned by the service adapter's <code>generate-manifest</code> subcommand.</p>
+
 <%= partial 'mmd/update_service_with_pending_changes_workflow.mmd' %>
 
 ### <a id="update-service-instance-no-changes"></a>When There Are No Pending Changes

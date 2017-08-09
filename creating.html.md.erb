@@ -26,7 +26,7 @@ See the [BOSH docs](http://bosh.io/docs) for help creating a BOSH release. We re
 
 ### Service Instance Lifecycle Errands
 
- <p class="note">**Note**: This feature requires BOSH director v261 or later.</p>
+ <p class="note"><strong>Note</strong>: This feature requires BOSH director v261 or later.</p>
 
 A service release can provide job errands that can be used by ODB during the management of an instance lifecycle. Service instance lifecycle errands may be [configured by the operator](./operating.html#lifecycle-errands).
 
@@ -55,6 +55,8 @@ A Service Adapter is an executable invoked by ODB. It is expected to respond to 
   - service instance (ID, request parameters, plan properties, IAAS resources)
   - previous manifest, if this is an upgrade deployment
 
+    **Note**: ODB requires <code>generate-manifest</code> to be a <strong>pure function</strong>. Given the same arguments when a previous manifest is supplied&mdash;which happens during a deployment update&mdash;the command should always output the same BOSH manifest.
+
 - `dashboard-url`
   Generate an optional URL of a web-based management user interface for the service instance.
 
@@ -64,7 +66,7 @@ A Service Adapter is an executable invoked by ODB. It is expected to respond to 
 - `delete-binding`
   Invalidate the created credentials, if possible. Some services (e.g. Redis) are single-user, and this endpoint will do nothing.
 
-<p class="note">**Note**: The ODB requires generate-manifest to be a pure function when a previous manifest is supplied (updating a deployment scenario): given the same arguments the command should always output the same BOSH manifest.</p>
+
 
 The parameters, and expected output from these subcommands will be explained in detail below. For each of these subcommands, exit status 0 indicates that the command succeeded exit status 10 indicates not implemented, and any non-zero status indicates failure.
 
@@ -145,7 +147,13 @@ service-adapter generate-manifest [service-deployment-JSON] [plan-JSON] [request
 
 The generate-manifest subcommand takes in 5 arguments and returns a BOSH deployment manifest YAML.
 
-<p class="note">**Note**: The ODB requires generate-manifest to be a pure function when a previous manifest is supplied (updating a deployment scenario): given the same arguments the command should always output the same BOSH manifest.</p>
+<div class="note">
+  <strong>Notes</strong>:
+  <ul>
+    <li>ODB requires <code>generate-manifest</code> to be a <strong>pure function</strong>. Given the same arguments when a previous manifest is supplied&mdash;which happens during a deployment update&mdash;the command should always output the same BOSH manifest.</li>
+    <li>When determing whether there are pending changes for an instance during an update, ODB <em>ignores</em> any configuration supplied in the <a href="https://bosh.io/docs/deployment-manifest.html#update" target="_blank">update block of the manifest</a> returned by the <code>generate-manifest</code> subcommand.</li>
+  </ul>
+</div>
 
 <a id="generate-manifest-output"></a>
 #### Output
