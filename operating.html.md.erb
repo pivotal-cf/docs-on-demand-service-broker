@@ -32,7 +32,7 @@ Dependencies for the On-Demand Broker:
 - BOSH director v257 or later (PCF 1.8) **Note:** does not support BOSH Windows
 - Cloud Foundry v238 or later (PCF 1.8)
 
- <p class="note">**Note**: [Service instance lifecycle errands](#lifecycle-errands) require BOSH director v261 (PCF 1.10) or later.</p>
+ <p class="note"><strong>Note</strong>: [Service instance lifecycle errands](#lifecycle-errands) require BOSH director v261 (PCF 1.10) or later.</p>
 
 ### SSL certificates
 
@@ -319,7 +319,7 @@ You cannot change the plan_id of a plan that has existing service instances.
 
 ## <a id="lifecycle-errands"></a>Service Instance Lifecycle Errands
 
- <p class="note">**Note**: This feature requires BOSH director v261 or later.</p>
+ <p class="note"><strong>Note</strong>: This feature requires BOSH director v261 or later.</p>
 
 Service Instance lifecycle errands allow additional short lived jobs to be run as part of service instance deployment. A deployment is only considered successful if the lifecycle errand successfully exits.
 
@@ -457,7 +457,7 @@ Add the following instance group to your manifest:
   azs: [<az>]
 ```
 
- <p class="note">**Note**: The `polling_interval` default is set to 60 seconds
+ <p class="note"><strong>Note</strong>: The `polling_interval` default is set to 60 seconds
     because the Cloud Controller itself polls the on-demand broker every 60 seconds.
     Setting your polling interval to anything lower than 60 seconds will not speed up the errand.<br/>
     The `polling_initial_offset` default is set to 5 seconds.
