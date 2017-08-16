@@ -3,19 +3,26 @@ title: On-Demand Services SDK Release Notes
 owner: London Services Enablement
 ---
 
-# <a id="release-notes"></a>vx.x.x Release Notes
+# <a id="release-notes"></a>v0.17.0 Release Notes
 
 ## <a id="minimum-version-requirements"></a>Minimum Version Requirements
 
 - BOSH 257+ (261+ for lifecycle errands) / BOSH lite v9000.131.0
 - CF 238+
 
-
 # <a id="known-issues"></a>Known Issues
+
+- None
 
 ## <a id="new-features"></a>New Features
 
+-  Service adapters can now provide a different <a href="https://bosh.io/docs/deployment-manifest.html#update" target="_blank">update block</a> each time that a manifest is generated. This allows for clustered services to create nodes in parallel at create time and then perform a rolling deployment when the cluster is being updated.
+-  Service adapters can now change the name of an instance group by using the <a href="https://bosh.io/docs/deployment-manifest.html#update" target="_blank">migrated from</a> BOSH manifest property. See the <a href="https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/v0.17.0/adapter/redis_manifest_generator.go#L100" target="_blank"> Redis example</a> for more details. To make use of this feature you can use the latest <a href="https://github.com/pivotal-cf/on-demand-services-sdk/tree/v0.17.0">ODB Golang SDK</a>.
+
 ## <a id="breaking-changes"></a>Breaking Changes
+
+- None
 
 ## <a id="bug-fixes"></a>Bug fixes
 
+- On Demand Broker log files in `/var/vcap/sys/log/broker/*` are no longer truncated when the broker process restarts via Monit. We reccomend using [syslog-migration-release](https://github.com/pivotal-cf/syslog-migration-release)
