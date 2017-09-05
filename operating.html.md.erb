@@ -551,6 +551,21 @@ The `orphan-deployments` errand will collate a list of service deployments that
 have no matching service instances in Cloud Foundry and return the list to the
 operator. It is then up to the operator to remove the orphaned bosh deployments.
 
+Add the following instance group to your manifest:
+
+```yaml
+- name: orphan-deployments
+  lifecycle: errand
+  instances: 1
+  jobs:
+  - name: orphan-deployments
+    release: <odb-release-name>
+  vm_type: <vm-type>
+  stemcell: <stemcell>
+  networks: [{name: <network>}]
+  azs: [<az>]
+```
+
 Run the errand with `bosh run errand orphan-deployments`.
 
 If orphan deployments are present, the errand will output a list of deployment
