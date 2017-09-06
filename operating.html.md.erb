@@ -117,6 +117,7 @@ instance_groups:
           username: <broker username>
           password: <broker password>
           disable_ssl_cert_verification: <true|false> # optional, defaults to false. This should NOT be used in production
+          shutdown_timeout: 60 # optional, defaults to 60 seconds. This allows the broker to gracefully wait for any open requests to complete before shutting down.
           cf:
             url: <CF API URL>
             root_ca_cert: <ca cert for cloud controller> # optional, see SSL certificates
@@ -316,6 +317,10 @@ CF API error: Cloud Foundry API version is insufficient, ODB requires CF v238+.
 ```
 You cannot change the plan_id of a plan that has existing service instances.
 ```
+
+## <a id="broker-stop"></a>Broker Shutdown
+
+The broker will try and wait for any incomplete https requests to complete before shutting down. This allows us to reduce the risk of leaving orphan deployments in the event that the BOSH director does not respond to our initial `bosh deploy` request. The `broker.shutdown_timeout` property determines how long the broker will wait before it is forced to shutdown. The default is 60 seconds, but can be configured in the manifest. Please refer to how to <a href="#broker-manifest">Write a Broker Manifest</a>
 
 ## <a id="lifecycle-errands"></a>Service Instance Lifecycle Errands
 
