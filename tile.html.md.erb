@@ -35,6 +35,8 @@ Notes:
 
 Follow the default build your own [Product tile documentation](http://docs.pivotal.io/tiledev/tile-generator.html), enhance the `handcraft.yml` with the accessors listed below. To access the `$self` accessors, the `service-broker` flag must be `true` in the handcraft.
 
+<p class="note"><strong>Note</strong>: If you are publishing a tile to be consumed by Ops Manager 1.8.x or 1.9.x, you will need to build your tile using releases with SHA1 internal checksums. On Demand Broker releases are published using SHA2 internal checksums. You can convert these releases to use SHA1 internal checksums using the BOSH CLI command <code>sha1ify-release</code>.</p>
+
 ## <a id="accessors"></a>Non-Exhaustive Accessors Reference
 
 #### director
