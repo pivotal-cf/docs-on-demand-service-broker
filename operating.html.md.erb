@@ -852,6 +852,8 @@ All ODB's logs have a UTC timestamp.
 
 If you have [configured broker metrics](#broker-metrics), the broker will emit metrics to the CF firehose. You can, for example, consume these metrics by using the [CF CLI firehose plugin](https://github.com/cloudfoundry/firehose-plugin).
 
+<p class="note"><strong>Note</strong>: The broker must be <a href="#register">registered with a Cloud Foundry</a> in order for metrics to be successfully emitted</p>
+
 #### Service-level Metrics
 The broker will emit a metric indicating the total number of instances across all plans. In addition, if there is a global quota set for the service, a metric showing how much of that quota is remaining will be emitted. Service-level metrics use the format shown below.
 
