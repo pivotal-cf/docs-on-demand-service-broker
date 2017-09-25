@@ -117,6 +117,7 @@ instance_groups:
           username: <broker username>
           password: <broker password>
           disable_ssl_cert_verification: <true|false> # optional, defaults to false. This should NOT be used in production
+          shutdown_timeout_in_seconds: 60 # optional, defaults to 60 seconds. This allows the broker to gracefully wait for any open requests to complete before shutting down.
           cf:
             url: <CF API URL>
             root_ca_cert: <ca cert for cloud controller> # optional, see SSL certificates
@@ -317,6 +318,10 @@ CF API error: Cloud Foundry API version is insufficient, ODB requires CF v238+.
 You cannot change the plan_id of a plan that has existing service instances.
 ```
 
+## <a id="broker-stop"></a>Broker Shutdown
+
+The broker will try and wait for any incomplete https requests to complete before shutting down. This allows us to reduce the risk of leaving orphan deployments in the event that the BOSH director does not respond to our initial `bosh deploy` request. The `broker.shutdown_timeout` property determines how long the broker will wait before it is forced to shutdown. The default is 60 seconds, but can be configured in the manifest. Please refer to how to <a href="#broker-manifest">Write a Broker Manifest</a>
+
 ## <a id="lifecycle-errands"></a>Service Instance Lifecycle Errands
 
  <p class="note"><strong>Note</strong>: This feature requires BOSH director v261 or later.</p>
@@ -480,11 +485,6 @@ Add the following instance group to your manifest:
       release: <odb-release-name>
       properties:
         broker_name: <broker-name>
-        disable_ssl_cert_verification: <true|false> # defaults to false
-        cf:
-          api_url: <cf-api-url>
-          admin_username: <cf-api-admin-username>
-          admin_password: <cf-api-admin-password>
   vm_type: <vm-type>
   stemcell: <stemcell>
   networks: [{name: <service-network>}]
@@ -846,6 +846,8 @@ All ODB's logs have a UTC timestamp.
 ### <a id="metrics"></a>Metrics
 
 If you have [configured broker metrics](#broker-metrics), the broker will emit metrics to the CF firehose. You can, for example, consume these metrics by using the [CF CLI firehose plugin](https://github.com/cloudfoundry/firehose-plugin).
+
+<p class="note"><strong>Note</strong>: The broker must be <a href="#register">registered with a Cloud Foundry</a> in order for metrics to be successfully emitted</p>
 
 #### Service-level Metrics
 The broker will emit a metric indicating the total number of instances across all plans. In addition, if there is a global quota set for the service, a metric showing how much of that quota is remaining will be emitted. Service-level metrics use the format shown below.
