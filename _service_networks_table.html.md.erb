@@ -36,7 +36,7 @@ Regardless of the specific network layout, the operator must ensure network rule
 <table class="nice">
 	<th>This component...</th>
 	<th>Must communicate with...</th>
-	<th>Default Port</th>
+	<th>Default TCP Port</th>
 	<th>Notes</th>
 	<tr>
 		<td><strong>ODB</strong></td>
@@ -46,8 +46,13 @@ Regardless of the specific network layout, the operator must ensure network rule
 		    	<li><strong>BOSH UAA</strong></li>
 		    </ul>
 		</td>
-		<td>443</td>
-		<td>One-way communication. <br>The default port is not configurable.</td>
+		<td>
+			<ul>
+				<li>25555</li>
+				<li>8443</li>
+			</ul>
+		</td>
+		<td>One-way communication. <br>The default ports are not configurable.</td>
 	</tr>
 	<tr>
 		<td><strong>ODB</strong></td>
@@ -85,9 +90,9 @@ Regardless of the specific network layout, the operator must ensure network rule
 		<td><strong>BOSH Agent</strong></td>
 		<td><strong>BOSH Director</strong>
 		</td>
-		<td>6868</td>
-		<td>Two-way communication. <br>The BOSH agent runs on every VM in the system and on the BOSH director. <br><br>
-		The default port is not configurable.</td>
+		<td>4222</td>
+		<td>One way connection; two-way communication. <br>The BOSH agent runs on every VM in the system and on the BOSH director. <br><br>
+		The default port is not configurable.  The BOSH Agent always initiates the connection.</td>
 	</tr>
 	<tr>
 		<td><strong>Deployed apps on ERT</strong></td>
