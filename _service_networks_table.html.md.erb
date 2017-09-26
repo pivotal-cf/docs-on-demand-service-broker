@@ -36,6 +36,7 @@ Regardless of the specific network layout, the operator must ensure network rule
 <table class="nice">
 	<th>This component...</th>
 	<th>Must communicate with...</th>
+	<th>Communication direction(s)</th>
 	<th>Default TCP Port</th>
 	<th>Notes</th>
 	<tr>
@@ -52,21 +53,24 @@ Regardless of the specific network layout, the operator must ensure network rule
 				<li>8443</li>
 			</ul>
 		</td>
-		<td>One-way communication. <br>The default ports are not configurable.</td>
+		<td>One-way</td>
+		<td>The default ports are not configurable.</td>
 	</tr>
 	<tr>
 		<td><strong>ODB</strong></td>
 		<td><strong>Deployed service instances</strong>
 		</td>
 		<td>Specific to the service (such as RabbitMQ for PCF). May be one or more ports.</td>
-		<td>One-way communication. <br>This connection is for administrative tasks. Avoid opening general use, app-specific ports for this connection.</td>
+		<td>One-way</td>
+		<td>This connection is for administrative tasks. Avoid opening general use, app-specific ports for this connection.</td>
 	</tr>
 	<tr>
 		<td><strong>ODB</strong></td>
 		<td><strong>ERT</strong>
 		</td>
 		<td>443</td>
-		<td>One-way communication. <br>The default port is not configurable.</td>
+		<td>One-way</td>
+		<td>The default port is not configurable.</td>
 	</tr>
 	<tr>
 		<td><strong>Errand VMs</strong></td>
@@ -84,28 +88,32 @@ Regardless of the specific network layout, the operator must ensure network rule
 				<li>Specific to the service. May be one or more ports.</li>
 			</ul>
 		</td>
-		<td>One-way communication. <br>The default port is not configurable.</td>
+		<td>One-way</td>
+		<td>The default port is not configurable.</td>
 	</tr>
 	<tr>
 		<td><strong>BOSH Agent</strong></td>
 		<td><strong>BOSH Director</strong>
 		</td>
 		<td>4222</td>
-		<td>One way connection; two-way communication. <br>The BOSH agent runs on every VM in the system and on the BOSH director. <br><br>
-		The default port is not configurable.  The BOSH Agent always initiates the connection.</td>
+		<td>Two-way</td>
+		<td>The BOSH Agent runs on every VM in the system, including the BOSH Director VM. The BOSH Agent initiates the connection with the BOSH Director.<br>
+		The default port is not configurable.  </td>
 	</tr>
 	<tr>
 		<td><strong>Deployed apps on ERT</strong></td>
 		<td><strong>Deployed service instances</strong>
 		</td>
 		<td>Specific to the service. May be one or more ports.</td>
-		<td>One-way communication. <br>This connection is for general use, app-specific tasks. Avoid opening administrative ports for this connection.</td>
+		<td>One-way</td>
+		<td>This connection is for general use, app-specific tasks. Avoid opening administrative ports for this connection.</td>
 	</tr>
 	<tr>
 		<td><strong>ERT</strong></td>
 		<td><strong>ODB</strong>
 		</td>
 		<td>8080</td>
-		<td>One-way communication. <br>This port may be different for individual services. This port may also be configurable by the operator if allowed by the tile developer.</td>
+		<td>One-way</td>
+		<td>This port may be different for individual services. This port may also be configurable by the operator if allowed by the tile developer.</td>
 	</tr>
 </table>
