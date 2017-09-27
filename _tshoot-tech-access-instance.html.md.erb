@@ -1,8 +1,16 @@
 1. To target an individual service instance deployment, retrieve the GUID of your service instance with the cf CLI command `cf service MY-SERVICE --guid`.
 
+1. Run `bosh status --uuid` to retrieve the BOSH Director GUID.
+<p class="note"><strong>Note</strong>: "GUID" and "UUID" mean the same thing.</p>
+
 1. To download your BOSH manifest for the service, run `bosh download manifest service-instance_SERVICE-INSTANCE-GUID MY-SERVICE.yml` using the GUID you just obtained and a filename you want to save the manifest as.
 
-1. Run `bosh deployment MY-SERVICE.yml to select the deployment`.
+1. Edit the following line in the service instance manifest that you just saved, to include the current BOSH Director GUID:
+<pre class="code">
+&nbsp;&nbsp;&nbsp;&nbsp;director_uuid: BOSH-DIRECTOR-GUID
+</pre>
+
+1. Run `bosh deployment MY-SERVICE.yml` to select the deployment using the Director UUID.
 
 1. Run `bosh instances` to view VMs in the deployment.
 
