@@ -125,6 +125,12 @@ Note, we recommend service authors use the following order of precedence in thei
 
 For example, see `auto_create_topics` in the [example Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go#L68-L77).
 
+### <a id="defensive-upgrade-behaviors"></a> Defensive upgrade behaviors for stemcells or releases
+
+Service Authors should ensure that the service release or the stemcell satisfies the functional requirements of the service adapter. This can be achieved, for example, by checking that the service release satisfies a minimum version constraint.
+
+The [generate manifest subcommand for the Kafka example](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/ab99f9086c63396464347b585fb3f2abad6e332c/adapter/generate_manifest.go#L86) has an example of this approach.
+
 ## <a id="interface"></a>Service Adapter Interface
 
 A service adapter is expected to be implemented as a binary with the interface
