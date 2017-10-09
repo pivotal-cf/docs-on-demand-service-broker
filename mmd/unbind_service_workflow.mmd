@@ -2,6 +2,10 @@
 sequenceDiagram
   User->>Cloud Controller:cf unbind-service
   Cloud Controller->>On Demand Broker:DELETE binding
+  opt CredHub enabled
+  On Demand Broker->>CredHub:Delete credentials
+  CredHub->>On Demand Broker:OK
+  end
   On Demand Broker->>Service Adapter:delete-binding
   Service Adapter->>On Demand Broker:exit 0
   On Demand Broker->>Cloud Controller:OK

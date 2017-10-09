@@ -4,6 +4,11 @@ sequenceDiagram
   Cloud Controller->>On Demand Broker:PUT binding
   On Demand Broker->>Service Adapter:create-binding
   Service Adapter->>On Demand Broker:binding credentials
+  alt CredHub enabled
+  On Demand Broker->>CredHub:Store credentials with ACLs for app
+  On Demand Broker->>Cloud Controller:CredHub reference
+  else CredHub disabled
   On Demand Broker->>Cloud Controller:binding credentials
+  end
   Cloud Controller->>User:OK
 </div>
