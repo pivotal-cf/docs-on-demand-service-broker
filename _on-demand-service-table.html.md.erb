@@ -1,0 +1,53 @@
+Various Service and Partner tile use on-demand instances. However, they implement on-demand in different ways. 
+
+On-Demand lets developers provision instances when they want. 
+The dedicated or pre-provisioned means that the operators must provision the service instances during installation and configuration through the service tile UI. 
+
+<table class="nice">
+<tr>
+	<th>PCF Service</th>
+	<th>Standalone product related to the service</th>
+	<th>Pre-provisioned (PP) or on-demand (OD)</th>
+	<th>PP/OD options are separate products on PivNet?</th>
+	<th>Multiple service brokers in the same tile/product?</th>
+</tr>
+<tr>
+	<td>
+	<ul>
+	<li>Pivotal Cloud Cache (OD)</li> 
+	<li>Gemfire for PCF (PP)</li>
+	Pivotal Cloud Cache has fewer features than Gemfire for PCF.
+	</ul>
+	</td>
+	<td>Pivotal Gemfire</td>
+	<td><strong>PP:</strong> Gemfire for PCF<br/>
+	<strong>OD:</strong> Pivotal Cloud Cache</td>
+	<td>Yes</td>
+	<td>No</td>
+</tr>
+<tr>
+	<td>RabbitMQ for PCF (one tile to install and configure OD and PP)</td>
+	<td>Pivotal Rabbit MQ</td>
+	<td><strong>PP:</strong>RabbitMQ for PCF v1.7 and earlier<br/>
+	<strong>OD:</strong>RabbitMQ for PCF v1.8 and later</td>
+	<td>No</td>
+	<td>Yes</td>
+</tr>
+<tr>
+	<td>Redis for PCF<br/> (One tile with three variations: OD, PP shared instance, and PP dedicated instance)</td>
+	<td>Redis</td>
+	<td>PP:</strong> Redis 1.7 and earlier<br/>
+	<strong>OD:</strong> Redis 1.8 and later</td>
+	<td>No</td>
+	<td>No</td>
+</tr>
+<tr>
+	<td>MySQL for PCF <br/>
+	(Two tiles with the same name but different version numbers. MySQL for PCF v2.0 is OD; MySQL for PCF v1.x is PP.)</td>
+	<td>MySQL</td>
+	<td><strong>PP:</strong> MySQL for PCF 1.x<br/>
+	<strong>OD:</strong>MySQL for PCF 2.x</td>
+	<td>Yes</td>
+	<td>No</td>
+</tr>
+</table>
