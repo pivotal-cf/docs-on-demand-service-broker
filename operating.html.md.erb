@@ -28,7 +28,7 @@ Dependencies for the On-Demand Broker:
 - BOSH director v257 or later
 - Cloud Foundry v238 or later
 
-### SSL certificates
+### <a id="ssl-certs"></a>SSL Certificates
 
 If ODB is configured to communicate with BOSH on the director's public IP you may be using a self-signed certificate unless you have a domain for your BOSH director. ODB does not ignore TLS certificate validation errors by default (as expected). You have two options to configure certificate-based authentication between the BOSH director and the ODB:
 
@@ -43,7 +43,7 @@ If ODB is configured to communicate with BOSH on the director's public IP you ma
 
 You can also configure a separate root CA certificate that is used when ODB communicates with the Cloud Foundry API (Cloud Controller). This is done in a similar way to above. Please see [manifest snippets below](#core-broker-configuration) for details.
 
-### <a id="bosh-teams"></a>BOSH teams
+### <a id="bosh-teams"></a>BOSH Teams
 
 BOSH has a teams feature that allows you to further control how BOSH operations are available to different clients. We recommend using it to ensure that your on-demand service broker client can only see deployments it is allowed to. For example, if you [use uaac](https://docs.cloudfoundry.org/adminguide/uaa-user-management.html) to create the client like this:
 
@@ -60,7 +60,7 @@ For more details on how to set up and use BOSH teams, see [Director teams and pe
 
 For more details on securing how ODB uses BOSH, see [Security](#security).
 
-### <id="cloud-controller"></a>Cloud Controller
+### <a id="cloud-controller"></a>Cloud Controller
 
 ODB used the Cloud Controller as a source of truth about service offerings, plans, and instances. To reach Cloud Controller, ODB needs to be configured with credentials. These can be either client or user credentials:
 
