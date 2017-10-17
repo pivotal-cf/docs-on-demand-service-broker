@@ -16,10 +16,11 @@ owner: London Services Enablement
 
 ## <a id="new-features"></a>New Features
 
--  Service adapters can now provide a different <a href="https://bosh.io/docs/deployment-manifest.html#update" target="_blank">update block</a> each time that a manifest is generated. This allows for clustered services to create nodes in parallel at create time and then perform a rolling deployment when the cluster is being updated.
--  Service adapters can now change the name of an instance group by using the <a href="https://bosh.io/docs/deployment-manifest.html#update" target="_blank">migrated from</a> BOSH manifest property. See the <a href="https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/v0.17.0/adapter/redis_manifest_generator.go#L100" target="_blank"> Redis example</a> for more details. To make use of this feature you can use the latest <a href="https://github.com/pivotal-cf/on-demand-services-sdk/tree/v0.17.0">ODB Golang SDK</a>.
+- Service adapters can now provide a different <a href="https://bosh.io/docs/deployment-manifest.html#update" target="_blank">update block</a> each time that a manifest is generated. This allows for clustered services to create nodes in parallel at create time and then perform a rolling deployment when the cluster is being updated.
+- Service adapters can now change the name of an instance group by using the <a href="https://bosh.io/docs/deployment-manifest.html#update" target="_blank">migrated from</a> BOSH manifest property. See the <a href="https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/v0.17.0/adapter/redis_manifest_generator.go#L100" target="_blank"> Redis example</a> for more details. To make use of this feature you can use the latest <a href="https://github.com/pivotal-cf/on-demand-services-sdk/tree/v0.17.0">ODB Golang SDK</a>.
 - Support for [BOSH tags](https://bosh.io/docs/manifest-v2.html#tags) in service-adapter generated manifests [0.17.1]
 - Release distributed with SHA2 checksums only [0.17.1]
+- Bump to Golang 1.8.4 [0.17.2]
 
 ## <a id="breaking-changes"></a>Breaking Changes
 
@@ -28,3 +29,5 @@ owner: London Services Enablement
 ## <a id="bug-fixes"></a>Bug fixes
 
 - On Demand Broker log files in `/var/vcap/sys/log/broker/*` are no longer truncated when the broker process restarts via Monit. We recommend using [syslog-migration-release](https://github.com/pivotal-cf/syslog-migration-release)
+- Auto-detect BOSH UAA url, you can remove the `bosh.authentication.uaa.url` property from your ODB manifest. Configuring this property via PCF OpsManager was causing some issues. [0.17.2]
+
