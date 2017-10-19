@@ -1,7 +1,6 @@
-Various Service and Partner tile use on-demand instances. However, they implement on-demand in different ways. 
+Many service and partner tiles use on-demand (OD) instances. Each tile can implement an OD instance in different ways.
 
-On-Demand lets developers provision instances when they want. 
-The dedicated or pre-provisioned means that the operators must provision the service instances during installation and configuration through the service tile UI. 
+OD instances let developers provision instances when they want. Dedicated, or pre-provisioned (PP) instances require the operators to provision the service instances during installation and configuration via the service tile UI. 
 
 <table class="nice">
 <tr>
@@ -12,15 +11,8 @@ The dedicated or pre-provisioned means that the operators must provision the ser
 	<th>Multiple service brokers in the same tile/product?</th>
 </tr>
 <tr>
-	<td>
-	<ul>
-	<li>Pivotal Cloud Cache (OD)</li> 
-	<li>Gemfire for PCF (PP)</li>
-	Pivotal Cloud Cache has fewer features than Gemfire for PCF.
-	</ul>
-	</td>
-</tr>
-<tr>
+	<td><strong>PP:</strong> Gemfire for PCF<br/>
+	<strong>OD:</strong> Pivotal Cloud Cache. Pivotal Cloud Cache has fewer features than Gemfire for PCF.</td>
 	<td>Pivotal Gemfire</td>
 	<td><strong>PP:</strong> Gemfire for PCF<br/>
 	<strong>OD:</strong> Pivotal Cloud Cache</td>
@@ -30,8 +22,8 @@ The dedicated or pre-provisioned means that the operators must provision the ser
 <tr>
 	<td>RabbitMQ for PCF (one tile to install and configure OD and PP)</td>
 	<td>Pivotal Rabbit MQ</td>
-	<td><strong>PP:</strong>RabbitMQ for PCF v1.7 and earlier<br/>
-	<strong>OD:</strong>RabbitMQ for PCF v1.8 and later</td>
+	<td><strong>PP:</strong> RabbitMQ for PCF v1.7 and earlier<br/>
+	<strong>OD:</strong> RabbitMQ for PCF v1.8 and later</td>
 	<td>No</td>
 	<td>Yes</td>
 </tr>
