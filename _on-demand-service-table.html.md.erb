@@ -8,40 +8,35 @@ OD instances let developers provision instances when they want. Dedicated, or pr
 	<th>Standalone product related to the service</th>
 	<th>Pre-provisioned (PP) or on-demand (OD)</th>
 	<th>PP/OD options are separate products on PivNet?</th>
-	<th>Multiple service brokers in the same tile/product?</th>
 </tr>
 <tr>
-	<td><strong>PP:</strong> Gemfire for PCF<br/>
-	<strong>OD:</strong> Pivotal Cloud Cache. Pivotal Cloud Cache has fewer features than Gemfire for PCF.</td>
+	<td>Gemfire for PCF or Pivotal Cloud Cache</td>
 	<td>Pivotal Gemfire</td>
 	<td><strong>PP:</strong> Gemfire for PCF<br/>
-	<strong>OD:</strong> Pivotal Cloud Cache</td>
+	<strong>OD:</strong> Pivotal Cloud Cache<br/>
+	Pivotal Cloud Cache has fewer features than Gemfire for PCF.</td>
 	<td>Yes</td>
-	<td>No</td>
 </tr>
 <tr>
-	<td>RabbitMQ for PCF (one tile to install and configure OD and PP)</td>
+	<td>RabbitMQ for PCF </td>
 	<td>Pivotal Rabbit MQ</td>
-	<td><strong>PP:</strong> RabbitMQ for PCF v1.7 and earlier<br/>
+	<td><strong>PP:</strong> All versions<br/>
 	<strong>OD:</strong> RabbitMQ for PCF v1.8 and later</td>
-	<td>No</td>
-	<td>Yes</td>
+	<td>No. To choose OD or PP installations, configure the tile panes. For more information, see the<a href="../../docs-rabbitmq-pcf/install-config.html">RabbitMQ Operator Guide</a> and <a href="../../docs-rabbitmq-pcf/install-config-pp.html">User Guide</a>.</td>
 </tr>
 <tr>
-	<td>Redis for PCF<br/> (One tile with three variations: OD, PP shared instance, and PP dedicated instance)</td>
+	<td>Redis for PCF</td>
 	<td>Redis</td>
-	<td>PP:</strong> Redis 1.7 and earlier<br/>
+	<td>PP:</strong> All versions<br/>
 	<strong>OD:</strong> Redis 1.8 and later</td>
-	<td>No</td>
-	<td>No</td>
+	<td>No<br/>
+	Select service plans in the Redis for PCF tile. Three service plans are available: OD, Dedicated-VM, and Shared-VM.</td>
 </tr>
 <tr>
-	<td>MySQL for PCF <br/>
-	(Two tiles with the same name but different version numbers. MySQL for PCF v2.0 is OD; MySQL for PCF v1.x is PP.)</td>
+	<td>MySQL for PCF</td>
 	<td>MySQL</td>
 	<td><strong>PP:</strong> MySQL for PCF 1.x<br/>
 	<strong>OD:</strong>MySQL for PCF 2.x</td>
 	<td>Yes</td>
-	<td>No</td>
 </tr>
 </table>
