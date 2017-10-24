@@ -283,18 +283,9 @@ Add the following jobs to the broker instance group:
       execution_interval_seconds: <interval between successive metrics collections>
       origin: <origin tag for metrics>
       monit_dependencies: [broker] # hardcode this
-- name: metron_agent
-  release: loggregator
-  properties:
-    metron_agent:
-      deployment: <deployment tag for metrics>
-    metron_endpoint:
-      shared_secret: <metron secret>
-    loggregator:
-      etcd:
-        machines: [<CF etcd IPs>]
-    loggregator_endpoint:
-      shared_secret: <loggregator secret>
+      ....snip....
+      #Add Loggregator configuration here: see examples @ https://github.com/pivotal-cf/service-metrics-release/blob/master/manifests
+      ....snip....
 - name: service-metrics-adapter
   release: <ODB release>
 ```
