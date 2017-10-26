@@ -42,7 +42,7 @@ Before setting up and using ODB on your local development environment, install a
 
 1. Target your BOSH Lite installation:
    <pre class="terminal">
-    $ bosh target
+    $ bosh alias-env YOUR-ENVIRONMENT -e
     Current target is https<span>:</span>//192.168.50.4:25555 (Bosh Lite Director)
    </pre>
 
@@ -143,11 +143,11 @@ Before setting up and using ODB on your local development environment, install a
 
 1. Obtain the URL and UUID BOSH Lite director information:
   <pre class="terminal">
-    $ bosh status
+    $ bosh env
   </pre>
   This command produces output similar to the following:
   <pre class="terminal">
-    → bosh status
+    → bosh env
     Config
                  /Users/pivotal/.bosh_config
 
