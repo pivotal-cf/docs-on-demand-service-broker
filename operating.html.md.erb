@@ -244,6 +244,30 @@ service_catalog:
         pre_delete: <errand name> #optional
 ```
 
+## <a id="credhub"></a>CredHub Integration
+
+ODB optionally allows secure storage of service credentials in CredHub. To use
+this feature, you will need to have CredHub 1.4.X installed as part of the Cloud
+Foundry deployment, and include a CredHub configuration section in the ODB
+manifest:
+
+```
+instance_groups:
+- name: broker
+  ...
+  jobs:
+  - name: broker
+    properties:
+      ...
+      credhub:
+        api_url: https://credhub.example.com:8844
+        client_id: ((credhub.client_id))
+        client_secret: ((credhub.client_secret))
+```
+
+If the CredHub configuration section is omitted, the service credentials will be
+set explicitly in the application's VCAP_SERVICES environmental variable.
+
 ## <a id="route"></a>Route Registration
 
 You can optionally colocate the `route_registrar` job from the [routing release](http://bosh.io/releases/github.com/cloudfoundry-incubator/cf-routing-release?all=1) with the on-demand-service-broker, in order to:
