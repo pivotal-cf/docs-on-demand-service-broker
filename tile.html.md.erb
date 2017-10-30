@@ -7,7 +7,7 @@ This documents the process for deploying an on-demand broker (ODB) with a servic
 
 ## <a id="requirements"></a>Requirements
 
-Before ODB, Ops Manager controlled the IP allocation of the private networks. So when using ODB in a tile, you will need at least two private networks:
+Before ODB, Ops Manager controlled the IP allocation of the private networks. When you use ODB in a tile, you will need at least two private networks:
 
 * a network where Ops Manager will deploy the ODB VM, and
 * a different network where the ODB will deploy service instance VMs.
@@ -44,12 +44,20 @@ Follow the default build your own [product tile documentation](http://docs.pivot
 
 These accessors are used to provide fields relating to the BOSH Director installation present.
 
-| Accessor                  | Description                                                                                                                    |
-|:--------------------------|:-------------------------------------------------------------------------------------------------------------------------------|
-| $director.hostname        | The director's hostname or IP address                                                                                                      |
-| $director.ca\_public\_key | The director's root ca certificate. Related: [how to configure SSL certificates for the ODB](operating.html#ssl-certificates). |
+<table class="nice">
+  <th>Accessor</th>
+  <th>Description</th>
+  <tr>
+    <td>$director.hostname</td>
+    <td>The Ops Manager Director's hostname or IP address</td>
+  </tr>
+  <tr>
+    <td>$director.ca_public_key</td>
+    <td>The Ops Manager Director's root CA certificate. For more information, see <a href="./operating.html#ssl-certificates">How to configure SSL certificates for the ODB</a>.</td>
+  </tr>
+</table>
 
-For example
+For example:
 
 ```yaml
 bosh:
@@ -61,12 +69,23 @@ bosh:
 
 These accessors are used to provide fields that belong to the specific tile (in this case, the broker tile).
 
-| Accessor                  | Description                                                     |
-|:--------------------------|:----------------------------------------------------------------|
-| $self.uaa\_client_name    | UAA client name, that can authenticate with the BOSH director   |
-| $self.uaa\_client\_secret | UAA client secret, that can authenticate with the BOSH director |
-| $self.service\_network    | Service network configured for the on-demand instances          |
-
+<table class="nice">
+  <th>Accessor</th>
+  <th>Description</th>
+  <tr>
+    <td>$self.uaa\_client_name</td>
+    <td>Name of UAA client that can authenticate with the Ops Manager Director</td>
+  </tr>
+  <tr>
+    <td>$self.uaa_client_secret</td>
+    <td>Name of UAA secret that can authenticate with the BOSH director</td>
+  </tr>
+  <tr>
+    <td>$self.service_network </td>
+    <td>Service network configured for the on-demand instances
+</td>
+  </tr>
+</table>
 
 You must create the service network manually. Create a subnet on AWS and then add it to the Director by configuring the Director tile. Configuration options are in the tile, under *Create Networks* > *ADD network*.
 
@@ -89,15 +108,32 @@ bosh:
 
 These accessors are used to provide fields from the Elastic Runtime Tile (Cloud Foundry) present in the Ops Manager installation.
 
-| Accessor                                        | Description                                                                        |
-|:------------------------------------------------|:-----------------------------------------------------------------------------------|
-| ..cf.ha\_proxy.skip\_cert\_verify.value         | Flag to skip SSL certificate verification for connections to the CF API            |
-| ..cf.cloud\_controller.apps\_domain.value       | The application domain configured in the CF installation                           |
-| ..cf.cloud\_controller.system\_domain.value     | The system domain configured in the CF installation                                |
-| ..cf.uaa.system\_services\_credentials.identity | Username of a CF user in the cloud\_controller.admin group, to be used by services |
-| ..cf.uaa.system\_services\_credentials.password | Password of a CF user in the cloud\_controller.admin group, to be used by services |
+<table class="nice">
+  <th>Accessor</th>
+  <th>Description</th>
+  <tr>
+    <td>..cf.ha\_proxy.skip\_cert\_verify.value</td>
+    <td>Flag to skip SSL certificate verification for connections to the CF API</td>
+  </tr>
+  <tr>
+    <td>..cf.cloud\_controller.apps\_domain.value</td>
+    <td>The application domain configured in the CF installation</td>
+  </tr>
+  <tr>
+    <td>..cf.cloud\_controller.system\_domain.value</td>
+    <td>The system domain configured in the CF installation</td>
+  </tr>
+  <tr>
+    <td>..cf.uaa.system\_services\_credentials.identity</td>
+    <td>Username of a CF user in the <code>cloud\_controller.admin</code> group, to be used by services</td>
+  </tr>
+  <tr>
+    <td>..cf.uaa.system\_services\_credentials.password</td>
+    <td>Password of a CF user in the <code>cloud\_controller.admin</code> group, to be used by services</td>
+  </tr>
+</table>
 
-For example
+For example:
 
 ```yaml
 disable_ssl_cert_verification: (( ..cf.ha_proxy.skip_cert_verify.value ))
