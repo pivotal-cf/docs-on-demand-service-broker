@@ -2,13 +2,23 @@ A service instance is defined as ‘orphaned’ when the BOSH deployment for the
 
 The `orphan-deployments` errand collates a list of service deployments that have no matching service instances in Cloud Foundry and return the list to the operator. It is then up to the operator to remove the orphaned bosh deployments.
 
+#### <a id="cli-v2"></a>BOSH CLI v2
+
+The following procedure is for v2 of the BOSH CLI. 
+
+Run this errand with the command `bosh run-errand orphan-deployments` after you have selected the broker deployment with `bosh deployment`.
+
+#### <a id="cli-v1"></a>BOSH CLI v1
+
+The following procedure is for v1 of the BOSH CLI.
+
 Run this errand with the command `bosh run errand orphan-deployments` after you have selected the broker deployment with `bosh deployment`.
 
 If orphan deployments exist, the errand script will:
 
-- Exit with exit code 10
-- Output a list of deployment names under a `[stdout]` header
-- Provide a detailed error message under a `[stderr]` header
+* Exit with exit code 10
+* Output a list of deployment names under a `[stdout]` header
+* Provide a detailed error message under a `[stderr]` header
 
 For example:
 <pre class="terminal">
@@ -37,9 +47,9 @@ $ curl 'https://bosh-user:bosh-password@bosh-url:25555/tasks/task-id/output?type
 
 If no orphan deployments exist, the errand script will:
 
-- Exit with exit code 0
-- Stdout will be an empty list of deployments
-- Stderr will be `None`
+* Exit with exit code 0
+* Stdout will be an empty list of deployments
+* Stderr will be `None`
 
 <pre class="terminal">
 [stdout]
@@ -53,9 +63,25 @@ Errand 'orphan-deployments' completed successfully (exit code 0)
 
 If the errand encounters an error during running it will:
 
-- Exit with exit 1
-- Stdout will be empty
-- Any error messages will be under stderr
+* Exit with exit 1
+* Stdout will be empty
+* Any error messages will be under stderr
+
+#### <a id="cli-v2"></a>BOSH CLI v2
+
+The following procedure is for v2 of the BOSH CLI. 
+
+To clean up orphaned instances, perform the following action on each:
+<pre class="terminal">
+$ bosh delete-deployment service-instance_SERVICE-INSTANCE-GUID
+</pre>
+<p class="note warning">
+<strong>WARNING: </strong> This may leave IaaS resources in an unusable state.
+</p>
+
+#### <a id="cli-v1"></a>BOSH CLI v1
+
+The following procedure is for v1 of the BOSH CLI.
 
 To clean up orphaned instances, perform the following action on each:
 <pre class="terminal">
