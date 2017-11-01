@@ -8,16 +8,20 @@ Instance provisioning failed: There was a problem completing your request. Pleas
 
 Retrieve the BOSH task ID from the error message and run `bosh task TASK-ID`.
 
+Additionally, you can [access the broker logs](#access-broker) and use the `broker-request-id` from the error message above to search the log for more information.
+
+Check for:
+
+* [Authentication errors](<%= vars.tshooting_components_file %>#auth)
+* [Network errors](<%= vars.tshooting_components_file %>#network)
+* [Quota errors](<%= vars.tshooting_components_file %>#quotas)
+
+### <a id="cli-v1"></a>BOSH CLI v1
+
+The following procedures are for v1 of the BOSH CLI. For instructions using v2, see <a name="#cli-v2">BOSH CLI v2</a>.
+
 If the BOSH error shows a problem with the deployment manifest:
 
 1. Download the manifest for <%=vars.service_name_article_full%> instance by running `bosh download manifest service-instance_SERVICE-INSTANCE-GUID MY-SERVICE.yml`.
 
 1. Check the manifest for configuration errors.
-
-[Access the broker logs](#access-broker) and use the `broker-request-id` from the error message above to search the log for more information.
-
-Check for:
-
-  - [Authentication errors](<%= vars.tshooting_components_file %>#auth)
-  - [Network errors](<%= vars.tshooting_components_file %>#network)
-  - [Quota errors](<%= vars.tshooting_components_file %>#quotas)
