@@ -30,3 +30,5 @@ Use the information in the `Message` field to debug further. Provide this inform
 The `task-id` field maps to the BOSH task id. For further information on a failed BOSH task, use the `bosh task TASK-ID` command in the BOSH CLI.
 
 The `broker-request-guid` maps to the portion of the On-Demand Broker log containing the failed step. Access the broker log through your syslog aggregator, or access BOSH logs for the broker by typing `bosh logs broker 0`. If you have more than one broker instance, repeat this process for each instance.
+
+<p class="note"><strong>Note:</strong> This procedure is the same for v1 and v2 of the BOSH CLI.</p>
