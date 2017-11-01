@@ -1,16 +1,30 @@
-If you have made changes to the plan definition or uploaded a new tile into Ops Manager you may want to upgrade all <%=vars.service_name_article_full%> instances to the latest software / plan definition.
-
-To do this you can either select the errand through the Ops Manager UI and have this happen along with the `Apply Changes` action or run the errand directly with the command `bosh run errand upgrade-all-service-instances` after you have selected the broker deployment with `bosh deployment`.
+If you have made changes to the plan definition or uploaded a new tile into Ops Manager, you may want to upgrade all <%=vars.service_name_article_full%> instances to the latest software/plan definition.
 
 The errand does the following:
 
-- Collects all of the service instances the on-demand broker has registered.
-- For each instance the errand serially:
-  - Issues an upgrade command to the on-demand broker.
-  - Re-generates the service instance manifest based on its latest configuration from the tile.
-  - Deploys the new manifest for the service instance.
-  - Waits for this operation to complete, then proceeds to the next instance.
-- Adds to a retry list any instances that have ongoing BOSH tasks at the time of upgrade.
-- Retries any instances in the retry list until all are upgraded.
+<ul>
+	<li>Collects all of the service instances the on-demand broker has registered.</li>
+	<li>For each instance the errand serially:
+		<ul>
+			<li>Issues an upgrade command to the on-demand broker.</li>
+			<li>Re-generates the service instance manifest based on its latest configuration from the tile.</li>
+			<li>Deploys the new manifest for the service instance.</li>
+			<li>Waits for this operation to complete, then proceeds to the next instance.</li>
+		</ul></li>
+	<li>Adds to a retry list any instances that have ongoing BOSH tasks at the time of upgrade.</li>
+	<li>Retries any instances in the retry list until all are upgraded.</li>
+</ul>
 
-If any instance fails to upgrade, the errand fails immediately. This prevents  systemic problems from spreading to the rest of your service instances.
+If any instance fails to upgrade, the errand fails immediately. This prevents systemic problems from spreading to the rest of your service instances. Run the errand by following either of the procedures below.
+
+#### <a id="cli-v2"></a>BOSH CLI v2
+
+The following procedure is for v2 of the BOSH CLI.
+
+You can either select the errand through the Ops Manager UI and have it run when you click `Apply Changes`, or you can run the errand directly with the command `bosh run-errand upgrade-all-service-instances`.
+
+#### <a id="cli-v1"></a>BOSH CLI v1
+
+The following procedure is for v1 of the BOSH CLI.
+
+You can either select the errand through the Ops Manager UI and have it run when you click `Apply Changes`, or you can run the errand directly with the command `bosh run errand upgrade-all-service-instances` after you have selected the broker deployment with `bosh deployment`.
