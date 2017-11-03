@@ -450,6 +450,14 @@ Add the following instance group to your manifest:
   azs: [<az>]
 ```
 
+Execute the errand in one of two ways, depending on which version of the BOSH CLI you're using.
+
+#### <a id="cli-v1"></a>BOSH CLI v2
+
+Run the errand with `bosh run-errand register-broker`.
+
+#### <a id="cli-v1"></a>BOSH CLI v1
+
 Run the errand with `bosh run errand register-broker`.
 
 ### <a id="delete-instances-and-deregister"></a>Delete All Service Instances and Deregister Broker
@@ -494,6 +502,14 @@ Add the following instance group to your manifest:
     The `polling_initial_offset` default is set to 5 seconds.
     In systems with more load, consider increasing the polling offset.
 
+Execute the errand in one of two ways, depending on which version of the BOSH CLI you're using.
+
+#### <a id="cli-v1"></a>BOSH CLI v2
+
+Run the errand with `bosh run-errand delete-all-service-instances-and-deregister-broker`.
+
+#### <a id="cli-v1"></a>BOSH CLI v1
+
 Run the errand with `bosh run errand delete-all-service-instances-and-deregister-broker`.
 
 ### <a id="deregister-broker"></a>Deregister Broker
@@ -516,6 +532,14 @@ Add the following instance group to your manifest:
   networks: [{name: <service-network>}]
   azs: [<az>]
 ```
+
+Execute the errand in one of two ways, depending on which version of the BOSH CLI you're using.
+
+#### <a id="cli-v1"></a>BOSH CLI v2
+
+Run the errand with `bosh run-errand deregister-broker`.
+
+#### <a id="cli-v1"></a>BOSH CLI v1
 
 Run the errand with `bosh run errand deregister-broker`.
 
@@ -563,6 +587,14 @@ Add the following instance group to your manifest:
     In systems with more load on Cloud Foundry, this process could take a longer,
     in which case you might consider increasing the polling offset.</p>
 
+Execute the errand in one of two ways, depending on which version of the BOSH CLI you're using.
+
+#### <a id="cli-v1"></a>BOSH CLI v2
+
+Run the errand with `bosh run-errand delete-all-service-instances`.
+
+#### <a id="cli-v1"></a>BOSH CLI v1
+
 Run the errand with `bosh run errand delete-all-service-instances`.
 
 ### <a id="orphan-deployments"></a>Delete Orphaned Deployments
@@ -590,6 +622,14 @@ Add the following instance group to your manifest:
   azs: [<az>]
 ```
 
+Execute the errand in one of two ways, depending on which version of the BOSH CLI you're using.
+
+#### <a id="cli-v1"></a>BOSH CLI v2
+
+Run the errand with `bosh run-errand orphan-deployments`.
+
+#### <a id="cli-v1"></a>BOSH CLI v1
+
 Run the errand with `bosh run errand orphan-deployments`.
 
 If orphan deployments are present, the errand will output a list of deployment
@@ -605,9 +645,17 @@ None
 Errand 'orphan-deployments' completed successfully (exit code 0)
 ```
 
-**Warning:** Deleting the bosh deployment will destroy the vm, any data present will be lost.
+**Warning:** Deleting the BOSH deployment will destroy the VM. Any data present will be lost.
 
-To delete the orphan deployment run `bosh delete deployment service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3`.
+Execute the errand in one of two ways, depending on which version of the BOSH CLI you're using.
+
+#### <a id="cli-v1"></a>BOSH CLI v2
+
+Run the errand with `bosh delete-deployment service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3`.
+
+#### <a id="cli-v1"></a>BOSH CLI v1
+
+Run the errand with `bosh delete deployment service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3`.
 
 ## <a id="updates"></a>Updates
 
@@ -699,9 +747,10 @@ Operators should run the [upgrade-all-service-instances errand](#upgrade-instanc
 
 To upgrade all existing service instances after the service offering has been updated or upgraded:
 
-1. Add the following instance group to your broker manifest:
-
-    ```yaml
+<ol>
+<li>Add the following instance group to your broker manifest:
+    <pre class="terminal">
+    yaml
     - name: upgrade-all-service-instances
       lifecycle: errand
       instances: 1
@@ -714,10 +763,15 @@ To upgrade all existing service instances after the service offering has been up
       stemcell: <stemcell>
       networks: [{name: <network>}]
       azs: [<az>]
-    ```
-
-1. Deploy the broker manifest.
-1. Run the errand with `bosh run errand upgrade-all-service-instances`.
+    </pre></li>
+<li>Deploy the broker manifest.</li>
+<li>Run the errand in one of two ways, depending on which version of the BOSH CLI you use:<br/>  
+<ul>
+<li><strong>For v2 of the CLI:</strong> <code>bosh run-errand upgrade-all-service-instances</code>.</li>
+<li><strong>For v1 of the CLI:</strong> <code>bosh run errand upgrade-all-service-instances</code>.</li>
+</ul>
+</li>
+</ol>
 
 <p class="note"><strong>Note:</strong> The `upgrade-all-service-instances` errand will trigger [service instance lifecycle errands](#lifecycle-errands) configured for the broker.</p>
 
@@ -744,6 +798,12 @@ The actions that the ODB needs to be able to perform are:
 
 Modify:
 
+#### BOSH CLI v2
+- `bosh deploy`
+- `bosh delete-deployment`
+- `bosh run-errand`
+
+#### BOSH CLI v1
 - `bosh deploy`
 - `bosh delete deployment`
 - `bosh run errand`
@@ -754,7 +814,11 @@ Read only:
 - `bosh vms`
 - `bosh tasks`
 
-The minimum UAA authority required by the BOSH Director to perform these actions is `bosh.teams.<team>.admin`. Note: a team admin cannot view or update the director's cloud config, nor upload releases or stemcells.
+<p class="note"><strong>Note:</strong> The read-only actions are identical between v1 and v2 of the BOSH CLI.
+
+The minimum UAA authority required by the BOSH Director to perform these actions is `bosh.teams.<team>.admin`. 
+
+<p class="note"><strong>Note:</strong> A team admin cannot view or update the director's cloud config, nor upload releases or stemcells.</p>
 
 For more details on how to set up and use BOSH teams, see [Director teams and permissions configuration](https://bosh.io/docs/director-users-uaa-perms.html).
 
@@ -767,6 +831,8 @@ The team admin authority also allows the following actions, which currently are 
 - `bosh logs`
 - `bosh releases`
 - `bosh stemcells`
+
+<p class="note"><strong>Note:</strong> These permissions are identical between v1 and v2 of the BOSH CLI.
 
 ### <a id="ipsec"></a>PCF IPsec Add-On
 
@@ -941,6 +1007,8 @@ Most operations on the on demand service broker API are implemented by launching
    <pre class="terminal">
     $ bosh task \<task\_ID\>
    </pre>
+
+<p class="note"><strong>Note:</strong> This action is identical between v1 and v2 of the BOSH CLI.
 
 ### <a id="id-uaa-issues"></a>Identify Issues When Connecting to BOSH or UAA
 
