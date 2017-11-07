@@ -4,7 +4,7 @@ sequenceDiagram
   Cloud Controller->>On Demand Broker:DELETE binding
   On Demand Broker->>Service Adapter:delete-binding
   Service Adapter->>On Demand Broker:exit 0
-  opt CredHub enabled
+  opt Secure Binding enabled
   On Demand Broker->>CredHub:Delete credentials
   CredHub->>On Demand Broker:OK
   end
