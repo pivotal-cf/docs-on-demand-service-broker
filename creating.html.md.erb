@@ -41,6 +41,16 @@ See an example implementation of a health check post-deploy job in the [example 
 
 In the [generate-manifest](#generate-manifest) command ensure to validate and include any supported errands that are specified in the instance groups array.
 
+#### Service Instance Lifecycle Colocated Errands
+
+<p class="note"><strong>Note</strong>: This feature requires BOSH director v263 or later.</p>
+
+A job errand can be run as a `post-deploy` colocated errand. Colocated errands run on an existing service instance group, avoiding additional resource allocation.
+
+In order to enable a new colocated errand, they must be added to the list of jobs of an instance group.
+
+For more information see the [BOSH documentation](https://bosh.io/docs/errands.html).
+
 ### Job links
 When generating a manifest, we recommend not using static IPs as this makes network IP management very complex. Instead, we recommend using [BOSH's job links feature](https://bosh.io/docs/links.html).
 There are two types of job links, implicit and explicit. The [example Kafka release](https://github.com/pivotal-cf-experimental/kafka-example-service-release/blob/master/jobs/kafka_server/spec#L15) uses implicit job links to get the IPs of the brokers and the zookeeper. Details on how to use the links feature are available [here](https://bosh.io/docs/links.html).

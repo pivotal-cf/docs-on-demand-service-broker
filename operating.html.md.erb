@@ -410,6 +410,42 @@ service_catalog:
 Changing a plan's lifecycle errands configuration while an existing deployment is in progress is not supported.
 Lifecycle errands will not be run.
 
+#### Service Instance Lifecycle Colocated Errands
+
+<p class="note"><strong>Note</strong>: This feature requires BOSH director v263 or later.</p>
+
+A job errand can be run as a `post-deploy` colocated errand. Colocated errands run on an existing service instance group, avoiding additional resource allocation. For more information see the [BOSH documentation](https://bosh.io/docs/errands.html).
+
+Similarly to the other lifecycle errands, colocated errands are deployed on a per-plan basis. Currently the ODB supports only colocated post-deploy errands.
+In order to enable a colocated post deploy errand, the errand job must be:
+
+- Added to the service instance deployment (1).
+- Set in the plan's lifecycle errands configuration (2).
+- Set the instances where the errand should run on (3).
+
+An example manifest for colocated errands looks like the following:
+
+```yaml
+service_deployment:
+  releases:
+    - name: <service-release>
+      version: <service-release-version>
+      jobs:
+      - <service_release_job>
+      - <post_deploy_errand_job> # (1)
+service_catalog:
+  plans:
+      - name: <CF marketplace plan name>
+        lifecycle_errands:
+          post_deploy:
+            name: <post_deploy_errand_job> # (2)
+            instances: [<service_release_job>/0] # (3)
+        instance_groups:
+          - name: <service_release_job>
+            ...
+```
+
+
 ## <a id="management"></a>Broker Management
 
 Management tasks on the broker are performed with BOSH errands.
