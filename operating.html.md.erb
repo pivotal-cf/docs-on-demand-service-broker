@@ -392,7 +392,8 @@ service_catalog:
   plans:
       - name: <CF marketplace plan name>
         lifecycle_errands:
-          post_deploy: <post_deploy_errand_job>
+          post_deploy:
+            name: <post_deploy_errand_job>
           pre_delete: <pre_delete_errand_job>
         instance_groups:
           - name: <service_release_job>
