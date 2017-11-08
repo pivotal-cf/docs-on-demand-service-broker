@@ -247,9 +247,9 @@ service_catalog:
 ## <a id="secure-binding"></a>Enabling Secure Binding
 
 ODB optionally allows secure storage of service credentials in CredHub. To use
-this feature, you will need to have CredHub 1.6.X installed as part of the Cloud
-Foundry deployment, and include the Secure Binding Credentials configuration
-section in the ODB manifest:
+this feature, you will need to have CredHub 1.6.X installed as part of the
+Cloud Foundry deployment. In the ODB manifest, you will also need to consume
+the credhub link and include the secure binding credentials section as below:
 
 ```
 instance_groups:
@@ -257,25 +257,29 @@ instance_groups:
   ...
   jobs:
   - name: broker
+    consumes:
+      credhub:
+        from: credhub
+        deployment: cf
     properties:
       ...
       secure_binding_credentials:
         enabled: true
         authentication:
           uaa:
-            client_id: ((CredHub.client_id))
-            client_secret: ((CredHub.client_secret))
+            client_id: ((credhub.client_id))
+            client_secret: ((credhub.client_secret))
             ca_cert: ((cf.uaa.ca_cert))
 ```
 
 <p class="note"><strong>Note</strong>: The CredHub UAA Client must have
-<code>CredHub.write</code> and <code>CredHub.read</code> in its list of <code>authorities</code>.</p>
+<code>credhub.write</code> and <code>credhub.read</code> in its list of <code>authorities</code>.</p>
 
 If the Secure Binding Credentials section is omitted, or if
 `secure_binding_credentials.enabled` is `false`, the service credentials will be
 set explicitly in the application's VCAP_SERVICES environment variable.
 
-### <a id="CredHub-key-format"></a> How credentials are stored on CredHub
+### <a id="credhub-key-format"></a> How credentials are stored on CredHub
 
 The credentials for a given Service Binding are stored with the following format:
 
@@ -915,7 +919,7 @@ All ODB's logs have a UTC timestamp.
 
 If you have [configured secure binding credentials](#secure-binding), the broker
 will store credentials on CredHub. You can see and consume these credentials by
-using the [CredHub CLI](https://github.com/cloudfoundry-incubator/CredHub-cli).
+using the [CredHub CLI](https://github.com/cloudfoundry-incubator/credhub-cli).
 
 <p class="note"><strong>Note</strong>: Usually, CredHub is not accessble from
 outside the Cloud Foundry network. Use the CredHub CLI from within the internal
