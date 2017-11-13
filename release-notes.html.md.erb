@@ -3,19 +3,35 @@ title: On-Demand Services SDK Release Notes
 owner: London Services Enablement
 ---
 
-# <a id="release-notes"></a>vx.x.x Release Notes
+# <a id="release-notes"></a>v0.18.0 Release Notes
 
 ## <a id="minimum-version-requirements"></a>Minimum Version Requirements
 
 - BOSH 257+ (261+ for lifecycle errands) / BOSH lite v9000.131.0
 - CF 238+
 
-
 # <a id="known-issues"></a>Known Issues
+
+- None
 
 ## <a id="new-features"></a>New Features
 
+- Added support for Cloud Foundrys "Secure Service Instance Credentials" workflow. The On Demand Broker optionally store credentials in CredHub and returns a reference to the credential location in CredHub. Cloud Foundry will resolve this reference for the application process env in the container. This feature requires PCF 2.0. [See docs here](/operating.html#secure-binding).
+- Added support for using colocated errands for `post_deploy` service instance lifecycle errands. This requires PCF 1.12 (BOSH v263). See the [BOSH docs](https://bosh.io/docs/errands.html) for more details. See [docs here](/operating.html/#lifecycle-errands).
+- Ability to disable startup checks to stop ODB reaching out to Cloud Foundry during startup, useful when restoring On Demand Services and Cloud Foundry is not available. Not recommended for regular operations. Use `broker.disable_cf_startup_checks`.
+
 ## <a id="breaking-changes"></a>Breaking Changes
+
+- If you are using `post_deploy` service instance lifecycle errands, you need to update your manifest:
+```
+    plans:
+      - name: <CF marketplace plan name>
+        lifecycle_errands:
+          post_deploy:
+            name: <post_deploy_errand_job>
+            instances: [<service_release_job>/0]
+```
 
 ## <a id="bug-fixes"></a>Bug fixes
 
+- None
