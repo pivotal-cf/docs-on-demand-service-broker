@@ -1,7 +1,14 @@
+#### BOSH CLI v2: Selecting a BOSH deployment
+
 1. Retrieve the GUID of your service instance with command `cf service YOUR-SERVICE-INSTANCE --guid`.
 
 1. To download your BOSH manifest for the service, run `bosh download manifest service-instance_SERVICE-INSTANCE-GUID myservice.yml` GUID you just obtained and a filename you want to save the manifest as.
 
-1. Run `bosh deployment MY-SERVICE.yml to select the deployment`.
 
-<p class="note"><strong>Note:</strong> This procedure is the same for v1 and v2 of the BOSH CLI.</p>
+#### BOSH CLI v1: Selecting a BOSH deployment
+
+1. Retrieve the GUID of your service instance with command `cf service YOUR-SERVICE-INSTANCE --guid`.
+
+1. To download your BOSH manifest for the service, run `bosh manifest service-instance_SERVICE-INSTANCE-GUID myservice.yml` GUID you just obtained and a filename you want to save the manifest as.
+
+1. Run `bosh deployment MY-SERVICE.yml to select the deployment`.
