@@ -16,16 +16,15 @@ Check for:
 * [Network errors](<%= vars.tshooting_components_file %>#network)
 * [Quota errors](<%= vars.tshooting_components_file %>#quotas)
 
-##### <a id="cli-v2"></a>BOSH CLI v2: This error does not apply
+#### BOSH CLI v2: This error does not apply
 
-In the BOSH CLI v2, the manifest is not configurable. You cannot troubleshoot the deployment manifest to identify the problem.
+In the BOSH CLI v2, the manifest is not configurable. Open the manifest in a text editor or other program and troubleshoot it there.
 
-##### <a id="cli-v1"></a>BOSH CLI v1: Troubleshooting the deployment manifest
+#### BOSH CLI v1: Troubleshooting the deployment manifest
 
 The following procedure is for v1 of the BOSH CLI.
 
 If the BOSH error shows a problem with the deployment manifest:
 
-1. Download the manifest for <%=vars.service_name_article_full%> instance by running `bosh download manifest service-instance_SERVICE-INSTANCE-GUID MY-SERVICE.yml`.
-
+1. Download the manifest for the on-demand service instance by running `bosh download manifest service-instance_SERVICE-INSTANCE-GUID MY-SERVICE.yml.`
 1. Check the manifest for configuration errors.
