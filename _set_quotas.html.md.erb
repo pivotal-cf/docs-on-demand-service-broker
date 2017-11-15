@@ -43,9 +43,9 @@ To create and set an org level quota, do the following:
 
 1. Run this command to create a quota for service instances at the org level:
 
-	```
+	<pre>
 	cf create-quota QUOTA_NAME -m TOTAL_MEMORY -i INSTANCE_MEMORY -r ROUTES -s SERVICE_INSTANCES --allow-paid-service-plans
-	```
+	</pre>
 
 	where these variables are:
 
@@ -60,12 +60,11 @@ To create and set an org level quota, do the following:
 
 2. Associate the quota you created above with a specific org by running the following command:
 
-	```
+	<pre>
 	cf set-quota ORG_NAME QUOTA_NAME
-	```
+	</pre>
 
-	For example: 
-	<br>`cf set-quota dev_org myquota`
+	For example: `cf set-quota dev_org myquota`
 
 For more information on managing org level quotas, see [Creating and Modifying Quota Plans](https://docs.pivotal.io/pivotalcf/1-12/adminguide/quota-plans.html).
 
@@ -79,9 +78,9 @@ To create and set a space level quota, do the following:
 
 1. Run the following command to create the quota:
 
-	```
+	<pre>
 	cf create-space-quota QUOTA -m TOTAL_MEMORY -i INSTANCE_MEMORY -r ROUTES -s SERVICE_INSTANCES --allow-paid-service-plans
-	```
+	</pre>
 	where these variables are:
 
 	<br>`QUOTA_NAME`---A name for this quota
@@ -95,12 +94,12 @@ To create and set a space level quota, do the following:
 
 2. Associate the quota you created above with a specific space by running the following command:
 
-```
-cf set-space-quota SPACE_NAME QUOTA_NAME
-```
+	<pre>
+	cf set-space-quota SPACE_NAME QUOTA_NAME
+	</pre>
 
-For example: 
-<br>`cf set-space-quota myspace myspacequota`
+	For example: 
+	<br>`cf set-space-quota myspace myspacequota`
 
 For more information on managing space level quotas, see [Creating and Modifying Quota Plans](https://docs.pivotal.io/pivotalcf/1-12/adminguide/quota-plans.html).
 
@@ -134,32 +133,49 @@ Service level and plan level quota use, and total number of service instances, a
 <p class="note"><strong>Note</strong>: Quota metrics are not emitted if no quota has been set.</p>
 
 
-## <a id="Calculate"></a> Calculate Resource Costs for On-Demand Plans
+## <a id="calculate"></a> Calculate Resource Costs for On-Demand Plans
 
-<p class="note warning"><strong>Warning</strong>:
-	RabbitMQ On-Demand plans use dedicated VM and disks, which consume IaaS resources. Operators can limit resource usage with Plan Quotas and a Global Quota, but resource usage will vary based on number of On-Demand instances provisioned.</p>
+RabbitMQ on-demand plans use dedicated VM, disks, and various other resources from your IaaS, such as AWS. To calculate maximum resource cost for plans individually or combined, you multiply the quota by the cost of VM and Persistent Disk types selected in the plan configuration(s). The specific costs depend on your IaaS. 
 
-If the number of on-demand instances is greater than or equal to the Global Quota set on the ‘On Demand Service Settings’ page, no new instances can be provisioned.
+The image below shows an example of the VM type and persistent disk selected, as well as the quota for this plan.
 
-To calculate the maximum cost/ usage for each plan:
+![plan resources](./images/plan-resources.png) 
 
-```
-max_plan_resources = plan_quota x plan_resources
-```
+<p class="note"><strong>Important</strong>:
+	Although operators can limit on-demand instances with plan quotas and a global quota, as described in the above topics, Iaas resource usage still varies based on the number of on-demand instances provisioned.</p>
 
-To calculate the maximum cost across plans, add together the cost/ usage for each plan, while the quotas sum to less than the global quota.
+### Calculate Maximum Resource Cost Per On-Demand Plan 
 
-```
-While (plan_1_quota + plan_2_quota) ≤ global_quota:
-max_resources = (plan_1_quota x plan_1_resources) + ( plan_2_quota x plan_2_resources)
-```
+To calculate the maximum cost of VMs and persistent disk for each plan, do the following calculation:
 
-To calculate the current IaaS cost/ usage across On-Demand plans:
 
-1. Current instances provisioned for all plans can be found by referencing the total_instance metric.
-2. Multiply the total_instance for each plan by that plan’s resources. Sum all plans that are active to get your total current usage
+**plan quota x cost of selected resources**
 
-```
-current_usage = (plan_1_total_instances x plan_1_resources) + (plan_2_total_instances x plan_2_resources)
-```
+
+For example, if you selected the options in the above image, you have selected a VM type **micro.cpu**, and a persistent disk type **20GB**, and the plan quota is **15**. The VM and persistent disk types have an associated cost for the IaaS you are using. Therefore, to calculate the maximum cost of resources for this plan, multiply the cost of the resources selected by the plan quota:
+
+**(15 x cost of micro.cpu VM type) + (15 x cost of 20GB persistent disk)**
+
+### Calculate Maximum Resource Cost for All On-Demand Plans
+
+To calculate the maximum cost for all plans combined, add together the maximum costs for each plan. This assumes that the sum of your individual plan quotas is less than the global quota. For example:
+
+
+**(plan1 quota x plan1 resource cost) + ( plan2 quota x plan2 resource cost) = max cost for all plans**
+
+
+### Calculate Actual Resource Cost of all On-Demand Plans
+
+To calculate the current actual resource cost across all your on-demand plans:
+
+1. Find the number of instances currently provisioned for each active plan by looking at the `total_instance` [metric](#monitor) for that plan.
+
+2. Multiply the `total_instance` count for each plan by that plan's resource costs. Note the costs for each plan.
+
+3. Add up the costs noted in Step 2 to get your total current resource costs.
+
+For example:
+
+**(plan1 total\_instances x plan1 resource cost) + (plan2 total\_instances x plan2 resource cost) = current cost for all plans**
+
 
