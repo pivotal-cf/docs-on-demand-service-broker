@@ -3,11 +3,9 @@
 The following procedure is for v2 of the BOSH CLI.
 
 1. Run `bosh deployments` to identify the on-demand broker (ODB) deployment.
-1. Run `bosh manifest ODB-DEPLOYMENT-NAME odb.yml` to download the ODB manifest.
-1. Select the ODB deployment using `bosh deployment odb.yml`.
-1. View VMs in the deployment using `bosh instances`.
-1. Run `bosh ssh INSTANCE-ID` to SSH onto the VM.
-1. Run `bosh logs INSTANCE-ID` to download broker logs.
+1. View VMs in the deployment using `bosh -d DEPLOYMENT-NAME` instances.
+1. Run `bosh -d DEPLOYMENT-NAME ssh INSTANCE-ID` to SSH onto the VM.
+1. Run `bosh -d DEPLOYMENT-NAME logs INSTANCE-ID` to download broker logs.
 
 ##### <a id="cli-v1"></a>BOSH CLI v1: Accessing logs
 
