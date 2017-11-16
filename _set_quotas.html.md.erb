@@ -21,8 +21,8 @@ After you set quotas, you can:
 Each Pivotal Cloud Foundry (PCF) service has a separate service broker.
 A global quota at the service level sets the maximum number of service instances that can be created by a given service broker. If a service has more than one plan, then the number of service instances for all plans combined cannot exceed the global quota for the service.
 
-The operator can set a global quota for each PCF service independently.
-For example, if you have Redis for PCF and RabbitMQ for PCF, you can set a separate global service quota for each of them. 
+The operator sets a global quota for each PCF service independently.
+For example, if you have Redis for PCF and RabbitMQ for PCF, you must set a separate global service quota for each of them. 
 
 When the global quota is reached for a service, no more instances of that service can be created unless the quota is increased, or some instances of that service are deleted.
 
