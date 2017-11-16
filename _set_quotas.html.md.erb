@@ -11,12 +11,12 @@ There are several ways to control the provisioning of on-demand service instance
 
 After you set quotas, you can:
 
-* [View Current Org and Space-Level Quotas](#view)
+* [View Current Org and Space-level Quotas](#view)
 * [Monitor Quota Use and Service Instance Count](#monitor)
 * [Calculate Resource Costs for On-Demand Plans](#calculate)
 
 
-## <a id="global"></a> Create Global-Level Quotas
+## <a id="global"></a> Create Global-level Quotas
 
 Each Pivotal Cloud Foundry (PCF) service has a separate service broker.
 A global quota at the service level sets the maximum number of service instances that can be created by a given service broker. If a service has more than one plan, then the number of service instances for all plans combined cannot exceed the global quota for the service.
@@ -31,7 +31,7 @@ The global quota is set in the service tile in Ops Manager, shown for an example
 ![service_level_quotas](images/service_level_quota.png)
 
 
-## <a id="plan"></a> Create Plan-Level Quotas
+## <a id="plan"></a> Create Plan-level Quotas
 
 A service may offer one or more plans.
 You can set a separate quota per plan so that instances of that plan cannot exceed the plan quota.
@@ -43,7 +43,7 @@ The plan quota is set in the service tile in Ops Manager, shown for an example s
 
 ![plan_level_quotas](images/plan_level_quota.png)
 
-## <a id="org"></a> Create and Set Org-Level Quotas
+## <a id="org"></a> Create and Set Org-level Quotas
 
 An org-level quota applies to all PCF services and sets the maximum number of service instances an organization can create within PCF.
 For example, if you set your org-level quota to 100, developers can create up to 100 service instances in that org using any combination of PCF services. 
@@ -80,7 +80,7 @@ To create and set an org-level quota, do the following:
 For more information on managing org-level quotas,
 see [Creating and Modifying Quota Plans](https://docs.pivotal.io/pivotalcf/1-12/adminguide/quota-plans.html).
 
-## <a id="space"></a> Create and Set Space-Level Quotas
+## <a id="space"></a> Create and Set Space-level Quotas
 
 A space-level service quota applies to all PCF services and sets the maximum number of service instances
 that can be created within a given space in PCF.
@@ -120,7 +120,7 @@ To create and set a space-level quota, do the following:
 For more information on managing space-level quotas,
 see [Creating and Modifying Quota Plans](https://docs.pivotal.io/pivotalcf/1-12/adminguide/quota-plans.html).
 
-## <a id="view"></a> View Current Org and Space-Level Quotas
+## <a id="view"></a> View Current Org and Space-level Quotas
 
 To view **org** quotas, run the following command. 
 
