@@ -1,3 +1,23 @@
+#### BOSH CLI v2: Reinstalling the tile
+
+The following procedure is for v2 of the BOSH CLI.
+
+To reinstall a tile in the same environment where it was previously uninstalled:
+
+1. Ensure that the previous tile was correctly uninstalled as follows:
+  1. `cf login` as an admin user.
+  1. Run `cf m` and confirm that the Marketplace does not list <%=vars.service_name_article%>.
+  1. `bosh login` as an admin user.
+1. Run the [`delete-all-service-instances`](#delete-all) errand to delete all instances of the service.
+1. Run the [`deregister-broker`](#deregister-broker) errand to delete the service broker.
+1. Run `bosh delete-deployment YOUR-BROKER-DEPLOYMENT` to delete the service broker BOSH deployment.
+1. Install the tile again.
+
+
+#### BOSH CLI v1: Reinstalling the tile
+
+The following procedure is for v1 of the BOSH CLI.
+
 To reinstall a tile in the same environment where it was previously uninstalled:
 
 1. Ensure that the previous tile was correctly uninstalled as follows:

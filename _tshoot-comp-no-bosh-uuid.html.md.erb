@@ -1,4 +1,12 @@
-If using the BOSH v1 CLI you need to re-add the `director_uuid` to the manifest:
+#### BOSH CLI v2: Does not apply
+
+The manifest is not configurable through v2 of the BOSH CLI. 
+
+#### BOSH CLI v1: Modify the manifest
+
+This procedure is for v1 of the BOSH CLI.
+
+You must re-add the `director_uuid` to the manifest. 
 
 1. Run `bosh status --uuid` and record the `director_uuid` value from the output.
 
