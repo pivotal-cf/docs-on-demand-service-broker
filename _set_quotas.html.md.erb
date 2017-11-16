@@ -155,7 +155,7 @@ These metrics are listed below:
 
 ## <a id="calculate"></a> Calculate Resource Costs for On-Demand Plans
 
-RabbitMQ on-demand plans use dedicated VM, disks, and various other resources from your IaaS, such as AWS.
+RabbitMQ on-demand plans use dedicated VM, disks, and various other resources from an IaaS, such as AWS.
 To calculate maximum resource cost for plans individually or combined,
 you multiply the quota by the cost of VM and Persistent Disk types selected in the plan configuration(s).
 The specific costs depend on your IaaS. 
@@ -187,8 +187,8 @@ Therefore, to calculate the maximum cost of resources for this plan, multiply th
 
 To calculate the maximum cost for all plans combined, add together the maximum costs for each plan.
 This assumes that the sum of your individual plan quotas is less than the global quota.
-For example:
 
+Here is an example:
 
 **(plan1 quota x plan1 resource cost) + ( plan2 quota x plan2 resource cost) = max cost for all plans**
 
