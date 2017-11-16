@@ -35,6 +35,17 @@ The `task-id` field maps to the BOSH task id. For further information on a faile
 
 #### Accessing logs
 
-The `broker-request-guid` maps to the portion of the On-Demand Broker log containing the failed step. Access the broker log through your syslog aggregator, or access BOSH logs for the broker by typing `bosh logs broker 0`. If you have more than one broker instance, repeat this process for each instance.
+The `broker-request-guid` maps to the portion of the On-Demand Broker log containing the failed step. Access the logs to troubleshoot your instance. If you have more than one broker instance, repeat this process for each one.
 
-<p class="note"><strong>Note:</strong> This procedure is the same for v1 and v2 of the BOSH CLI.</p>
+##### BOSH CLI v2: Accessing logs
+
+This procedure is for v2 of the BOSH CLI.
+
+Access the broker log with the syslog aggregator, or access BOSH broker logs with `bosh logs broker /0`.
+
+##### BOSH CLI v1: Accessing logs
+
+This procedure is for v1 of the BOSH CLI.
+
+Access the broker log with the syslog aggregator, or access BOSH broker logs with `bosh logs broker 0`.
+
