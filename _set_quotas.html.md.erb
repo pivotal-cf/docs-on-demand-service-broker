@@ -1,4 +1,6 @@
-On-demand provisioning is intended to accelerate application development since it eliminates the need for development teams to request, and wait for operators to create, a service instance. However, operations teams and administrators must ensure responsible use of resources to control their costs. 
+On-demand provisioning is intended to accelerate app development by eliminating the need for development teams to request
+and wait for operators to create a service instance.
+However, to control costs, operations teams and administrators must ensure responsible use of resources.
 
 There are several ways to control the provisioning of on-demand service instances by setting various **quotas** at these levels:
 
@@ -7,158 +9,203 @@ There are several ways to control the provisioning of on-demand service instance
 * [Org](#org) 
 * [Space](#space)
 
-Once you set quotas, you can:
+After you set quotas, you can:
 
-* [View Current Org and Space Level Quotas](#view)
+* [View Current Org and Space-Level Quotas](#view)
 * [Monitor Quota Use and Service Instance Count](#monitor)
 * [Calculate Resource Costs for On-Demand Plans](#calculate)
 
 
-## <a id="global"></a> Create Global Level Quotas
+## <a id="global"></a> Create Global-Level Quotas
 
-Each Pivotal Cloud Foundry (PCF) service has a separate service broker. A global quota at the service level sets the maximum number of service instances that can be created by a given service broker. 
+Each Pivotal Cloud Foundry (PCF) service has a separate service broker.
+A global quota at the service level sets the maximum number of service instances that can be created by a given service broker. If a service has more than one plan, then the number of service instances for all plans combined cannot exceed the global quota for the service.
 
-The operator can set a global quota for each PCF service independently. For example, if you have Redis for PCF and RabbitMQ for PCF, you can set a separate global service quota for each of them. 
+The operator sets a global quota for each PCF service independently.
+For example, if you have Redis for PCF and RabbitMQ for PCF, you must set a separate global service quota for each of them. 
+
+When the global quota is reached for a service, no more instances of that service can be created unless the quota is increased, or some instances of that service are deleted.
 
 The global quota is set in the service tile in Ops Manager, shown for an example service below:
 
 ![service_level_quotas](images/service_level_quota.png)
 
 
-## <a id="plan"></a> Create Plan Level Quotas
+## <a id="plan"></a> Create Plan-Level Quotas
 
-A service may offer one or more plans. You can set a separate quota per plan so that instances of that plan cannot exceed the plan quota. If you set both a plan quota and a global quota, then new service instances are created until at least one of those quotas is met. 
+A service may offer one or more plans.
+You can set a separate quota per plan so that instances of that plan cannot exceed the plan quota.
+For a service with multiple plans, the total number of instances created for all plans combined cannot exceed the [global quota](#global) for the service. 
+
+When the plan quota is reached, no more instances of that plan can be created unless the plan quota is increased or some instances of that plan are deleted.
 
 The plan quota is set in the service tile in Ops Manager, shown for an example service plan below:
 
 ![plan_level_quotas](images/plan_level_quota.png)
 
-## <a id="org"></a> Create and Set Org Level Quotas
+## <a id="org"></a> Create and Set Org-Level Quotas
 
-An org level quota applies to all services, and sets the maximum number of service instances an organization can create within Cloud Foundry. For example, if you set your org level quota to 100, developers can create up to 100 service instances in that org using any combination of PCF services. 
+An org-level quota applies to all PCF services and sets the maximum number of service instances an organization can create within PCF.
+For example, if you set your org-level quota to 100, developers can create up to 100 service instances in that org using any combination of PCF services. 
 
-Once this quota is met, no more service instances of any kind can be created in the org unless the quota is updated, or some service instances are deleted.
+When this quota is met, no more service instances of any kind can be created in the org unless the quota is increased or some service instances are deleted.
 
-To create and set an org level quota, do the following:
+To create and set an org-level quota, do the following:
 
 1. Run this command to create a quota for service instances at the org level:
 
-	```
-	cf create-quota QUOTA_NAME -m TOTAL_MEMORY -i INSTANCE_MEMORY -r ROUTES -s SERVICE_INSTANCES --allow-paid-service-plans
-	```
+	<pre>
+	cf create-quota QUOTA-NAME -m TOTAL-MEMORY -i INSTANCE-MEMORY -r ROUTES -s SERVICE-INSTANCES --allow-paid-service-plans
+	</pre>
 
 	where these variables are:
 
-	<br>`QUOTA_NAME`---A name for this quota
-	<br>`TOTAL_MEMORY`---Maximum memory used by all service instances combined
-	<br>`INSTANCE_MEMORY`---Maximum memory used by any single service instance
+	<br>`QUOTA-NAME`---A name for this quota
+	<br>`TOTAL-MEMORY`---Maximum memory used by all service instances combined
+	<br>`INSTANCE-MEMORY`---Maximum memory used by any single service instance
 	<br>`ROUTES`---Maximum number of routes allowed for all service instances combined
-	<br>`SERVICE_INSTANCES`---Maximum number of service instances allowed for the org
+	<br>`SERVICE-INSTANCES`---Maximum number of service instances allowed for the org
 
 	<br> For example: 
 	<br>`cf create-quota myquota -m 1024mb -i 16gb -r 30 -s 50 --allow-paid-service-plans`
 
 2. Associate the quota you created above with a specific org by running the following command:
 
-	```
-	cf set-quota ORG_NAME QUOTA_NAME
-	```
+	<pre>
+	cf set-quota ORG-NAME QUOTA-NAME
+	</pre>
 
-	For example: 
-	<br>`cf set-quota dev_org myquota`
+	For example: `cf set-quota dev_org myquota`
 
-For more information on managing org level quotas, see [Creating and Modifying Quota Plans](https://docs.pivotal.io/pivotalcf/1-12/adminguide/quota-plans.html).
+For more information on managing org-level quotas,
+see [Creating and Modifying Quota Plans](https://docs.pivotal.io/pivotalcf/1-12/adminguide/quota-plans.html).
 
-## <a id="space"></a> Create and Set Space Level Quotas
+## <a id="space"></a> Create and Set Space-Level Quotas
 
-A space level service quota applies to all services, and sets the maximum number of service instances that can be created within a given space in Cloud Foundry. For example, if you set your space level quota to 100, developers can create up to 100 service instances in that space using any combination of services. 
+A space-level service quota applies to all PCF services and sets the maximum number of service instances
+that can be created within a given space in PCF.
+For example, if you set your space-level quota to 100,
+developers can create up to 100 service instances in that space using any combination of PCF services. 
 
-Once this quota is met, no more service instances of any kind can be created in the space unless the quota is updated, or some service instances are deleted.
+When this quota is met, no more service instances of any kind can be created in the space unless the quota is updated
+or some service instances are deleted.
 
-To create and set a space level quota, do the following:
+To create and set a space-level quota, do the following:
 
 1. Run the following command to create the quota:
 
-	```
-	cf create-space-quota QUOTA -m TOTAL_MEMORY -i INSTANCE_MEMORY -r ROUTES -s SERVICE_INSTANCES --allow-paid-service-plans
-	```
+	<pre>
+	cf create-space-quota QUOTA -m TOTAL-MEMORY -i INSTANCE-MEMORY -r ROUTES -s SERVICE-INSTANCES --allow-paid-service-plans
+	</pre>
 	where these variables are:
 
-	<br>`QUOTA_NAME`---A name for this quota
-	<br>`TOTAL_MEMORY`---Maximum memory used by all service instances combined
-	<br>`INSTANCE_MEMORY`---Maximum memory used by any single service instance
+	<br>`QUOTA-NAME`---A name for this quota
+	<br>`TOTAL-MEMORY`---Maximum memory used by all service instances combined
+	<br>`INSTANCE-MEMORY`---Maximum memory used by any single service instance
 	<br>`ROUTES`---Maximum number of routes allowed for all service instances combined
-	<br>`SERVICE_INSTANCES`---Maximum number of service instances allowed for the org
+	<br>`SERVICE-INSTANCES`---Maximum number of service instances allowed for the org
 
 	<br> For example: `cf create-space-quota myspacequota -m 1024mb -i 16gb -r 30 -s 50 --allow-paid-service-plans`
 
 
 2. Associate the quota you created above with a specific space by running the following command:
 
-```
-cf set-space-quota SPACE_NAME QUOTA_NAME
-```
+	<pre>
+	cf set-space-quota SPACE-NAME QUOTA-NAME
+	</pre>
 
-For example: 
-<br>`cf set-space-quota myspace myspacequota`
+	For example: 
+	<br>`cf set-space-quota myspace myspacequota`
 
-For more information on managing space level quotas, see [Creating and Modifying Quota Plans](https://docs.pivotal.io/pivotalcf/1-12/adminguide/quota-plans.html).
+For more information on managing space-level quotas,
+see [Creating and Modifying Quota Plans](https://docs.pivotal.io/pivotalcf/1-12/adminguide/quota-plans.html).
 
-## <a id="view"></a> View Current Org and Space Level Quotas
+## <a id="view"></a> View Current Org and Space-Level Quotas
 
 To view **org** quotas, run the following command. 
 
 ```
-cf org ORG_NAME
+cf org ORG-NAME
 ```
 
 To view **space** quotas, run the following command: 
 
 ```
-cf space SPACE_NAME
+cf space SPACE-NAME
 ```
 
-For more information on managing org and space level quotas, see the [Creating and Modifying Quota Plans](https://docs.pivotal.io/pivotalcf/1-12/adminguide/quota-plans.html).
+For more information on managing org and space-level quotas,
+see the [Creating and Modifying Quota Plans](https://docs.pivotal.io/pivotalcf/1-12/adminguide/quota-plans.html).
 
 ## <a id="monitor"></a> Monitor Quota Use and Service Instance Count
 
-Service level and plan level quota use, and total number of service instances, are available through the on-demand broker metrics emitted to Loggregator. These metrics are listed below:
+Service-level and plan-level quota use, and total number of service instances,
+are available through the on-demand broker metrics emitted to Loggregator.
+These metrics are listed below:
 
 | **Metric name**                                                         | **Description**                                            |
 |-------------------------------------------------------------------------|------------------------------------------------------------|
-| on-demand-broker/\<service-name\>/quota_remaining             | Quota remaining for all instances across all plans |
-| on-demand-broker/\<service-name\>/\<plan\_name\>/quota_remaining | Quota remaining for a specific plan                      |
-| on-demand-broker/\<service-name\>/total_instances             | Total instances created across all plans                   |
-| on-demand-broker/\<service-name\>/\<plan\_name\>/total_instances | Total instances created for a specific plan                   |
+| on-demand-broker/SERVICE-NAME/quota_remaining             | Quota remaining for all instances across all plans |
+| on-demand-broker/SERVICE-NAME/PLAN-NAME/quota_remaining | Quota remaining for a specific plan                      |
+| on-demand-broker/SERVICE-NAME/total_instances             | Total instances created across all plans                   |
+| on-demand-broker/SERVICE-NAME/PLAN-NAME/total_instances | Total instances created for a specific plan                   |
 
 <p class="note"><strong>Note</strong>: Quota metrics are not emitted if no quota has been set.</p>
 
 
-## <a id="Calculate"></a> Calculate Resource Costs for On-Demand Plans
+## <a id="calculate"></a> Calculate Resource Costs for On-Demand Plans
 
-<p class="note warning"><strong>Warning</strong>:
-	RabbitMQ On-Demand plans use dedicated VM and disks, which consume IaaS resources. Operators can limit resource usage with Plan Quotas and a Global Quota, but resource usage will vary based on number of On-Demand instances provisioned.</p>
+RabbitMQ on-demand plans use dedicated VM, disks, and various other resources from your IaaS, such as AWS.
+To calculate maximum resource cost for plans individually or combined,
+you multiply the quota by the cost of VM and Persistent Disk types selected in the plan configuration(s).
+The specific costs depend on your IaaS. 
 
-If the number of on-demand instances is greater than or equal to the Global Quota set on the ‘On Demand Service Settings’ page, no new instances can be provisioned.
+The image below shows an example of the VM type and persistent disk selected, as well as the quota for this plan.
 
-To calculate the maximum cost/ usage for each plan:
+![plan resources](./images/plan-resources.png) 
 
-```
-max_plan_resources = plan_quota x plan_resources
-```
+<p class="note"><strong>Important</strong>:
+	Although operators can limit on-demand instances with plan quotas and a global quota, as described in the above topics,
+        IaaS resource usage still varies based on the number of on-demand instances provisioned.</p>
 
-To calculate the maximum cost across plans, add together the cost/ usage for each plan, while the quotas sum to less than the global quota.
+### Calculate Maximum Resource Cost Per On-Demand Plan 
 
-```
-While (plan_1_quota + plan_2_quota) ≤ global_quota:
-max_resources = (plan_1_quota x plan_1_resources) + ( plan_2_quota x plan_2_resources)
-```
+To calculate the maximum cost of VMs and persistent disk for each plan, do the following calculation:
 
-To calculate the current IaaS cost/ usage across On-Demand plans:
 
-1. Current instances provisioned for all plans can be found by referencing the total_instance metric.
-2. Multiply the total_instance for each plan by that plan’s resources. Sum all plans that are active to get your total current usage
+**plan quota x cost of selected resources**
 
-```
-current_usage = (plan_1_total_instances x plan_1_resources) + (plan_2_total_instances x plan_2_resources)
-```
+
+For example, if you selected the options in the above image,
+you have selected a VM type **micro.cpu** and a persistent disk type **20&nbsp;GB**, and the plan quota is **15**.
+The VM and persistent disk types have an associated cost for the IaaS you are using.
+Therefore, to calculate the maximum cost of resources for this plan, multiply the cost of the resources selected by the plan quota:
+
+**(15 x cost of micro.cpu VM type) + (15 x cost of 20&nbsp;GB persistent disk)**
+
+### Calculate Maximum Resource Cost for All On-Demand Plans
+
+To calculate the maximum cost for all plans combined, add together the maximum costs for each plan.
+This assumes that the sum of your individual plan quotas is less than the global quota.
+For example:
+
+
+**(plan1 quota x plan1 resource cost) + ( plan2 quota x plan2 resource cost) = max cost for all plans**
+
+
+### Calculate Actual Resource Cost of all On-Demand Plans
+
+To calculate the current actual resource cost across all your on-demand plans:
+
+1. Find the number of instances currently provisioned for each active plan by looking at the `total_instance` [metric](#monitor) for that plan.
+
+2. Multiply the `total_instance` count for each plan by that plan's resource costs.
+   Record the costs for each plan.
+
+3. Add up the costs noted in Step 2 to get your total current resource costs.
+
+For example:
+
+**(plan1 total\_instances x plan1 resource cost) + (plan2 total\_instances x plan2 resource cost) = current cost for all plans**
+
+
