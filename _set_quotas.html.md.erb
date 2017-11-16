@@ -19,10 +19,12 @@ After you set quotas, you can:
 ## <a id="global"></a> Create Global-Level Quotas
 
 Each Pivotal Cloud Foundry (PCF) service has a separate service broker.
-A global quota at the service level sets the maximum number of service instances that can be created by a given service broker. 
+A global quota at the service level sets the maximum number of service instances that can be created by a given service broker. If a service has more than one plan, then the number of service instances for all plans combined cannot exceed the global quota for the service.
 
 The operator can set a global quota for each PCF service independently.
 For example, if you have Redis for PCF and RabbitMQ for PCF, you can set a separate global service quota for each of them. 
+
+When the global quota is reached for a service, no more instances of that service can be created unless the quota is increased, or some instances of that service are deleted.
 
 The global quota is set in the service tile in Ops Manager, shown for an example service below:
 
@@ -33,8 +35,9 @@ The global quota is set in the service tile in Ops Manager, shown for an example
 
 A service may offer one or more plans.
 You can set a separate quota per plan so that instances of that plan cannot exceed the plan quota.
-If you set both a plan quota and a global quota,
-then new service instances are created until at least one of those quotas is met. 
+For a service with multiple plans, the total number of instances created for all plans combined cannot exceed the [global quota](#global) for the service. 
+
+When the plan quota is reached, no more instances of that plan can be created unless the plan quota is increased or some instances of that plan are deleted.
 
 The plan quota is set in the service tile in Ops Manager, shown for an example service plan below:
 
@@ -42,10 +45,10 @@ The plan quota is set in the service tile in Ops Manager, shown for an example s
 
 ## <a id="org"></a> Create and Set Org-Level Quotas
 
-An org-level quota applies to all services and sets the maximum number of service instances an organization can create within PCF.
+An org-level quota applies to all PCF services and sets the maximum number of service instances an organization can create within PCF.
 For example, if you set your org-level quota to 100, developers can create up to 100 service instances in that org using any combination of PCF services. 
 
-After this quota is met, no more service instances of any kind can be created in the org unless the quota is updated or some service instances are deleted.
+When this quota is met, no more service instances of any kind can be created in the org unless the quota is increased or some service instances are deleted.
 
 To create and set an org-level quota, do the following:
 
@@ -79,12 +82,12 @@ see [Creating and Modifying Quota Plans](https://docs.pivotal.io/pivotalcf/1-12/
 
 ## <a id="space"></a> Create and Set Space-Level Quotas
 
-A space-level service quota applies to all services and sets the maximum number of service instances
+A space-level service quota applies to all PCF services and sets the maximum number of service instances
 that can be created within a given space in PCF.
 For example, if you set your space-level quota to 100,
-developers can create up to 100 service instances in that space using any combination of services. 
+developers can create up to 100 service instances in that space using any combination of PCF services. 
 
-After this quota is met, no more service instances of any kind can be created in the space unless the quota is updated
+When this quota is met, no more service instances of any kind can be created in the space unless the quota is updated
 or some service instances are deleted.
 
 To create and set a space-level quota, do the following:
@@ -142,10 +145,10 @@ These metrics are listed below:
 
 | **Metric name**                                                         | **Description**                                            |
 |-------------------------------------------------------------------------|------------------------------------------------------------|
-| on-demand-broker/\<service-name\>/quota_remaining             | Quota remaining for all instances across all plans |
-| on-demand-broker/\<service-name\>/\<plan\_name\>/quota_remaining | Quota remaining for a specific plan                      |
-| on-demand-broker/\<service-name\>/total_instances             | Total instances created across all plans                   |
-| on-demand-broker/\<service-name\>/\<plan\_name\>/total_instances | Total instances created for a specific plan                   |
+| on-demand-broker/SERVICE-NAME/quota_remaining             | Quota remaining for all instances across all plans |
+| on-demand-broker/SERVICE-NAME/PLAN-NAME/quota_remaining | Quota remaining for a specific plan                      |
+| on-demand-broker/SERVICE-NAME/total_instances             | Total instances created across all plans                   |
+| on-demand-broker/SERVICE-NAME/PLAN-NAME/total_instances | Total instances created for a specific plan                   |
 
 <p class="note"><strong>Note</strong>: Quota metrics are not emitted if no quota has been set.</p>
 
