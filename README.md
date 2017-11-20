@@ -27,3 +27,21 @@ In order to display our mermaid templates locally (whilst running through `bookb
 To help with this we have two scripts to localise, and then revert these diagram files:
 * `./scripts/mmd-localise` will prepend each mermaid file with an underscore
 * `./scripts/mmd-globalise` will remove the first underscore from each mermaid file
+
+# General proccess for working in this repo
+
+## New releases
+
+1. Commit new feature work to master.
+
+2. To create a new release, create a new branch from master, for example, `0.19.x`.
+
+## Fixes and enhancements on master
+
+1. Apply fixes and enhancement to master.
+
+2. Cherry-pick the fixes and enhancements to relevant branches.
+
+## Fixes on branch only
+
+1. If the fix or enhancement is only relevant to a particular branch, then apply the change directly on the branch.
