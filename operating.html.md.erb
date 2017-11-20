@@ -34,7 +34,7 @@ Dependencies for the On-Demand Broker:
 
  <p class="note"><strong>Note</strong>: [Service instance lifecycle errands](#lifecycle-errands) require BOSH director v261 (PCF 1.10) or later.</p>
 
-### SSL certificates
+### <a id="ssl-certs"></a>SSL Certificates
 
 If ODB is configured to communicate with BOSH on the director's public IP you may be using a self-signed certificate unless you have a domain for your BOSH director. ODB does not ignore TLS certificate validation errors by default (as expected). You have two options to configure certificate-based authentication between the BOSH director and the ODB:
 
@@ -51,7 +51,7 @@ You can also configure a separate root CA certificate that is used when ODB comm
 This is done in a similar way to above.
 For more information, see [manifest snippets below](#core-broker-configuration).
 
-### <a id="bosh-teams"></a>BOSH teams
+### <a id="bosh-teams"></a>BOSH Teams
 
 BOSH has a teams feature that allows you to further control how BOSH operations are available to different clients. We strongly recommend using it to ensure that your on-demand service broker client can only modify deployments it created. For example, if you [use uaac](https://docs.cloudfoundry.org/adminguide/uaa-user-management.html) to create the client like this:
 
@@ -68,7 +68,7 @@ For how to set up and use BOSH teams, see [Director teams and permissions config
 
 For more details on securing how ODB uses BOSH, see [Security](#security).
 
-### <id="cloud-controller"></a>Cloud Controller
+### <a id="cloud-controller"></a>Cloud Controller
 
 ODB used the Cloud Controller as a source of truth about service offerings, plans, and instances. To reach Cloud Controller, ODB needs to be configured with credentials. These can be either client or user credentials:
 
@@ -247,9 +247,15 @@ service_catalog:
 ## <a id="secure-binding"></a>Enabling Secure Binding
 
 ODB optionally allows secure storage of service credentials in CredHub. To use
-this feature, you will need to have CredHub 1.6.X installed as part of the
-Cloud Foundry deployment. In the ODB manifest, you will also need to consume
-the credhub link and include the secure binding credentials section as below:
+this feature, you will need to be able to connect to CredHub 1.6.X or later.
+This may be provided as part of your Cloud Foundry deployment.
+Credhub depends on being addressed by a local domain name so your instance group
+will require access to the local DNS provider. Most Cloud Foundry deployments
+currently use Consul as a DNS provider. In the ODB manifest, you will need to consume
+the credhub link and include the secure binding credentials section.
+You may also wish to consume Consul links to enable DNS.
+An example manifest snippet assuming you are connecting to a Cloud Foundry deployment
+is shown below:
 
 ```
 instance_groups:
@@ -270,6 +276,17 @@ instance_groups:
             client_id: ((credhub.client_id))
             client_secret: ((credhub.client_secret))
             ca_cert: ((cf.uaa.ca_cert))
+  - name: consul_agent
+    release: consul
+    consumes:
+      consul: nil
+      consul_client:
+        from: consul_client_link
+        deployment: cf
+      consul_common:
+        from: consul_common_link
+        deployment: cf
+      consul_server: nil
 ```
 
 <p class="note"><strong>Note</strong>: The CredHub UAA Client must have
