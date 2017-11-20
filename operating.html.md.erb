@@ -247,9 +247,15 @@ service_catalog:
 ## <a id="secure-binding"></a>Enabling Secure Binding
 
 ODB optionally allows secure storage of service credentials in CredHub. To use
-this feature, you will need to have CredHub 1.6.X installed as part of the
-Cloud Foundry deployment. In the ODB manifest, you will also need to consume
-the credhub link and include the secure binding credentials section as below:
+this feature, you will need to be able to connect to CredHub 1.6.X or later.
+This may be provided as part of your Cloud Foundry deployment.
+Credhub depends on being addressed by a local domain name so your instance group
+will require access to the local DNS provider. Most Cloud Foundry deployments
+currently use Consul as a DNS provider. In the ODB manifest, you will need to consume
+the credhub link and include the secure binding credentials section.
+You may also wish to consume Consul links to enable DNS.
+An example manifest snippet assuming you are connecting to a Cloud Foundry deployment
+is shown below:
 
 ```
 instance_groups:
@@ -270,6 +276,17 @@ instance_groups:
             client_id: ((credhub.client_id))
             client_secret: ((credhub.client_secret))
             ca_cert: ((cf.uaa.ca_cert))
+  - name: consul_agent
+    release: consul
+    consumes:
+      consul: nil
+      consul_client:
+        from: consul_client_link
+        deployment: cf
+      consul_common:
+        from: consul_common_link
+        deployment: cf
+      consul_server: nil
 ```
 
 <p class="note"><strong>Note</strong>: The CredHub UAA Client must have
