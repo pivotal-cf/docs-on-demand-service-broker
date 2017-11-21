@@ -933,6 +933,43 @@ NB: The ODB's negroni server and start up logs are not prefixed with a request I
 
 All ODB's logs have a UTC timestamp.
 
+#### <a id="errands-syslog"></a> Syslog forwarding for errands logs
+
+If you want to forward your errand logs to a syslog aggregator, we recommend
+co-locating [syslog release](https://github.com/cloudfoundry/syslog-release)
+with the errand job. The manifest will look similar to the following:
+
+```
+- name: delete-all-service-instances-and-deregister-broker
+  lifecycle: errand
+  ...
+  jobs:
+  - name: delete-all-service-instances-and-deregister-broker
+    release: on-demand-service-broker
+    ...
+  - name: syslog_forwarder
+    release: syslog
+    properties:
+      syslog:
+        address: ((syslog.address))
+        port: ((syslog.port))
+        transport: udp
+        forward_files: false
+        custom_rule: |
+          module(load="imfile" mode="polling")
+          input(type="imfile"
+                File="/var/vcap/sys/log/delete-all-service-instances-and-deregister-broker/errand.stdout.log"
+                Tag="delete-all-service-instances-and-deregister-broker")
+          input(type="imfile"
+                File="/var/vcap/sys/log/delete-all-service-instances-and-deregister-broker/errand.stderr.log"
+                Tag="delete-all-service-instances-and-deregister-broker")
+```
+
+<p class="note"><strong>Note</strong>: The errand is configured to redirect stdout and stderr to
+<code>/var/vcap/sys/log/ERRAND_NAME/errand.stdout.log</code> and
+<code>/var/vcap/sys/log/ERRAND_NAME/errand.stderr.log</code>. When configuring your errand,
+be careful to match the actual log file paths in the <code>custom_rule</code> section.</p>
+
 ### <a id="secure-binding-troubleshooting"></a> Secure Binding Credentials
 
 If you have [configured secure binding credentials](#secure-binding), the broker
