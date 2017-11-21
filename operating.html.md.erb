@@ -481,7 +481,7 @@ Execute the errand in one of two ways, depending on which version of the BOSH CL
 
 #### <a id="cli-v1"></a>BOSH CLI v2
 
-Run the errand with `bosh run-errand register-broker`.
+Run the errand with `bosh2 run-errand register-broker`.
 
 #### <a id="cli-v1"></a>BOSH CLI v1
 
@@ -533,7 +533,7 @@ Execute the errand in one of two ways, depending on which version of the BOSH CL
 
 #### <a id="cli-v1"></a>BOSH CLI v2
 
-Run the errand with `bosh run-errand delete-all-service-instances-and-deregister-broker`.
+Run the errand with `bosh2 run-errand delete-all-service-instances-and-deregister-broker`.
 
 #### <a id="cli-v1"></a>BOSH CLI v1
 
@@ -564,7 +564,7 @@ Execute the errand in one of two ways, depending on which version of the BOSH CL
 
 #### <a id="cli-v1"></a>BOSH CLI v2
 
-Run the errand with `bosh run-errand deregister-broker`.
+Run the errand with `bosh2 run-errand deregister-broker`.
 
 #### <a id="cli-v1"></a>BOSH CLI v1
 
@@ -618,7 +618,7 @@ Execute the errand in one of two ways, depending on which version of the BOSH CL
 
 #### <a id="cli-v1"></a>BOSH CLI v2
 
-Run the errand with `bosh run-errand delete-all-service-instances`.
+Run the errand with `bosh2 run-errand delete-all-service-instances`.
 
 #### <a id="cli-v1"></a>BOSH CLI v1
 
@@ -653,7 +653,7 @@ Execute the errand in one of two ways, depending on which version of the BOSH CL
 
 #### <a id="cli-v1"></a>BOSH CLI v2
 
-Run the errand with `bosh run-errand orphan-deployments`.
+Run the errand with `bosh2 run-errand orphan-deployments`.
 
 #### <a id="cli-v1"></a>BOSH CLI v1
 
@@ -680,7 +680,7 @@ Execute the errand in one of two ways, depending on which version of the BOSH CL
 
 #### <a id="cli-v1"></a>BOSH CLI v2
 
-Run the errand with `bosh delete-deployment service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3`.
+Run the errand with `bosh2 delete-deployment service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3`.
 
 #### <a id="cli-v1"></a>BOSH CLI v1
 
@@ -854,7 +854,7 @@ Read only:
 - `bosh vms`
 - `bosh tasks`
 
-<p class="note"><strong>Note:</strong> The read-only actions are identical between v1 and v2 of the BOSH CLI.
+<p class="note"><strong>Note:</strong> The read-only actions are identical between v1 and v2 of the BOSH CLI. When using the BOSH CLI v2, use <code>bosh2</code> instead of <code>bosh</code>.</p>
 
 The minimum UAA authority required by the BOSH Director to perform these actions is <code>bosh.teams.<team>.admin</code>. 
 
@@ -872,7 +872,7 @@ The team admin authority also allows the following actions, which currently are 
 - `bosh releases`
 - `bosh stemcells`
 
-<p class="note"><strong>Note:</strong> These permissions are identical between v1 and v2 of the BOSH CLI.</p>
+<p class="note"><strong>Note:</strong> These permissions are identical between v1 and v2 of the BOSH CLI. When using the BOSH CLI v2, use <code>bosh2</code> instead of <code>bosh</code>.</p>
 
 ### <a id="ipsec"></a>PCF IPsec Add-On
 
@@ -1048,7 +1048,7 @@ Most operations on the on demand service broker API are implemented by launching
     $ bosh task \<task\_ID\>
    </pre>
 
-<p class="note"><strong>Note:</strong> This action is identical between v1 and v2 of the BOSH CLI.
+<p class="note"><strong>Note:</strong> This action is identical between v1 and v2 of the BOSH CLI. When using the BOSH CLI v2, use <code>bosh2</code> instead of <code>bosh</code>.</p>
 
 ### <a id="id-uaa-issues"></a>Identify Issues When Connecting to BOSH or UAA
 
