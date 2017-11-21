@@ -6,7 +6,7 @@ Use **master** for next the unreleased version, and numbered branches for the co
 | Branch name | Use for… |
 |-------------| ------|
 | master      | Next unreleased version (edge)|
-| v0.18.x         | live soon | 
+| v0.18.x         | live | 
 | v0.17.x         | live | 
 | v0.16.x         | live |
 | v0.15.x        | live |
