@@ -12,3 +12,5 @@ Before running any of these errands, set the service broker manifest in the BOSH
   1. In the **Name** column of the output, look or `grep` for a string of the form `p-rabbit-GUID`. This is the unique identifier for the broker in BOSH.
   1. Run `bosh download manifest RABBIT-BROKER-GUID BROKER-MANIFEST.yml` with the unique string from the previous step and any filename you want to give the broker deployment manifest.
   1. Run `bosh deployment BROKER-MANIFEST.yml` to select the broker deployment as the one to run broker errands against.
+
+  <p class="note"><strong>Note:</strong> This process is not available in v2 of the BOSH CLI.</p>
