@@ -573,11 +573,19 @@ The current manifest as YAML. This is used to extract information about the depl
 
 For example see the [kafka delete binding](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/delete_binding.go)
 
-## <a id="delete-request-params-JSON"></a>Request Params JSON
+#### <a id="delete-request-params-JSON"></a>Request Params JSON
 
 This is a JSON object that holds the entire body of the [service unbinding](http://docs.cloudfoundry.org/services/api.html#unbinding) request sent by the Cloud Controller to the service broker.
 
-The field `parameters` contains arbitrary key-value pairs which were passed by the application developer as a `cf` CLI parameter when creating, or updating the service instance.
+The field `parameters` contains arbitrary key-value pairs which were passed by
+the application developer as a `cf` CLI parameter when creating, or updating
+the service instance. If using the <a href="#sdk">golang SDK</a>, it can be
+obtained using the `ArbitraryParams()` helper method on requestParams.
+
+The field `bind_resource` contains key-value pairs for `app_guid`,
+`credential_client_id` and `route`.  If using the <a href="#sdk">golang
+SDK</a>, the `brokerapi.BindResource` struct containing these fields can be
+accessed using the `BindResource()` helper method on requestParams.
 
 ## <a id="packaging"></a>Packaging
 
