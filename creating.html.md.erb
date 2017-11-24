@@ -65,7 +65,10 @@ A Service Adapter is an executable invoked by ODB. It is expected to respond to 
   - service instance (ID, request parameters, plan properties, IAAS resources)
   - previous manifest, if this is an upgrade deployment
 
-    **Note**: ODB requires <code>generate-manifest</code> to be a <strong>pure function</strong>. Given the same arguments when a previous manifest is supplied&mdash;which happens during a deployment update&mdash;the command should always output the same BOSH manifest.
+    **Note**: ODB requires <code>generate-manifest</code> to be idempotent.
+    Given the same arguments when a previous manifest is supplied&mdash;which
+    happens during a deployment update&mdash;the command should always output
+    the same BOSH manifest.
 
 - `dashboard-url`
   Generate an optional URL of a web-based management user interface for the service instance.
@@ -453,9 +456,19 @@ The current manifest as YAML. This is used to extract information about the depl
 
 #### <a id="create-request-params-JSON"></a>request-params-JSON
 
-This is a JSON object that holds the entire body of the [service binding](http://docs.cloudfoundry.org/services/api.html#binding) request sent by the Cloud Controller to the service broker.
+This is a JSON object that holds the entire body of the [service
+binding](http://docs.cloudfoundry.org/services/api.html#binding) request sent
+by the Cloud Controller to the service broker.
 
-The field `parameters` contains arbitrary key-value pairs which were passed by the application developer as a `cf` CLI parameter when creating, or updating the service instance.
+The field `parameters` contains arbitrary key-value pairs which were passed by
+the application developer as a `cf` CLI parameter when creating, or updating
+the service instance. If using the <a href="#sdk">golang SDK</a>, it can be
+obtained using the `ArbitraryParams()` helper method on requestParams.
+
+The field `bind_resource` contains key-value pairs for `app_guid`,
+`credential_client_id` and `route`.  If using the <a href="#sdk">golang
+SDK</a>, the `brokerapi.BindResource` struct containing these fields can be
+accessed using the `BindResource()` helper method on requestParams.
 
 #### Credentials for Bindings
 
