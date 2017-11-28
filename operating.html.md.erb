@@ -411,7 +411,8 @@ service_catalog:
         lifecycle_errands:
           post_deploy:
             name: <post_deploy_errand_job>
-          pre_delete: <pre_delete_errand_job>
+          pre_delete:
+            name: <pre_delete_errand_job>
         instance_groups:
           - name: <service_release_job>
             ...
@@ -436,16 +437,16 @@ Lifecycle errands will not be run.
 
 <p class="note"><strong>Note</strong>: This feature requires BOSH director v263 or later.</p>
 
-A job errand can be run as a `post-deploy` colocated errand. Colocated errands run on an existing service instance group, avoiding additional resource allocation. For more information see the [BOSH documentation](https://bosh.io/docs/errands.html).
+A job errand can be run as a `post-deploy` or `pre-delete` colocated errand. Colocated errands run on an existing service instance group, avoiding additional resource allocation. For more information see the [BOSH documentation](https://bosh.io/docs/errands.html).
 
-Similarly to the other lifecycle errands, colocated errands are deployed on a per-plan basis. Currently the ODB supports only colocated post-deploy errands.
-In order to enable a colocated post deploy errand, the errand job must be:
+Similarly to the other lifecycle errands, colocated errands are deployed on a per-plan basis. Currently the ODB supports only colocated post-deploy or pre-delete errands.
+In order to enable a colocated errand, the errand job must be:
 
 - Added to the service instance deployment (1).
 - Set in the plan's lifecycle errands configuration (2).
 - Set the instances where the errand should run on (3).
 
-An example manifest for colocated errands looks like the following:
+An example manifest for colocated post-deploy errand looks like the following:
 
 ```yaml
 service_deployment:
@@ -466,7 +467,6 @@ service_catalog:
           - name: <service_release_job>
             ...
 ```
-
 
 ## <a id="management"></a>Broker Management
 
