@@ -1,7 +1,8 @@
 <div class="mermaid">
 sequenceDiagram
   Operator->>Upgrade Errand:bosh run errand upgrade-all-service-instances
-  Upgrade Errand->>Cloud Controller:GET instances
+  Upgrade Errand->>On Demand Broker:GET instances
+  On Demand Broker->>Cloud Controller:GET instances
   Cloud Controller->>Upgrade Errand:instances
   loop for all instances
     Upgrade Errand->>On Demand Broker: PATCH instance (upgrade)
