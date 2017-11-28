@@ -7,7 +7,7 @@ owner: London Services Enablement
 The operator is responsible for performing the following:
 
 * Request appropriate networking rules for on-demand service tiles.
-* Configure the BOSH director
+* Configure the BOSH Director
 * Upload the required releases for the broker deployment and service instance deployments.
 * Write a broker manifest
   * If you are unfamiliar with writing BOSH v2 manifests, see [Manifest v2 Schema](http://bosh.io/docs/manifest-v2.html).
@@ -16,11 +16,38 @@ The operator is responsible for performing the following:
 * Manage brokers
 * Documentation for the operator
 
-For a list of deliverables provided by the Service Author, see [Required Deliverables](creating.html#what-is-required-of-the-service-authors).
+For a list of deliverables provided by the Service Author,
+see [Required Deliverables](creating.html#what-is-required-of-the-service-authors).
 
-For an example manifest for a Redis service, see [redis-example-service-adapter-release](https://github.com/pivotal-cf-experimental/redis-example-service-adapter-release/blob/master/docs/example-manifest.yml).
+For an example manifest for a Redis service,
+see [redis-example-service-adapter-release](https://github.com/pivotal-cf-experimental/redis-example-service-adapter-release/blob/master/docs/example-manifest.yml).
 
-For an example manifest for a Kafka service, see [kafka-example-service-adapter-release](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml).
+For an example manifest for a Kafka service,
+see [kafka-example-service-adapter-release](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml).
+
+## <a id="about-cli"></a>About the BOSH CLI
+
+The BOSH CLI is available in two major versions, v1 and v2.
+
+Where appropriate, this topic provides examples of using each version of the BOSH CLI.
+Consult the table below to determine which version of the CLI is supported for your Pivotal Cloud Foundry (PCF) installation.
+
+<table class="nice">
+        <th>PCF Version</th>
+        <th>BOSH CLI Version</th>
+        <tr>
+                <td>v1.10</td>
+                <td>CLI v1</td>
+        </tr>
+        <tr>
+                <td>v1.11</td>
+                <td>CLI v1 or CLI v2 (Pivotal recommends CLI v2)</td>
+        </tr>
+        <tr>
+                <td>v1.12</td>
+                <td>CLI v2</td>
+        </tr>
+</table>
 
 ## <a id="networking"></a>Set Up Networking
 
@@ -29,14 +56,17 @@ For an example manifest for a Kafka service, see [kafka-example-service-adapter-
 ## <a id="configure-bosh"></a>Set Up Your BOSH Director
 Dependencies for the On-Demand Broker:
 
-- BOSH director v257 or later (PCF 1.8) **Note:** does not support BOSH Windows
-- Cloud Foundry v238 or later (PCF 1.8)
++ BOSH Director v257 or later (PCF v1.8) 
 
- <p class="note"><strong>Note</strong>: [Service instance lifecycle errands](#lifecycle-errands) require BOSH director v261 (PCF 1.10) or later.</p>
+    <p class="note"><strong>Note:</strong> BOSH Windows is not supported.</p>
+
++ Cloud Foundry v238 or later (PCF v1.8)</li>
+
+    <p class="note"><strong>Note</strong>: <a href="#lifecycle-errands">Service Instance Lifecycle Errands</a> require BOSH Director v261 (PCF v1.10) or later.</p>
 
 ### <a id="ssl-certs"></a>SSL Certificates
 
-If ODB is configured to communicate with BOSH on the director's public IP you may be using a self-signed certificate unless you have a domain for your BOSH director. ODB does not ignore TLS certificate validation errors by default (as expected). You have two options to configure certificate-based authentication between the BOSH director and the ODB:
+You have two options to configure certificate-based authentication between the BOSH Director and the ODB:
 
 1. Add the BOSH director's root certificate to ODB's trusted pool in the ODB manifest:
 
@@ -48,12 +78,14 @@ If ODB is configured to communicate with BOSH on the director's public IP you ma
 1. Use BOSH's `trusted_certs` feature to add a self-signed CA certificate to each VM BOSH deploys. For more details on how to generate and use self-signed certificates for BOSH director and UAA, see [Director SSL Certificate Configuration](https://bosh.io/docs/director-certs.html).
 
 You can also configure a separate root CA certificate that is used when ODB communicates with the Cloud Foundry API (Cloud Controller).
-This is done in a similar way to above.
+
 For more information, see [manifest snippets below](#core-broker-configuration).
 
 ### <a id="bosh-teams"></a>BOSH Teams
 
-BOSH has a teams feature that allows you to further control how BOSH operations are available to different clients. We strongly recommend using it to ensure that your on-demand service broker client can only modify deployments it created. For example, if you [use uaac](https://docs.cloudfoundry.org/adminguide/uaa-user-management.html) to create the client like this:
+BOSH has a teams feature that allows you to further control how BOSH operations are available to different clients.
+Pivotal recommends using this feature to ensure that your on-demand service broker client can only modify deployments it created.
+The example below shows how you can [configure UUAC](https://docs.cloudfoundry.org/adminguide/uaa-user-management.html) to create the client.
 
 ```bash
 uaac client add <client-id> \
@@ -62,7 +94,9 @@ uaac client add <client-id> \
   --authorities "bosh.teams.<team-name>.admin"
 ```
 
-Then when you [configure the broker's BOSH authentication](#core-broker-configuration), you can use this client ID and secret. The broker will then only be able to perform BOSH operations on deployments it has created itself.
+If you use this process, when you [configure the broker's BOSH authentication](#core-broker-configuration),
+you can use this client ID and secret.
+Then the broker is only able to perform BOSH operations on deployments it has created.
 
 For how to set up and use BOSH teams, see [Director teams and permissions configuration](https://bosh.io/docs/director-users-uaa-perms.html).
 
@@ -70,31 +104,29 @@ For more details on securing how ODB uses BOSH, see [Security](#security).
 
 ### <a id="cloud-controller"></a>Cloud Controller
 
-ODB used the Cloud Controller as a source of truth about service offerings, plans, and instances. To reach Cloud Controller, ODB needs to be configured with credentials. These can be either client or user credentials:
+ODB uses the Cloud Controller as a source of truth about service offerings, plans, and instances.
+To reach Cloud Controller, ODB needs to be configured with credentials.
+These can be either client or user credentials:
 
 * Client credentials: as of Cloud Foundry v238, the UAA client must have authority `cloud_controller.admin`.
-* User credentials: a Cloud Foundry admin user, i.e. a member of the `scim.read` and `cloud_controller.admin` groups as a minimum.
-
-Detailed broker configuration is covered [below](#core-broker-configuration).
+* User credentials: a Cloud Foundry admin user, such as a member of the `scim.read` and `cloud_controller.admin` groups as a minimum.
 
 ## <a id="upload-releases"></a>Upload Required Releases
 
-Upload the following releases to the BOSH director:
+Upload the following releases to the BOSH Director:
 
-* on-demand-service-broker
-* your service adapter
-* your service release(s)
+* On-demand-service-broker
+* Your service adapter
+* Your service release(s)
 
 ## <a id="broker-manifest"></a>Write a Broker Manifest
 
 ### <a id="core-broker-config"></a>Core Broker Configuration
 
-Your manifest should contain one non-errand instance group, that co-locates both:
+Your manifest should contain one non-errand instance group that co-locates the `broker` job
+from on-demand-service-broker and your service adapter job from the service adapter release.
 
-* the `broker` job from on-demand-service-broker
-* your service adapter job from your service adapter release
-
-The broker is stateless and does not need a persistent disk. The VM type can be quite small: a single CPU and 1 GB of memory should be sufficient in most cases.
+The broker is stateless and does not need a persistent disk. The VM type can be quite small; in most cases, a single CPU and 1 GB of memory should be sufficient.
 
 An example snippet is shown below:
 
@@ -147,7 +179,7 @@ instance_groups:
 
 This snippet is using the BOSH v2 syntax and making use of global cloud config and job-level properties.
 
-<p class="note"><strong>Note</strong>: The <code>disable_ssl_cert_verification</code> option is dangerous and <strong>should not be used in production</strong>.</p>
+<p class="note"><strong>Note:</strong> The <code>disable_ssl_cert_verification</code> option is dangerous and <strong>should not be used in production</strong>.</p>
 
 ### <a id="catalog"></a>Service Catalog and Plan Composition
 
@@ -158,12 +190,16 @@ The operator must:
 1. Use exact versions for releases and stemcells. The use of `latest` and floating stemcells are not supported.
 1. Create Cloud Foundry [service metadata](https://docs.pivotal.io/pivotalcf/services/catalog-metadata.html#services-metadata-fields) in the catalog for the service offering.
    This metadata will be aggregated in the Cloud Foundry marketplace and displayed in Apps Manager and the `cf` CLI.
-1. Compose plans. In ODB, service authors do not define plans but instead expose plan properties. The operator's role is to compose combinations of these properties, along with IAAS resources and catalog metadata into as many plans as they like.
+1. Compose plans.
+   In ODB, service authors do not define plans but instead expose plan properties.
+   The operator's role is to compose combinations of these properties,
+   along with IaaS resources and catalog metadata into as many plans as they like.
   1. Create Cloud Foundry [service plan metadata](https://docs.pivotal.io/pivotalcf/services/catalog-metadata.html#plan-metadata-fields) in the service catalog for each plan.
   1. Provide resource mapping for each instance group specified by the Service Author for each plan.
-     The resource values must correspond to valid resource definitions in the BOSH director's global cloud config.
-     In some cases Service Authors will recommend resource configuration: e.g. in single-node Redis deployments, an instance count greater than 1 does not make sense.
-     Here the operator can configure the deployment to span multiple availability zones, by using the [BOSH multi-az feature](https://bosh.io/docs/azs.html). For example the [kafka multi az plan](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml#L100). In some cases, service authors will provide errands for the service release. You can add an instance group of type errand by setting the lifecycle field. For example the [smoke_tests for the kafka deployment](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml#L93).
+     The resource values must correspond to valid resource definitions in the BOSH Director's global cloud config.
+     In some cases, Service Authors will recommend resource configuration;
+     for example, in single-node Redis deployments, an instance count greater than 1 does not make sense.
+     Here the operator can configure the deployment to span multiple availability zones (AZs) by using the [BOSH multi-az feature](https://bosh.io/docs/azs.html). For example, the [kafka multi AZ plan](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml#L100). In some cases, service authors will provide errands for the service release. You can add an instance group of type errand by setting the lifecycle field. For example the [smoke_tests for the kafka deployment](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml#L93).
   1. Provide values for plan properties.
      Plan properties are key-value pairs defined by the Service Author. Some examples include a boolean to enable disk persistence for Redis, and a list of strings representing RabbitMQ plugins to load. The Service Author should document whether these properties are mandatory or optional, whether the use of one property precludes the use of another, and whether certain properties affect recommended instance group to resource mappings.
      Properties can also be specified at the service offering level, where they will be applied to every plan. If there is a conflict between global and plan-level properties, the plan properties will take precedence.
@@ -309,12 +345,15 @@ available under the VCAP_SERVICES environment variable for the application.
 
 ## <a id="route"></a>Route Registration
 
-You can optionally colocate the `route_registrar` job from the [routing release](http://bosh.io/releases/github.com/cloudfoundry-incubator/cf-routing-release?all=1) with the on-demand-service-broker, in order to:
+You can optionally co-locate the `route_registrar` job
+from the [routing release](http://bosh.io/releases/github.com/cloudfoundry-incubator/cf-routing-release?all=1) with the on-demand-service-broker, in order to:
 
-1. load balance multiple instances of ODB using Cloud Foundry's router
-1. access ODB from the public internet
+* Load balance multiple instances of ODB using Cloud Foundry's router.
+* Access ODB from the public internet.
 
-To do this, upload the release to your BOSH director and [configure the job properties](http://bosh.io/jobs/route_registrar?source=github.com/cloudfoundry-incubator/cf-routing-release&version=0.136.0), replacing the version in that docs URL query string as appropriate.
+To do this, upload the release to your BOSH Director and
+[configure the job properties](http://bosh.io/jobs/route_registrar?source=github.com/cloudfoundry-incubator/cf-routing-release&version=0.136.0),
+replacing the version in that docs URL query string as appropriate.
 
 Remember to set the `broker_uri` property in the [register-broker errand](#register-broker) if you configure a route.
 
@@ -326,14 +365,15 @@ Plan quotas restrict the number of service instances for a given plan, while
 the global limit restricts the number of service instances across all plans.
 
 When creating a service instance, ODB will check the global service instance limit.
-If it has not been reached, it will check the plan service instance limit.
+If it has not been reached, it checks the plan service instance limit.
 
 <p class="note"><strong>Note</strong>: These limits do not include orphans. See <a href="#listing-orphans">List Orphan Deployments</a>
    and <a href="#orphan-deployments">Delete Orphaned Deployments</a>.</p>
 
 ## <a id="broker-metrics"></a>Broker Metrics
 
-The ODB bosh release contains a metrics job, that can be used to emit metrics when colocated with [service metrics](https://network.pivotal.io/products/service-metrics-sdk/). You must include the [loggregator release](https://github.com/cloudfoundry/loggregator) in order to do this.
+The ODB BOSH release contains a metrics job that can be used to emit metrics when co-located with [service metrics](https://network.pivotal.io/products/service-metrics-sdk/).
+You must include the [loggregator release](https://github.com/cloudfoundry/loggregator) in order to do this.
 
 Add the following jobs to the broker instance group:
 
@@ -352,7 +392,8 @@ Add the following jobs to the broker instance group:
   release: <ODB release>
 ```
 
-An example of how the service metrics can be configured for an on-demand-broker deployment can be seen in the [kafka-example-service-adapter-release](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml#L106) manifest.
+For an example of how the service metrics can be configured for an on-demand-broker deployment,
+see the [kafka-example-service-adapter-release](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml#L106) manifest.
 
 Pivotal have tested this example configuration with loggregator v58 and service-metrics v1.5.0.
 
@@ -362,37 +403,51 @@ For more information about service metrics, see [Service Metrics for Pivotal Clo
 
 The following startup checks occur:
 
-* Verify that the CF and BOSH versions satisfy the minimum requirement. **Note**: If your service offering includes lifecycle errands, the minimum requirement for BOSH will be higher. See [Set Up Your BOSH Director](#configure-bosh). If your system does not meet minimum requirements, you will see an insufficient version error. For example:
-```
-CF API error: Cloud Foundry API version is insufficient, ODB requires CF v238+.
-```
-* Verify that, for the service offering, no plan IDs have changed for plans that have existing service instances. If there are instances, you will see following error:
-```
-You cannot change the plan_id of a plan that has existing service instances.
-```
+* Verify that the CF and BOSH versions satisfy the minimum requirement. 
+
+    <p class="note"><strong>Note:</strong> If your service offering includes lifecycle errands, the minimum requirement for BOSH is higher.
+    See <a href="#configure-bosh">Set Up Your BOSH Director</a>.
+    If your system does not meet minimum requirements, an error appears.
+    For example:<br>
+    <code> CF API error: Cloud Foundry API version is insufficient, ODB requires CF v238+.</code>
+    </p>
+
+* Verify that no service offering plan IDs have changed for plans that have existing service instances.
+  If there are instances, you see following error:<br/>
+  <code>You cannot change the plan_id of a plan that has existing service instances.</code>
 
 ## <a id="broker-stop"></a>Broker Shutdown
 
-The broker will try and wait for any incomplete https requests to complete before shutting down. This allows us to reduce the risk of leaving orphan deployments in the event that the BOSH director does not respond to our initial `bosh deploy` request. The `broker.shutdown_timeout` property determines how long the broker will wait before it is forced to shutdown. The default is 60 seconds, but can be configured in the manifest. Please refer to how to <a href="#broker-manifest">Write a Broker Manifest</a>
+The broker waits for any incomplete `https` requests to complete before shutting down.
+This reduces the risk of leaving orphan deployments in the event that the BOSH Director does not respond to an initial `bosh deploy` request.
+The `broker.shutdown_timeout` property determines how long the broker waits before it is forced to shut down.
+The default is 60 seconds, but can be configured in the manifest.
+For more information, see <a href="#broker-manifest">Write a Broker Manifest</a> below.
 
 ## <a id="lifecycle-errands"></a>Service Instance Lifecycle Errands
 
  <p class="note"><strong>Note</strong>: This feature requires BOSH director v261 or later.</p>
 
-Service Instance lifecycle errands allow additional short lived jobs to be run as part of service instance deployment. A deployment is only considered successful if the lifecycle errand successfully exits.
+Service instance lifecycle errands allow additional short lived jobs to be run as part of service instance deployment.
+A deployment is only considered successful if the lifecycle errand exits successfully.
 
 The service adapter must offer this errand as part of the service instance deployment.
 
 ODB supports the following lifecycle errands:
 
-- `post_deploy` - Runs after the creation or updating of a service instance. An example use case is running a health check to ensure the service instance is functioning. See the workflow [here](./concepts.html#post-deploy)
-- `pre_delete` - Runs before the deletion of a service instance. An example use case is cleaning up data prior to a service shutdown. See the workflow [here](./concepts.html#pre-delete)
+* `post_deploy`:  Runs after the creation or updating of a service instance.
+   An example use case is running a health check to ensure the service instance is functioning.
+   See the workflow [here](./concepts.html#post-deploy).
+* `pre_delete`: Runs before the deletion of a service instance.
+   An example use case is cleaning up data prior to a service shutdown.
+   See the workflow [here](./concepts.html#pre-delete).
 
-Service Instance lifecycle errands are configured on a per-plan basis. To enable lifecycle errands, the errand job must be:
+Service Instance lifecycle errands are configured on a per-plan basis.
+To enable lifecycle errands, the errand job must be:
 
-- Added to the service instance deployment.
-- Added to the plan's instance groups.
-- Set in the plan's lifecycle errands configuration.
+* Added to the service instance deployment.
+* Added to the plan's instance groups.
+* Set in the plan's lifecycle errands configuration.
 
 An example manifest snippet configuring lifecycle errands for a plan:
 
@@ -474,9 +529,11 @@ Management tasks on the broker are performed with BOSH errands.
 
 ### <a id="register"></a>Register Broker
 
-This errand registers the broker with Cloud Foundry and enables access to plans in the service catalog. The errand should be run whenever the broker is re-deployed with new catalog metadata to update the Cloud Foundry catalog.
+This errand registers the broker with Cloud Foundry and enables access to plans in the service catalog.
+The errand should be run whenever the broker is re-deployed with new catalog metadata to update the Cloud Foundry catalog.
 
-If the `broker_uri` property is set, then you should also register a route for your broker with Cloud Foundry. See [Route registration](#route-registration) section for more details.
+If the `broker_uri` property is set, you should also register a route for your broker with Cloud Foundry.
+For more information, see [Route Registration](#route) above.
 
 When `enable_service_access: false` is set, the errand will not change service access for any plan.
 
@@ -488,7 +545,8 @@ Individual plans can be enabled via the optional `cf_service_access` property. T
 
 If the `cf_service_access` property is not set at all, the register-broker errand will enable access for that plan.
 
-Plans with disabled service access will not be visible to non-admin Cloud Foundry users (including Org Managers and Space Managers). Admin Cloud Foundry users can see all plans including those with disabled service access.
+Plans with disabled service access are not visible to non-admin Cloud Foundry users (including Org Managers and Space Managers).
+Admin Cloud Foundry users can see all plans including those with disabled service access.
 
 Add the following instance group to your manifest:
 
@@ -514,6 +572,14 @@ Add the following instance group to your manifest:
   azs: [<az>]
 ```
 
+Execute the errand in one of two ways, depending on which version of the BOSH CLI you're using.
+
+#### <a id="cli-v1"></a>BOSH CLI v2
+
+Run the errand with `bosh2 run-errand register-broker`.
+
+#### <a id="cli-v1"></a>BOSH CLI v1
+
 Run the errand with `bosh run errand register-broker`.
 
 ### <a id="delete-instances-and-deregister"></a>Delete All Service Instances and Deregister Broker
@@ -530,7 +596,7 @@ The errand does the following:
 1. Deletes all service instances sequentially
 1. Deregisters the broker from Cloud Foundry
 
-**This errand should only be used with extreme caution when you want to totally destroy all of the on-demand service instances and deregister the broker from the Cloud Foundry.**
+**This errand should only be used when you want to destroy all of the on-demand service instances and deregister the broker from the Cloud Foundry.**
 
 Add the following instance group to your manifest:
 
@@ -558,6 +624,14 @@ Add the following instance group to your manifest:
     The `polling_initial_offset` default is set to 5 seconds.
     In systems with more load, consider increasing the polling offset.
 
+Execute the errand in one of two ways, depending on which version of the BOSH CLI you're using.
+
+#### <a id="cli-v1"></a>BOSH CLI v2
+
+Run the errand with `bosh2 run-errand delete-all-service-instances-and-deregister-broker`.
+
+#### <a id="cli-v1"></a>BOSH CLI v1
+
 Run the errand with `bosh run errand delete-all-service-instances-and-deregister-broker`.
 
 ### <a id="deregister-broker"></a>Deregister Broker
@@ -581,14 +655,22 @@ Add the following instance group to your manifest:
   azs: [<az>]
 ```
 
+Execute the errand in one of two ways, depending on which version of the BOSH CLI you're using.
+
+#### <a id="cli-v1"></a>BOSH CLI v2
+
+Run the errand with `bosh2 run-errand deregister-broker`.
+
+#### <a id="cli-v1"></a>BOSH CLI v1
+
 Run the errand with `bosh run errand deregister-broker`.
 
 ### <a id="delete-instances"></a>Delete All Service Instances
 
 This errand deletes all service instances of your broker's service offering in every org and space of Cloud Foundry.
 It uses the Cloud Controller API to do this, and therefore only deletes instances the Cloud Controller knows about.
-It does not delete orphan BOSH deployments: those that don't correspond to a known service instance.
-Orphan BOSH deployments *should* never happen, but in practice they might.
+It does not delete orphan BOSH deployments, which are deployments that don't correspond to a known service instance.
+Orphan BOSH deployments are rare, but can occur.
 Use the [orphan-deployments errand](#listing-orphans) to identify them.
 
 The errand does the following:
@@ -596,10 +678,10 @@ The errand does the following:
 1. Unbinds all applications from the service instances
 1. Deletes all service instances sequentially
 1. Checks if any instances have been created while the errand was running
-1. If instances are detected the errand fails
+1. If instances are detected, the errand fails
 1. Re-runs the errand
 
-**This errand should only be used with extreme caution when you want to totally destroy all of the on-demand service instances from Cloud Foundry.**
+**This errand should only be used when you want to destroy all of the on-demand service instances from Cloud Foundry.**
 
 Add the following instance group to your manifest:
 
@@ -623,23 +705,29 @@ Add the following instance group to your manifest:
  <p class="note"><strong>Note</strong>: The `polling_interval` default is set to 60 seconds
     because the Cloud Controller itself polls the on-demand broker every 60 seconds.
     Setting your polling interval to anything lower than 60 seconds will not speed up the errand.<br/>
-    The `polling_initial_offset` default is set to 5 seconds
-    because we don't want the delete all errand to start polling cloudfoundry before
-    cloudfoundry has finished processing the delete request and has contacted the broker.
-    In systems with more load on cloudfoundry, this process could take a longer,
+    The `polling_initial_offset` default is set to 5 seconds to give Cloud Foundry time to finish processing the delete request and contact the broker before the `delete all` errand starts polling Cloud Foundry.
+    In systems with more load on Cloud Foundry, this process could take a longer,
     in which case you might consider increasing the polling offset.</p>
+
+Execute the errand in one of two ways, depending on which version of the BOSH CLI you're using.
+
+#### <a id="cli-v1"></a>BOSH CLI v2
+
+Run the errand with `bosh2 run-errand delete-all-service-instances`.
+
+#### <a id="cli-v1"></a>BOSH CLI v1
 
 Run the errand with `bosh run errand delete-all-service-instances`.
 
 ### <a id="orphan-deployments"></a>Delete Orphaned Deployments
 
-The deployment for a service instance is defined as 'Orphaned' when the Bosh
+The deployment for a service instance is defined as 'orphaned' when the Bosh
 deployment is still running, but the service is no longer registered in
 Cloud Foundry.
 
 The `orphan-deployments` errand will collate a list of service deployments that
 have no matching service instances in Cloud Foundry and return the list to the
-operator. It is then up to the operator to remove the orphaned bosh deployments.
+operator. It is then up to the operator to remove the orphaned BOSH deployments.
 
 Add the following instance group to your manifest:
 
@@ -656,6 +744,14 @@ Add the following instance group to your manifest:
   azs: [<az>]
 ```
 
+Execute the errand in one of two ways, depending on which version of the BOSH CLI you're using.
+
+#### <a id="cli-v1"></a>BOSH CLI v2
+
+Run the errand with `bosh2 run-errand orphan-deployments`.
+
+#### <a id="cli-v1"></a>BOSH CLI v1
+
 Run the errand with `bosh run errand orphan-deployments`.
 
 If orphan deployments are present, the errand will output a list of deployment
@@ -671,9 +767,19 @@ None
 Errand 'orphan-deployments' completed successfully (exit code 0)
 ```
 
-**Warning:** Deleting the bosh deployment will destroy the vm, any data present will be lost.
+<p class="note warning">
+<strong>WARNING</strong>: Deleting the BOSH deployment destroys the VM.
+                          Any data present is lost.</p>
 
-To delete the orphan deployment run `bosh delete deployment service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3`.
+Execute the errand in one of two ways, depending on which version of the BOSH CLI you're using.
+
+#### <a id="cli-v1"></a>BOSH CLI v2
+
+Run the errand with `bosh2 delete-deployment service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3`.
+
+#### <a id="cli-v1"></a>BOSH CLI v1
+
+Run the errand with `bosh delete deployment service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3`.
 
 ## <a id="updates"></a>Updates
 
@@ -681,36 +787,44 @@ To delete the orphan deployment run `bosh delete deployment service-instance_aoe
 
 To update the [core broker configuration](#core-broker-config):
 
-* make any necessary changes to the core broker configuration in the broker manifest
-* deploy the broker
+* Make any necessary changes to the core broker configuration in the broker manifest
+* Deploy the broker
 
 ### <a id="updating-service-offering"></a>Update Service Offering
 
 To update the service offering:
 
-* make any changes to properties in the `service_catalog` of the broker manifest. For example, update the service metadata.
-* make any changes to properties in the `service_deployment` of the broker manifest. For example, update the jobs used from a service release.
-* deploy the broker
+* Make any changes to properties in the `service_catalog` of the broker manifest. For example, update the service metadata.
+* Make any changes to properties in the `service_deployment` of the broker manifest. For example, update the jobs used from a service release.
+* Deploy the broker
 
-**Warning:** Once the broker has been registered with Cloud Foundry do not change the `service_id` or the `plan_id` for any plan. When the ODB starts it checks that all existing service instances in Cloud Foundy have a `plan_id` that exists in the `service_catalog`.
+    <p class="note warning">
+<strong>WARNING</strong>: After the broker has been registered with Cloud Foundry,
+                          do not change the <code>service_id</code> or the <code>plan_id</code> for any plan.
+                          When the ODB starts, it checks that all existing service instances in Cloud Foundy 
+                          have a <code>plan_id</code> that exists in the <code>service_catalog</code>.</p>
 
 After changing the `service_catalog`, you should run the [register-broker errand](#register) to update the Cloud Foundry marketplace.
 
-When the plans are updated in the `service_catalog`, then upgrades will need to be applied to existing service instances. See [upgrading all service instances](#upgrade-all-instances).
+When the plans are updated in the `service_catalog`, upgrades will need to be applied to existing service instances.
+See [upgrading all service instances](#upgrade-all-instances).
 
 ### <a id="disabling-service-plans"></a>Disable Service Plans
 
-Access to a service plan can be disabled by using the Cloud Foundry CLI:<pre class="terminal">
+You can disable access to a service plan by using the Cloud Foundry CLI:<pre class="terminal">
 $ cf disable-service-access \<service-name-from-catalog\> -p \<plan-name\>
 </pre>
 
-Also, when a plan has the property `cf_service_access: disable` in the `service_catalog` then the [register-broker errand](#register) errand will disable service access to that plan.
+Also, when a plan has the property `cf_service_access: disable` in the `service_catalog`
+then the [register-broker errand](#register) errand will disable service access to that plan.
 
 ### <a id="remove-plans"></a>Remove Service Plans
 
-A service plans can be removed if there are no instances using the plan. To remove the a plan, remove it from the broker manifest and update the Cloud Foundry marketplace by running the [register-broker errand](#register).
+A service plans can be removed if there are no instances using the plan.
+To remove a plan, remove it from the broker manifest and update the Marketplace by running the [register-broker errand](#register).
 
-**Warning:** If any service instances remain on a plan that has been removed from the catalog then the ODB will fail to start.
+<p class="note warning">
+<strong>WARNING</strong>: If any service instances remain on a plan that has been removed from the catalog, the ODB fails to start.</p>
 
 ## <a id="upgrades"></a>Upgrades
 
@@ -718,39 +832,43 @@ A service plans can be removed if there are no instances using the plan. To remo
 
 The broker is upgraded in a similar manner to all BOSH releases:
 
-* upload new version of `on-demand-service-broker-release` BOSH release to the BOSH Director
-* make any necessary changes to the core broker configuration in the broker manifest
-* deploy the broker
+* Upload new version of `on-demand-service-broker-release` BOSH release to the BOSH Director
+* Make any necessary changes to the core broker configuration in the broker manifest
+* Deploy the broker
 
 ### <a id="upgrade-service-offering"></a>Upgrade Service Offering
 
 The service offering consists of:
 
-* service catalog
-* service adapter BOSH release
-* service BOSH release(s)
-* service stemcell
+* Service catalog
+* Service adapter BOSH release
+* Service BOSH release(s)
+* Service stemcell
 
 To upgrade a service offering:
 
-* make any changes to the service catalog in the broker manifest
-* upload any new service BOSH release(s) to the BOSH Director
-* make any changes to service release(s) in the broker manifest
-* upload any new service stemcell to the BOSH Director
-* make any changes to the service stemcell in the `service_deployment` broker manifest
-* deploy the broker
+* Make any changes to the service catalog in the broker manifest
+* Upload any new service BOSH release(s) to the BOSH Director
+* Make any changes to service release(s) in the broker manifest
+* Upload any new service stemcell to the BOSH Director
+* Make any changes to the service stemcell in the `service_deployment` broker manifest
+* Deploy the broker
 
 Any new service instances will be created using the latest service offering.
 
-To upgrade all existing instances you can run the [upgrade-all-service-instances errand](#upgrade-instances).
+To upgrade all existing instances, run the [upgrade-all-service-instances errand](#upgrade-instances).
 
-**Warning:** Until a service instance has been upgraded, `cf update-service` operations will be blocked and an error will be shown, see [updating service offering](#updating-service-offering).
+<p class="note warning">
+<strong>WARNING</strong>: Until a service instance has been upgraded, <code>cf update-service</code> operations is blocked and an error appears.
+        For more information, see <a href="#updating-service-offering">Update Service Offering</a> above.</p>
 
 ### <a id="upgrade-individual-instances"></a>Upgrade an Individual Service Instance
 
 Cloud Foundry users cannot upgrade their service instances to the latest service offering.
 
-Until a service instance has been upgraded, Cloud Foundry users cannot set parameters, or change plan until the service instance has been upgraded by an operator:<pre class="terminal">
+Until a service instance has been upgraded, Cloud Foundry users cannot set parameters or change plan until the service instance has been upgraded by an operator:
+
+<pre class="terminal">
 $ cf update-service my-redis -c '{"maxclients": 10000}'
 Updating service instance my-redis as admin...
 FAILED
@@ -763,9 +881,10 @@ Operators should run the [upgrade-all-service-instances errand](#upgrade-instanc
 
 To upgrade all existing service instances after the service offering has been updated or upgraded:
 
-1. Add the following instance group to your broker manifest:
-
-    ```yaml
+<ol>
+<li>Add the following instance group to your broker manifest:
+    <pre class="terminal">
+    yaml
     - name: upgrade-all-service-instances
       lifecycle: errand
       instances: 1
@@ -778,12 +897,18 @@ To upgrade all existing service instances after the service offering has been up
       stemcell: <stemcell>
       networks: [{name: <network>}]
       azs: [<az>]
-    ```
+    </pre></li>
+<li>Deploy the broker manifest.</li>
+<li>Run the errand in one of two ways, depending on which version of the BOSH CLI you use:<br/>  
+<ul>
+<li><strong>For v2 of the CLI:</strong> <code>bosh run-errand upgrade-all-service-instances</code>.</li>
+<li><strong>For v1 of the CLI:</strong> <code>bosh run errand upgrade-all-service-instances</code>.</li>
+</ul>
+</li>
+</ol>
 
-1. Deploy the broker manifest.
-1. Run the errand with `bosh run errand upgrade-all-service-instances`.
-
-Note, the `upgrade-all-service-instances` errand will trigger [service instance lifecycle errands](#lifecycle-errands) configured for the broker.
+<p class="note"><strong>Note:</strong> The <code>upgrade-all-service-instances</code> errand triggers service instance lifecycle errands configured for the broker.
+   For more information, see <a href="#lifecycle-errands">Service Instance Lifecycle Errands</a> below.</p>
 
 ## <a id="security"></a>Security
 
@@ -791,16 +916,16 @@ Note, the `upgrade-all-service-instances` errand will trigger [service instance 
 
 The ODB accesses the following [BOSH API](https://bosh.io/docs/director-api-v1.html) endpoints during the service instance lifecycle:
 
-| API endpoint                                                     | Examples of usage in the ODB                                                                                                                                 |
+| API endpoint                                                     | Examples of usage in ODB                                                                                                                                 |
 |:-----------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `POST /deployments`                                              | create, or update a service instance                                                                                                                         |
-| `POST /deployments/<deployment_name>/errands/<errand_name>/runs` | register, or de-register the on-demand broker with the Cloud Controller, run smoke tests                                                                     |
-| `GET /deployments/<deployment_name>`                             | passed as argument to the service adapter for `generate-manifest` and `create-binding`                                                                       |
-| `GET /deployments/<deployment_name>/vms?format=full`             | passed as argument to the service adapter for `create-binding`                                                                                               |
-| `DELETE /deployments/<deployment_name>`                          | delete a service instance                                                                                                                                    |
-| `GET /tasks/<task_ID>/output?type=result`                        | check a task was successful (i.e. the exit code was zero), get list of VMs                                                                                   |
-| `GET /tasks/<task_ID>`                                           | poll the BOSH director until a task finishes, e.g. create, update, or delete a deployment                                                                    |
-| `GET /tasks?deployment=<deployment_name>`                        | determine the last operation status and message for a service instance, e.g. 'create in progress' - used when creating, updating, deleting service instances |
+| `POST /deployments`                                              | Create or update a service instance                                                                                                                         |
+| `POST /deployments/<deployment_name>/errands/<errand_name>/runs` | Register or de-register the on-demand broker with the Cloud Controller, run smoke tests                                                                     |
+| `GET /deployments/<deployment_name>`                             | Passed as argument to the service adapter for `generate-manifest` and `create-binding`                                                                       |
+| `GET /deployments/<deployment_name>/vms?format=full`             | Passed as argument to the service adapter for `create-binding`                                                                                               |
+| `DELETE /deployments/<deployment_name>`                          | Delete a service instance                                                                                                                                    |
+| `GET /tasks/<task_ID>/output?type=result`                        | Check a task was successful (i.e. the exit code was zero), get list of VMs                                                                                   |
+| `GET /tasks/<task_ID>`                                           | Poll the BOSH director until a task finishes, e.g. create, update, or delete a deployment                                                                    |
+| `GET /tasks?deployment=<deployment_name>`                        | Determine the last operation status and message for a service instance, for example 'create in progress'. This is used when creating, updating, deleting service instances |
 
 ### <a id="bosh-uaa"></a>BOSH UAA Permissions
 
@@ -808,6 +933,12 @@ The actions that the ODB needs to be able to perform are:
 
 Modify:
 
+#### BOSH CLI v2
+- `bosh2 deploy`
+- `bosh2 delete-deployment`
+- `bosh2 run-errand`
+
+#### BOSH CLI v1
 - `bosh deploy`
 - `bosh delete deployment`
 - `bosh run errand`
@@ -818,11 +949,15 @@ Read only:
 - `bosh vms`
 - `bosh tasks`
 
-The minimum UAA authority required by the BOSH Director to perform these actions is `bosh.teams.<team>.admin`. Note: a team admin cannot view or update the director's cloud config, nor upload releases or stemcells.
+<p class="note"><strong>Note:</strong> The read-only actions are identical between v1 and v2 of the BOSH CLI. When using the BOSH CLI v2, use <code>bosh2</code> instead of <code>bosh</code>.</p>
+
+The minimum UAA authority required by the BOSH Director to perform these actions is <code>bosh.teams.<team>.admin</code>. 
+
+<p class="note"><strong>Note:</strong> A team admin cannot view or update the director's cloud config, nor upload releases or stemcells.</p>
 
 For more details on how to set up and use BOSH teams, see [Director teams and permissions configuration](https://bosh.io/docs/director-users-uaa-perms.html).
 
-#### Unused BOSH permissions
+#### Unused BOSH Permissions
 The team admin authority also allows the following actions, which currently are not used by the ODB:
 
 - `bosh start/stop/recreate`
@@ -832,9 +967,11 @@ The team admin authority also allows the following actions, which currently are 
 - `bosh releases`
 - `bosh stemcells`
 
+<p class="note"><strong>Note:</strong> These permissions are identical between v1 and v2 of the BOSH CLI. When using the BOSH CLI v2, use <code>bosh2</code> instead of <code>bosh</code>.</p>
+
 ### <a id="ipsec"></a>PCF IPsec Add-On
 
-The ODB has been tested with the [PCF IPsec Add-On](https://docs.pivotal.io/addon-ipsec/installing.html), and it appears to work. Note that we excluded the BOSH director itself from IPsec ranges, as the BOSH add-on cannot be applied to BOSH itself.
+The ODB has been tested with the [PCF IPsec Add-On](https://docs.pivotal.io/addon-ipsec/installing.html). The BOSH Director is excluded from IPsec ranges, as the BOSH add-on cannot be applied to BOSH itself.
 
 ### <a id="cf-endpoints"></a>CF API Endpoints
 
@@ -842,20 +979,20 @@ The ODB accesses the following [CF API](https://apidocs.cloudfoundry.org/268/) e
 
 | API endpoint                                                         | Examples of usage in the ODB                                                                           |
 |:---------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------|
-| `GET /v2/info`                                                       | identify CF API version, to determine feature compatibility & availability                             |
-| `GET /v2/services`                                                   | list all services, to find our own service based on defined unique ID rather than GUID                 |
-| `GET /v2/services/<service_guid>/service_plans`                      | find registered service plans for ODB service e.g. for calculating plan quota usage                    |
-| `GET /v2/service_brokers`                                            | find service broker metadata by name during broker deregistration                                      |
-| `DELETE /v2/service_brokers/<service_broker_guid>`                   | delete ODB service broker during broker deregister errand                                              |
-| `GET /v2/service_plans/<service_plan_guid>`                          | identify service plan when upgrading an instance to trigger any lifecycle errands                      |
-| `PUT /v2/service_plans/<service_plan_guid>`                          | disable service access prior to service deletion                                                       |
-| `GET /v2/service_plans/<service_plan_guid>/service_instances`        | find service instances for given plan when determining global quota and running startup checks         |
-| `GET /v2/service_instances/<service_instance_guid>`                  | determine service instance state to check an operation is not in progress before triggering an upgrade |
-| `DELETE /v2/service_instances/<service_instance_guid>`               | deleting a service instance during delete all service instances errand                                 |
-| `GET /v2/service_instances/<service_instance_guid>/service_bindings` | finding bindings for given service instance during delete all service instances errand                 |
-| `GET /v2/service_instances/<service_instance_guid>/service_keys`     | finding service keys for given service instance during delete all service instances errand             |
-| `DELETE /v2/apps/<app_guid>/service_bindings/<service_binding_guid>` | unbinding a service instance during delete all service instances errand                                |
-| `DELETE /v2/service_keys/<service_key_guid>`                         | deleting a service key during delete all service instances errand                                      |
+| `GET /v2/info`                                                       | Identify CF API version, to determine feature compatibility and availability                           |
+| `GET /v2/services`                                                   | List all services, to find our own service based on defined unique ID rather than GUID                 |
+| `GET /v2/services/<service_guid>/service_plans`                      | Find registered service plans for ODB service e.g. for calculating plan quota usage                    |
+| `GET /v2/service_brokers`                                            | Find service broker metadata by name during broker deregistration                                      |
+| `DELETE /v2/service_brokers/<service_broker_guid>`                   | Delete ODB service broker during broker deregister errand                                              |
+| `GET /v2/service_plans/<service_plan_guid>`                          | Identify service plan when upgrading an instance to trigger any lifecycle errands                      |
+| `PUT /v2/service_plans/<service_plan_guid>`                          | Disable service access prior to service deletion                                                       |
+| `GET /v2/service_plans/<service_plan_guid>/service_instances`        | Find service instances for given plan when determining global quota and running startup checks         |
+| `GET /v2/service_instances/<service_instance_guid>`                  | Determine service instance state to check an operation is not in progress before triggering an upgrade |
+| `DELETE /v2/service_instances/<service_instance_guid>`               | Deleting a service instance during delete all service instances errand                                 |
+| `GET /v2/service_instances/<service_instance_guid>/service_bindings` | Finding bindings for given service instance during delete all service instances errand                 |
+| `GET /v2/service_instances/<service_instance_guid>/service_keys`     | Finding service keys for given service instance during delete all service instances errand             |
+| `DELETE /v2/apps/<app_guid>/service_bindings/<service_binding_guid>` | Unbinding a service instance during delete all service instances errand                                |
+| `DELETE /v2/service_keys/<service_key_guid>`                         | Deleting a service key during delete all service instances errand                                      |
 
 ### <a id="cf-uaa"></a>CF UAA Permissions
 
@@ -881,7 +1018,7 @@ Read only:
 - `cf app`
 - `cf service-keys`
 
-The minimum UAA authority required by CF to perform these actions is `cloud_controller.admin`. Admin is required as many operations are required to perform against all of the on demand service instances across a foundation, regardless of org and space.
+The minimum UAA authority required by CF to perform these actions is `cloud_controller.admin`. Admins can perform operations required by all on demand service instances across a foundation. 
 
 #### Unused CF permissions
 The Cloud Controller admin authority also allows the following actions, which currently are not used by the ODB:
@@ -909,27 +1046,27 @@ The Cloud Controller admin authority also allows the following actions, which cu
 
 ### <a id="admin-instances"></a>Administer Service Instances
 
-We recommend using the [bosh cli gem](https://bosh.io/docs/bosh-cli.html) for administering the deployments created by ODB; for example for checking VMs, ssh, viewing logs.
+Pivotal recommends using the [bosh cli gem](https://bosh.io/docs/bosh-cli.html) for administering the deployments created by ODB; for example for checking VMs, ssh, viewing logs.
 
-We **recommend against** using the bosh cli for updating/deleting ODB service deployments as it might accidentally trigger a race condition with Cloud Controller-induced updates/deletes or result in ODB overriding your [snowflake](http://martinfowler.com/bliki/SnowflakeServer.html) changes at the next deploy. All updates to the service instances must be done using the [errand to upgrade all service instances](#upgrade-instances).
+Pivotal does **not** recommend using the BOSH CLI to update or delete ODB service deployments. The CLI might accidentally trigger a race condition with Cloud Controller-induced updates/deletes or result in ODB overriding your [snowflake](http://martinfowler.com/bliki/SnowflakeServer.html) changes at the next deploy. Perform all updates to the service instances using the [errand to upgrade all service instances](#upgrade-instances).
 
 ### <a id="logs"></a>Logs
 
-The on-demand broker writes logs to a log file, and to syslog.
+The on-demand broker writes logs to a log file and to syslog.
 
 The broker log contains error messages and non-zero exit codes returned by the service adapter, as well as the stdout and stderr streams of the adapter.
 
 The log file is located at `/var/vcap/sys/log/broker/broker.log`. In syslog, logging is written with the tag `on-demand-service-broker`, under the facility `user`, with priority `info`.
 
-If you want to forward syslog to a syslog aggregator, we recommend co-locating [syslog release](https://github.com/cloudfoundry/syslog-release) with the broker.
+If you want to forward syslog to a syslog aggregator, Pivotal recommends co-locating the [syslog release](https://github.com/cloudfoundry/syslog-release) with the broker.
 
-The ODB generates a UUID for each request and prefixes all the logs for that request, e.g.
+The ODB generates a UUID for each request and prefixes all the logs for that request, for example:
 
 ```
 on-demand-service-broker: [on-demand-service-broker] [4d63080d-e038-45a3-85f9-93910f6b40b1] 2016/09/05 16:43:26.123456 a valid UAA token was found in cache, will not obtain a new one
 ```
 
-NB: The ODB's negroni server and start up logs are not prefixed with a request ID.
+<p class="note"><strong>Note:</strong> The ODB's negroni server and start up logs are not prefixed with a request ID.</p>
 
 All ODB's logs have a UTC timestamp.
 
@@ -1001,7 +1138,7 @@ If you have [configured broker metrics](#broker-metrics), the broker will emit m
 <p class="note"><strong>Note</strong>: The broker must be <a href="#register">registered with a Cloud Foundry</a> in order for metrics to be successfully emitted</p>
 
 #### Service-level Metrics
-The broker will emit a metric indicating the total number of instances across all plans. In addition, if there is a global quota set for the service, a metric showing how much of that quota is remaining will be emitted. Service-level metrics use the format shown below.
+The broker will emit a metric indicating the total number of instances across all plans. In addition, if there is a global quota set for the service, a metric showing how much of that quota is remaining is emitted. Service-level metrics are emitted in the following format:
 
 ```
 origin:"<broker deployment name>" eventType:ValueMetric timestamp:<timestamp> deployment:"<broker deployment name>" job:"broker" index:"<bosh job index>" ip:"<IP>" valueMetric:<name:"/on-demand-broker/<service offering name>/total_instances" value:<instance count> unit:"count" >
@@ -1009,7 +1146,7 @@ origin:"<broker deployment name>" eventType:ValueMetric timestamp:<timestamp> de
 ```
 
 #### Plan-level Metrics
-For each service plan, the metrics will report the total number of instances for that plan. If there is a quota set for the plan, the metrics will also report how much of that quota is remaining. Plan-level metrics are emitted in the following format.
+For each service plan, the metrics will report the total number of instances for that plan. If there is a quota set for the plan, the metrics will also report how much of that quota is remaining. Plan-level metrics are emitted in the following format:
 
 ```
 origin:"<broker deployment name>" eventType:ValueMetric timestamp:<timestamp> deployment:"<broker deployment name>" job:"broker" index:"<bosh job index>" ip:"<IP>" valueMetric:<name:"/on-demand-broker/<service offering name>/<plan name>/total_instances" value:<instance count> unit:"count" >
@@ -1020,7 +1157,7 @@ If `quota_remaining` is `0` then you need to increase your plan quota in the BOS
 
 ### <a id="identifying-deployments"></a>Identify Deployments in BOSH
 
-There is a one to one mapping between the service instance id from CF and the deployment name in BOSH. The convention is the BOSH deployment name would be the service instance id prepended by `service-instance_`. To identify the BOSH deployment for a service instance you can.
+There is a one to one mapping between the service instance ID from CF and the deployment name in BOSH. The convention is the BOSH deployment name is the service instance ID, prepended by `service-instance_`. To identify the BOSH deployment for a service instance, follow the procedure below:
 
 1. Determine the GUID of the service
    <pre class="terminal">
@@ -1067,9 +1204,11 @@ Most operations on the on demand service broker API are implemented by launching
     $ bosh task \<task\_ID\>
    </pre>
 
+<p class="note"><strong>Note:</strong> This action is identical between v1 and v2 of the BOSH CLI. When using the BOSH CLI v2, use <code>bosh2</code> instead of <code>bosh</code>.</p>
+
 ### <a id="id-uaa-issues"></a>Identify Issues When Connecting to BOSH or UAA
 
-The ODB interacts with the BOSH director to provision and deprovision instances, and is authenticated via the director's UAA. See [Core Broker Configuration](#core-broker-configuration) for an example configuration.
+The ODB interacts with the BOSH Director to provision and deprovision instances, and is authenticated via the Director's UAA. See [Core Broker Configuration](#core-broker-configuration) for an example configuration.
 
 If BOSH and/or UAA are wrongly configured in the broker's manifest, then meaningful error messages will be displayed in the broker's log, indicating whether the issue is caused by an unreachable destination or bad credentials.
 
@@ -1083,11 +1222,11 @@ on-demand-service-broker: [on-demand-service-broker] [575afbc1-b541-481d-9cde-b3
 
 The ODB persists the list of ODB-deployed service instances and provides an endpoint to retrieve them. This endpoint requires basic authentication.
 
-During disaster recovery this endpoint could be used to assess the situation.
+You can use this endpoint during disaster recovery to assess damage or availability.
 
 **Request**
 
-`GET http://username:password@<ON_DEMAND_BROKER_IP>:8080/mgmt/service_instances`
+`GET http://username:password@<\ON_DEMAND_BROKER_IP>:8080/mgmt/service_instances`
 
 **Response**
 
@@ -1117,10 +1256,10 @@ deployments against the service instances registered in Cloud Foundry. When call
 the endpoint will return a list of orphaned deployments, if any are present.
 
 This endpoint is exercised in the [`orphan-deployments`](#orphan-deployments) errand. To call this endpoint
-without  running the errand, use curl
+without running the errand, use curl.
 
 **Request**
-`GET http://username:password@<ON_DEMAND_BROKER_IP>:8080/mgmt/orphan_deployments`
+`GET http://username:password@<\ON_DEMAND_BROKER_IP>:8080/mgmt/orphan_deployments`
 
 **Response**
 

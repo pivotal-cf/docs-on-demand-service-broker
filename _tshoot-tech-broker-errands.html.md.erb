@@ -6,7 +6,17 @@ From the BOSH CLI, you can run service broker errands that manage the service br
 * [`delete-all-service-instances`](#delete-all) deletes all instances of service
 * [`orphan-deployments`](#detect-orphans) detects "orphan" instances that are running on BOSH but not registered with the Cloud Controller
 
-Before running any of these errands, set the service broker manifest in the BOSH CLI by doing the following:
+#### <a id="cli-v1"></a>BOSH CLI v2: Running the errand
+
+This procedure is for v2 of the BOSH CLI.
+
+Run this errand with the command `bosh2 -d DEPLOYMENT-NAME run-errand deregister-broker`.
+
+#### <a id="cli-v1"></a>BOSH CLI v1: Running the errand
+
+This procedure is for v1 of the BOSH CLI. If you use v1 of the BOSH CLI, you must configure the service broker manifest to run errands.
+
+Set the service broker manifest in the BOSH CLI by doing the following:
 
   1. Run `bosh deployments`.
   1. In the **Name** column of the output, look or `grep` for a string of the form `p-rabbit-GUID`. This is the unique identifier for the broker in BOSH.
