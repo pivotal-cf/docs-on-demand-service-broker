@@ -1,7 +1,13 @@
+#### BOSH CLI v2: Viewing statistics
+
+To view usage statistics for any service, select the service broker deployment.
+Then run `bosh2 vms --vitals` and `bosh2 instances --vitals` to view current resource utilization.
+
+You can also view process-level information by using `bosh2 instances --ps`.
+
+#### BOSH CLI v1: Viewing statistics
+
 To view usage statistics for any service, select the service broker deployment.
 Then run `bosh vms --vitals` and `bosh instances --vitals` to view current resource utilization.
 
 You can also view process-level information by using `bosh instances --ps`.
-
-<p class="note"><strong>Note:</strong> This procedure is the same for v1 and v2 of the BOSH CLI. When using the BOSH CLI v2, use <code>bosh2</code> instead of <code>bosh</code>.</p>
-
