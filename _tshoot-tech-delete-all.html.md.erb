@@ -1,28 +1,14 @@
-This errand deletes all service instances of your broker’s service offering in every org and space of Cloud Foundry. It uses the Cloud Controller API to do this, and therefore only deletes instances the Cloud Controller knows about. It will not delete orphan BOSH deployments. 
-
-Orphan BOSH deployments don’t correspond to a known service instance. While rare, orphan deployments can occur. Use the `orphan-deployments` errand to identify them.
+This errand deletes all service instances of your broker’s service offering in every org and space of Cloud Foundry. It uses the Cloud Controller API to do this, and therefore only deletes instances the Cloud Controller knows about. It will not delete orphan BOSH deployments: those that don’t correspond to a known service instance. Orphan BOSH deployments should never happen, but in practice they might. Use the orphan-deployments errand to identify them.
 
 The errand does the following:
 
-* Unbinds all applications from the service instances.
-* Deletes all service instances sequentially.
-* Checks if any instances have been created while the errand was running.
-* If newly-created instances are detected, the errand fails.
+- Unbinds all applications from the service instances.
+- Deletes all service instances sequentially.
+- Checks if any instances have been created while the errand was running.
+- If newly-created instances are detected, the errand fails.
 
 <p class="note">
 <strong>WARNING: </strong> This errand should only be used with extreme caution when you want to totally destroy all of the on-demand service instances in an environment.
 </p>
 
-##### <a id="cli-v2"></a>BOSH CLI v2: Running the errand
-
-The following procedure is for v2 of the BOSH CLI.
-
-Run this errand with the command `bosh2 -d service-instance_SERVICE-INSTANCE-GUID delete-deployment`.
-
-##### <a id="cli-v1"></a>BOSH CLI v1: Running the errand
-
-The following procedure is for v1 of the BOSH CLI.
-
 Run this errand with the command `bosh run errand delete-all-service-instances` after you have selected the broker deployment with `bosh deployment`.
-
-

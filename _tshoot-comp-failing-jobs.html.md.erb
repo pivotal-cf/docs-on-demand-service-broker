@@ -1,28 +1,7 @@
-#### BOSH CLI v2: Troubleshooting the deployment
-
-This procedure is for v2 of the BOSH CLI.
-
-To determine whether there is an issue with <%=vars.service_name_article_full%> deployment, inspect the VMs.
-
-<pre class="terminal">
-$ bosh2 -d service-instance_SERVICE-INSTANCE-GUID vms --vitals 
-</pre>
-
-For additional information, run `bosh2 instances`:
-
-<pre class="terminal">
-$ bosh2 instances --ps --vitals
-</pre>
-
-If the VM is failing, follow the service-specific information.
-Any unadvised corrective actions (such as running `bosh2 restart` on a VM) can cause issues in the service instance.
-
-#### BOSH CLI v1: Troubleshooting the deployment
-
 To determine whether there is an issue with <%=vars.service_name_article_full%> deployment, run `bosh vms`:
 
 <pre class="terminal">
-$ bosh vms --vitals service-instance_SERVICE-INSTANCE-GUID
+$ bosh vms --vitals service-instance_$guid
 </pre>
 
 For additional information, run `bosh instances`:
@@ -31,5 +10,4 @@ For additional information, run `bosh instances`:
 $ bosh instances --ps --vitals
 </pre>
 
-If the VM is failing, follow the service-specific information.
-Any unadvised corrective actions (such as running `bosh restart` on a VM) can cause issues in the service instance.
+If the VM is failing. follow the service-specific information. Any unadvised corrective actions (such as running `bosh restart` on a VM) may cause issues in the service instance.
