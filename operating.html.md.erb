@@ -692,7 +692,7 @@ To update the service offering:
 * make any changes to properties in the `service_deployment` of the broker manifest. For example, update the jobs used from a service release.
 * deploy the broker
 
-**Warning:** Once the broker has been registered with Cloud Foundry do not change the `service_id` or the `plan_id` for any plan. When the ODB starts it checks that all existing service instances in Cloud Foundy have a `plan_id` that exists in the `service_catalog`.
+**Warning:** Once the broker has been registered with Cloud Foundry do not change the `service_id` or the `plan_id` for any plan. When the ODB starts it checks that all existing service instances in Cloud Foundry have a `plan_id` that exists in the `service_catalog`.
 
 After changing the `service_catalog`, you should run the [register-broker errand](#register) to update the Cloud Foundry marketplace.
 
