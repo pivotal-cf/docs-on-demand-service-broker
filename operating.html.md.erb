@@ -884,19 +884,18 @@ To upgrade all existing service instances after the service offering has been up
 <ol>
 <li>Add the following instance group to your broker manifest:
     <pre class="terminal">
-    yaml
     - name: upgrade-all-service-instances
       lifecycle: errand
       instances: 1
       jobs:
         - name: upgrade-all-service-instances
-          release: <odb-release-name>
+          release: &lt;odb-release-name>
           properties:
-            polling_interval: <interval in seconds when waiting for service instance to be upgraded> # defaults to 60
-      vm_type: <vm-type>
-      stemcell: <stemcell>
-      networks: [{name: <network>}]
-      azs: [<az>]
+            polling_interval: &lt;interval in seconds when waiting for service instance to be upgraded> # defaults to 60
+      vm_type: &lt;vm-type>
+      stemcell: &lt;stemcell>
+      networks: [{name: &lt;network>}]
+      azs: [&lt;az>]
     </pre></li>
 <li>Deploy the broker manifest.</li>
 <li>Run the errand in one of two ways, depending on which version of the BOSH CLI you use:<br/>  
@@ -909,6 +908,67 @@ To upgrade all existing service instances after the service offering has been up
 
 <p class="note"><strong>Note:</strong> The <code>upgrade-all-service-instances</code> errand triggers service instance lifecycle errands configured for the broker.
    For more information, see <a href="#lifecycle-errands">Service Instance Lifecycle Errands</a> below.</p>
+
+#### <a id="service-instances-api"></a> Service Instances API
+
+The service instances API consists of a single HTTP endpoint that the errand will utilise to collect the required state to drive the upgrade process against your On Demand Service Broker. The API endpoint called is configurable in the upgrade-all-service-instances errand.
+
+<p class="warning note"><strong>WARNING:</strong> The Service Instances API is an advanced feature.
+Configuring a Service Instances API is not required, unless you are operating in very specific circumstances, such as running an On Demand Service Broker with no connection to Cloud Foundry.
+You will be required to provide an endpoint which satisfied the API requirements detailed below, and also guarantees that all service instances which need to be upgraded are part of that response.
+If you configure an endpoint which does not satisfy these criteria, some service instances may become unusable.</p>
+
+The Service Instances API definition is at version 0.1.0 and should be considered subject to change. The API consists of a single endpoint which should handle the following request with the appropriate response:
+
+<strong>Request:</strong>
+
+```
+HTTP Method: GET
+Parameters: None
+Authentication: http/basic
+Body: None
+```
+
+<strong>Response:</strong>
+
+```
+Status: 200 OK if successful, 3xx, 4xx, 5xx HTTP codes for other scenarios.
+Content-Type: application/json
+Body:
+"[
+  {
+    "service_instance_id": <text/guid>,
+    "plan_id": <text/guid>
+  },
+  ...
+]"
+```
+
+The plan\_ids listed in the response need to correspond to the plan\_ids that appear in each plan's definition in the On Demand Broker deployment manifest, not any other id that may be assigned by the service controller.
+
+To configure the `upgrade-all-service-instances` errand to connect to a Service Instances API provider, update the errand's configuration in the deployment manifest to include the following additional properties:
+
+<pre class="terminal">
+- name: upgrade-all-service-instances
+  lifecycle: errand
+  instances: 1
+  jobs:
+    - name: upgrade-all-service-instances
+      release: &lt;odb-release-name>
+      properties:
+        polling_interval: &lt;interval in seconds when waiting for service instance to be upgraded> # defaults to 60
+        <strong><em>service_instances_api: # optional
+          url: &lt;URL of service instances API provider> # required
+          root_ca_cert: &lt;root CA cert to validate TLS connection> # optional
+          authentication:
+            basic: # required - currently the only supported authentication type
+              username: &lt;basic http auth username>
+              password: &lt;basic http auth password></em></strong>
+  vm_type: &lt;vm-type>
+  stemcell: &lt;stemcell>
+  networks: [{name: &lt;network>}]
+  azs: [&lt;az>]
+</pre>
 
 ## <a id="security"></a>Security
 
