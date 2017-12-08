@@ -9,7 +9,11 @@ Server error, status code: 504, error code: 10001, message: The request to the s
 	<li>Check the BOSH queue size:
 		<ol>
 		<li>Log into BOSH as an admin.</li>
-		<li>Type <code>bosh tasks</code> for the BOSH CLI v1 and <code>bosh2 tasks</code> for the BOSH CLI v2.</li>
+		<li>Run one of these commands depending on your Ops Manager version:
+		<ul><li>1.10 or earlier: <code>bosh tasks</code></li>
+			<li>1.11 or 1.12: <code>bosh2 tasks</code></li>
+			<li>2.0: <code>bosh tasks</code></li>
+		</ul>
 		</ol>
 	</li>
 	<li>If there are a large number of queued tasks, the system may be under too much load. BOSH is configured with two workers and one status worker, which may not be sufficient resources for the level of load. Advise app developers to try again once the system is under less load.</li>
