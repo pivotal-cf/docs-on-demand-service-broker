@@ -60,6 +60,12 @@ ODB provides BOSH errand to upgrade all the instances managed by the broker. Thi
 
 <%= partial 'mmd/upgrade_all_instances_workflow.mmd' %>
 
+## <a id="upgrade-all-instances"></a>Upgrade All Service Instances with external Service Instances API Configured
+
+The upgrade-all-service-instances errand will connect to a different endpoint to gather the list of instances to upgrade, if the <a href="operating.html#service-instances-api" target="_blank">service instances API</a> is configured
+
+<%= partial 'mmd/upgrade_all_instances_with_si_api_workflow.mmd' %>
+
 ## <a id="delete-all-instances"></a>Delete All Service Instances
 
 ODB provides BOSH errand to delete all the instances managed by the broker.
