@@ -9,20 +9,22 @@ The errand does the following:
 * Checks if any instances have been created while the errand was running.
 * If newly-created instances are detected, the errand fails.
 
-<p class="note">
-<strong>WARNING: </strong> This errand should only be used with extreme caution when you want to totally destroy all of the on-demand service instances in an environment.
+<p class="note warning">
+<strong>WARNING: </strong> Use extreme caution when running this errand. You should only use it when you want to totally destroy all of the on-demand service instances in an environment.
 </p>
 
-##### <a id="cli-v2"></a>BOSH CLI v2: Running the errand
+To run the errand, do the following:
 
-The following procedure is for v2 of the BOSH CLI.
+1. **For BOSH CLI v1 only:** Select the broker deployment by running the command:<br>
+`bosh deployment BROKER_MANIFEST.yml`.
 
-Run this errand with the command `bosh2 -d service-instance_SERVICE-INSTANCE-GUID delete-deployment`.
+2. Run one of the following commands depending on your Ops Manager version:
 
-##### <a id="cli-v1"></a>BOSH CLI v1: Running the errand
+	| Ops Manager Version | BOSH Command |
+	|-----|---------|
+	| 1.10 or below | `bosh run errand delete-all-service-instances`|
+	| 1.11 and 1.12 | `bosh2 -d service-instance_GUID delete-deployment` |
+	| 2.0 | `bosh -d service-instance_GUID delete-deployment` |
 
-The following procedure is for v1 of the BOSH CLI.
-
-Run this errand with the command `bosh run errand delete-all-service-instances` after you have selected the broker deployment with `bosh deployment`.
 
 

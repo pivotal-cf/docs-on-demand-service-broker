@@ -10,7 +10,14 @@ Choose one of the following methods to run the errand, depending on your BOSH CL
 
 **With BOSH CLI v2**
 
-Run `bosh2 -d DEPLOYMENT_NAME run-errand ERRAND_NAME`. For example:<br> `bosh2 -d DEPLOYMENT-NAME run-errand deregister-broker`.
+Run one of the following commands depending on your Ops Manager version:
+
+| Ops Manager Version | BOSH Command |
+|-----|---------|
+| 1.11 and 1.12 | `bosh2 -d DEPLOYMENT_NAME run-errand ERRAND_NAME` |
+| 2.0 | `bosh -d DEPLOYMENT_NAME run-errand ERRAND_NAME` |
+
+For example:<br> `bosh2 -d DEPLOYMENT-NAME run-errand deregister-broker`.
 
 **With BOSH CLI v1**
 
@@ -18,4 +25,4 @@ Run `bosh2 -d DEPLOYMENT_NAME run-errand ERRAND_NAME`. For example:<br> `bosh2 -
   1. In the **Name** column of the output, look or `grep` for a string of the form `p-SERVICE_NAME-GUID`, for example `p-rabbit-GUID`. This is the unique identifier for the broker in BOSH.
   1. Run `bosh download manifest RABBIT-BROKER-GUID BROKER-MANIFEST.yml` with the unique string from the previous step and any filename you want to give the broker deployment manifest.
   1. Run `bosh deployment BROKER-MANIFEST.yml` to select the broker deployment as the one to run broker errands against.
-  1. Run `bosh run errand ERRAND_NAME`.
+  1. Run `bosh run errand ERRAND_NAME`. For example: `bosh run errand deregister-broker`.
