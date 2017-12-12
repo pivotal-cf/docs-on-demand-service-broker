@@ -24,13 +24,13 @@ Book repo: **docs-book-services-sdk**
 
 ## Submit changes to the docs through PRs
 
-Instructions on doing a PR: https://drive.google.com/a/pivotal.io/file/d/0B2mXuxvnODS0eEQzWEJGblhsVGc/view?usp=sharing
+Instructions on doing a PR: https://docs.google.com/a/pivotal.io/document/d/14Go0uCj20BFMBzL2ddEKsZp-GONhVp0yr2cEFSskWnQ/edit?usp=sharing
 
 ## New (unpublished) releases
 
 1. Commit new feature docs to **master** only.
 
-2. When the release is ready to publish, the docs team will create a new live/production branch from master, for example, `0.19.x`.
+2. When the release is ready to publish, the docs team will create a new live/production branch from master, for example, 0.19.x.
 
 ## Fixes and enhancements on master
 
@@ -40,7 +40,7 @@ Instructions on doing a PR: https://drive.google.com/a/pivotal.io/file/d/0B2mXux
 
 ## Fixes on branch only
 
-1. If the fix or enhancement is only relevant to a particular branch, then apply the change to that branch only.
+If the fix or enhancement is only relevant to a particular branch, then apply the change to that branch only.
 
 # Displaying locally
 
