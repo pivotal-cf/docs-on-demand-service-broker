@@ -6,12 +6,10 @@
    1. `tail -f LOG` and see if the errand is still attempting to upgrade instances. If it is, then allow the errand to continue. 
    1. If the errand appears to be stuck, cancel the errand task:
    		1. Identify the errand task by running one of these commands, depending on your Ops Manager version. 
-    		- 1.10 or earlier: `bosh tasks`
-    		- 1.11 or 1.12: `bosh2 tasks`
-    		- 2.0: `bosh -d service-instance_GUID tasks`
+    		- 1.10 and earlier: `bosh tasks`
+    		- 1.11 and later: `bosh2 tasks`
     	1. Cancel the errand task by running one of these commands, depending on your Ops Manager version.
-    		- 1.10 or earlier: `bosh cancel task TASK-ID`
-    		- 1.11 or 1.12: `bosh2 cancel-task TASK-ID`
-    		- 2.0: `bosh cancel-task TASK-ID`
+    		- 1.10 and earlier: `bosh cancel task TASK-ID`
+    		- 1.11 and later: `bosh2 cancel-task TASK-ID`
 
 1. Retry [running the errand](#upgrade-all).

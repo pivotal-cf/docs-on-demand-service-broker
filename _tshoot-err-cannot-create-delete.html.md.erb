@@ -18,9 +18,8 @@ Instance provisioning failed: There was a problem completing your request. Pleas
 
 	| Ops Manager Version | BOSH Command |
 	|-----|---------|
-	| 1.10 or below | `bosh task TASK-ID`|
-	| 1.11 and 1.12 | `bosh2 task TASK-ID` |
-	| 2.0 | `bosh task TASK-ID` |
+	| 1.10 and earlier | `bosh task TASK-ID`|
+	| 1.11 and later | `bosh2 task TASK-ID` |
 
 1. If you need more information, [access the broker logs](#access-broker) and use the `broker-request-id` from the error message above to search the logs for more information. Check for:
   * [Authentication errors](#auth)
