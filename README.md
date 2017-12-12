@@ -20,23 +20,27 @@ Book repo: **docs-book-services-sdk**
 
 * **master:** book branch that publishes all the live versions in production. <br>**Pipeline:** https://concourse.run.pivotal.io/teams/cf-docs/pipelines/cf-services-sdk
 
-# General proccess for working in this repo
+# Proccess for working in this repo
 
-## New releases
+## Submit changes to the docs through PRs
 
-1. Commit new feature work to master.
+Instructions on doing a PR: https://drive.google.com/a/pivotal.io/file/d/0B2mXuxvnODS0eEQzWEJGblhsVGc/view?usp=sharing
 
-2. To create a new release, create a new branch from master, for example, `0.19.x`.
+## New (unpublished) releases
+
+1. Commit new feature docs to **master** only.
+
+2. When the release is ready to publish, the docs team will create a new live/production branch from master, for example, `0.19.x`.
 
 ## Fixes and enhancements on master
 
-1. Apply fixes and enhancement to master.
+1. For fixes and enhancement, do PRs to **master**.
 
-2. Cherry-pick the fixes and enhancements to relevant branches.
+2. Tell the docs team in the PR, if it should be applied to other specific branches (or do additional PRs to those branches).
 
 ## Fixes on branch only
 
-1. If the fix or enhancement is only relevant to a particular branch, then apply the change directly on the branch.
+1. If the fix or enhancement is only relevant to a particular branch, then apply the change to that branch only.
 
 # Displaying locally
 
