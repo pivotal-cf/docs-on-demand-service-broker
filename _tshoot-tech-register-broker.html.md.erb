@@ -1,4 +1,4 @@
-This errand registers the broker with Cloud Foundry and enables access to plans in the service catalog. Run this errand whenever the broker is re-deployed with new catalog metadata to update the Cloud Foundry catalog.
+The `register-broker` errand registers the broker with Cloud Foundry and enables access to plans in the service catalog. Run this errand whenever the broker is re-deployed with new catalog metadata to update the Cloud Foundry catalog.
 
 Plans with disabled service access are not visible to non-admin Cloud Foundry users (including Org Managers and Space Managers). Admin Cloud Foundry users can see all plans including those with disabled service access.
 
@@ -9,14 +9,16 @@ The errand does the following:
 * Disables service access for any plans that have the radio button set to `disabled` in the tile plan page.
 * Does nothing for any for any plans that have the radio button set to `manual`.
 
-##### <a id="cli-v2"></a>BOSH CLI v2: Running the errand
 
-The following procedure is for v2 of the BOSH CLI.
+To run the errand, do the following:
 
-Run this errand with the command `bosh2 -d DEPLOYMENT-NAME run-errand register-broker`.
+1. **For BOSH CLI v1 only:** Select the broker deployment by running this command:<br>
+	`bosh deployment BOSH_MANIFEST.yml`
 
-##### <a id="cli-v1"></a>BOSH CLI v1: Running the errand
+2. Run one of the following commands depending on your Ops Manager version:
 
-The following procedure is for v1 of the BOSH CLI.
+	| Ops Manager Version | BOSH Command |
+	|-----|---------|
+	| 1.10 and earlier | `bosh run errand register-broker`|
+	| 1.11 and later | `bosh2 -d DEPLOYMENT-NAME run-errand register-broker` |
 
-Run this errand with the command `bosh run-errand register-broker` after you have selected the broker deployment with `bosh deployment`.

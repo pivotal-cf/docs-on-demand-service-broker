@@ -1,8 +1,6 @@
-##### BOSH CLI v2: This error does not apply
-If you're using the BOSH v2 CLI, this error should not occur. The `director_uuid` is not a configurable field in the BOSH v2 CLI.
+<p class="note"><strong>Note</strong>: This error does not occur if you are using BOSH CLI v2</p>
 
-##### BOSH CLI v1: Modifying the manifest
-If using the BOSH v1 CLI, re-add the `director_uuid` to the manifest:
+If using the BOSH CLI v1, re-add the `director_uuid` to the manifest:
 
 1. Run `bosh status --uuid` and record the `director_uuid` value from the output.
 

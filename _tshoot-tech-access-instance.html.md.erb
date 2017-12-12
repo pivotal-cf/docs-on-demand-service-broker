@@ -1,35 +1,41 @@
-#### BOSH CLI v2: Accessing logs and VMs
-
-This procedure is for v2 of the BOSH CLI.
-
 1. To target an individual service instance deployment, retrieve the GUID of your service instance with the cf CLI command `cf service MY-SERVICE --guid`.
 
-1. Run `bosh2 -d service-instance_YOUR-SERVICE-INSTANCE-GUID instances` to view VMs in the deployment.
+1. **For BOSH CLI v1 only:**
 
-1. Run `bosh2 -d service-instance_YOUR-SERVICE-INSTANCE-GUID ssh INSTANCE-ID` to SSH onto the VM.
+	1. Run `bosh status --uuid` to retrieve the BOSH Director GUID.
+	<p class="note"><strong>Note</strong>: "GUID" and "UUID" mean the same thing.</p>
 
-1. Run `bosh2 -d service-instance_YOUR-SERVICE-INSTANCE-GUID logs INSTANCE-ID` to download the instance logs.
+	1. To download your BOSH manifest for the service, run `bosh download manifest service-instance_BOSH-DIRECTOR-GUID MANIFEST.yml` using the GUID you just obtained and a filename you want to save the manifest as.<br><br>
 
-#### BOSH CLI v1: Accessing logs and VMs
+	1. Edit the following line in the service instance manifest that you just saved, to include the current BOSH Director GUID:
+	<pre class="code">
+	&nbsp;&nbsp;&nbsp;&nbsp;director_uuid: BOSH-DIRECTOR-GUID
+	</pre>
 
-This procedure is for v1 of the BOSH CLI.
+	1. Run `bosh deployment MANIFEST.yml` to select the deployment using the Director UUID.
 
-1. To target an individual service instance deployment, retrieve the GUID of your service instance with the cf CLI command `cf service MY-SERVICE --guid`.
 
-1. Run `bosh status --uuid` to retrieve the BOSH Director GUID.
-<p class="note"><strong>Note</strong>: "GUID" and "UUID" mean the same thing.</p>
+1. View VMs in the deployment using one of the following commands:
 
-1. To download your BOSH manifest for the service, run `bosh download manifest service-instance_SERVICE-INSTANCE-GUID MY-SERVICE.yml` using the GUID you just obtained and a filename you want to save the manifest as.
+	| Ops Manager Version | BOSH Command |
+	|-----|---------|
+	| 1.10 and earlier | `bosh instances`|
+	| 1.11 and later | `bosh2 -d DEPLOYMENT-NAME instances` |
 
-1. Edit the following line in the service instance manifest that you just saved, to include the current BOSH Director GUID:
-<pre class="code">
-&nbsp;&nbsp;&nbsp;&nbsp;director_uuid: BOSH-DIRECTOR-GUID
-</pre>
 
-1. Run `bosh deployment MY-SERVICE.yml` to select the deployment using the Director UUID.
+1. SSH onto a VM by running one of the following commands:
 
-1. Run `bosh instances` to view VMs in the deployment.
+	| Ops Manager Version | BOSH Command |
+	|-----|---------|
+	| 1.10 and earlier | `bosh ssh service-instance_GUID`|
+	| 1.11 and later | `bosh2 -d service-instance_GUID ssh` |
 
-1. Run `bosh ssh INSTANCE-ID` to SSH onto the VM.
 
-1. Run `bosh logs INSTANCE-ID` to download instance logs.
+1. Download the instance logs by running one of the following commands:
+
+	| Ops Manager Version | BOSH Command |
+	-----|---------|
+	| 1.10 and earlier | `bosh logs service-instance_GUID`|
+	| 1.11 and later | `bosh2 -d service-instance_GUID logs` |
+
+
