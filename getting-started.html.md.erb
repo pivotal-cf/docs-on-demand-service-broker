@@ -62,6 +62,28 @@ Before setting up and using ODB on your local development environment, install a
 
   Make note of the PCF Dev domain. You will need this later on. The default is `local.pcfdev.io`.
 
+## <a id="about-cli"></a>About the BOSH CLI
+The BOSH CLI is available in two major versions, v1 and v2. Pivotal recommends that you use the BOSH CLI v2 when possible.
+
+This topic provides examples of using each version of the BOSH CLI. Your PCF installation may affect which version of the BOSH CLI you can use. Consult the table below to determine which version of the CLI is supported for your installation.
+
+<table class="nice">
+    <th>PCF Version</th>
+    <th>BOSH CLI Version</th>
+    <tr>
+        <td>1.10</td>
+        <td>CLI v1</td>
+    </tr>
+    <tr>
+        <td>1.11</td>
+        <td>CLI v1 or CLI v2 (Pivotal recommends CLI v2)</td>
+    </tr>
+    <tr>
+        <td>1.12 and later</td>
+        <td>CLI v2</td>
+    </tr>
+</table>
+
 ## <a id="cli-v2"></a>Creating and Managing an On-Demand Service with the BOSH CLI v2
 
 The following procedures are for v2 of the BOSH CLI. For instructions using v1, see <a name="#cli-v1">Creating and Managing an On-Demand Service with the BOSH CLI v1</a>.
@@ -432,7 +454,9 @@ Now the app runs at `https:/kafka-example-app.<PCF_DEV_DOMAIN>`, and you can use
 
 The following procedures are for v1 of the BOSH CLI. For instructions using v2, see <a name="#cli-v2">BOSH CLI v2</a>.
 
-### <a id="set_up_bosh"></a>Step 1: Set Up BOSH Lite
+
+
+## <a id="set_up_bosh"></a>Step 1: Set Up BOSH Lite
 
 1. Target your BOSH Lite installation:
    <pre class="terminal">
