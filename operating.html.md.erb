@@ -773,7 +773,7 @@ To upgrade all existing service instances after the service offering has been up
         - name: upgrade-all-service-instances
           release: &lt;odb-release-name>
           properties:
-            polling_interval: &lt;seconds to wait between checking status of a submitted upgrade job> # defaults to 60
+            polling_interval_seconds: &lt;seconds to wait between checking status of a submitted upgrade job> # defaults to 60
             attempt_interval_seconds: &lt;seconds to wait between retrying upgrades> # defaults to 60
             attempt_limit: &lt;max number of times the errand will try a set of upgrades> # defaults to 5
       vm_type: &lt;vm-type>
@@ -784,7 +784,7 @@ To upgrade all existing service instances after the service offering has been up
     <p>
       The errand properties allow fine-tuning of the behaviour of the upgrade job.
       <ul>
-        <li><code>polling_interval</code> controls
+        <li><code>polling_interval_seconds</code> controls
       the wait between checking the status of the successfully submitted BOSH upgrade job. </li>
     </ul>
     If service instances
@@ -856,7 +856,7 @@ To configure the `upgrade-all-service-instances` errand to connect to a Service 
     - name: upgrade-all-service-instances
       release: &lt;odb-release-name>
       properties:
-        polling_interval: &lt;seconds to wait between checking status of a submitted upgrade job> # defaults to 60
+        polling_interval_seconds: &lt;seconds to wait between checking status of a submitted upgrade job> # defaults to 60
         attempt_interval_seconds: &lt;seconds to wait between retrying upgrades> # defaults to 60
         attempt_limit: &lt;max number of times the errand will try a set of upgrades> # defaults to 5
         <strong><em>service_instances_api: # optional
