@@ -773,14 +773,32 @@ To upgrade all existing service instances after the service offering has been up
         - name: upgrade-all-service-instances
           release: &lt;odb-release-name>
           properties:
-            polling_interval: &lt;interval in seconds when waiting for service instance to be upgraded> # defaults to 60
+            polling_interval: &lt;seconds to wait between checking status of a submitted upgrade job> # defaults to 60
+            attempt_interval_seconds: &lt;seconds to wait between retrying upgrades> # defaults to 60
+            attempt_limit: &lt;max number of times the errand will try a set of upgrades> # defaults to 5
       vm_type: &lt;vm-type>
       stemcell: &lt;stemcell>
       networks: [{name: &lt;network>}]
       azs: [&lt;az>]
-    </pre></li>
+    </pre>
+    <p>
+      The errand properties allow fine-tuning of the behaviour of the upgrade job.
+      <ul>
+        <li><code>polling_interval</code> controls
+      the wait between checking the status of the successfully submitted BOSH upgrade job. </li>
+    </ul>
+    If service instances
+      have in-progress BOSH operations, upgrade requests will be rejected and the errand will queue those instances
+      for a retry:
+    <ul>
+      <li><code>attempt_limit</code> sets the number of times these instances will be retried for upgrade,
+      and </li>
+      <li><code>attempt_interval_seconds</code> determines the time to wait between these attempts.</li>
+    </ul>
+    </p>
+</li>
 <li>Deploy the broker manifest.</li>
-<li>Run the errand in one of two ways, depending on which version of the BOSH CLI you use:<br/>  
+<li>Run the errand in one of two ways, depending on which version of the BOSH CLI you use:<br/>
 <ul>
 <li><strong>For v2 of the CLI:</strong> <code>bosh run-errand upgrade-all-service-instances</code>.</li>
 <li><strong>For v1 of the CLI:</strong> <code>bosh run errand upgrade-all-service-instances</code>.</li>
@@ -838,7 +856,9 @@ To configure the `upgrade-all-service-instances` errand to connect to a Service 
     - name: upgrade-all-service-instances
       release: &lt;odb-release-name>
       properties:
-        polling_interval: &lt;interval in seconds when waiting for service instance to be upgraded> # defaults to 60
+        polling_interval: &lt;seconds to wait between checking status of a submitted upgrade job> # defaults to 60
+        attempt_interval_seconds: &lt;seconds to wait between retrying upgrades> # defaults to 60
+        attempt_limit: &lt;max number of times the errand will try a set of upgrades> # defaults to 5
         <strong><em>service_instances_api: # optional
           url: &lt;URL of service instances API provider> # required
           root_ca_cert: &lt;root CA cert to validate TLS connection> # optional
