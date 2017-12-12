@@ -29,7 +29,7 @@ For an example manifest for a Kafka service, see [kafka-example-service-adapter-
 ## <a id="configure-bosh"></a>Set Up Your BOSH Director
 Dependencies for the On-Demand Broker:
 
-- BOSH director v257 or later (PCF 1.8) **Note:** does not support BOSH Windows
+- BOSH Director v257 or later (PCF 1.8) **Note:** does not support BOSH Windows
 - Cloud Foundry v238 or later (PCF 1.8)
 
  <p class="note"><strong>Note</strong>: [Service instance lifecycle errands](#lifecycle-errands) require BOSH director v261 (PCF 1.10) or later.</p>
@@ -333,7 +333,7 @@ If it has not been reached, it will check the plan service instance limit.
 
 ## <a id="broker-metrics"></a>Broker Metrics
 
-The ODB bosh release contains a metrics job, that can be used to emit metrics when colocated with [service metrics](https://network.pivotal.io/products/service-metrics-sdk/). You must include the [loggregator release](https://github.com/cloudfoundry/loggregator) in order to do this.
+The ODB BOSH release contains a metrics job, that can be used to emit metrics when colocated with [service metrics](https://network.pivotal.io/products/service-metrics-sdk/). You must include the [loggregator release](https://github.com/cloudfoundry/loggregator) in order to do this.
 
 Add the following jobs to the broker instance group:
 
@@ -377,7 +377,7 @@ The broker will try and wait for any incomplete https requests to complete befor
 
 ## <a id="lifecycle-errands"></a>Service Instance Lifecycle Errands
 
- <p class="note"><strong>Note</strong>: This feature requires BOSH director v261 or later.</p>
+ <p class="note"><strong>Note</strong>: This feature requires BOSH Director v261 or later.</p>
 
 Service Instance lifecycle errands allow additional short lived jobs to be run as part of service instance deployment. A deployment is only considered successful if the lifecycle errand successfully exits.
 
@@ -514,7 +514,7 @@ Add the following instance group to your manifest:
   azs: [<az>]
 ```
 
-Run the errand with `bosh run errand register-broker`.
+Run the errand with `bosh run errand register-broker`. For v2 of the BOSH CLI, use `bosh2 run-errand register-broker`.
 
 ### <a id="delete-instances-and-deregister"></a>Delete All Service Instances and Deregister Broker
 
@@ -581,7 +581,7 @@ Add the following instance group to your manifest:
   azs: [<az>]
 ```
 
-Run the errand with `bosh run errand deregister-broker`.
+Run the errand with `bosh run errand deregister-broker`. For v2 of the BOSH CLI, use `bosh2 run-errand deregister-broker`.
 
 ### <a id="delete-instances"></a>Delete All Service Instances
 
@@ -633,13 +633,13 @@ Run the errand with `bosh run errand delete-all-service-instances`.
 
 ### <a id="orphan-deployments"></a>Delete Orphaned Deployments
 
-The deployment for a service instance is defined as 'Orphaned' when the Bosh
+The deployment for a service instance is defined as 'Orphaned' when the BOSH
 deployment is still running, but the service is no longer registered in
 Cloud Foundry.
 
 The `orphan-deployments` errand will collate a list of service deployments that
 have no matching service instances in Cloud Foundry and return the list to the
-operator. It is then up to the operator to remove the orphaned bosh deployments.
+operator. It is then up to the operator to remove the orphaned BOSH deployments.
 
 Add the following instance group to your manifest:
 
@@ -656,7 +656,7 @@ Add the following instance group to your manifest:
   azs: [<az>]
 ```
 
-Run the errand with `bosh run errand orphan-deployments`.
+Run the errand with `bosh run errand orphan-deployments`. For v2 of the BOSH CLI, use `bosh2 run-errand orphan-deployments`.
 
 If orphan deployments are present, the errand will output a list of deployment
 names
@@ -975,9 +975,9 @@ The Cloud Controller admin authority also allows the following actions, which cu
 
 ### <a id="admin-instances"></a>Administer Service Instances
 
-We recommend using the [bosh cli gem](https://bosh.io/docs/bosh-cli.html) for administering the deployments created by ODB; for example for checking VMs, ssh, viewing logs.
+We recommend using the [BOSH CLI gem](https://bosh.io/docs/bosh-cli.html) for administering the deployments created by ODB; for example for checking VMs, ssh, viewing logs.
 
-We **recommend against** using the bosh cli for updating/deleting ODB service deployments as it might accidentally trigger a race condition with Cloud Controller-induced updates/deletes or result in ODB overriding your [snowflake](http://martinfowler.com/bliki/SnowflakeServer.html) changes at the next deploy. All updates to the service instances must be done using the [errand to upgrade all service instances](#upgrade-instances).
+Pivotal does **not** recommend using the BOSH CLI to update or delete ODB service deployments as it might accidentally trigger a race condition with Cloud Controller-induced updates/deletes or result in ODB overriding your [snowflake](http://martinfowler.com/bliki/SnowflakeServer.html) changes at the next deploy. All updates to the service instances must be done using the [errand to upgrade all service instances](#upgrade-instances).
 
 ### <a id="logs"></a>Logs
 
