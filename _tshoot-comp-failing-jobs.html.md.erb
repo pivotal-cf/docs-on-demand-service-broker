@@ -1,16 +1,19 @@
-<!--Note: The partial that referenced the below was removed, and the text was added manually, due to it breaking the header formatting in the following file: '../../docs-rabbitmq-pcf/troubleshoot.html.md.erb. If any changes are required, please go to that file to make them manually. -->
+To determine whether there is an issue with <%=vars.service_name_article_full%> deployment, inspect the VMs. To do so, run one of the following commands:
 
-To determine whether there is an issue with <%=vars.service_name_article_full%> deployment, run `bosh vms`:
+| Ops Manager Version | BOSH Command |
+|-----|---------|
+| 1.10 or eariler | `bosh vms --vitals service-instance_GUID`|
+| 1.11 to 2.0 | `bosh2 -d service-instance_GUID vms --vitals` |
 
-<pre class="terminal">
-$ bosh vms --vitals service-instance_$guid
-</pre>
 
-For additional information, run `bosh instances`:
+For additional information, run one of the following commands:
 
-<pre class="terminal">
-$ bosh instances --ps --vitals
-</pre>
+| Ops Manager Version | BOSH Command |
+|-----|---------|
+| 1.10 and earlier | `bosh instances --ps --vitals`|
+| 1.11 and later | `bosh2 instances --ps --vitals` |
 
-If the VM is failing. follow the service-specific information.
-Any unadvised corrective actions (such as running `bosh restart` on a VM) may cause issues in the service instance.
+
+If the VM is failing, follow the service-specific information.
+Any unadvised corrective actions (such as running BOSH `restart` on a VM) can cause issues in the service instance.
+
