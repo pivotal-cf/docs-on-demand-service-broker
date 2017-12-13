@@ -565,8 +565,8 @@ Add the following instance group to your manifest:
       release: <odb-release-name>
       properties:
         broker_name: <broker-name>
-        polling_interval: <interval in seconds when waiting for service instance to be deleted> # defaults to 60
-        polling_initial_offset: <offset in seconds before starting to poll Cloud Foundry to check if the instance has been deleted> # defaults to 5
+        polling_interval_seconds: <interval in seconds when waiting for service instance to be deleted> # defaults to 60
+        polling_initial_offset_seconds: <offset in seconds before starting to poll Cloud Foundry to check if the instance has been deleted> # defaults to 5
 
   vm_type: <vm-type>
   stemcell: <stemcell>
@@ -574,10 +574,10 @@ Add the following instance group to your manifest:
   azs: [<az>]
 ```
 
- <p class="note"><strong>Note</strong>: The `polling_interval` default is set to 60 seconds
+ <p class="note"><strong>Note</strong>: The `polling_interval_seconds` default is set to 60 seconds
     because the Cloud Controller itself polls the on-demand broker every 60 seconds.
     Setting your polling interval to anything lower than 60 seconds will not speed up the errand.<br/>
-    The `polling_initial_offset` default is set to 5 seconds.
+    The `polling_initial_offset_seconds` default is set to 5 seconds.
     In systems with more load, consider increasing the polling offset.
 
 Run the errand with `bosh run errand delete-all-service-instances-and-deregister-broker`.
