@@ -6,10 +6,17 @@ Use **master** for next the unreleased version, and numbered branches for the co
 | Branch name | Use for… |
 |-------------| ------|
 | master      | Next unreleased version (edge)|
+| v0.19.x         | live | 
 | v0.18.x         | live | 
 | v0.17.x         | live | 
 | v0.16.x         | live |
 | v0.15.x        | live |
+| v0.14.x         | live | 
+| v0.13.x         | live | 
+| v0.12.x         | live | 
+| v0.11.x         | obsolete, but do not delete the branch | 
+| v0.10.x         | obsolete, but do not delete the branch | 
+| v0.9.x         | obsolete, but do not delete the branch | 
 
 
 # Book repo for publishing this content
