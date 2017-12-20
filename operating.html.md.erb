@@ -536,7 +536,15 @@ Add the following instance group to your manifest:
   azs: [<az>]
 ```
 
-Run the errand with `bosh run errand register-broker`. For v2 of the BOSH CLI, use `bosh2 run-errand register-broker`.
+Execute the errand in one of two ways, depending on which version of the BOSH CLI you're using.
+
+#### <a id="cli-v1"></a>BOSH CLI v2
+
+Run the errand with `bosh2 run-errand register-broker`.
+
+#### <a id="cli-v1"></a>BOSH CLI v1
+
+Run the errand with `bosh run errand register-broker`.
 
 ### <a id="delete-instances-and-deregister"></a>Delete All Service Instances and Deregister Broker
 
@@ -695,7 +703,7 @@ Errand 'orphan-deployments' completed successfully (exit code 0)
 
 **Warning:** Deleting the bosh deployment will destroy the vm, any data present will be lost.
 
-To delete the orphan deployment run `bosh delete deployment service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3`.
+To delete the orphan deployment run `bosh2 delete deployment service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3`.
 
 ## <a id="updates"></a>Updates
 
@@ -822,7 +830,7 @@ To upgrade all existing service instances after the service offering has been up
 <li>Deploy the broker manifest.</li>
 <li>Run the errand in one of two ways, depending on which version of the BOSH CLI you use:<br/>
 <ul>
-<li><strong>For v2 of the CLI:</strong> <code>bosh run-errand upgrade-all-service-instances</code>.</li>
+<li><strong>For v2 of the CLI:</strong> <code>bosh2 run-errand upgrade-all-service-instances</code>.</li>
 <li><strong>For v1 of the CLI:</strong> <code>bosh run errand upgrade-all-service-instances</code>.</li>
 </ul>
 </li>
@@ -917,9 +925,9 @@ The actions that the ODB needs to be able to perform are:
 
 Modify:
 
-- `bosh deploy`
-- `bosh delete deployment`
-- `bosh run errand`
+- `bosh2 deploy`
+- `bosh2 delete-deployment`
+- `bosh2 run-errand`
 
 Read only:
 
@@ -1139,7 +1147,7 @@ There is a one to one mapping between the service instance id from CF and the de
 
 1. Get current tasks for the deployment by using
    <pre class="terminal">
-    $ bosh tasks --deployment service-instance_\<GUID\>
+    $ bosh2 tasks --deployment service-instance_\<GUID\>
    </pre>
 
 ### <a id="id-tasks"></a>Identify Tasks in BOSH
@@ -1153,8 +1161,8 @@ Most operations on the on demand service broker API are implemented by launching
 
 1. SSH on to the service broker VM:
    <pre class="terminal">
-    $ bosh deployment \<path to broker manifest\>
-    $ bosh ssh
+    $ bosh2 deployment \<path to broker manifest\>
+    $ bosh2 ssh
    </pre>
 
 1. In the broker log, look for lines relating to the service, identified by the service ID. Lines recording the starting and finishing of BOSH tasks will also have the BOSH task ID:
@@ -1172,7 +1180,7 @@ Most operations on the on demand service broker API are implemented by launching
 
 1. Use the task ID to obtain the task log from BOSH (adding flags such as `--debug` or `--cpi` as necessary):
    <pre class="terminal">
-    $ bosh task \<task\_ID\>
+    $ bosh2 task \<task\_ID\>
    </pre>
 
 ### <a id="id-uaa-issues"></a>Identify Issues When Connecting to BOSH or UAA
