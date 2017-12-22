@@ -12,7 +12,11 @@ owner: London Services Enablement
 
 # <a id="known-issues"></a>Known Issues
 
-- None
+<p class="warning note">BOSH SSL validation is now mandatory. The
+<code>ignore_ssl_validation</code> flag now only applies to communication with
+Cloud Foundry. Therefore it is essential to include BOSH's CA certificate in
+the <code>bosh.root_ca_cert</code> property of the broker job in the manifest
+if BOSH is using its own certificate authority.</p>
 
 ## <a id="new-features"></a>New Features
 
