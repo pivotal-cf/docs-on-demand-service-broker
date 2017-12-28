@@ -11,9 +11,9 @@ Use **master** for next the unreleased version, and numbered branches for the co
 | v0.17.x         | live | 
 | v0.16.x         | live |
 | v0.15.x        | live |
-| v0.14.x         | live | 
-| v0.13.x         | live | 
-| v0.12.x         | live | 
+| v0.14.x         | obsolete, but do not delete the branch | 
+| v0.13.x         | obsolete, but do not delete the branch | 
+| v0.12.x         | obsolete, but do not delete the branch | 
 | v0.11.x         | obsolete, but do not delete the branch | 
 | v0.10.x         | obsolete, but do not delete the branch | 
 | v0.9.x         | obsolete, but do not delete the branch | 
