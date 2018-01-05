@@ -609,6 +609,14 @@ Add the following instance group to your manifest:
   azs: [<az>]
 ```
 
+Execute the errand in one of two ways, depending on which version of the BOSH CLI you're using.
+
+#### <a id="cli-v1"></a>BOSH CLI v2
+
+Run the errand with `bosh2 run-errand deregister-broker`.
+
+#### <a id="cli-v1"></a>BOSH CLI v1
+
 Run the errand with `bosh run errand deregister-broker`.
 
 ### <a id="delete-instances"></a>Delete All Service Instances
