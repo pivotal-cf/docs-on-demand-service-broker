@@ -580,6 +580,12 @@ Add the following instance group to your manifest:
     The `polling_initial_offset` default is set to 5 seconds.
     In systems with more load, consider increasing the polling offset.
 
+#### <a id="cli-v1"></a>BOSH CLI v2
+
+Run the errand with `bosh2 run-errand delete-all-service-instances-and-deregister-broker`.
+
+#### <a id="cli-v1"></a>BOSH CLI v1
+
 Run the errand with `bosh run errand delete-all-service-instances-and-deregister-broker`.
 
 ### <a id="deregister-broker"></a>Deregister Broker
