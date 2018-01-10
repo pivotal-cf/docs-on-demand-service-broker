@@ -795,6 +795,7 @@ To upgrade all existing service instances after the service offering has been up
         - name: upgrade-all-service-instances
           release: &lt;odb-release-name>
           properties:
+            max_in_flight: &lt;max number of instances that will be in an upgrading state at the same time> # defaults to 1
             polling_interval_seconds: &lt;seconds to wait between checking status of a submitted upgrade job> # defaults to 60
             attempt_interval_seconds: &lt;seconds to wait between retrying upgrades> # defaults to 60
             attempt_limit: &lt;max number of times the errand will try a set of upgrades> # defaults to 5
@@ -806,6 +807,11 @@ To upgrade all existing service instances after the service offering has been up
     <p>
       The errand properties allow fine-tuning of the behaviour of the upgrade job.
       <ul>
+      <li><code>max_in_flight</code> sets limit for number of upgrades occuring concurrently.
+      The number of simultaneous upgrades is limited by the number of available BOSH workers
+      (see <a href="https://bosh.io/jobs/director?source=github.com/cloudfoundry/bosh#p=director.workers">BOSH docs</a>).
+      The <code>max_in_flight</code> value should be lower than this limit to avoid over-saturating BOSH.
+      </li>
         <li><code>polling_interval_seconds</code> controls
       the wait between checking the status of the successfully submitted BOSH upgrade job. </li>
     </ul>
