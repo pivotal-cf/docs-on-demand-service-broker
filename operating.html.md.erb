@@ -787,7 +787,7 @@ To upgrade all existing service instances after the service offering has been up
 
 <ol>
 <li>Add the following instance group to your broker manifest:
-    <pre class="terminal">
+    <pre>
     - name: upgrade-all-service-instances
       lifecycle: errand
       instances: 1
@@ -810,7 +810,7 @@ To upgrade all existing service instances after the service offering has been up
       <li><code>max_in_flight</code> sets the limit for the number of upgrades occurring concurrently.
       The number of simultaneous upgrades is limited by the number of available BOSH workers
       (see <a href="https://bosh.io/jobs/director?source=github.com/cloudfoundry/bosh#p=director.workers">BOSH docs</a>).
-      The <code>max_in_flight</code> value should be lower than this limit to avoid over-saturating BOSH.
+      Set the <code>max_in_flight</code> value to lower than this limit to avoid over-saturating BOSH.
       </li>
         <li><code>polling_interval_seconds</code> controls
       the wait between checking the status of the successfully submitted BOSH upgrade job. </li>
