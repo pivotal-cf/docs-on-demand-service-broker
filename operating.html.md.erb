@@ -805,9 +805,9 @@ To upgrade all existing service instances after the service offering has been up
       azs: [&lt;az>]
     </pre>
     <p>
-      The errand properties allow fine-tuning of the behaviour of the upgrade job.
+      The errand properties allow fine-tuning of the behavior of the upgrade job.
       <ul>
-      <li><code>max_in_flight</code> sets limit for number of upgrades occuring concurrently.
+      <li><code>max_in_flight</code> sets the limit for the number of upgrades occurring concurrently.
       The number of simultaneous upgrades is limited by the number of available BOSH workers
       (see <a href="https://bosh.io/jobs/director?source=github.com/cloudfoundry/bosh#p=director.workers">BOSH docs</a>).
       The <code>max_in_flight</code> value should be lower than this limit to avoid over-saturating BOSH.
