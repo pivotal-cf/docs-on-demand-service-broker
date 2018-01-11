@@ -38,16 +38,15 @@ errands, you need to update your manifest:
 
 ```
     plans:
-      - name: <CF marketplace plan name>
+      - name: CF-MARKETPLACE-PLAN-NAME
         lifecycle_errands:
           post_deploy:
-            name: <post_deploy_errand_job>
-            instances: [<service_release_job>/0]
+            name: POST-DEPLOY-ERRAND-JOB
+            instances: [SERVICE-RELEASE-JOB/0]
           pre_delete:
-            name: <pre_delete_errand_job>
-            instances: [<service_release_job>/0]
+            name: PRE-DELETE-ERRAND-JOB
+            instances: [SERVICE-RELEASE-JOB/0]
 ```
-
 ## <a id="bug-fixes"></a>Bug fixes
 
 - None

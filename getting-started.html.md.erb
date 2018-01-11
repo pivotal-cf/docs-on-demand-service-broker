@@ -192,7 +192,7 @@ This topic provides examples of using each version of the BOSH CLI. Your PCF ins
     ```yaml
     name: kafka-on-demand-broker
 
-    director_uuid: <BOSH_LITE_UUID>
+    director_uuid: BOSH-LITE-UUID
 
     releases:
     - name: &broker-release on-demand-service-broker
@@ -205,7 +205,7 @@ This topic provides examples of using each version of the BOSH CLI. Your PCF ins
     stemcells:
     - alias: trusty
       os: ubuntu-trusty
-      version: <STEMCELL_VERSION>
+      version: STEMCELL-VERSION
 
     instance_groups:
     - name: broker
@@ -229,15 +229,15 @@ This topic provides examples of using each version of the BOSH CLI. Your PCF ins
           password: password #or replace with your own
           disable_ssl_cert_verification: true
           bosh:
-            url: <BOSH_LITE_URL>
+            url: BOSH-LITE-URL
             authentication:
               basic:
                 username: admin
                 password: admin
           cf:
-            url: https://api.<PCF_DEV_DOMAIN>
+            url: https://api.PCF-DEV-DOMAIN
             authentication:
-              url: https://uaa.<PCF_DEV_DOMAIN>
+              url: https://uaa.PCF-DEV-DOMAIN
               user_credentials:
                 username: admin
                 password: admin
@@ -246,11 +246,11 @@ This topic provides examples of using each version of the BOSH CLI. Your PCF ins
           service_deployment:
             releases:
             - name: *service-release
-              version: <SERVICE_RELEASE_VERSION>
+              version: SERVICE-RELEASE-VERSION
               jobs: [kafka_server, zookeeper_server]
             stemcell:
               os: ubuntu-trusty
-              version: <STEMCELL_VERSION>
+              version: STEMCELL-VERSION
           service_catalog:
             id: D94A086D-203D-4966-A6F1-60A9E2300F72
             service_name: kafka-service-with-odb
@@ -328,7 +328,7 @@ This topic provides examples of using each version of the BOSH CLI. Your PCF ins
 1. Create a service broker on PCF Dev and enable access to its service offering. You will need the broker's credentials set in the deployment manifest and the IP of the broker VM.
 <p class="note">Replace `BROKER_IP` with the value obtained in the previous step.</p>
     <pre class="terminal">
-    $ cf create-service-broker kafka-broker broker password http://\<BROKER\_IP\>:8080
+    $ cf create-service-broker kafka-broker broker password http://<BROKER-IP>:8080
     </pre>
 
     For more details on service brokers see [here](http://docs.cloudfoundry.org/services/api.html).
@@ -417,7 +417,7 @@ The [Kafka Example App](https://github.com/pivotal-cf-experimental/kafka-example
     $ cf start kafka-example-app
     </pre>
 
-Now the app runs at `https:/kafka-example-app.<PCF_DEV_DOMAIN>`, and you can use it to read and write to your on-demand Kafka service instance. For example:
+Now the app runs at `https:/kafka-example-app.PCF-DEV-DOMAIN`, and you can use it to read and write to your on-demand Kafka service instance. For example:
 
-* To write data, run `curl -XPOST http://kafka-example-app.<PCF_DEV_DOMAIN>/queues/my-queue -d SOME-DATA`
-* To read data, run `curl http://kafka-example-app.<PCF_DEV_DOMAIN>/queues/my-queue`
+* To write data, run `curl -XPOST http://kafka-example-app.PCF-DEV-DOMAIN/queues/my-queue -d SOME-DATA`
+* To read data, run `curl http://kafka-example-app.PCF-DEV-DOMAIN/queues/my-queue`
