@@ -64,7 +64,7 @@ If ODB is configured to communicate with BOSH on the director's public IP you ma
 
     ```yaml
     bosh:
-      root_ca_cert: <root-ca-cert>
+      root_ca_cert: ROOT-CA-CERT
     ```
 
 1. Use BOSH's `trusted_certs` feature to add a self-signed CA certificate to each VM BOSH deploys. For more details on how to generate and use self-signed certificates for BOSH director and UAA, see [Director SSL Certificate Configuration](https://bosh.io/docs/director-certs.html).
@@ -78,10 +78,10 @@ For more information, see [manifest snippets below](#core-broker-configuration).
 BOSH has a teams feature that allows you to further control how BOSH operations are available to different clients. We strongly recommend using it to ensure that your on-demand service broker client can only modify deployments it created. For example, if you [use uaac](https://docs.cloudfoundry.org/adminguide/uaa-user-management.html) to create the client like this:
 
 ```bash
-uaac client add <client-id> \
-  --secret <client-secret> \
+uaac client add CLIENT-ID \
+  --secret CLIENT-SECRET \
   --authorized_grant_types "refresh_token password client_credentials" \
-  --authorities "bosh.teams.<team-name>.admin"
+  --authorities "bosh.teams.TEAM-NAME.admin"
 ```
 
 Then when you [configure the broker's BOSH authentication](#core-broker-configuration), you can use this client ID and secret. The broker will then only be able to perform BOSH operations on deployments it has created itself.
@@ -124,45 +124,45 @@ An example snippet is shown below:
 instance_groups:
   - name: broker # this can be anything
     instances: 1
-    vm_type: <vm type>
-    stemcell: <stemcell>
+    vm_type: VM-TYPE
+    stemcell: STEMCELL
     networks:
-      - name: <network>
+      - name: NETWORK
     jobs:
-      - name: <service adapter job name>
-        release: <service adapter release>
+      - name: SERVICE-ADAPTER-JOB-NAME
+        release: SERVICE-ADAPTER-RELEASE
       - name: broker
         release: on-demand-service-broker
         properties:
           # choose a port and basic auth credentials for the broker
-          port: <broker port>
-          username: <broker username>
-          password: <broker password>
-          disable_ssl_cert_verification: <true|false> # optional, defaults to false. This should NOT be used in production
+          port: BROKER-PORT
+          username: BROKER-USERNAME
+          password: BROKER-PASSWORD
+          disable_ssl_cert_verification: TRUE|FALSE # optional, defaults to false. This should NOT be used in production
           shutdown_timeout_in_seconds: 60 # optional, defaults to 60 seconds. This allows the broker to gracefully wait for any open requests to complete before shutting down.
           cf:
-            url: <CF API URL>
-            root_ca_cert: <ca cert for cloud controller> # optional, see SSL certificates
+            url: CF-API-URL
+            root_ca_cert: CA-CERT-FOR-CLOUD-CONTROLLER # optional, see SSL certificates
             authentication: # either client_credentials or user_credentials, not both as shown
-              url: <CF UAA URL>
+              url: CF-UAA-URL
               client_credentials:
                 client_id: <UAA client id with cloud_controller.admin authority and client_credentials in the authorized_grant_type>
-                secret: <UAA client secret>
+                secret: UAA-CLIENT-SECRET
               user_credentials:
                 username: <CF admin username in the cloud_controller.admin and scim.read groups>
-                password: <CF admin password>
+                password: CF-ADMIN-PASSWORD
           bosh:
-            url: <director url>
-            root_ca_cert: <ca cert for bosh director and associated UAA> # optional, see SSL certificates
+            url: DIRECTOR-URL
+            root_ca_cert: CA-CERT-FOR-BOSH-DIRECTOR-AND-ASSOCIATED-UAA # optional, see SSL certificates
             authentication: # either basic or uaa, not both as shown
               basic:
-                username: <bosh username>
-                password: <bosh password>
+                username: BOSH-USERNAME
+                password: BOSH-PASSWORD
               uaa:
-                client_id: <bosh client id>
-                client_secret: <bosh client secret>
+                client_id: BOSH-CLIENT-ID
+                client_secret: BOSH-CLIENT-SECRET
           service_adapter:
-            path: <path to service adapter binary> # optional, provided by the Service Author. Defaults to /var/vcap/packages/odb-service-adapter/bin/service-adapter
+            path: PATH-TO-SERVICE-ADAPTER-BINARY # optional, provided by the Service Author. Defaults to /var/vcap/packages/odb-service-adapter/bin/service-adapter
 
           # There are more broker properties that are discussed below
 ```
@@ -197,63 +197,63 @@ Add the snippet below to your broker job properties section:
 ```yaml
 service_deployment:
   releases:
-    - name: <service-release>
-      version: <service-release-version> # Exact release version
-      jobs: [<release-jobs-needed-for-deployment-and-lifecycle-errands>] # Service Author will specify list of jobs required
+    - name: SERVICE-RELEASE
+      version: SERVICE-RELEASE-VERSION # Exact release version
+      jobs: [RELEASE-JOBS-NEEDED-FOR-DEPLOYMENT-AND-LIFECYCLE-ERRANDS] # Service Author will specify list of jobs required
   stemcell: # every instance group in the service deployment has the same stemcell
-    os: <service-stemcell>
-    version: <service-stemcell-version> # Exact stemcell version
+    os: SERVICE-STEMCELL
+    version: SERVICE-STEMCELL-VERSION # Exact stemcell version
 service_catalog:
-  id: <CF marketplace ID>
-  service_name: <CF marketplace service offering name>
-  service_description: <CF marketplace description>
-  bindable: <true|false>
-  plan_updatable: <true|false> # optional
-  tags: [<tags>] # optional
-  requires: [<required permissions] # optional
+  id: CF-MARKETPLACE-ID
+  service_name: CF-MARKETPLACE-SERVICE-OFFERING-NAME
+  service_description: CF-MARKETPLACE-DESCRIPTION
+  bindable: TRUE|FALSE
+  plan_updatable: TRUE|FALSE # optional
+  tags: [TAGS] # optional
+  requires: [REQUIRED-PERMISSIONS] # optional
   dashboard_client: # optional
-    id: <dashboard OAuth client ID>
-    secret: <dashboard OAuth client secret>
-    redirect_uri: <dashboard OAuth redirect URI>
+    id: DASHBOARD-OAUTH-CLIENT-ID
+    secret: DASHBOARD-OAUTH-CLIENT-SECRET
+    redirect_uri: DASHBOARD-OAUTH-REDIRECT-URI
   metadata: # optional
-    display_name: <display name>
-    image_url: <image url>
-    long_description: <long description>
-    provider_display_name: <provider display name>
-    documentation_url: <documentation url>
-    support_url: <support url>
+    display_name: DISPLAY-NAME
+    image_url: IMAGE-URL
+    long_description: LONG-DESCRIPTION
+    provider_display_name: PROVIDER-DISPLAY-NAME
+    documentation_url: DOCUMENTATION-URL
+    support_url: SUPPORT-URL
   global_properties: {} # optional, applied to every plan.
   global_quotas: # optional
-    service_instance_limit: <instance limit> # the maximum number of service instances across all plans
+    service_instance_limit: INSTANCE-LIMIT # the maximum number of service instances across all plans
   plans:
-    - name: <CF marketplace plan name>
-      plan_id: <CF marketplace plan id>
-      description: <CF marketplace description>
-      cf_service_access: <enable|disable|manual> # optional, enable by default.
-      bindable: <true|false> # optional. If specified, this takes precedence over the bindable attribute of the service
+    - name: CF-MARKETPLACE-PLAN-NAME
+      plan_id: CF-MARKETPLACE-PLAN-ID
+      description: CF-MARKETPLACE-DESCRIPTION
+      cf_service_access: ENABLE|DISABLE|MANUAL # optional, enable by default.
+      bindable: TRUE|FALSE # optional. If specified, this takes precedence over the bindable attribute of the service
       metadata: # optional
-        display_name: <display name>
-        bullets: [<bullet1>, <bullet2>]
+        display_name: DISPLAY-NAME
+        bullets: [BULLET1, BULLET2]
         costs:
           - amount:
-              <currency code (string)>: <currency amount (float)>
-            unit: <frequency of cost>
+              CURRENCY-CODE-STRING: CURRENCY-AMOUNT-FLOAT
+            unit: FREQUENCY-OF-COST
       quotas: # optional
-        service_instance_limit: <instance limit> # the maximum number of service instances for this plan
+        service_instance_limit: INSTANCE-LIMIT # the maximum number of service instances for this plan
       instance_groups: # resource mapping for the instance groups defined by the Service Author
-        - name: <service author provided instance group name>
-          vm_type: <vm type>
-          vm_extensions: [<vm extensions>] # optional
-          instances: <instance count>
-          networks: [<network>]
-          azs: [<az>]
-          persistent_disk_type: <disk> # optional
-        - name: <service author provided lifecycle errand name> # optional
+        - name: SERVICE-AUTHOR-PROVIDED-INSTANCE-GROUP-NAME
+          vm_type: VM-TYPE
+          vm_extensions: [VM-EXTENSIONS] # optional
+          instances: INSTANCE-COUNT
+          networks: [NETWORK]
+          azs: [AZ]
+          persistent_disk_type: DISK # optional
+        - name: SERVICE-AUTHOR-PROVIDED-LIFECYCLE-ERRAND-NAME # optional
           lifecycle: errand
-          vm_type: <vm type>
-          instances: <instance count>
-          networks: [<network>]
-          azs: [<az>]
+          vm_type: VM-TYPE
+          instances: INSTANCE-COUNT
+          networks: [NETWORK]
+          azs: [AZ]
       properties: {} # valid property key-value pairs are defined by the Service Author
       update: # optional
         canaries: 1 # required
@@ -262,8 +262,8 @@ service_catalog:
         update_watch_time: 1000-30000 # required
         serial: true # optional
       lifecycle_errands: #optional
-        post_deploy: <errand name> #optional
-        pre_delete: <errand name> #optional
+        post_deploy: ERRAND-NAME #optional
+        pre_delete: ERRAND-NAME #optional
 ```
 
 ## <a id="secure-binding"></a>Enabling Secure Binding
@@ -364,14 +364,14 @@ Add the following jobs to the broker instance group:
   release: service-metrics
   properties:
     service_metrics:
-      execution_interval_seconds: <interval between successive metrics collections>
-      origin: <origin tag for metrics>
+      execution_interval_seconds: INTERVAL-BETWEEN-SUCCESSIVE-METRICS-COLLECTIONS
+      origin: ORIGIN-TAG-FOR-METRICS
       monit_dependencies: [broker] # hardcode this
       ....snip....
       #Add Loggregator configuration here: see examples @ https://github.com/pivotal-cf/service-metrics-release/blob/master/manifests
       ....snip....
 - name: service-metrics-adapter
-  release: <ODB release>
+  release: ODB-RELEASE
 ```
 
 An example of how the service metrics can be configured for an on-demand-broker deployment can be seen in the [kafka-example-service-adapter-release](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml#L106) manifest.

@@ -21,7 +21,7 @@ The network for service instances should be flagged as a Service Network in Ops 
   1. Download the CloudFormation JSON and save it in the Ops Manager directory.
   1. Run the CloudFormation stack, saving any pertinent inputs (e.g BOSH DB credentials) you type into the web console into the Ops Manager directory for safe keeping (e.g. in `info.txt`).
   1. Launch an instance of the AMI. If possible, use an elastic IP so that we can always keep the same DNS record even if we recreate the VM. Failing that, auto-assign a public IP.
-  1. Create a DNS record for `pcf.<the domain you made a wildcard cert for earlier>`. To use the earlier example, the record will be for `pcf.some-subdomain.cf-app.com`. It should point to the public IP of the Ops Manager VM.
+  1. Create a DNS record for `pcf.WILDCARD-CERTIFICATE-DOMAIN`. To use the earlier example, the record will be for `pcf.some-subdomain.cf-app.com`. It should point to the public IP of the Ops Manager VM.
 1. Keep following the docs to log into Ops Manager (save the credentials).
 1. Configure the Ops Manager director (BOSH) tile.
 1. Click "Apply Changes", and steal the BOSH init manifest for future reference. `scp -i private_key.pem ubuntu@opsmanIP:/var/tempest/workspaces/default/deployments/bosh.yml bosh.yml`
