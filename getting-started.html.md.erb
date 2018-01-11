@@ -328,7 +328,7 @@ This topic provides examples of using each version of the BOSH CLI. Your PCF ins
 1. Create a service broker on PCF Dev and enable access to its service offering. You will need the broker's credentials set in the deployment manifest and the IP of the broker VM.
 <p class="note">Replace `BROKER_IP` with the value obtained in the previous step.</p>
     <pre class="terminal">
-    $ cf create-service-broker kafka-broker broker password http://<BROKER-IP>:8080
+    $ cf create-service-broker kafka-broker broker password http://BROKER-IP:8080
     </pre>
 
     For more details on service brokers see [here](http://docs.cloudfoundry.org/services/api.html).
