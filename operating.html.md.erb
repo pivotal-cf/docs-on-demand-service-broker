@@ -323,7 +323,7 @@ set explicitly in the application's VCAP_SERVICES environment variable.
 The credentials for a given Service Binding are stored with the following format:
 
 ```
-/c/:service-guid/:service-instance-guid/:binding-guid/credentials
+/C/:SERVICE-GUID/:SERVICE-INSTANCE-GUID/:BINDING-GUID/CREDENTIALS
 ```
 
 The plain-text credentials are stored in CredHub under this key, and the key is
@@ -421,35 +421,35 @@ An example manifest snippet configuring lifecycle errands for a plan:
 ```yaml
 service_deployment:
   releases:
-    - name: <service-release>
-      version: <service-release-version>
+    - name: SERVICE-RELEASE
+      version: SERVICE-RELEASE-VERSION
       jobs:
-      - <service_release_job>
-      - <post_deploy_errand_job>
-      - <pre_delete_errand_job>
+      - SERVICE-RELEASE-JOB
+      - POST-DEPLOY-ERRAND-JOB
+      - PRE-DELETE-ERRAND-JOB
 service_catalog:
   plans:
-      - name: <CF marketplace plan name>
+      - name: CF-MARKETPLACE-PLAN-NAME
         lifecycle_errands:
           post_deploy:
-            name: <post_deploy_errand_job>
+            name: POST-DEPLOY-ERRAND-JOB
           pre_delete:
-            name: <pre_delete_errand_job>
+            name: PRE-DELETE-ERRAND-JOB
         instance_groups:
-          - name: <service_release_job>
+          - name: SERVICE-RELEASE-JOB
             ...
-          - name: <post_deploy_errand_job>
+          - name: POST-DEPLOY-ERRAND-JOB
             lifecycle: errand
-            vm_type: <vm type>
-            instances: <instance count>
-            networks: [<network>]
-            azs: [<az>]
-          - name: <pre_delete_errand_job>
+            vm_type: VM-TYPE
+            instances: INSTANCE-COUNT
+            networks: [NETWORK]
+            azs: [AZ]
+          - name: PRE-DELETE-ERRAND-JOB
             lifecycle: errand
-            vm_type: <vm type>
-            instances: <instance count>
-            networks: [<network>]
-            azs: [<az>]
+            vm_type: VM-TYPE
+            instances: INSTANCE-COUNT
+            networks: [NETWORK]
+            azs: [AZ]
 ```
 
 Changing a plan's lifecycle errands configuration while an existing deployment is in progress is not supported.
@@ -473,20 +473,20 @@ An example manifest for colocated post-deploy errand looks like the following:
 ```yaml
 service_deployment:
   releases:
-    - name: <service-release>
-      version: <service-release-version>
+    - name: SERVICE-RELEASE
+      version: SERVICE-RELEASE-VERSION
       jobs:
-      - <service_release_job>
-      - <post_deploy_errand_job> # (1)
+      - SERVICE-RELEASE-JOB
+      - POST-DEPLOY-ERRAND-JOB # (1)
 service_catalog:
   plans:
-      - name: <CF marketplace plan name>
+      - name: CF-MARKETPLACE-PLAN-NAME
         lifecycle_errands:
           post_deploy:
-            name: <post_deploy_errand_job> # (2)
-            instances: [<service_release_job>/0] # (3)
+            name: POST-DEPLOY-ERRAND-JOB # (2)
+            instances: [SERVICE-RELEASE-JOB/0] # (3)
         instance_groups:
-          - name: <service_release_job>
+          - name: SERVICE-RELEASE-JOB
             ...
 ```
 
@@ -520,20 +520,20 @@ Add the following instance group to your manifest:
   instances: 1
   jobs:
     - name: register-broker
-      release: <odb-release-name>
+      release: ODB-RELEASE-NAME
       properties:
-        broker_name: <broker-name>
-        broker_uri: <broker URI, only required when a route has been registered> # optional
-        disable_ssl_cert_verification: <true|false> # defaults to false
-        enable_service_access: <true|false> # defaults to true
+        broker_name: BROKER-NAME
+        broker_uri: BROKER-URI # optional, only required when a route has been registered
+        disable_ssl_cert_verification: TRUE|FALSE # defaults to false
+        enable_service_access: TRUE|FALSE # defaults to true
         cf:
-          api_url: <cf-api-url>
-          admin_username: <cf-api-admin-username>
-          admin_password: <cf-api-admin-password>
-  vm_type: <vm-type>
-  stemcell: <stemcell>
-  networks: [{name: <network>}]
-  azs: [<az>]
+          api_url: CF-API-URL
+          admin_username: CF-API-ADMIN-USERNAME
+          admin_password: CF-API-ADMIN-PASSWORD
+  vm_type: VM-TYPE
+  stemcell: STEMCELL
+  networks: [{name: NETWORK}]
+  azs: [AZ]
 ```
 
 Run the errand with `bosh run errand register-broker`. For v2 of the BOSH CLI, use `bosh2 run-errand register-broker`.
@@ -562,17 +562,21 @@ Add the following instance group to your manifest:
   instances: 1
   jobs:
     - name: delete-all-service-instances-and-deregister-broker
-      release: <odb-release-name>
+      release: ODB-RELEASE-NAME
       properties:
-        broker_name: <broker-name>
-        polling_interval_seconds: <interval in seconds when waiting for service instance to be deleted> # defaults to 60
-        polling_initial_offset_seconds: <offset in seconds before starting to poll Cloud Foundry to check if the instance has been deleted> # defaults to 5
+        broker_name: BROKER-NAME
+        polling_interval_seconds: INTERVAL-IN-SECONDS # defaults to 60
+        polling_initial_offset_seconds: OFFSET-IN-SECONDS # defaults to 5
 
-  vm_type: <vm-type>
-  stemcell: <stemcell>
-  networks: [{name: <network>}]
-  azs: [<az>]
+  vm_type: VM-TYPE
+  stemcell: STEMCELL
+  networks: [{name: NETWORK}]
+  azs: [AZ]
 ```
+
+Where: <br>
+`INTERVAL-IN-SECONDS`: interval in seconds when waiting for service instance to be deleted <br>
+`OFFSET-IN-SECONDS`: The offset in seconds before starting to poll Cloud Foundry to check if the instance has been deleted.
 
  <p class="note"><strong>Note</strong>: The `polling_interval_seconds` default is set to 60 seconds
     because the Cloud Controller itself polls the on-demand broker every 60 seconds.
@@ -594,13 +598,13 @@ Add the following instance group to your manifest:
   instances: 1
   jobs:
     - name: deregister-broker
-      release: <odb-release-name>
+      release: ODB-RELEASE-NAME
       properties:
-        broker_name: <broker-name>
-  vm_type: <vm-type>
-  stemcell: <stemcell>
-  networks: [{name: <service-network>}]
-  azs: [<az>]
+        broker_name: BROKER-NAME
+  vm_type: VM-TYPE
+  stemcell: STEMCELL
+  networks: [{name: SERVICE-NETWORK}]
+  azs: [AZ]
 ```
 
 Run the errand with `bosh run errand deregister-broker`. For v2 of the BOSH CLI, use `bosh2 run-errand deregister-broker`.
@@ -631,16 +635,20 @@ Add the following instance group to your manifest:
   instances: 1
   jobs:
     - name: delete-all-service-instances
-      release: <odb-release-name>
+      release: ODB-RELEASE-NAME
       properties:
-        polling_interval_seconds: <interval in seconds when waiting for service instance to be deleted> # defaults to 60
-        polling_initial_offset_seconds: <offset in seconds before starting to poll Cloud Foundry to check if the instance has been deleted> # defaults to 5
+        polling_interval_seconds: INTERVAL-IN-SECONDS # defaults to 60
+        polling_initial_offset_seconds: OFFSET-IN-SECONDS # defaults to 5
 
-  vm_type: <vm-type>
-  stemcell: <stemcell>
-  networks: [{name: <network>}]
-  azs: [<az>]
+  vm_type: VM-TYPE
+  stemcell: STEMCELL
+  networks: [{name: NETWORK}]
+  azs: [AZ]
 ```
+
+Where:<br>
+`INTERVAL-IN-SECONDS`: interval in seconds when waiting for service instance to be deleted <br>
+`OFFSET-IN-SECONDS`: The offset in seconds before starting to poll Cloud Foundry to check if the instance has been deleted.
 
  <p class="note"><strong>Note</strong>: The `polling_interval_seconds` default is set to 60 seconds
     because the Cloud Controller itself polls the on-demand broker every 60 seconds.
@@ -671,11 +679,11 @@ Add the following instance group to your manifest:
   instances: 1
   jobs:
   - name: orphan-deployments
-    release: <odb-release-name>
-  vm_type: <vm-type>
-  stemcell: <stemcell>
-  networks: [{name: <network>}]
-  azs: [<az>]
+    release: ODB-RELEASE-NAME
+  vm_type: VM-TYPE
+  stemcell: STEMCELL
+  networks: [{name: NETWORK}]
+  azs: [AZ]
 ```
 
 Run the errand with `bosh run errand orphan-deployments`. For v2 of the BOSH CLI, use `bosh2 run-errand orphan-deployments`.
@@ -722,9 +730,10 @@ When the plans are updated in the `service_catalog`, then upgrades will need to 
 
 ### <a id="disabling-service-plans"></a>Disable Service Plans
 
-Access to a service plan can be disabled by using the Cloud Foundry CLI:<pre class="terminal">
-$ cf disable-service-access \<service-name-from-catalog\> -p \<plan-name\>
-</pre>
+Access to a service plan can be disabled by using the Cloud Foundry CLI:
+```
+cf disable-service-access SERVICE-NAME-FROM-CATALOG -p PLAN-NAME
+```
 
 Also, when a plan has the property `cf_service_access: disable` in the `service_catalog` then the [register-broker errand](#register) errand will disable service access to that plan.
 
@@ -793,16 +802,16 @@ To upgrade all existing service instances after the service offering has been up
       instances: 1
       jobs:
         - name: upgrade-all-service-instances
-          release: &lt;odb-release-name>
+          release: ODB-RELEASE-NAME
           properties:
-            max_in_flight: &lt;max number of instances that will be in an upgrading state at the same time> # defaults to 1
-            polling_interval_seconds: &lt;seconds to wait between checking status of a submitted upgrade job> # defaults to 60
-            attempt_interval_seconds: &lt;seconds to wait between retrying upgrades> # defaults to 60
-            attempt_limit: &lt;max number of times the errand will try a set of upgrades> # defaults to 5
-      vm_type: &lt;vm-type>
-      stemcell: &lt;stemcell>
-      networks: [{name: &lt;network>}]
-      azs: [&lt;az>]
+            max_in_flight: NUMBER-OF-INSTANCES # defaults to 1
+            polling_interval_seconds: POLLING-INTERVAL-IN-SECONDS # defaults to 60
+            attempt_interval_seconds: ATTEMPT-INTERVAL-IN-SECONDS # defaults to 60
+            attempt_limit: NUMBER-OF-ATTEMPTS # defaults to 5
+      vm_type: VM-TYPE
+      stemcell: STEMCELL
+      networks: [{name: NETWORK}]
+      azs: [AZ]
     </pre>
     <p>
       The errand properties allow fine-tuning of the behavior of the upgrade job.
@@ -819,9 +828,8 @@ To upgrade all existing service instances after the service offering has been up
       have in-progress BOSH operations, upgrade requests will be rejected and the errand will queue those instances
       for a retry:
     <ul>
-      <li><code>attempt_limit</code> sets the number of times these instances will be retried for upgrade,
-      and </li>
-      <li><code>attempt_interval_seconds</code> determines the time to wait between these attempts.</li>
+      <li><code>attempt_interval_seconds</code> determines the time to wait between retrying upgrades.</li>
+      <li><code>attempt_limit</code> sets the number of times these instances will be retried for upgrade.</li>
     </ul>
     </p>
 </li>
@@ -876,29 +884,38 @@ The plan\_ids listed in the response need to correspond to the plan\_ids that ap
 
 To configure the `upgrade-all-service-instances` errand to connect to a Service Instances API provider, update the errand's configuration in the deployment manifest to include the following additional properties:
 
-<pre class="terminal">
+<pre>
 - name: upgrade-all-service-instances
   lifecycle: errand
   instances: 1
   jobs:
     - name: upgrade-all-service-instances
-      release: &lt;odb-release-name>
+      release: ODB-RELEASE-NAME
       properties:
-        polling_interval_seconds: &lt;seconds to wait between checking status of a submitted upgrade job> # defaults to 60
-        attempt_interval_seconds: &lt;seconds to wait between retrying upgrades> # defaults to 60
-        attempt_limit: &lt;max number of times the errand will try a set of upgrades> # defaults to 5
+        polling_interval_seconds: POLLING-INTERVAL-IN-SECONDS # defaults to 60
+        attempt_interval_seconds: ATTEMPT-INTERVAL-IN-SECONDS # defaults to 60
+        attempt_limit: NUMBER-OF-ATTEMPTS # defaults to 5
         <strong><em>service_instances_api: # optional
-          url: &lt;URL of service instances API provider> # required
-          root_ca_cert: &lt;root CA cert to validate TLS connection> # optional
+          url: URL-OF-SERVICE-INSTANCES-API-PROVIDER # required
+          root_ca_cert: ROOT-CA-CERT # optional
           authentication:
             basic: # required - currently the only supported authentication type
-              username: &lt;basic http auth username>
-              password: &lt;basic http auth password></em></strong>
-  vm_type: &lt;vm-type>
-  stemcell: &lt;stemcell>
-  networks: [{name: &lt;network>}]
-  azs: [&lt;az>]
+              username: USERNAME
+              password: PASSWORD</em></strong>
+  vm_type: VM-TYPE
+  stemcell: STEMCELL
+  networks: [{name: NETWORK}]
+  azs: [AZ]
 </pre>
+
+Where: <br>
+`POLLING-INTERVAL-IN-SECONDS`: The number of seconds to wait between checking the status of a submitted upgrade job. <br>
+`ATTEMPT-INTERVAL-IN-SECONDS`: The number of seconds to wait between retrying upgrades. <br>
+`NUMBER-OF-ATTEMPTS`: The maximum number of times the errand will try a set of upgrades. <br>
+`ROOT-CA-CERT`: The root CA cert to validate TLS connection. <br>
+`USERNAME`: The basic http auth username. <br>
+`PASSWORD`: The basic http auth password. 
+
 
 ## <a id="security"></a>Security
 
@@ -909,13 +926,13 @@ The ODB accesses the following [BOSH API](https://bosh.io/docs/director-api-v1.h
 | API endpoint                                                     | Examples of usage in the ODB                                                                                                                                 |
 |:-----------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `POST /deployments`                                              | create, or update a service instance                                                                                                                         |
-| `POST /deployments/<deployment_name>/errands/<errand_name>/runs` | register, or de-register the on-demand broker with the Cloud Controller, run smoke tests                                                                     |
-| `GET /deployments/<deployment_name>`                             | passed as argument to the service adapter for `generate-manifest` and `create-binding`                                                                       |
-| `GET /deployments/<deployment_name>/vms?format=full`             | passed as argument to the service adapter for `create-binding`                                                                                               |
-| `DELETE /deployments/<deployment_name>`                          | delete a service instance                                                                                                                                    |
-| `GET /tasks/<task_ID>/output?type=result`                        | check a task was successful (i.e. the exit code was zero), get list of VMs                                                                                   |
-| `GET /tasks/<task_ID>`                                           | poll the BOSH director until a task finishes, e.g. create, update, or delete a deployment                                                                    |
-| `GET /tasks?deployment=<deployment_name>`                        | determine the last operation status and message for a service instance, e.g. 'create in progress' - used when creating, updating, deleting service instances |
+| `POST /deployments/DEPLOYMENT-NAME/errands/ERRAND-NAME/runs` | register, or de-register the on-demand broker with the Cloud Controller, run smoke tests                                                                     |
+| `GET /deployments/DEPLOYMENT-NAME`                             | passed as argument to the service adapter for `generate-manifest` and `create-binding`                                                                       |
+| `GET /deployments/DEPLOYMENT-NAME/vms?format=full`             | passed as argument to the service adapter for `create-binding`                                                                                               |
+| `DELETE /deployments/DEPLOYMENT-NAME`                          | delete a service instance                                                                                                                                    |
+| `GET /tasks/TASK-ID/output?type=result`                        | check a task was successful (i.e. the exit code was zero), get list of VMs                                                                                   |
+| `GET /tasks/TASK-ID`                                           | poll the BOSH director until a task finishes, e.g. create, update, or delete a deployment                                                                    |
+| `GET /tasks?deployment=DEPLOYMENT-NAME`                        | determine the last operation status and message for a service instance, e.g. 'create in progress' - used when creating, updating, deleting service instances |
 
 ### <a id="bosh-uaa"></a>BOSH UAA Permissions
 
@@ -933,7 +950,7 @@ Read only:
 - `bosh vms`
 - `bosh tasks`
 
-The minimum UAA authority required by the BOSH Director to perform these actions is `bosh.teams.<team>.admin`. Note: a team admin cannot view or update the director's cloud config, nor upload releases or stemcells.
+The minimum UAA authority required by the BOSH Director to perform these actions is `bosh.teams.TEAM.admin`. Note: a team admin cannot view or update the director's cloud config, nor upload releases or stemcells.
 
 For more details on how to set up and use BOSH teams, see [Director teams and permissions configuration](https://bosh.io/docs/director-users-uaa-perms.html).
 
@@ -958,18 +975,18 @@ The ODB accesses the following [CF API](https://apidocs.cloudfoundry.org/268/) e
 |:---------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------|
 | `GET /v2/info`                                                       | identify CF API version, to determine feature compatibility & availability                             |
 | `GET /v2/services`                                                   | list all services, to find our own service based on defined unique ID rather than GUID                 |
-| `GET /v2/services/<service_guid>/service_plans`                      | find registered service plans for ODB service e.g. for calculating plan quota usage                    |
+| `GET /v2/services/SERVICE-GUID/service_plans`                      | find registered service plans for ODB service e.g. for calculating plan quota usage                    |
 | `GET /v2/service_brokers`                                            | find service broker metadata by name during broker deregistration                                      |
-| `DELETE /v2/service_brokers/<service_broker_guid>`                   | delete ODB service broker during broker deregister errand                                              |
-| `GET /v2/service_plans/<service_plan_guid>`                          | identify service plan when upgrading an instance to trigger any lifecycle errands                      |
-| `PUT /v2/service_plans/<service_plan_guid>`                          | disable service access prior to service deletion                                                       |
-| `GET /v2/service_plans/<service_plan_guid>/service_instances`        | find service instances for given plan when determining global quota and running startup checks         |
-| `GET /v2/service_instances/<service_instance_guid>`                  | determine service instance state to check an operation is not in progress before triggering an upgrade |
-| `DELETE /v2/service_instances/<service_instance_guid>`               | deleting a service instance during delete all service instances errand                                 |
-| `GET /v2/service_instances/<service_instance_guid>/service_bindings` | finding bindings for given service instance during delete all service instances errand                 |
-| `GET /v2/service_instances/<service_instance_guid>/service_keys`     | finding service keys for given service instance during delete all service instances errand             |
-| `DELETE /v2/apps/<app_guid>/service_bindings/<service_binding_guid>` | unbinding a service instance during delete all service instances errand                                |
-| `DELETE /v2/service_keys/<service_key_guid>`                         | deleting a service key during delete all service instances errand                                      |
+| `DELETE /v2/service_brokers/SERVICE-BROKER-GUID`                   | delete ODB service broker during broker deregister errand                                              |
+| `GET /v2/service_plans/SERVICE-PLAN-GUID`                          | identify service plan when upgrading an instance to trigger any lifecycle errands                      |
+| `PUT /v2/service_plans/SERVICE-PLAN-GUID`                          | disable service access prior to service deletion                                                       |
+| `GET /v2/service_plans/SERVICE-PLAN-GUID/service_instances`        | find service instances for given plan when determining global quota and running startup checks         |
+| `GET /v2/service_instances/SERVICE-INSTANCE-GUID`                  | determine service instance state to check an operation is not in progress before triggering an upgrade |
+| `DELETE /v2/service_instances/SERVICE-INSTANCE-GUID`               | deleting a service instance during delete all service instances errand                                 |
+| `GET /v2/service_instances/SERVICE-INSTANCE-GUID/service_bindings` | finding bindings for given service instance during delete all service instances errand                 |
+| `GET /v2/service_instances/SERVICE-INSTANCE-GUID/service_keys`     | finding service keys for given service instance during delete all service instances errand             |
+| `DELETE /v2/apps/APP-GUID/service_bindings/SERVICE-BINDING-GUID` | unbinding a service instance during delete all service instances errand                                |
+| `DELETE /v2/service_keys/SERVICE-KEY-GUID`                         | deleting a service key during delete all service instances errand                                      |
 
 ### <a id="cf-uaa"></a>CF UAA Permissions
 
@@ -1118,16 +1135,16 @@ If you have [configured broker metrics](#broker-metrics), the broker will emit m
 The broker will emit a metric indicating the total number of instances across all plans. In addition, if there is a global quota set for the service, a metric showing how much of that quota is remaining will be emitted. Service-level metrics use the format shown below.
 
 ```
-origin:"<broker deployment name>" eventType:ValueMetric timestamp:<timestamp> deployment:"<broker deployment name>" job:"broker" index:"<bosh job index>" ip:"<IP>" valueMetric:<name:"/on-demand-broker/<service offering name>/total_instances" value:<instance count> unit:"count" >
-origin:"<broker deployment name>" eventType:ValueMetric timestamp:<timestamp> deployment:"<broker deployment name>" job:"broker" index:"<bosh job index>" ip:"<IP>" valueMetric:<name:"/on-demand-broker/<service offering name>/quota_remaining" value:<quota remaining> unit:"count" >
+origin:"BROKER-DEPLOYMENT-NAME" eventType:ValueMetric timestamp:TIMESTAMP deployment:"BROKER-DEPLOYMENT-NAME" job:"broker" index:"BOSH-JOB-INDEX" ip:"IP" valueMetric:<name:"/on-demand-broker/<service offering name>/total_instances" value:INSTANCE-COUNT unit:"count" >
+origin:"BROKER-DEPLOYMENT-NAME" eventType:ValueMetric timestamp:TIMESTAMP deployment:"BROKER-DEPLOYMENT-NAME" job:"broker" index:"BOSH-JOB-INDEX>" ip:"IP" valueMetric:<name:"/on-demand-broker/<service offering name>/quota_remaining" value:QUOTA-REMAINING unit:"count" >
 ```
 
 #### Plan-level Metrics
 For each service plan, the metrics will report the total number of instances for that plan. If there is a quota set for the plan, the metrics will also report how much of that quota is remaining. Plan-level metrics are emitted in the following format.
 
 ```
-origin:"<broker deployment name>" eventType:ValueMetric timestamp:<timestamp> deployment:"<broker deployment name>" job:"broker" index:"<bosh job index>" ip:"<IP>" valueMetric:<name:"/on-demand-broker/<service offering name>/<plan name>/total_instances" value:<instance count> unit:"count" >
-origin:"<broker deployment name>" eventType:ValueMetric timestamp:<timestamp> deployment:"<broker deployment name>" job:"broker" index:"<bosh job index>" ip:"<IP>" valueMetric:<name:"/on-demand-broker/<service offering name>/<plan name>/quota_remaining" value:<quota remaining> unit:"count" >
+origin:"BROKER-DEPLOYMENT-NAME" eventType:ValueMetric timestamp:TIMESTAMP deployment:"BROKER-DEPLOYMENT-NAME" job:"broker" index:"BOSH-JOB-INDEX" ip:"IP" valueMetric:<name:"/on-demand-broker/<service offering name>/<plan name>/total_instances" value:INSTANCE-COUNT unit:"count" >
+origin:"BROKER-DEPLOYMENT-NAME" eventType:ValueMetric timestamp:TIMESTAMP deployment:"BROKER-DEPLOYMENT-NAME" job:"broker" index:"BOSH-JOB-INDEX" ip:"IP" valueMetric:<name:"/on-demand-broker/<service offering name>/<plan name>/quota_remaining" value:QUOTA-REMAINING unit:"count" >
 ```
 
 If `quota_remaining` is `0` then you need to increase your plan quota in the BOSH manifest.
@@ -1138,14 +1155,14 @@ There is a one to one mapping between the service instance id from CF and the de
 
 1. Determine the GUID of the service
    <pre class="terminal">
-    $ cf service --guid \<service-name\>
+    $ cf service --guid SERVICE-NAME
    </pre>
 
-1. Identify deployment in `bosh deployments` by looking for `service-instance_<GUID>`
+1. Identify deployment in `bosh deployments` by looking for `service-instance_GUID`
 
 1. Get current tasks for the deployment by using
    <pre class="terminal">
-    $ bosh tasks --deployment service-instance_\<GUID\>
+    $ bosh tasks --deployment service-instance_GUID
    </pre>
 
 ### <a id="id-tasks"></a>Identify Tasks in BOSH
@@ -1154,12 +1171,12 @@ Most operations on the on demand service broker API are implemented by launching
 
 1. Determine the ID of the service for which an operation failed. You can do this using the Cloud Foundry CLI:
    <pre class="terminal">
-    $ cf service --guid \<service name\>
+    $ cf service --guid SERVICE NAME
    </pre>
 
 1. SSH on to the service broker VM:
    <pre class="terminal">
-    $ bosh deployment \<path to broker manifest\>
+    $ bosh deployment PATH TO BROKER MANIFEST
     $ bosh ssh
    </pre>
 
@@ -1178,7 +1195,7 @@ Most operations on the on demand service broker API are implemented by launching
 
 1. Use the task ID to obtain the task log from BOSH (adding flags such as `--debug` or `--cpi` as necessary):
    <pre class="terminal">
-    $ bosh task \<task\_ID\>
+    $ bosh task TASK-ID
    </pre>
 
 ### <a id="id-uaa-issues"></a>Identify Issues When Connecting to BOSH or UAA
@@ -1190,7 +1207,7 @@ If BOSH and/or UAA are wrongly configured in the broker's manifest, then meaning
 For example
 
 ```
-on-demand-service-broker: [on-demand-service-broker] [575afbc1-b541-481d-9cde-b3d3e67e87bf] 2016/05/18 15:56:40.100579 Error authenticating (401): {"error":"unauthorized","error_description":"Bad credentials"}, ensure that properties.<broker-job>.bosh.authentication.uaa is correct and try again.
+on-demand-service-broker: [on-demand-service-broker] [575afbc1-b541-481d-9cde-b3d3e67e87bf] 2016/05/18 15:56:40.100579 Error authenticating (401): {"error":"unauthorized","error_description":"Bad credentials"}, ensure that properties.BROKER-JOB.bosh.authentication.uaa is correct and try again.
 ```
 
 ### <a id="listing-instances"></a>List Service Instances
