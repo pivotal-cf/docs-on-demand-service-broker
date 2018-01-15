@@ -200,3 +200,34 @@ Pre-delete:
 - `delete-all-service-instances-and-deregister-broker`
 
 These errands are documented in the [operating section](operating.html#management).
+
+
+## <a id="secure-creds"></a>Secure Binding Credentials
+
+It is possible to store service instance credentials securely in CredHub. 
+To include this feature in your tile, make some changes to the tile metadata, as described below:
+
+1. Add `secure_binding_credentials` to the top-level properties block in the on-demand broker manifest. For example:
+
+    ```yaml
+    secure_binding_credentials:
+      enabled: true
+      authentication:
+        uaa:
+          client_id: CREDHUB_CLIENT_ID # client ID used by broker when communicating with CredHub
+          client_secret: CREDHUB_CLIENT_SECRET # client secret used by broker when communicating with CredHub
+          ca_cert: UAA_CA_CERT
+    ```
+
+2. To let users enable and disable this feature in the Ops Manager UI, add an element to the `property_blueprints` 
+section of your tile's `handcraft.yml`, and add a selector that templates in the appropriate manifest snippet.
+
+For an example, see the **example-kafka-on-demand-tile**:
+
+* ['Enable Secure Bindings' form field](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L39-L46)
+* [`property_blueprint`](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L605-L632)
+* [broker manifest template](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L112)
+
+
+<p class="note">To use the secure binding credentials feature you must use Pivotal Cloud Foundry (PCF) 2.0 or later.</p>
+
