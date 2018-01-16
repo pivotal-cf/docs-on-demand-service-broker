@@ -21,7 +21,7 @@ Before setting up and using ODB on your local development environment, install a
 
 - Once PCF Dev has finished installing, you should see some output like this...
 
-  ```sh
+  ```
       _______  _______  _______    ______   _______  __   __
     |       ||       ||       |  |      | |       ||  | |  |
     |    _  ||       ||    ___|  |  _    ||    ___||  |_|  |
@@ -326,11 +326,11 @@ This topic provides examples of using each version of the BOSH CLI. Your PCF ins
 ## <a id="create_service"></a> Step 6: Create a Service Broker on PCF Dev
 
 1. Create a service broker on PCF Dev and enable access to its service offering. You will need the broker's credentials set in the deployment manifest and the IP of the broker VM.
-<p class="note">Replace `BROKER_IP` with the value obtained in the previous step.</p>
     <pre class="terminal">
     $ cf create-service-broker kafka-broker broker password http://BROKER-IP:8080
     </pre>
-
+    Where:<br>
+    `BROKER_IP` is the value obtained in the previous step.<br>
     For more details on service brokers see [here](http://docs.cloudfoundry.org/services/api.html).
 
 1. Enable access to the broker's service plans:
