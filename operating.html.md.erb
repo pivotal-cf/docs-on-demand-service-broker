@@ -138,7 +138,7 @@ instance_groups:
           port: BROKER-PORT
           username: BROKER-USERNAME
           password: BROKER-PASSWORD
-          disable_ssl_cert_verification: TRUE|FALSE # optional, defaults to false. This should NOT be used in production
+          disable_ssl_cert_verification: true|false # optional, defaults to false. This should NOT be used in production
           shutdown_timeout_in_seconds: 60 # optional, defaults to 60 seconds. This allows the broker to gracefully wait for any open requests to complete before shutting down.
           cf:
             url: CF-API-URL
@@ -532,7 +532,7 @@ Add the following instance group to your manifest:
           admin_password: CF-API-ADMIN-PASSWORD
   vm_type: VM-TYPE
   stemcell: STEMCELL
-  networks: [{name: NETWORK}]
+  networks: [NETWORK]
   azs: [AZ]
 ```
 
@@ -881,7 +881,7 @@ The plan\_ids listed in the response need to correspond to the plan\_ids that ap
 
 To configure the `upgrade-all-service-instances` errand to connect to a Service Instances API provider, update the errand's configuration in the deployment manifest to include the following additional properties:
 
-<pre>
+```
 - name: upgrade-all-service-instances
   lifecycle: errand
   instances: 1
@@ -899,9 +899,9 @@ To configure the `upgrade-all-service-instances` errand to connect to a Service 
               password: PASSWORD</em>
   vm_type: VM-TYPE
   stemcell: STEMCELL
-  networks: [{name: NETWORK}]
+  networks: [NETWORK]
   azs: [AZ]
-</pre>
+```
 
 Where: <br>
 <code>POLLING-INTERVAL-IN-SECONDS</code>: The number of seconds to wait between checking the 
@@ -1047,9 +1047,9 @@ If you want to forward syslog to a syslog aggregator, we recommend co-locating [
 
 The ODB generates a UUID for each request and prefixes all the logs for that request, e.g.
 
-```
-on-demand-service-broker: [on-demand-service-broker] [4d63080d-e038-45a3-85f9-93910f6b40b1] 2016/09/05 16:43:26.123456 a valid UAA token was found in cache, will not obtain a new one
-```
+<pre class="terminal">
+[on-demand-service-broker] [4d63080d-e038-45a3-85f9-93910f6b40b1] 2016/09/05 16:43:26.123456 a valid UAA token was found in cache, will not obtain a new one
+</pre>
 
 NB: The ODB's negroni server and start up logs are not prefixed with a request ID.
 

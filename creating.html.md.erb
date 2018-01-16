@@ -156,7 +156,7 @@ A service adapter is expected to be implemented as a binary with the interface
 service-adapter [subcommand] [params ...]
 ```
 
-where the subcommand can be generate-manifest, create-binding, delete-binding
+Where the subcommand can be generate-manifest, create-binding, delete-binding
 
 Examples are provided for [Redis](https://github.com/pivotal-cf-experimental/redis-example-service-adapter) and [Kafka](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter). Note that these Golang examples us the SDK to help with cross-cutting concerns such as unmarshalling the JSON command line parameters. For example, see the use of `HandleCommandLineInvocation` in the [redis-adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/cmd/service-adapter/main.go#L15).
 
@@ -261,9 +261,9 @@ _plan-JSON schema_
 | properties                                | map                      | properties which the operator has configured for deployments of the current plan                                                       |
 | lifecycle\_errands                        | map                      | Optional, details of post-deploy and pre-delete errands                                                                                |
 | lifecycle\_errands.post\_deploy.name      | string                   | Optional, name of post-deploy errand                                                                                                   |
-| lifecycle\_errands.post\_deploy.instances | array of strings         | Optional, for a colocated errand, specify a list of \<instance-name>/\<instance_idx> to run the errand                                 |
+| lifecycle\_errands.post\_deploy.instances | array of strings         | Optional, for a colocated errand, specify a list of INSTANCE-NAME/INSTANCE_IDX to run the errand                                 |
 | lifecycle\_errands.pre\_delete.name       | string                   | Optional, name of pre-delete errand                                                                                                    |
-| lifecycle\_errands.pre\_delete.instances  | array of strings         | Optional, for a colocated errand, specify a list of \<instance-name>/\<instance_idx> to run the errand                                 |
+| lifecycle\_errands.pre\_delete.instances  | array of strings         | Optional, for a colocated errand, specify a list of INSTANCE-NAME/INSTANCE_IDX to run the errand                                 |
 | update                                    | map                      | update block which the operator has configured for deployments of the current plan                                                     |
 | update.canaries                           | int                      | plan-specific number of canary instances                                                                                               |
 | update.max\_in\_flight                    | int                      | plan-specific maximum number of non-canary instances to update in parallel                                                             |
@@ -627,7 +627,7 @@ This scenario makes sense for services that use the same credentials for all bin
 ```yaml
 properties:
   redis:
-    password: SAME-FOR-ALL-BINDINGS
+    password: PASSWORD
 ```
 
 **Credentials Unique to Each Binding**
@@ -638,7 +638,7 @@ This option makes sense for services whose binding creation resembles user creat
 
 ```yaml
 properties:
-  admin_password: USE-TO-CREATE-CREDENTIALS
+  admin_password: ADMIN-PASSWORD
 ```
 
 **Using an Agent**
