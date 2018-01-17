@@ -7,7 +7,7 @@ owner: London Services Enablement
 The operator is responsible for performing the following:
 
 * Request appropriate networking rules for on-demand service tiles.
-* Configure the BOSH director
+* Configure the BOSH Director
 * Upload the required releases for the broker deployment and service instance deployments.
 * Write a broker manifest
   * If you are unfamiliar with writing BOSH v2 manifests, see [Manifest v2 Schema](http://bosh.io/docs/manifest-v2.html).
@@ -54,20 +54,20 @@ Dependencies for the On-Demand Broker:
 - BOSH Director v257 or later (PCF 1.8) **Note:** does not support BOSH Windows
 - Cloud Foundry v238 or later (PCF 1.8)
 
- <p class="note"><strong>Note</strong>: [Service instance lifecycle errands](#lifecycle-errands) require BOSH director v261 (PCF 1.10) or later.</p>
+ <p class="note"><strong>Note</strong>: [Service instance lifecycle errands](#lifecycle-errands) require BOSH Director v261 (PCF 1.10) or later.</p>
 
 ### <a id="ssl-certs"></a>SSL Certificates
 
-If ODB is configured to communicate with BOSH on the director's public IP you may be using a self-signed certificate unless you have a domain for your BOSH director. ODB does not ignore TLS certificate validation errors by default (as expected). You have two options to configure certificate-based authentication between the BOSH director and the ODB:
+If ODB is configured to communicate with BOSH on the Director's public IP you may be using a self-signed certificate unless you have a domain for your BOSH Director. ODB does not ignore TLS certificate validation errors by default (as expected). You have two options to configure certificate-based authentication between the BOSH Director and the ODB:
 
-1. Add the BOSH director's root certificate to ODB's trusted pool in the ODB manifest:
+1. Add the BOSH Director's root certificate to ODB's trusted pool in the ODB manifest:
 
     ```yaml
     bosh:
       root_ca_cert: ROOT-CA-CERT
     ```
 
-1. Use BOSH's `trusted_certs` feature to add a self-signed CA certificate to each VM BOSH deploys. For more details on how to generate and use self-signed certificates for BOSH director and UAA, see [Director SSL Certificate Configuration](https://bosh.io/docs/director-certs.html).
+1. Use BOSH's `trusted_certs` feature to add a self-signed CA certificate to each VM BOSH deploys. For more details on how to generate and use self-signed certificates for BOSH Director and UAA, see [Director SSL Certificate Configuration](https://bosh.io/docs/director-certs.html).
 
 You can also configure a separate root CA certificate that is used when ODB communicates with the Cloud Foundry API (Cloud Controller).
 This is done in a similar way to above.
@@ -101,7 +101,7 @@ Detailed broker configuration is covered [below](#core-broker-configuration).
 
 ## <a id="upload-releases"></a>Upload Required Releases
 
-Upload the following releases to the BOSH director:
+Upload the following releases to the BOSH Director:
 
 * on-demand-service-broker
 * your service adapter
@@ -184,7 +184,7 @@ The operator must:
 1. Compose plans. In ODB, service authors do not define plans but instead expose plan properties. The operator's role is to compose combinations of these properties, along with IAAS resources and catalog metadata into as many plans as they like.
   1. Create Cloud Foundry [service plan metadata](https://docs.pivotal.io/pivotalcf/services/catalog-metadata.html#plan-metadata-fields) in the service catalog for each plan.
   1. Provide resource mapping for each instance group specified by the Service Author for each plan.
-     The resource values must correspond to valid resource definitions in the BOSH director's global cloud config.
+     The resource values must correspond to valid resource definitions in the BOSH Director's global cloud config.
      In some cases Service Authors will recommend resource configuration: e.g. in single-node Redis deployments, an instance count greater than 1 does not make sense.
      Here the operator can configure the deployment to span multiple availability zones, by using the [BOSH multi-az feature](https://bosh.io/docs/azs.html). For example the [kafka multi az plan](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml#L100). In some cases, service authors will provide errands for the service release. You can add an instance group of type errand by setting the lifecycle field. For example the [smoke_tests for the kafka deployment](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml#L93).
   1. Provide values for plan properties.
@@ -337,7 +337,7 @@ You can optionally colocate the `route_registrar` job from the [routing release]
 1. load balance multiple instances of ODB using Cloud Foundry's router
 1. access ODB from the public internet
 
-To do this, upload the release to your BOSH director and [configure the job properties](http://bosh.io/jobs/route_registrar?source=github.com/cloudfoundry-incubator/cf-routing-release&version=0.136.0), replacing the version in that docs URL query string as appropriate.
+To do this, upload the release to your BOSH Director and [configure the job properties](http://bosh.io/jobs/route_registrar?source=github.com/cloudfoundry-incubator/cf-routing-release&version=0.136.0), replacing the version in that docs URL query string as appropriate.
 
 Remember to set the `broker_uri` property in the [register-broker errand](#register-broker) if you configure a route.
 
@@ -396,7 +396,7 @@ You cannot change the plan_id of a plan that has existing service instances.
 
 ## <a id="broker-stop"></a>Broker Shutdown
 
-The broker will try and wait for any incomplete https requests to complete before shutting down. This allows us to reduce the risk of leaving orphan deployments in the event that the BOSH director does not respond to our initial `bosh deploy` request. The `broker.shutdown_timeout` property determines how long the broker will wait before it is forced to shutdown. The default is 60 seconds, but can be configured in the manifest. Please refer to how to <a href="#broker-manifest">Write a Broker Manifest</a>
+The broker will try and wait for any incomplete https requests to complete before shutting down. This allows us to reduce the risk of leaving orphan deployments in the event that the BOSH Director does not respond to our initial `bosh deploy` request. The `broker.shutdown_timeout` property determines how long the broker will wait before it is forced to shutdown. The default is 60 seconds, but can be configured in the manifest. Please refer to how to <a href="#broker-manifest">Write a Broker Manifest</a>
 
 ## <a id="lifecycle-errands"></a>Service Instance Lifecycle Errands
 
@@ -458,7 +458,7 @@ Lifecycle errands will not be run.
 
 #### Service Instance Lifecycle Colocated Errands
 
-<p class="note"><strong>Note</strong>: This feature requires BOSH director v263 or later.</p>
+<p class="note"><strong>Note</strong>: This feature requires BOSH Director v263 or later.</p>
 
 A job errand can be run as a `post-deploy` or `pre-delete` colocated errand. Colocated errands run on an existing service instance group, avoiding additional resource allocation. For more information see the [BOSH documentation](https://bosh.io/docs/errands.html).
 
@@ -931,7 +931,7 @@ The ODB accesses the following [BOSH API](https://bosh.io/docs/director-api-v1.h
 | `GET /deployments/DEPLOYMENT-NAME/vms?format=full`             | passed as argument to the service adapter for `create-binding`                                                                                               |
 | `DELETE /deployments/DEPLOYMENT-NAME`                          | delete a service instance                                                                                                                                    |
 | `GET /tasks/TASK-ID/output?type=result`                        | check a task was successful (i.e. the exit code was zero), get list of VMs                                                                                   |
-| `GET /tasks/TASK-ID`                                           | poll the BOSH director until a task finishes, e.g. create, update, or delete a deployment                                                                    |
+| `GET /tasks/TASK-ID`                                           | poll the BOSH Director until a task finishes, e.g. create, update, or delete a deployment                                                                    |
 | `GET /tasks?deployment=DEPLOYMENT-NAME`                        | determine the last operation status and message for a service instance, e.g. 'create in progress' - used when creating, updating, deleting service instances |
 
 ### <a id="bosh-uaa"></a>BOSH UAA Permissions
@@ -950,7 +950,7 @@ Read only:
 - `bosh vms`
 - `bosh tasks`
 
-The minimum UAA authority required by the BOSH Director to perform these actions is `bosh.teams.TEAM.admin`. Note: a team admin cannot view or update the director's cloud config, nor upload releases or stemcells.
+The minimum UAA authority required by the BOSH Director to perform these actions is `bosh.teams.TEAM.admin`. Note: a team admin cannot view or update the Director's cloud config, nor upload releases or stemcells.
 
 For more details on how to set up and use BOSH teams, see [Director teams and permissions configuration](https://bosh.io/docs/director-users-uaa-perms.html).
 
@@ -965,7 +965,7 @@ The team admin authority also allows the following actions, which currently are 
 
 ### <a id="ipsec"></a>PCF IPsec Add-On
 
-The ODB has been tested with the [PCF IPsec Add-On](https://docs.pivotal.io/addon-ipsec/installing.html), and it appears to work. Note that we excluded the BOSH director itself from IPsec ranges, as the BOSH add-on cannot be applied to BOSH itself.
+The ODB has been tested with the [PCF IPsec Add-On](https://docs.pivotal.io/addon-ipsec/installing.html), and it appears to work. Note that we excluded the BOSH Director itself from IPsec ranges, as the BOSH add-on cannot be applied to BOSH itself.
 
 ### <a id="cf-endpoints"></a>CF API Endpoints
 
@@ -1107,7 +1107,7 @@ If you have [configured secure binding credentials](#secure-binding), the broker
 will store credentials on CredHub. You can see and consume these credentials by
 using the [CredHub CLI](https://github.com/cloudfoundry-incubator/credhub-cli).
 
-<p class="note"><strong>Note</strong>: Usually, CredHub is not accessble from
+<p class="note"><strong>Note</strong>: Usually, CredHub is not accessible from
 outside the Cloud Foundry network. Use the CredHub CLI from within the internal
 network, or connect using an appropriate tunnel.</p>
 
@@ -1200,7 +1200,7 @@ Most operations on the on demand service broker API are implemented by launching
 
 ### <a id="id-uaa-issues"></a>Identify Issues When Connecting to BOSH or UAA
 
-The ODB interacts with the BOSH director to provision and deprovision instances, and is authenticated via the director's UAA. See [Core Broker Configuration](#core-broker-configuration) for an example configuration.
+The ODB interacts with the BOSH Director to provision and deprovision instances, and is authenticated via the Director's UAA. See [Core Broker Configuration](#core-broker-configuration) for an example configuration.
 
 If BOSH and/or UAA are wrongly configured in the broker's manifest, then meaningful error messages will be displayed in the broker's log, indicating whether the issue is caused by an unreachable destination or bad credentials.
 
