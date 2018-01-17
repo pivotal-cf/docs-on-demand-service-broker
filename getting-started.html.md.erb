@@ -697,7 +697,7 @@ The following procedures are for v1 of the BOSH CLI. For instructions using v2, 
 
 1. Create a service broker on PCF Dev and enable access to its service offering. You will need the broker's credentials set in the deployment manifest and the IP of the broker VM.
     <pre class="terminal">
-    $ cf create-service-broker kafka-broker broker password http://BROKER-IP:8080
+    $ cf create-service-broker kafka-broker broker password http<span>:</span>//BROKER-IP:8080
     </pre>
     Where:<br>
     `BROKER_IP` is the value obtained in the previous step.<br>
