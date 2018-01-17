@@ -138,7 +138,7 @@ instance_groups:
           port: BROKER-PORT
           username: BROKER-USERNAME
           password: BROKER-PASSWORD
-          disable_ssl_cert_verification: true|false # optional, defaults to false. This should NOT be used in production
+          disable_ssl_cert_verification: true|false # optional, defaults to false. This should NOT set to true in production
           shutdown_timeout_in_seconds: 60 # optional, defaults to 60 seconds. This allows the broker to gracefully wait for any open requests to complete before shutting down.
           cf:
             url: CF-API-URL
@@ -146,10 +146,10 @@ instance_groups:
             authentication: # either client_credentials or user_credentials, not both as shown
               url: CF-UAA-URL
               client_credentials:
-                client_id: <UAA client id with cloud_controller.admin authority and client_credentials in the authorized_grant_type>
+                client_id: UAA-CLIENT-ID # with cloud_controller.admin authority and client_credentials in the authorized_grant_type
                 secret: UAA-CLIENT-SECRET
               user_credentials:
-                username: <CF admin username in the cloud_controller.admin and scim.read groups>
+                username: CF-ADMIN-USERNAME # in the cloud_controller.admin and scim.read groups
                 password: CF-ADMIN-PASSWORD
           bosh:
             url: DIRECTOR-URL
@@ -167,9 +167,10 @@ instance_groups:
           # There are more broker properties that are discussed below
 ```
 
-This snippet is using the BOSH v2 syntax and making use of global cloud config and job-level properties.
+<p class="note"><strong>Note</strong>: The <code>disable_ssl_cert_verification</code> 
+  option is dangerous and <strong>should not be set to true in production</strong>.</p>
 
-<p class="note"><strong>Note</strong>: The <code>disable_ssl_cert_verification</code> option is dangerous and <strong>should not be used in production</strong>.</p>
+This snippet is using the BOSH v2 syntax and making use of global cloud config and job-level properties.
 
 ### <a id="catalog"></a>Service Catalog and Plan Composition
 
@@ -575,8 +576,9 @@ Add the following instance group to your manifest:
 ```
 
 Where: <br>
-`INTERVAL-IN-SECONDS`: interval in seconds when waiting for service instance to be deleted <br>
-`OFFSET-IN-SECONDS`: The offset in seconds before starting to poll Cloud Foundry to check if the instance has been deleted.
+`INTERVAL-IN-SECONDS`: The interval in seconds before a service instance is deleted. <br>
+`OFFSET-IN-SECONDS`: The offset in seconds before polling Cloud Foundry to check 
+if the instance has been deleted.
 
  <p class="note"><strong>Note</strong>: The `polling_interval_seconds` default is set to 60 seconds
     because the Cloud Controller itself polls the on-demand broker every 60 seconds.
@@ -647,8 +649,9 @@ Add the following instance group to your manifest:
 ```
 
 Where:<br>
-`INTERVAL-IN-SECONDS`: interval in seconds when waiting for service instance to be deleted <br>
-`OFFSET-IN-SECONDS`: The offset in seconds before starting to poll Cloud Foundry to check if the instance has been deleted.
+`INTERVAL-IN-SECONDS`: The interval in seconds before a service instance is deleted. <br>
+`OFFSET-IN-SECONDS`: The offset in seconds before polling Cloud Foundry to check 
+if the instance has been deleted.
 
  <p class="note"><strong>Note</strong>: The `polling_interval_seconds` default is set to 60 seconds
     because the Cloud Controller itself polls the on-demand broker every 60 seconds.
@@ -895,13 +898,13 @@ To configure the `upgrade-all-service-instances` errand to connect to a Service 
         polling_interval_seconds: POLLING-INTERVAL-IN-SECONDS # defaults to 60
         attempt_interval_seconds: ATTEMPT-INTERVAL-IN-SECONDS # defaults to 60
         attempt_limit: NUMBER-OF-ATTEMPTS # defaults to 5
-        <strong><em>service_instances_api: # optional
+        service_instances_api: # optional
           url: URL-OF-SERVICE-INSTANCES-API-PROVIDER # required
           root_ca_cert: ROOT-CA-CERT # optional
           authentication:
             basic: # required - currently the only supported authentication type
               username: USERNAME
-              password: PASSWORD</strong></em>
+              password: PASSWORD
   vm_type: VM-TYPE
   stemcell: STEMCELL
   networks: [NETWORK]
@@ -909,7 +912,8 @@ To configure the `upgrade-all-service-instances` errand to connect to a Service 
 ```
 
 Where: <br>
-`POLLING-INTERVAL-IN-SECONDS`: The number of seconds to wait between checking the status of a submitted upgrade job. <br>
+`POLLING-INTERVAL-IN-SECONDS`: The number of seconds to wait between checking the 
+status of a submitted upgrade job. <br>
 `ATTEMPT-INTERVAL-IN-SECONDS`: The number of seconds to wait between retrying upgrades. <br>
 `NUMBER-OF-ATTEMPTS`: The maximum number of times the errand will try a set of upgrades. <br>
 
@@ -1131,16 +1135,16 @@ If you have [configured broker metrics](#broker-metrics), the broker will emit m
 The broker will emit a metric indicating the total number of instances across all plans. In addition, if there is a global quota set for the service, a metric showing how much of that quota is remaining will be emitted. Service-level metrics use the format shown below.
 
 ```
-origin:"BROKER-DEPLOYMENT-NAME" eventType:ValueMetric timestamp:TIMESTAMP deployment:"BROKER-DEPLOYMENT-NAME" job:"broker" index:"BOSH-JOB-INDEX" ip:"IP" valueMetric:<name:"/on-demand-broker/<service offering name>/total_instances" value:INSTANCE-COUNT unit:"count" >
-origin:"BROKER-DEPLOYMENT-NAME" eventType:ValueMetric timestamp:TIMESTAMP deployment:"BROKER-DEPLOYMENT-NAME" job:"broker" index:"BOSH-JOB-INDEX>" ip:"IP" valueMetric:<name:"/on-demand-broker/<service offering name>/quota_remaining" value:QUOTA-REMAINING unit:"count" >
+origin:"BROKER-DEPLOYMENT-NAME" eventType:ValueMetric timestamp:TIMESTAMP deployment:"BROKER-DEPLOYMENT-NAME" job:"broker" index:"BOSH-JOB-INDEX" ip:"IP" valueMetric:<name:"/on-demand-broker/SERVICE-OFFERING-NAME/total_instances" value:INSTANCE-COUNT unit:"count" >
+origin:"BROKER-DEPLOYMENT-NAME" eventType:ValueMetric timestamp:TIMESTAMP deployment:"BROKER-DEPLOYMENT-NAME" job:"broker" index:"BOSH-JOB-INDEX>" ip:"IP" valueMetric:<name:"/on-demand-broker/SERVICE-OFFERING-NAME/quota_remaining" value:QUOTA-REMAINING unit:"count" >
 ```
 
 #### Plan-level Metrics
 For each service plan, the metrics will report the total number of instances for that plan. If there is a quota set for the plan, the metrics will also report how much of that quota is remaining. Plan-level metrics are emitted in the following format.
 
 ```
-origin:"BROKER-DEPLOYMENT-NAME" eventType:ValueMetric timestamp:TIMESTAMP deployment:"BROKER-DEPLOYMENT-NAME" job:"broker" index:"BOSH-JOB-INDEX" ip:"IP" valueMetric:<name:"/on-demand-broker/<service offering name>/<plan name>/total_instances" value:INSTANCE-COUNT unit:"count" >
-origin:"BROKER-DEPLOYMENT-NAME" eventType:ValueMetric timestamp:TIMESTAMP deployment:"BROKER-DEPLOYMENT-NAME" job:"broker" index:"BOSH-JOB-INDEX" ip:"IP" valueMetric:<name:"/on-demand-broker/<service offering name>/<plan name>/quota_remaining" value:QUOTA-REMAINING unit:"count" >
+origin:"BROKER-DEPLOYMENT-NAME" eventType:ValueMetric timestamp:TIMESTAMP deployment:"BROKER-DEPLOYMENT-NAME" job:"broker" index:"BOSH-JOB-INDEX" ip:"IP" valueMetric:<name:"/on-demand-broker/SERVICE-OFFERING-NAME/PLAN-NAME/total_instances" value:INSTANCE-COUNT unit:"count" >
+origin:"BROKER-DEPLOYMENT-NAME" eventType:ValueMetric timestamp:TIMESTAMP deployment:"BROKER-DEPLOYMENT-NAME" job:"broker" index:"BOSH-JOB-INDEX" ip:"IP" valueMetric:<name:"/on-demand-broker/SERVICE-OFFERING-NAME/PLAN-NAME/quota_remaining" value:QUOTA-REMAINING unit:"count" >
 ```
 
 If `quota_remaining` is `0` then you need to increase your plan quota in the BOSH manifest.
@@ -1167,12 +1171,12 @@ Most operations on the on demand service broker API are implemented by launching
 
 1. Determine the ID of the service for which an operation failed. You can do this using the Cloud Foundry CLI:
    <pre class="terminal">
-    $ cf service --guid SERVICE NAME
+    $ cf service --guid SERVICE-NAME
    </pre>
 
 1. SSH on to the service broker VM:
    <pre class="terminal">
-    $ bosh deployment PATH TO BROKER MANIFEST
+    $ bosh deployment PATH-TO-BROKER-MANIFEST
     $ bosh ssh
    </pre>
 
@@ -1214,7 +1218,7 @@ During disaster recovery this endpoint could be used to assess the situation.
 
 **Request**
 
-`GET http://username:password@<ON_DEMAND_BROKER_IP>:8080/mgmt/service_instances`
+`GET http://USERNAME:PASSWORD@ON-DEMAND-BROKER-IP:8080/mgmt/service_instances`
 
 **Response**
 
@@ -1247,7 +1251,7 @@ This endpoint is exercised in the [`orphan-deployments`](#orphan-deployments) er
 without  running the errand, use curl
 
 **Request**
-`GET http://username:password@<ON_DEMAND_BROKER_IP>:8080/mgmt/orphan_deployments`
+`GET http://USERNAME:PASSWORD@ON-DEMAND-BROKER-IP:8080/mgmt/orphan_deployments`
 
 **Response**
 
