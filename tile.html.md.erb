@@ -33,7 +33,7 @@ Notes:
 
 ## <a id="building"></a>Build a Tile
 
-Follow the default build your own [Product tile documentation](http://docs.pivotal.io/tiledev/tile-generator.html), enhance the `handcraft.yml` with the accessors listed below. To access the `$self` accessors, the `service-broker` flag must be `true` in the handcraft.
+Follow the default build your own [Product tile documentation](http://docs.pivotal.io/tiledev/tile-generator.html), enhance the tile metadata file (`tile.yml` if using Tile Generator) with the accessors listed below. To access the `$self` accessors, the `service-broker` flag must be `true` in the handcraft.
 
 <p class="note"><strong>Note</strong>: If you are publishing a tile to be consumed by Ops Manager 1.8.x or 1.9.x, you will need to build your tile using releases with SHA1 internal checksums. On Demand Broker releases are published using SHA2 internal checksums. You can convert these releases to use SHA1 internal checksums using the BOSH CLI command <code>sha1ify-release</code>.</p>
 
@@ -69,7 +69,7 @@ Used to provide fields that belong to the specific tile (in this case, the broke
 
 The service network has to be created manually. Create a subnet on AWS and then add it to the director. In the director tile, under Create Networks > ADD network > fill in the subnet/vpc details.
 
-`$self` accessors are enabled by setting `service_broker: true` at the top level of `handcraft.yml`. Please note that, at the time of writing this, setting `service_broker: true` will cause a redeployment of the BOSH Director when installing or uninstalling the tile.
+`$self` accessors are enabled by setting `service_broker: true` at the top level of your tile metadata file. Please note that, at the time of writing this, setting `service_broker: true` will cause a redeployment of the BOSH Director when installing or uninstalling the tile.
 
 For example
 
@@ -219,7 +219,7 @@ To include this feature in your tile, make some changes to the tile metadata, as
           ca_cert: UAA_CA_CERT
     ```
 
-2. To let users enable and disable this feature in the Ops Manager UI, you need to make some changes to your tile's `handcraft.yml`:
+2. To let users enable and disable this feature in the Ops Manager UI, you need to make some changes to your tile's metadata file:
   - add a form field to allow the use to enable/disable secure bindings ([example](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L39-L46))
   - add an element in `property_blueprints` which reads the setting in the form field and exposes an appropriate manifest snippet for both CredHub and secure binding ([example](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L606-L632))
   - change the `broker` job so that it consumes the CredHub BOSH link from the above manifest snippet ([example](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L96))
