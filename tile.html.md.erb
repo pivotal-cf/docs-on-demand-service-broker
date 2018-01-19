@@ -219,14 +219,10 @@ To include this feature in your tile, make some changes to the tile metadata, as
           ca_cert: UAA_CA_CERT
     ```
 
-2. To let users enable and disable this feature in the Ops Manager UI, add an element to the `property_blueprints` 
-section of your tile's `handcraft.yml`, and add a selector that templates in the appropriate manifest snippet.
-
-For an example, see the **example-kafka-on-demand-tile**:
-
-* ['Enable Secure Bindings' form field](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L39-L46)
-* [`property_blueprint`](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L605-L632)
-* [broker manifest template](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L112)
-
+2. To let users enable and disable this feature in the Ops Manager UI, you need to make some changes to your tile's `handcraft.yml`:
+  - add a form field to allow the use to enable/disable secure bindings ([example](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L39-L46))
+  - add an element in `property_blueprints` which reads the setting in the form field and exposes an appropriate manifest snippet for both CredHub and secure binding ([example](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L606-L632))
+  - change the `broker` job so that it consumes the CredHub BOSH link from the above manifest snippet ([example](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L96))
+  - finally, change the `broker` manifest template so that it consumes the generated secure bindings manifest snippet ([example](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L96))
 
 <p class="note">To use the secure binding credentials feature you must use Pivotal Cloud Foundry (PCF) 2.0 or later.</p>
