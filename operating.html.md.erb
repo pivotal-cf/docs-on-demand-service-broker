@@ -276,7 +276,9 @@ service_catalog:
         update_watch_time: 1000-30000 # required
         serial: true # optional
       lifecycle_errands: #optional
-        post_deploy: <errand name> #optional
+        post_deploy:
+          name: <errand name> #optional
+          instances: [<instance name>] #optional, for co-locating errand
         pre_delete: <errand name> #optional
 ```
 
