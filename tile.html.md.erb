@@ -33,7 +33,12 @@ Notes:
 
 ## <a id="building"></a>Build a Tile
 
-Follow the default build your own [Product tile documentation](http://docs.pivotal.io/tiledev/tile-generator.html), enhance the tile metadata file (`tile.yml` if using Tile Generator) with the accessors listed below. To access the `$self` accessors, the `service-broker` flag must be `true` in the handcraft.
+1. Follow the instructions in the topic 
+[Tile Generator](http://docs.pivotal.io/tiledev/tile-generator.html) 
+to build your service tile. 
+1. Enhance the tile metadata file, named `tile.yml` if using Tile Generator, with the 
+accessors listed in [Non-Exhaustive Accessors Reference](#accessors). To use the `$self` accessors, the `service-broker` 
+flag must be `true` in the tile metadata file.
 
 <p class="note"><strong>Note</strong>: If you are publishing a tile to be consumed by Ops Manager 1.8.x or 1.9.x, you will need to build your tile using releases with SHA1 internal checksums. On Demand Broker releases are published using SHA2 internal checksums. You can convert these releases to use SHA1 internal checksums using the BOSH CLI command <code>sha1ify-release</code>.</p>
 
