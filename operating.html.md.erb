@@ -235,6 +235,7 @@ instance_groups:
           password: BROKER-PASSWORD
           disable_ssl_cert_verification: true|false # optional, defaults to false. This should NOT set to true in production
           shutdown_timeout_in_seconds: 60 # optional, defaults to 60 seconds. This allows the broker to gracefully wait for any open requests to complete before shutting down.
+          expose_operational_errors: true|false # optional, defaults to false. This allows for BOSH operational errors to be displayed for the CF user.
           cf:
             url: CF-API-URL
             root_ca_cert: CA-CERT-FOR-CLOUD-CONTROLLER # optional, see SSL certificates
