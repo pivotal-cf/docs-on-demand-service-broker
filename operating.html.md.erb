@@ -352,7 +352,7 @@ service_catalog:
           azs: [AZ]
       properties: {} # valid property key-value pairs are defined by the Service Author
       update: # optional
-        canaries: 1 # required
+        canaries: 1 # optional
         max_in_flight: 2  # required
         canary_watch_time: 1000-30000 # required
         update_watch_time: 1000-30000 # required
@@ -904,7 +904,8 @@ To upgrade all existing service instances after the service offering has been up
         - name: upgrade-all-service-instances
           release: ODB-RELEASE-NAME
           properties:
-            max_in_flight: NUMBER-OF-INSTANCES # defaults to 1
+            canaries: NUMBER-OF-CANARIES # defaults to 0
+            max_in_flight: NUMBER-OF-PARALLEL-UPGRADES # defaults to 1
             polling_interval_seconds: POLLING-INTERVAL-IN-SECONDS # defaults to 60
             attempt_interval_seconds: ATTEMPT-INTERVAL-IN-SECONDS # defaults to 60
             attempt_limit: NUMBER-OF-ATTEMPTS # defaults to 5
@@ -916,12 +917,30 @@ To upgrade all existing service instances after the service offering has been up
     <p>
       The errand properties allow fine-tuning of the behavior of the upgrade job.
       <ul>
-      <li><code>max_in_flight</code> sets the limit for the number of upgrades occurring concurrently.
-      The number of simultaneous upgrades is limited by the number of available BOSH workers
-      (see <a href="https://bosh.io/jobs/director?source=github.com/cloudfoundry/bosh#p=director.workers">BOSH docs</a>).
-      Set the <code>max_in_flight</code> value to lower than this limit to avoid over-saturating BOSH.
-      </li>
-        <li><code>polling_interval_seconds</code> controls
+      <li><code>max_in_flight</code> sets the limit for the number of upgrades
+      occurring concurrently.  The number of simultaneous upgrades is limited by
+      the number of available BOSH workers (see <a
+      href="https://bosh.io/jobs/director?source=github.com/cloudfoundry/bosh#p=director.workers">BOSH
+      docs</a>).  Set the <code>max_in_flight</code> value to lower than this
+      limit to avoid over-saturating BOSH.  </li>
+
+      <li><code>canaries</code> sets the number of canary instances to upgrade
+      first, selected in a non-deterministic way using all available instances.
+      If all selected instances upgrade successfully, the remaining instances
+      will be upgraded. If a canary instance fails to upgrade, no further
+      instances will be upgraded and the errand will exit with error (all
+      in-flight upgrades will be allowed to complete). If a selected instance is
+      busy or was deleted, another instance will be selected (if available).
+      Note that canary instances will be upgraded in parallel, respecting the
+      <code>max_in_flight</code> value. If all instances are busy, the errand
+      will retry, respecting the <code>attempts_limit</code> and
+      <code>attempt_interval_seconds</code>.
+
+      <p class="note"> <strong>Note:</strong> canaries will cause the
+      upgrade to fail if, and only if, a canary instance fail to upgrade or the
+      <code>attempts_limit</code> is reached.</p> </li>
+
+      <li><code>polling_interval_seconds</code> controls
       the wait between checking the status of the successfully submitted BOSH upgrade job. </li>
     </ul>
     If service instances
