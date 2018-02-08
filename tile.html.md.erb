@@ -121,7 +121,7 @@ cf:
 
 For more accessors you can see the [ops-manager-example product](https://github.com/pivotal-cf-experimental/ops-manager-example)
 
-## <a id="public-ip"></a>Public IP address for on-demand service instance groups
+## <a id="public-ip"></a>Public IP Address for On-Demand Service Instance Groups
 
 Ops Manager 1.9 RC1+ provides a VM extension called `public_ip` in the BOSH Director's cloud config. This can be used in the on-demand service broker's manifest to give instance groups a public IP address. This IP is only used for outgoing traffic to the internet from VMs with the `public_ip` extension. All internal traffic / incoming connections need to go over the private IP.
 
@@ -157,7 +157,7 @@ job_types:
       label: "Internet Connected VMs (on supported IaaS providers)"
 ```
 
-## <a id="floating-stemcell"></a>Floating stemcells
+## <a id="floating-stemcell"></a>Floating Stemcells
 
 Ops Manager provides a feature called [Floating Stemcells](https://docs.pivotal.io/pivotalcf/1-9/customizing/understanding-stemcells.html) that allows PCF to quickly propagate a patched stemcell to all VMs in the deployment that have the same compatible stemcell. Both the broker deployment and the service instances deployed by the On-Demand Broker can make use of this feature. Enabling this feature can help ensure that all of your service instances are patched to the latest stemcell.
 
@@ -194,7 +194,7 @@ stemcell_criteria:
 
 Please note, configuring this value to `false` will disable this feature.
 
-## <a id="errands"></a>On-Demand Broker errands
+## <a id="errands"></a>On-Demand Broker Errands
 
 In the reference [Kafka tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile) 
 we have demonstrated how the errands in the on-demand broker release can be used.
@@ -228,7 +228,7 @@ The example [Kafka
 tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile)
 shows how to create a tab with fields to configure the parameters for this errand. 
 The example tile has constraints to ensure the number of simultaneous
-upgrades is greater than one, and the number of canaries is greater than zero.
+upgrades is greater than one and the number of canaries is greater than zero.
 
 ## <a id="secure-creds"></a>Secure Binding Credentials
 
