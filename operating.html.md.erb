@@ -926,19 +926,18 @@ To upgrade all existing service instances after the service offering has been up
 
       <li>
         <code>canaries</code> sets the number of canary instances to upgrade first. 
+        If all canary instances upgrade, the remaining instances are upgraded.
+        If a canary instance fails to upgrade or the <code>attempt_limit</code> 
+        is reached, the upgrade fails. 
+        No further instances are upgraded and the errand exits with an error, 
+        however, all in-flight upgrades can complete.
         Canary instances are upgraded in parallel, respecting the <code>max_in_flight</code> value.
-        Canaries cause the upgrade to fail if a canary instance fails to upgrade 
-        or the <code>attempts_limit</code> is reached.
-        If all canary instances upgrade, the remaining instances are upgraded. 
-        If a canary instance fails to upgrade, no further instances are upgraded and the errand exits with an error, 
-        however, all in-flight upgrades are allowed to complete. 
-
 
         <p class="note"> <strong>Note:</strong> Canary instances are selected in 
           a non-deterministic way using all available instances. 
           If a selected instance is busy or was deleted, another instance is selected. 
           If all instances are busy, the errand retries, respecting the 
-          <code>attempts_limit</code> and <code>attempt_interval_seconds</code>.</p> 
+          <code>attempt_limit</code> and <code>attempt_interval_seconds</code>.</p> 
       </li>
 
       <li><code>polling_interval_seconds</code> controls
