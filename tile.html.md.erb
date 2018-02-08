@@ -212,18 +212,23 @@ Pre-delete:
 
 These errands are documented in the [operating section](operating.html#management).
 
-### Service instances upgrades
+### Upgrade All Service Instances Errand
 
 The `upgrade-all-service-instances` errand can be configured with two
-parameters: the number of simultaneous upgrades, and the number of canary
-instances. For more details about these parameters, see the errand
-[docs](operating.html#upgrade-all-instances).
+parameters: 
 
-In our example [Kafka
+- The number of simultaneous upgrades
+
+- The number of canary instances 
+
+For more information about these parameters, see 
+[Upgrade All Service Instances](operating.html#upgrade-all-instances).
+
+The example [Kafka
 tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile)
-we have shown how to create a tab with fields to configure the parameters. In
-particular, we have added constraints to ensure the number of simultaneous
-upgrades is greater than one and the number of canaries is greater than zero.
+shows how to create a tab with fields to configure the parameters for this errand. 
+The example tile has constraints to ensure the number of simultaneous
+upgrades is greater than one, and the number of canaries is greater than zero.
 
 ## <a id="secure-creds"></a>Secure Binding Credentials
 
