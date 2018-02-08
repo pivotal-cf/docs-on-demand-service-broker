@@ -825,7 +825,8 @@ For more complete code examples please take a look at the [kafka adapter](https:
 
 Service authors can enable configuration of BOSH Features in their service adapters.
 
-The SDK provides the following [BoshFeatures struct](https://github.com/pivotal-cf/on-demand-services-sdk/blob/49cf3649cd34db8715b673d42e36710517e0f30e/bosh/bosh_manifest.go#L36-L45) with the possibility of passing extra features via the `ExtraFeatures` map.
+The SDK provides the following [BoshFeatures struct](https://github.com/pivotal-cf/on-demand-services-sdk/blob/49cf3649cd34db8715b673d42e36710517e0f30e/bosh/bosh_manifest.go#L36-L45) 
+with the possibility of adding extra features via the `ExtraFeatures` map.
 
 ```
 type BoshFeatures struct {
@@ -836,6 +837,6 @@ type BoshFeatures struct {
 }
 ```
 
-An example of utilizing a BOSH feature can be seen in the [redis adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/4f78b89d791733d025ae96f4056eb6840989818e/adapter/redis_manifest_generator.go#L215-L222)
+For an example, see [redis adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/4f78b89d791733d025ae96f4056eb6840989818e/adapter/redis_manifest_generator.go#L215-L222).
 
-For more information on BOSH Features see [the BOSH documentation](https://bosh.io/docs/manifest-v2.html#features).
+For more information on BOSH Features, see [the BOSH documentation](https://bosh.io/docs/manifest-v2.html#features).
