@@ -751,7 +751,7 @@ You should use the same version of the SDK as your ODB release. For example if y
 
 For the generated BOSH manifest the SDK supports properties in two levels: manifest (global) and job level. Global properties are [deprecated in BOSH](http://bosh.io/docs/manifest-v2.html#properties), in favour of job level properties and job links. As an example, refer to the [Kafka example service adapter property generation](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/ffe85fecc2d9cf1b663fab418875e67ddcf3327f/adapter/generate_manifest.go#L79-L123).
 
-### Usage
+### <a id="sdk_usage"></a>Usage
 
 Get the SDK:
 
@@ -781,7 +781,7 @@ func main() {
 }
 ```
 
-### Interfaces
+### <a id="interfaces"></a>Interfaces
 
 The `HandleCommandLineInvocation` function accepts structs that implement these interfaces:
 
@@ -800,12 +800,12 @@ type DashboardUrlGenerator interface {
 }
 ```
 
-### Helpers
+### <a id="helper_function"></a>Helpers
 
 The helper function `GenerateInstanceGroupsWithNoProperties` can be used to generate the instance groups for the BOSH manifest from the arguments passed to the adapter.
 One of the inputs for this function is the mapping of instance groups to jobs for the deployment (`deploymentInstanceGroupsToJobs`). This mapping must be provided by the service author. This function will not address job level properties for the generated instance groups; these properties must also be provided by the service author. For an example implementation see the [job mapping in the Kafka example adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/ffe85fecc2d9cf1b663fab418875e67ddcf3327f/adapter/generate_manifest.go#L14-L20).
 
-### Error handling
+### <a id="error_handling"></a>Error handling
 
 Any error returned by the interface functions is considered to be for the Cloud Foundry CLI user and will accordingly be printed to stdout.
 
@@ -821,7 +821,7 @@ serviceadapter.NewAppGuidNotProvidedError()
 
 For more complete code examples please take a look at the [kafka adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter) or the [redis adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter).
 
-### BOSH Features
+### <a id="bosh_features"></a>BOSH Features
 
 Service authors can enable configuration of BOSH Features in their service adapters.
 
