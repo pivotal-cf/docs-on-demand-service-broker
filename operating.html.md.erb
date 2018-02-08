@@ -919,9 +919,9 @@ To upgrade all existing service instances after the service offering has been up
       <ul>
       <li><code>max_in_flight</code> sets the limit for the number of upgrades
       occurring concurrently.  The number of simultaneous upgrades is limited by
-      the number of available BOSH workers (see <a
+      the number of available BOSH workers. See the <a
       href="https://bosh.io/jobs/director?source=github.com/cloudfoundry/bosh#p=director.workers">BOSH
-      docs</a>).  Set the <code>max_in_flight</code> value to lower than this
+      docs</a>.  Set the <code>max_in_flight</code> value to lower than this
       limit to avoid over-saturating BOSH.  </li>
 
       <li>
@@ -929,7 +929,7 @@ To upgrade all existing service instances after the service offering has been up
         If all canary instances upgrade, the remaining instances are upgraded.
         If a canary instance fails to upgrade or the <code>attempt_limit</code> 
         is reached, the upgrade fails. 
-        No further instances are upgraded and the errand exits with an error, 
+        No further instances are upgraded, and the errand exits with an error;
         however, all in-flight upgrades can complete.
         Canary instances are upgraded in parallel, respecting the <code>max_in_flight</code> value.
 
@@ -944,11 +944,11 @@ To upgrade all existing service instances after the service offering has been up
       the wait between checking the status of the successfully submitted BOSH upgrade job. </li>
     </ul>
     If service instances
-      have in-progress BOSH operations, upgrade requests will be rejected and the errand will queue those instances
+      have in-progress BOSH operations, upgrade requests are rejected and the errand queues those instances
       for a retry:
     <ul>
       <li><code>attempt_interval_seconds</code> determines the time to wait between retrying upgrades.</li>
-      <li><code>attempt_limit</code> sets the number of times these instances will be retried for upgrade.</li>
+      <li><code>attempt_limit</code> sets the number of times these instances are retried for upgrade.</li>
     </ul>
     </p>
 </li>
