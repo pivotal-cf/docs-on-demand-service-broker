@@ -212,6 +212,19 @@ Pre-delete:
 
 These errands are documented in the [operating section](operating.html#management).
 
+### Service instances upgrades
+
+The `upgrade-all-service-instances` errand can be configured with two
+parameters: the number of simultaneous upgrades, and the number of canary
+instances. For more details about these parameters, see the errand
+[docs](operating.html#upgrade-all-instances).
+
+In our example [Kafka
+tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile)
+we have shown how to create a tab with fields to configure the parameters. In
+particular, we have added constraints to ensure the number of simultaneous
+upgrades is greater than one and the number of canaries is greater than zero.
+
 ## <a id="secure-creds"></a>Secure Binding Credentials
 
 Runtime CredHub can securely store service instance credentials. 
