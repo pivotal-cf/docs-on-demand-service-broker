@@ -924,21 +924,22 @@ To upgrade all existing service instances after the service offering has been up
       docs</a>).  Set the <code>max_in_flight</code> value to lower than this
       limit to avoid over-saturating BOSH.  </li>
 
-      <li><code>canaries</code> sets the number of canary instances to upgrade
-      first, selected in a non-deterministic way using all available instances.
-      If all selected instances upgrade successfully, the remaining instances
-      will be upgraded. If a canary instance fails to upgrade, no further
-      instances will be upgraded and the errand will exit with error (all
-      in-flight upgrades will be allowed to complete). If a selected instance is
-      busy or was deleted, another instance will be selected (if available).
-      Note that canary instances will be upgraded in parallel, respecting the
-      <code>max_in_flight</code> value. If all instances are busy, the errand
-      will retry, respecting the <code>attempts_limit</code> and
-      <code>attempt_interval_seconds</code>.
+      <li>
+        <code>canaries</code> sets the number of canary instances to upgrade first. 
+        Canary instances are upgraded in parallel, respecting the <code>max_in_flight</code> value.
+        Canaries cause the upgrade to fail if a canary instance fails to upgrade 
+        or the <code>attempts_limit</code> is reached.
+        If all canary instances upgrade, the remaining instances are upgraded. 
+        If a canary instance fails to upgrade, no further instances are upgraded and the errand exits with an error, 
+        however, all in-flight upgrades are allowed to complete. 
 
-      <p class="note"> <strong>Note:</strong> canaries will cause the
-      upgrade to fail if, and only if, a canary instance fail to upgrade or the
-      <code>attempts_limit</code> is reached.</p> </li>
+
+        <p class="note"> <strong>Note:</strong> Canary instances are selected in 
+          a non-deterministic way using all available instances. 
+          If a selected instance is busy or was deleted, another instance is selected. 
+          If all instances are busy, the errand retries, respecting the 
+          <code>attempts_limit</code> and <code>attempt_interval_seconds</code>.</p> 
+      </li>
 
       <li><code>polling_interval_seconds</code> controls
       the wait between checking the status of the successfully submitted BOSH upgrade job. </li>
