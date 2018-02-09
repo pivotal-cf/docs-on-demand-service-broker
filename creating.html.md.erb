@@ -813,8 +813,8 @@ also be provided by the service author. For an example implementation see the
 adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/ffe85fecc2d9cf1b663fab418875e67ddcf3327f/adapter/generate_manifest.go#L14-L20).
 
 The SDK provides also the methods `ArbitraryContext` and `Platform`. These are
-used to extract the `context` property and the `platform` property, within
-`context` from the request parameters. The context in the response is a feature of [OSBAPI spec
+used to extract the `context` property from the request parameters and the `platform` property from within the
+`context`. The context in the response is a feature of [OSBAPI spec
 v2.13](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md)
 and is used to passthrough information about the environment in which the
 platform or application is executing.
