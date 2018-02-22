@@ -143,12 +143,28 @@ Service-level and plan-level quota use, and total number of service instances,
 are available through the on-demand broker metrics emitted to Loggregator.
 These metrics are listed below:
 
-| **Metric name**                                                         | **Description**                                            |
-|-------------------------------------------------------------------------|------------------------------------------------------------|
-| on-demand-broker/SERVICE-NAME/quota_remaining             | Quota remaining for all instances across all plans |
-| on-demand-broker/SERVICE-NAME/PLAN-NAME/quota_remaining | Quota remaining for a specific plan                      |
-| on-demand-broker/SERVICE-NAME/total_instances             | Total instances created across all plans                   |
-| on-demand-broker/SERVICE-NAME/PLAN-NAME/total_instances | Total instances created for a specific plan                   |
+<table>
+	<tr>
+		<th><b>Metric Name</b></th>
+		<th><b>Description</b></th>
+	</tr>
+	<tr>
+		<td>on-demand-broker/SERVICE-NAME/quota_remaining </td>
+		<td>Quota remaining for all instances across all plans</td>
+	</tr>
+	<tr>
+		<td>on-demand-broker/SERVICE-NAME/PLAN-NAME/quota_remaining </td>
+		<td>Quota remaining for a specific plan</td>
+	</tr>
+	<tr>
+		<td>on-demand-broker/SERVICE-NAME/total_instances</td>
+		<td>Total instances created across all plans</td>
+	</tr>
+	<tr>
+		<td>on-demand-broker/SERVICE-NAME/PLAN-NAME/total_instances</td>
+		<td>Total instances created for a specific plan</td>
+	</tr>
+</table>
 
 <p class="note"><strong>Note</strong>: Quota metrics are not emitted if no quota has been set.</p>
 
