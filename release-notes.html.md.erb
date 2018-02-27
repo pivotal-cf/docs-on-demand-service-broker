@@ -3,7 +3,7 @@ title: On-Demand Services SDK Release Notes
 owner: London Services Enablement
 ---
 
-# <a id="release-notes"></a>v0.18.0 Release Notes
+# <a id="release-notes"></a>v0.20.0 Release Notes
 
 ## <a id="minimum-version-requirements"></a>Minimum Version Requirements
 
@@ -16,37 +16,34 @@ owner: London Services Enablement
 
 ## <a id="new-features"></a>New Features
 
-- Added support for Cloud Foundry's "Secure Service Instance Credentials"
-workflow. The On Demand Broker optionally stores credentials in CredHub and
-returns a reference to the credential location in CredHub. Cloud Foundry
-resolves this reference for the application process env in the container. This
-feature requires PCF 2.0. For more information, see [Enabling Secure
-Binding](./operating.html#secure-binding).
-- Added support for using colocated errands for `post_deploy` and `pre_delete`
-service instance [lifecycle errands](./operating.html#lifecycle-errands). This
-requires PCF 1.12 (BOSH v263).  See the [BOSH
-docs](https://bosh.io/docs/errands.html) for more details.
-- Ability to disable startup checks to stop ODB reaching out to Cloud Foundry
-during startup, useful when restoring On Demand Services and Cloud Foundry is
-not available. Not recommended for regular operations.  Use
-`broker.disable_cf_startup_checks`.
+- `upgrade-all-service-instances` errand supports parallel upgrades and
+  the ability to select the number of canary instances that should be upgraded
+  first. Upgrade `canaries`, when configured alongside a `max_in_flight`
+  greater than 1, specify the number of service instances which must first be
+  successfully upgraded, before the `upgrade-all-instances-errand` will
+  attempt to upgrade the remaining instances.
+- Added support for Credhub v1.7.
+- Added support for the OSBAPI
+  [context object](https://github.com/openservicebrokerapi/servicebroker/blob/master/profile.md#context-object).
+  This allows service authors to obtain platform-specific information
+  that is sent on provision, update, and bind requests.
+- Provide a summary message for upgrade-all-service-instances errand.
+- Expose BOSH error messages to application developers when `expose_bosh_errors`
+  flag is enabled in manifest.
+- Bump to Golang 1.10
+- Addons support in the BOSH manifest
+- Added `instance_groups.env` property that accepts an arbitrary hash,
+  to support passing through undocumented properties
+- Added support for optional `features` block, which enables BOSH features
+  to be toggled in service instance deployments.
 
 ## <a id="breaking-changes"></a>Breaking Changes
 
-- If you are using `post_deploy` or `pre_delete` service instance lifecycle
-errands, you need to update your manifest:
+- The `polling_interval` property has been renamed to `polling_interval_seconds`
+  for the following errands: `upgrade-all-service-instances`,
+  `delete-all-service-instances`,
+  `delete-all-service-instances-and-deregister-broker`.
 
-```
-    plans:
-      - name: CF-MARKETPLACE-PLAN-NAME
-        lifecycle_errands:
-          post_deploy:
-            name: POST-DEPLOY-ERRAND-JOB
-            instances: [SERVICE-RELEASE-JOB/0]
-          pre_delete:
-            name: PRE-DELETE-ERRAND-JOB
-            instances: [SERVICE-RELEASE-JOB/0]
-```
 ## <a id="bug-fixes"></a>Bug fixes
 
 - None
