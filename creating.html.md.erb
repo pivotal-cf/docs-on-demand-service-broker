@@ -73,6 +73,9 @@ A Service Adapter is an executable invoked by ODB. It is expected to respond to 
 - `dashboard-url`
   Generate an optional URL of a web-based management user interface for the service instance.
 
+- `generate-plan-schemas`
+  Generate a JSON schema to validate service-specific configuration parameters. It requires the JSON of a service plan passed via the `--plan-json` flag.
+
 - `create-binding`
   Create (unique, if possible) credentials for the service instance, printing them to stdout as JSON.
 
@@ -732,6 +735,65 @@ For example
 <p class="note"><strong>Note</strong>: This parameter is different from the create-binding `request-params-JSON` parameter, and in particular
 does not include `parameters` or `bind_resource`.</p>
 
+---
+
+### <a id="generate-plan-schemas"></a>generate-plan-schemas
+
+```
+service-adapter generate-plan-schemas [--plan-json]
+```
+
+The generate-plan-schemas subcommand takes a service plan JSON and returns a schema that can be used to validate service-specific configuration parameters.
+
+##### <a id="generate-plan-schemas-output"></a>Output
+---
+
+The following table describes the supported exit codes and output for the `generate-plan-schemas` subcommand:
+
+#### Supported Exit Codes for delete-binding
+| exit code     | Description            | Output                                                                                                                           |
+|:--------------|:-----------------------|:---------------------------------------------------------------------------------------------------------------------------------|
+| 0             | success                | No output is required                                                                                                            |
+| 10            | not implemented        |                                                  |
+| anything else | failure                | Stdout: optional error message for CF CLI users<br/> Stderr: error message for operator<br/> ODB will log both stdout and stderr |
+
+##### Parameters
+---
+
+
+<a id="plan-json"></a>**plan-json**
+
+The service plan as JSON corresponding to the JSON schema needed.
+
+For example
+
+```json
+{
+  "properties": {
+    "persistence": true
+  },
+  "lifecycle_errands": {
+    "post_deploy": {},
+    "pre_delete": {}
+  },
+  "instance_groups": [
+    {
+      "name": "my-example-server",
+      "vm_type": "t2.small",
+      "persistent_disk_type": "10GB",
+      "instances": 1,
+      "networks": [
+        "default"
+      ],
+      "azs": [
+        "z1"
+      ]
+    }
+  ]
+}
+```
+
+
 ## <a id="packaging"></a>Packaging
 
 This topic describes workflows for setting up and maintaining of a service instance. The diagrams show which tasks are undertaken by the ODB and which require interaction with the Service Adapter.
@@ -759,7 +821,7 @@ Get the SDK:
 go get github.com/pivotal-cf/on-demand-services-sdk
 ```
 
-In the main function for the service adapter, call the `HandleCommandLineInvocation` function:
+In the main function for the service adapter, call the `HandleCLI` function:
 
 ```go
 package main
@@ -777,15 +839,29 @@ func main() {
   manifestGenerator := adapter.ManifestGenerator{}
   binder := adapter.Binder{}
   dashboardUrlGenerator := adapter.DashboardUrlGenerator{}
-  serviceadapter.HandleCommandLineInvocation(os.Args, manifestGenerator, binder, dashboardUrlGenerator)
+	handler := serviceadapter.CommandLineHandler{
+  	ManifestGenerator:     manifestGenerator,
+  	Binder:                binder,
+  	DashboardURLGenerator: &adapter.DashboardUrlGenerator{},
+  	SchemaGenerator:       adapter.SchemaGenerator{},
+	}
+  serviceadapter.HandleCLI(os.Args, handler)
 }
 ```
+<p class="note"><strong>Note</strong>: The HandleCommandLineInvocation function is being deprecated but its functionality can be seen <a href="https://docs.pivotal.io/svc-sdk/odb/0-19/creating.html#usage">here</a>.</p>
 
 ### <a id="interfaces"></a>Interfaces
 
-The `HandleCommandLineInvocation` function accepts structs that implement these interfaces:
+The `HandleCLI` function accepts structs that implement these interfaces:
 
 ```go
+type CommandLineHandler struct {
+	ManifestGenerator     ManifestGenerator
+	Binder                Binder
+	DashboardURLGenerator DashboardUrlGenerator
+	SchemaGenerator       SchemaGenerator
+}
+
 type ManifestGenerator interface {
 	GenerateManifest(serviceDeployment ServiceDeployment, plan Plan, requestParams RequestParameters, previousManifest *bosh.BoshManifest, previousPlan *Plan) (bosh.BoshManifest, error)
 }
@@ -798,24 +874,28 @@ type Binder interface {
 type DashboardUrlGenerator interface {
 	DashboardUrl(instanceID string, plan Plan, manifest bosh.BoshManifest) (DashboardUrl, error)
 }
+
+type SchemaGenerator interface {
+	GeneratePlanSchema(plan Plan) (PlanSchema, error)
+}
 ```
 
 ### <a id="helper_function"></a>Helpers
 
-The helper function `GenerateInstanceGroupsWithNoProperties` can generate the 
-instance groups for the BOSH manifest from the arguments passed to the adapter. 
+The helper function `GenerateInstanceGroupsWithNoProperties` can generate the
+instance groups for the BOSH manifest from the arguments passed to the adapter.
 
-One of the inputs for this function is `deploymentInstanceGroupsToJobs`, 
-where instance groups are mapped to jobs for the deployment. 
-The service author must provide this mapping. 
-The helper function does not address job level properties for the generated instance groups; 
+One of the inputs for this function is `deploymentInstanceGroupsToJobs`,
+where instance groups are mapped to jobs for the deployment.
+The service author must provide this mapping.
+The helper function does not address job level properties for the generated instance groups;
 the service author must provide these properties.
 For an example implementation, see the job mapping in the [Kafka example
 adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go#L15-L21).
 
 The SDK provides the methods `ArbitraryContext` and `Platform`. These are
 used to extract the `context` property from the request parameters and the `platform` property from within the
-`context`. 
+`context`.
 
 The context in the response is a feature of [Open Service Broker API (OSBAPI) specification
 v2.13](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md)
