@@ -47,7 +47,7 @@ A service adapter is a binary that is called out by the ODB when it wants to do 
 
 The above diagram shows where responsibility lies for each aspect of the ODB workflow.
 
-The service author can focus on building the BOSH release of their service and provide a service adapter binary that manages manifest generation,  binding, and unbinding. The ODB manages all interactions with Cloud Foundry and BOSH.
+The service author can focus on building the BOSH release of their service and provide a service adapter binary that manages manifest generation, schema generation, binding, and unbinding. The ODB manages all interactions with Cloud Foundry and BOSH.
 
 Thanks to BOSH v2, service authors can define resources globally (in **Cloud Config**). This makes manifests portable across BOSH CPIs and lets them be substantially smaller than old-style manifests. The ODB takes advantage of other BOSH v2 features as well, including dynamic IP management, availability zones, and links through which deployed BOSH instances can access IP addresses and other information from other instances.
 
