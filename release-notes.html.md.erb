@@ -22,8 +22,9 @@ owner: London Services Enablement
   greater than 1, specify the number of service instances which must first be
   successfully upgraded, before the `upgrade-all-instances-errand` will
   attempt to upgrade the remaining instances.
+  [See full documentation here](https://docs.pivotal.io/svc-sdk/odb/0-20/operating.html#upgrade-all-instances)
 - Added support for Credhub v1.7.
-- Added support for the OSBAPI
+- Added support for the OSBAPI v2.13
   [context object](https://github.com/openservicebrokerapi/servicebroker/blob/master/profile.md#context-object).
   This allows service authors to obtain platform-specific information
   that is sent on provision, update, and bind requests.
@@ -32,10 +33,13 @@ owner: London Services Enablement
   flag is enabled in manifest.
 - Bump to Golang 1.10
 - Addons support in the BOSH manifest
-- Added `instance_groups.env` property that accepts an arbitrary hash,
-  to support passing through undocumented properties
+- Added `instance_groups.env` to `service_catalog.plans`. This property accepts
+  an arbitrary hash, to support passing through undocumented properties
 - Added support for optional `features` block, which enables BOSH features
   to be toggled in service instance deployments.
+  [See full documentation here](https://docs.pivotal.io/svc-sdk/odb/0-20/creating.html#bosh_features)
+- Amend endpoints for deleting service instances and fetching catalog to be
+  compliant with OSBAPI v2.13 [specification](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md)
 
 ## <a id="breaking-changes"></a>Breaking Changes
 
