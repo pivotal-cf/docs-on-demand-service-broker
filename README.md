@@ -1,7 +1,9 @@
 
 # How the branches here work
 
-Use **master** for next the unreleased version, and numbered branches for the corresponding live releases. For example:
+Use **master** for next the unreleased version, and numbered branches for the corresponding live releases. 
+
+For example:
 
 | Branch name | Use for… |
 |-------------| ------|
