@@ -743,19 +743,21 @@ does not include `parameters` or `bind_resource`.</p>
 service-adapter generate-plan-schemas [--plan-json]
 ```
 
-The generate-plan-schemas subcommand takes a service plan JSON and returns a schema that can be used to validate service-specific configuration parameters.
+The `generate-plan-schemas` subcommand takes a service plan JSON and returns a 
+schema that validates service-specific configuration parameters.
 
 ##### <a id="generate-plan-schemas-output"></a>Output
 ---
 
-The following table describes the supported exit codes and output for the `generate-plan-schemas` subcommand:
+The following table describes the supported exit codes and output for the 
+`generate-plan-schemas` subcommand:
 
 #### Supported Exit Codes for delete-binding
 | exit code     | Description            | Output                                                                                                                           |
 |:--------------|:-----------------------|:---------------------------------------------------------------------------------------------------------------------------------|
 | 0             | success                | No output is required                                                                                                            |
 | 10            | not implemented        |                                                  |
-| anything else | failure                | Stdout: optional error message for CF CLI users<br/> Stderr: error message for operator<br/> ODB will log both stdout and stderr |
+| anything else | failure                | Stdout: optional error message for cf CLI users<br/> Stderr: error message for operator<br/> ODB will log both stdout and stderr |
 
 ##### Parameters
 ---
