@@ -906,6 +906,7 @@ To upgrade all existing service instances after the service offering has been up
           release: ODB-RELEASE-NAME
           properties:
             canaries: NUMBER-OF-CANARIES # defaults to 0
+            canaries_selection_params: {}
             max_in_flight: NUMBER-OF-PARALLEL-UPGRADES # defaults to 1
             polling_interval_seconds: POLLING-INTERVAL-IN-SECONDS # defaults to 60
             attempt_interval_seconds: ATTEMPT-INTERVAL-IN-SECONDS # defaults to 60
@@ -980,7 +981,6 @@ The Service Instances API definition is at version 0.1.0 and should be considere
 
 ```
 HTTP Method: GET
-Parameters: None
 Authentication: http/basic
 Body: None
 ```
@@ -1001,6 +1001,43 @@ Body:
 ```
 
 The plan\_ids listed in the response need to correspond to the plan\_ids that appear in each plan's definition in the On Demand Broker deployment manifest, not any other id that may be assigned by the service controller.
+
+When the on-demand service broker is configured to use `canary_selection_params`, the service-instances API needs to be changed accordingly. `canary_selection_params` property defines how to filter the canary instances from of a set of instances. Therefore, the Service Instances API needs to respond a filtered list of instances when the `canary_selection_params` are passed as query parameters.
+
+For instance, if the `canary_selection_params` are configured as following:
+
+```
+canary_selection_params:
+  cf_org: staging-org
+  cf_space: staging-space
+```
+
+Then, will return a filtered list of instances when `cf_org` and `cf_space` are passed as query parameters in the request.
+
+<strong>Request:</strong>
+
+```
+HTTP Method: GET
+Query Parameters: ?cf_org=staging-org&cf_space=staging-space
+Authentication: http/basic
+Body: None
+```
+
+<strong>Response:</strong>
+
+```
+Status: 200 OK if successful, 3xx, 4xx, 5xx HTTP codes for other scenarios.
+Content-Type: application/json
+Body:
+"[
+  {
+    "service_instance_id": <text/guid>,
+    "plan_id": <text/guid>
+  },
+  ...
+]"
+```
+The filtered list of instance will be used as canary instances and upgraded before the rest. Moreover, the number of canaries taken from this list can be configured by specifying the `canaries` property in the on-demand service broker manifest.
 
 To configure the `upgrade-all-service-instances` errand to connect to a Service Instances API provider, update the errand's configuration in the deployment manifest to include the following additional properties:
 
