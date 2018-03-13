@@ -74,7 +74,8 @@ A Service Adapter is an executable invoked by ODB. It is expected to respond to 
   Generate an optional URL of a web-based management user interface for the service instance.
 
 - `generate-plan-schemas`
-  Generate a JSON schema to validate service-specific configuration parameters. It requires the JSON of a service plan passed via the `--plan-json` flag.
+  Generate a JSON schema to validate service-specific configuration parameters. 
+  It requires the JSON of a service plan passed via the `--plan-json` flag.
 
 - `create-binding`
   Create (unique, if possible) credentials for the service instance, printing them to stdout as JSON.
@@ -732,8 +733,9 @@ For example
 ```
 
 
-<p class="note"><strong>Note</strong>: This parameter is different from the create-binding `request-params-JSON` parameter, and in particular
-does not include `parameters` or `bind_resource`.</p>
+<p class="note"><strong>Note</strong>: This parameter is different from the 
+  create-binding <code>request-params-JSON</code> parameter, and in particular
+  does not include <code>parameters</code> or <code>bind_resource</code>.</p>
 
 ---
 
@@ -743,8 +745,8 @@ does not include `parameters` or `bind_resource`.</p>
 service-adapter generate-plan-schemas [--plan-json]
 ```
 
-The `generate-plan-schemas` subcommand takes a service plan JSON and returns a 
-schema that validates service-specific configuration parameters.
+The `generate-plan-schemas` subcommand takes the JSON for a service plan and 
+returns a schema that validates service-specific configuration parameters.
 
 ##### <a id="generate-plan-schemas-output"></a>Output
 ---
@@ -765,7 +767,7 @@ The following table describes the supported exit codes and output for the
 
 <a id="plan-json"></a>**plan-json**
 
-The service plan as JSON corresponding to the JSON schema needed.
+The service plan as JSON required to generate the JSON schema.
 
 For example
 
