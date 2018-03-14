@@ -236,6 +236,7 @@ instance_groups:
           disable_ssl_cert_verification: true|false # optional, defaults to false. This should NOT set to true in production
           shutdown_timeout_in_seconds: 60 # optional, defaults to 60 seconds. This allows the broker to gracefully wait for any open requests to complete before shutting down.
           expose_operational_errors: true|false # optional, defaults to false. This allows for BOSH operational errors to be displayed for the CF user.
+          enable_plan_schemas: true|false # optional, defaults to false. If set, includes plan schemas in the catalog. The broker will error if the adapter does not implement generate-plan-schemas.
           cf:
             url: CF-API-URL
             root_ca_cert: CA-CERT-FOR-CLOUD-CONTROLLER # optional, see SSL certificates
