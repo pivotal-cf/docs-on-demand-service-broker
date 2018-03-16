@@ -907,7 +907,9 @@ To upgrade all existing service instances after the service offering has been up
           release: ODB-RELEASE-NAME
           properties:
             canaries: NUMBER-OF-CANARIES # defaults to 0
-            canaries_selection_params: {}
+            canary_selection_params:
+              cf_org: ORG # specifying service instances to upgrade as canaries
+              cf_space: SPACE # specifying service instances to upgrade as canaries
             max_in_flight: NUMBER-OF-PARALLEL-UPGRADES # defaults to 1
             polling_interval_seconds: POLLING-INTERVAL-IN-SECONDS # defaults to 60
             attempt_interval_seconds: ATTEMPT-INTERVAL-IN-SECONDS # defaults to 60
@@ -928,19 +930,31 @@ To upgrade all existing service instances after the service offering has been up
       limit to avoid over-saturating BOSH.  </li>
 
       <li>
-        <code>canaries</code> sets the number of canary instances to upgrade first. 
+        <code>canaries</code> sets the number of canary instances to upgrade first.
         If all canary instances upgrade, the remaining instances are upgraded.
-        If a canary instance fails to upgrade or the <code>attempt_limit</code> 
-        is reached, the upgrade fails. 
+        If a canary instance fails to upgrade or the <code>attempt_limit</code>
+        is reached, the upgrade fails.
         No further instances are upgraded, and the errand exits with an error;
         however, all in-flight upgrades can complete.
         Canary instances are upgraded in parallel, respecting the <code>max_in_flight</code> value.
 
-        <p class="note"> <strong>Note:</strong> Canary instances are selected in 
-          a non-deterministic way using all available instances. 
-          If a selected instance is busy or was deleted, another instance is selected. 
-          If all instances are busy, the errand retries, respecting the 
-          <code>attempt_limit</code> and <code>attempt_interval_seconds</code>.</p> 
+        <p class="note"> <strong>Note:</strong> Canary instances are selected in
+          a non-deterministic way using all available instances.
+          If a selected instance is busy or was deleted, another instance is selected.
+          If all instances are busy, the errand retries, respecting the
+          <code>attempt_limit</code> and <code>attempt_interval_seconds</code>.</p>
+
+        <li>
+          <code>canary_selection_params</code> can be used to specify the specific org and space desired
+          to source service instances to be used as canaries in an upgrade operation. If <code>canaries</code>
+          is specified, the broker will upgrade that number of instances present in the org and space.
+          If fewer instances are present than specified, the broker will upgrade as many instances as possible
+          in that org and space.
+        </li>
+        <p class="note"> <strong>Note:</strong> If <code>canary_selection_params</code>
+           are specified and no instances exist in that org or space, no canaries will be chosen.
+           If other instances exist, the broker will fail alerting you to chose different selection criteria.
+         </p>
       </li>
 
       <li><code>polling_interval_seconds</code> controls
