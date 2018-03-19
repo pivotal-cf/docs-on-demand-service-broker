@@ -945,10 +945,10 @@ To upgrade all existing service instances after the service offering has been up
           <code>attempt_limit</code> and <code>attempt_interval_seconds</code>.</p>
 
         <li>
-          <code>canary_selection_params</code> can be used to specify the specific org and space desired
-          to source service instances to be used as canaries in an upgrade operation. If <code>canaries</code>
-          is specified, the broker will upgrade that number of instances present in the org and space.
-          If fewer instances are present than specified, the broker will upgrade as many instances as possible
+          (Optional) Use <code>canary_selection_params</code> to specify an org and a space
+          that you want canaries to be sourced from during an upgrade.
+          If <code>canaries</code> is specified, the broker upgrades that number of instances present in the org and space.
+          If fewer instances are present than specified, the broker upgrades as many instances as possible
           in that org and space.
         </li>
         <p class="note"> <strong>Note:</strong> If <code>canary_selection_params</code>
