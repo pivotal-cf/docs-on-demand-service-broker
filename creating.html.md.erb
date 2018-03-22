@@ -250,30 +250,31 @@ Plan for which the manifest is supposed to be generated
 _plan-JSON schema_
 
 | field                                     | Type                     | Description                                                                                                                            |
-|:------------------------------------------|:-------------------------|:---------------------------------------------------------------------------------------------------------------------------------------|
-| instance_groups                           | array of instance groups | instance groups configured for the plan                                                                                                |
-| instance_group.name                       | string                   | name of the instance group                                                                                                             |
-| instance_group.vm\_type                   | string                   | the vm_type configured for the instance group, matches one in the cloud config on the director                                         |
-| instance_group.vm\_extensions             | array of strings         | Optional, the vm_extensions configured for the instance group, must be present in the cloud config on the director                     |
-| instance_group.persistent\_disk\_type     | string                   | Optional, the persistent\_disk\_type configured for the instance group, matches one in the cloud config on the director                |
-| instance_group.networks                   | array of strings         | the networks the instance group is supposed to be in                                                                                   |
-| instance_group.instances                  | int                      | number of instances for the instance group                                                                                             |
-| instance_group.lifecycle                  | string                   | Optional, specifies the kind of workload the instance group represents. Valid values are `service` and `errand`; defaults to `service` |
-| instance_group.azs                        | array of strings         | a list of availability zones that the instance groups should be striped across                                                         |
-| instance_group.migrated\_from             | array of migrations      | Optional, list of [bosh migrations](https://bosh.io/docs/migrated-from.html)                                                           |
-| migration.name                            | string                   | Optional, name of the instance group to be migrated from                                                                               |
-| properties                                | map                      | properties which the operator has configured for deployments of the current plan                                                       |
-| lifecycle\_errands                        | map                      | Optional, details of post-deploy and pre-delete errands                                                                                |
-| lifecycle\_errands.post\_deploy.name      | string                   | Optional, name of post-deploy errand                                                                                                   |
-| lifecycle\_errands.post\_deploy.instances | array of strings         | Optional, for a colocated errand, specify a list of INSTANCE-NAME/INSTANCE_IDX to run the errand                                 |
-| lifecycle\_errands.pre\_delete.name       | string                   | Optional, name of pre-delete errand                                                                                                    |
-| lifecycle\_errands.pre\_delete.instances  | array of strings         | Optional, for a colocated errand, specify a list of INSTANCE-NAME/INSTANCE_IDX to run the errand                                 |
-| update                                    | map                      | update block which the operator has configured for deployments of the current plan                                                     |
-| update.canaries                           | int                      | plan-specific number of canary instances                                                                                               |
-| update.max\_in\_flight                    | int                      | plan-specific maximum number of non-canary instances to update in parallel                                                             |
-| update.canary\_watch\_time                | string                   | plan-specific time in milliseconds that the BOSH Director sleeps before checking whether the canary instances are healthy              |
-| update.update\_watch\_time                | string                   | plan-specific time in milliseconds that the BOSH Director sleeps before checking whether the non-canary instances are healthy          |
-| update.serial                             | boolean                  | Optional, plan-specific flag to deploy instance groups sequentially (`true`), or in parallel (`false`); defaults to `true`             |
+|:------------------------------------------|:----------------------------|:---------------------------------------------------------------------------------------------------------------------------------------|
+| instance_groups                           | array of instance groups    | instance groups configured for the plan                                                                                                |
+| instance_group.name                       | string                      | name of the instance group                                                                                                             |
+| instance_group.vm\_type                   | string                      | the vm_type configured for the instance group, matches one in the cloud config on the director                                         |
+| instance_group.vm\_extensions             | array of strings            | Optional, the vm_extensions configured for the instance group, must be present in the cloud config on the director                     |
+| instance_group.persistent\_disk\_type     | string                      | Optional, the persistent\_disk\_type configured for the instance group, matches one in the cloud config on the director                |
+| instance_group.networks                   | array of strings            | the networks the instance group is supposed to be in                                                                                   |
+| instance_group.instances                  | int                         | number of instances for the instance group                                                                                             |
+| instance_group.lifecycle                  | string                      | Optional, specifies the kind of workload the instance group represents. Valid values are `service` and `errand`; defaults to `service` |
+| instance_group.azs                        | array of strings            | a list of availability zones that the instance groups should be striped across                                                         |
+| instance_group.migrated\_from             | array of migrations         | Optional, list of [bosh migrations](https://bosh.io/docs/migrated-from.html)                                                           |
+| migration.name                            | string                      | Optional, name of the instance group to be migrated from                                                                               |
+| properties                                | map                         | properties which the operator has configured for deployments of the current plan                                                       |
+| lifecycle\_errands                        | map                         | Optional, details of post-deploy and pre-delete errands                                                                                |
+| lifecycle\_errands.post\_deploy.name      | string                      | Optional, name of post-deploy errand                                                                                                   |
+| lifecycle\_errands.post\_deploy.instances | array of strings            | Optional, for a colocated errand, specify a list of INSTANCE-NAME/INSTANCE_IDX to run the errand                                       |
+| lifecycle\_errands.pre\_delete            | array of pre_delete errands | Optional, list of errands to complete before deletion                                                                                  |
+| lifecycle\_errands.pre\_delete.name       | string                      | Optional, name of pre-delete errand                                                                                                    |
+| lifecycle\_errands.pre\_delete.instances  | array of strings            | Optional, for a colocated errand, specify a list of INSTANCE-NAME/INSTANCE_IDX to run the errand                                       |
+| update                                    | map                         | update block which the operator has configured for deployments of the current plan                                                     |
+| update.canaries                           | int                         | plan-specific number of canary instances                                                                                               |
+| update.max\_in\_flight                    | int                         | plan-specific maximum number of non-canary instances to update in parallel                                                             |
+| update.canary\_watch\_time                | string                      | plan-specific time in milliseconds that the BOSH Director sleeps before checking whether the canary instances are healthy              |
+| update.update\_watch\_time                | string                      | plan-specific time in milliseconds that the BOSH Director sleeps before checking whether the non-canary instances are healthy          |
+| update.serial                             | boolean                     | Optional, plan-specific flag to deploy instance groups sequentially (`true`), or in parallel (`false`); defaults to `true`             |
 
 For example
 
@@ -319,12 +320,14 @@ For example
     "post_deploy": {
       "name": "health-check"
     },
-    "pre_delete": {
-      "name": "cleanup",
-      "instances": [
-        "example-server/0"
-      ]
-    }
+    "pre_delete": [
+      {
+        "name": "cleanup",
+        "instances": [
+          "example-server/0"
+        ]
+      }
+    ]
   },
   "update": {
     "canaries": 1,
@@ -454,7 +457,7 @@ For example
   },
   "lifecycle_errands": {
     "post_deploy": {},
-    "pre_delete": {}
+    "pre_delete": []
   },
   "instance_groups": [
     {
@@ -778,7 +781,7 @@ For example
   },
   "lifecycle_errands": {
     "post_deploy": {},
-    "pre_delete": {}
+    "pre_delete": []
   },
   "instance_groups": [
     {
