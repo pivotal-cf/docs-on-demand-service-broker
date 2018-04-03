@@ -429,6 +429,14 @@ The credentials for a given Service Binding are stored with the following format
 The plain-text credentials are stored in CredHub under this key, and the key is
 available under the VCAP_SERVICES environment variable for the application.
 
+## <a id="plan-schemas"></a>Enabling plan schemas
+
+As of [OSBAPI Spec v2.12](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#changes-since-v212),
+ODB supports plan schemas in the service catalog. To use
+this feature, you will need to set the `enable_plan_schemas` flag to `true` (default to `false`). Note that the service adapter must implement the command `generate-plan-schemas` (see [Generate Plan Schemas](creating.html#generate-plan-schemas)), otherwise the broker will fail to deploy.
+
+During provision, bind and update, the broker will validate the incoming configuration parameters against the schema and will error if the parameters don't conform.
+
 ## <a id="route"></a>Route Registration
 
 You can optionally colocate the `route_registrar` job from the [routing release](http://bosh.io/releases/github.com/cloudfoundry-incubator/cf-routing-release?all=1) with the on-demand-service-broker, in order to:
