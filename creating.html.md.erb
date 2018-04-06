@@ -742,24 +742,25 @@ For example
 ### <a id="generate-plan-schemas"></a>generate-plan-schemas
 
 ```
-service-adapter generate-plan-schemas --plan-json PLAN-JSON
+service-adapter generate-plan-schemas --plan-json JSON-FOR-A-SERVICE-PLAN
 ```
 
 The `generate-plan-schemas` subcommand takes the JSON for a service plan and
 returns a schema. 
 The broker uses the schema to validate service-specific configuration parameters.
 Apps Manager uses the schema to generate a form that users can use to populate those parameters.
-The schema must follow the JSON Schema draft-04 format. 
-For more information, see the [Open Service Broker API (OSBAPI) v2.13 
+The schema must be in the JSON Schema draft-04 format.
+
+For more information about the plan schema, see the [Open Service Broker API (OSBAPI) v2.13 
 specification](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#schema-object).
 
-If you do not need to validate all parameters, set the JSON schema field
-`additionalProperties` to `true`. For an example, see the [kafka example
+If you do not want to validate all parameters and want additional parameters to 
+be accepted without constraints, set the JSON schema field `additionalProperties` to `true`. 
+For the location of this field, see the [kafka example
 adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_plan_schemas.go#L43-L59).
-Additional parameters are accepted without constraints.
-For example, you want to accept an undocumented optional parameter for 
-administration purposes that should not be exposed via the Apps Manager UI.
-
+For example, you might use this if you want to accept an 
+undocumented optional parameter, for administration purposes, that should not be 
+exposed through the Apps Manager UI.
 
 ##### <a id="generate-plan-schemas-output"></a>Output
 ---
