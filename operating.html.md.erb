@@ -379,8 +379,14 @@ Currently, most Cloud Foundry deployments use Consul as a DNS provider.
 To enable secure bindings, you must do the following in the ODB manifest:
 
 * Consume the CredHub link.
-* Include the secure binding credentials section.
+* Include the secure binding credentials section with `secure_binding_credentials.enabled`
+set to `true`.
 * If you use Consul as a DNS provider, you may want to consume Consul links to enable DNS.
+
+If the Secure Binding Credentials section is omitted, or if
+`secure_binding_credentials.enabled` is `false`, service credentials, 
+as opposed to a secure reference, are passed through the network to the 
+application's container.
 
 An example manifest snippet, assuming you are connecting to a Cloud
 Foundry deployment, is shown below:
@@ -421,10 +427,7 @@ instance_groups:
 Cloud Foundry UAA with <code>credhub.write</code> and <code>credhub.read</code>
 in its list of authorities.</p>
 
-If the Secure Binding Credentials section is omitted, or if
-`secure_binding_credentials.enabled` is `false`, service credentials, 
-as opposed to a secure reference, are passed through the network to the 
-application's container.
+
 
 ### <a id="credhub-key-format"></a> How credentials are stored on CredHub
 
