@@ -476,7 +476,7 @@ For example
 <br>
 <a id="dashboard-url-manifest"></a>**manifest-YAML**
 
-The current manifest as YAML. The format of the manifest should match the [BOSH] v2 manifest](https://bosh.io/docs/manifest-v2.html).
+The current manifest as YAML. The format of the manifest should match the [BOSH v2 manifest](https://bosh.io/docs/manifest-v2.html).
 
 For example
 
@@ -513,6 +513,11 @@ update:
   max_in_flight: 4
 tags:
   product: my-product
+addons:
+- name: some-addon
+  jobs:
+  - name: my-example-server
+    release: my-service
 ```
 
 ---
