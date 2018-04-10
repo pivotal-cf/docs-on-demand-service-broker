@@ -2,22 +2,33 @@
 sequenceDiagram
   User->>Cloud Controller:cf delete-service
   Cloud Controller->>On Demand Broker:DELETE instance
-  On Demand Broker->>BOSH:run pre-delete errand
+  On Demand Broker->>BOSH:run first pre-delete errand
   BOSH->>On Demand Broker:accepted
   On Demand Broker->>Cloud Controller:accepted
   Cloud Controller->>User: delete in progress
-  loop until errand bosh task is complete
+  loop while the errand is in progress
     Cloud Controller->>On Demand Broker:GET last operation
-    On Demand Broker->>BOSH:GET errand task
+    On Demand Broker->>BOSH:GET first errand task
     BOSH->>On Demand Broker:task in progress
     On Demand Broker->>Cloud Controller:delete in progress
   end
-  Cloud Controller->>On Demand Broker:GET last operation
-  On Demand Broker->>BOSH:GET errand task
-  BOSH->>On Demand Broker:task done
-  On Demand Broker->>BOSH:delete deployment
-  BOSH->>On Demand Broker:accepted
-  loop until delete deployment bosh task is complete
+  loop until there are no more pre-delete errands to run
+    Cloud Controller->>On Demand Broker:GET last operation
+    On Demand Broker->>BOSH: run next pre-delete errand
+    BOSH->>On Demand Broker:accepted
+    On Demand Broker->>Cloud Controller:delete in progress
+    loop while the errand is in progress
+      Cloud Controller->>On Demand Broker: GET last operation
+      On Demand Broker->>BOSH: GET errand task
+      BOSH->>On Demand Broker: task in progress
+      On Demand Broker->>Cloud Controller: delete in progress
+    end
+  end
+  Cloud Controller->>On Demand Broker: GET last operation
+  On Demand Broker->>BOSH: run delete-deployment
+  BOSH->>On Demand Broker: task in progress
+  On Demand Broker->>Cloud Controller: delete in progress
+  loop while delete deployment bosh task is in progress
     Cloud Controller->>On Demand Broker: GET last operation
     On Demand Broker->>BOSH: GET delete deployment task
     BOSH->>On Demand Broker: task in progress

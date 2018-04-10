@@ -20,15 +20,15 @@ In the delete service workflow the service adapter is not invoked.
 
 <%= partial 'mmd/delete_service_workflow.mmd' %>
 
-## <a id="post-deploy"></a>Create/Update Service Instance with Post-Deploy Errand
+## <a id="post-deploy"></a>Create/Update Service Instance with Post-Deploy Errands
 
-ODB will not report create/update succeeded to Cloud Foundry until both the deployment and post-deploy errand have completed successfully.
+ODB will not report create/update succeeded to Cloud Foundry until the deployment and all the post-deploy errands have completed successfully.
 
 <%= partial 'mmd/create_post_deploy_workflow.mmd' %>
 
 ## <a id="pre-delete"></a>Delete Service Instance with Pre-Delete Errand
 
-ODB will not report delete succeeded to Cloud Foundry until both the pre-delete errand and delete deployment have completed successfully.
+ODB will not report delete succeeded to Cloud Foundry until all the pre-delete errands and delete deployment have completed successfully.
 
 <%= partial 'mmd/pre_delete_workflow.mmd' %>
 
