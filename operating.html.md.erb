@@ -529,9 +529,9 @@ The broker will try and wait for any incomplete https requests to complete befor
 
  <p class="note"><strong>Note</strong>: This feature requires BOSH Director v261 or later.</p>
 
-Service Instance lifecycle errands allow additional short lived jobs to be run as part of service instance deployment. A deployment is only considered successful if the lifecycle errand successfully exits.
+Service Instance lifecycle errands allow additional short lived jobs to be run as part of service instance deployment. A deployment is only considered successful if all lifecycle errands successfully exit.
 
-The service adapter must offer this errand as part of the service instance deployment.
+The service adapter must offer the errands as part of the service instance deployment.
 
 ODB supports the following lifecycle errands:
 
@@ -560,13 +560,20 @@ service_catalog:
       - name: CF-MARKETPLACE-PLAN-NAME
         lifecycle_errands:
           post_deploy:
-            name: POST-DEPLOY-ERRAND-JOB
+          - name: POST-DEPLOY-ERRAND-JOB
+          - name: ANOTHER-POST-DEPLOY-ERRAND-JOB
           pre_delete:
-            name: PRE-DELETE-ERRAND-JOB
+          - name: PRE-DELETE-ERRAND-JOB
         instance_groups:
           - name: SERVICE-RELEASE-JOB
             ...
           - name: POST-DEPLOY-ERRAND-JOB
+            lifecycle: errand
+            vm_type: VM-TYPE
+            instances: INSTANCE-COUNT
+            networks: [NETWORK]
+            azs: [AZ]
+          - name: ANOTHER-POST-DEPLOY-ERRAND-JOB
             lifecycle: errand
             vm_type: VM-TYPE
             instances: INSTANCE-COUNT
@@ -583,11 +590,11 @@ service_catalog:
 Changing a plan's lifecycle errands configuration while an existing deployment is in progress is not supported.
 Lifecycle errands will not be run.
 
-#### Service Instance Lifecycle Colocated Errands
+##### Colocated Errands
 
 <p class="note"><strong>Note</strong>: This feature requires BOSH Director v263 or later.</p>
 
-A job errand can be run as a `post-deploy` or `pre-delete` colocated errand. Colocated errands run on an existing service instance group, avoiding additional resource allocation. For more information see the [BOSH documentation](https://bosh.io/docs/errands.html).
+It is possible to run the errand as a colocated job, for both `post-deploy` and `pre-delete`. Colocated errands run on an existing service instance group, avoiding additional resource allocation. For more information see the [BOSH documentation](https://bosh.io/docs/errands.html).
 
 Similarly to the other lifecycle errands, colocated errands are deployed on a per-plan basis. Currently the ODB supports only colocated post-deploy or pre-delete errands.
 In order to enable a colocated errand, the errand job must be:
@@ -605,15 +612,18 @@ service_deployment:
       version: SERVICE-RELEASE-VERSION
       jobs:
       - SERVICE-RELEASE-JOB
-      - POST-DEPLOY-ERRAND-JOB # (1)
+      - COLOCATED-POST-DEPLOY-ERRAND-JOB # (1)
 service_catalog:
   plans:
       - name: CF-MARKETPLACE-PLAN-NAME
         lifecycle_errands:
           post_deploy:
-            name: POST-DEPLOY-ERRAND-JOB # (2)
-            instances: [SERVICE-RELEASE-JOB/0] # (3)
+            - name: COLOCATED-POST-DEPLOY-ERRAND-JOB # (2)
+              instances: [SERVICE-RELEASE-JOB/0] # (3)
+            - name: NON-COLOCATED-POST-DEPLOY-ERRAND
         instance_groups:
+          - name: NON-COLOCATED-POST-DEPLOY-ERRAND
+            ...
           - name: SERVICE-RELEASE-JOB
             ...
 ```

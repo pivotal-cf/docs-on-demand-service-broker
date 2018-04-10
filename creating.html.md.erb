@@ -35,17 +35,17 @@ ODB supports the following service instance lifecycle errands:
 - `post-deploy` - Runs after the creation or updating of a service instance. See the workflow [here](./concepts.html#post-deploy).
 - `pre-delete` - Runs before the deletion of a service instance. See the workflow [here](./concepts.html#pre-delete).
 
-A deployment is only considered successful if along with the deployment the lifecycle errand completes successfully.
+A deployment is only considered successful if along with the deployment all lifecycle errands complete successfully.
 
-See an example implementation of a health check post-deploy job in the [example Redis release](https://github.com/pivotal-cf-experimental/redis-example-service-release/tree/b0405ebec76928a83a2d34261403bcbe230168fb/jobs/health-check).
+See an example implementation of a health check post-deploy job in the [example Redis release](https://github.com/pivotal-cf-experimental/redis-example-service-release/tree/master/jobs/health-check).
 
 In the [generate-manifest](#generate-manifest) command ensure to validate and include any supported errands that are specified in the instance groups array.
 
-### Service Instance Lifecycle Colocated Errands
+#### Colocated Errands
 
 <p class="note"><strong>Note</strong>: This feature requires BOSH director v263 or later.</p>
 
-A job errand can be run as a `post-deploy` or `pre-delete` colocated errand. Colocated errands run on an existing service instance group, avoiding additional resource allocation.
+It is possible to run errands as a colocated job, both on `post-deploy` and `pre-delete`. Colocated errands run on an existing service instance group, avoiding additional resource allocation.
 
 In order to enable a new colocated errand, they must be added to the list of jobs of an instance group.
 
@@ -264,10 +264,10 @@ _plan-JSON schema_
 | migration.name                            | string                   | Optional, name of the instance group to be migrated from                                                                               |
 | properties                                | map                      | properties which the operator has configured for deployments of the current plan                                                       |
 | lifecycle\_errands                        | map                      | Optional, details of post-deploy and pre-delete errands                                                                                |
-| lifecycle\_errands.post\_deploy.name      | string                   | Optional, name of post-deploy errand                                                                                                   |
-| lifecycle\_errands.post\_deploy.instances | array of strings         | Optional, for a colocated errand, specify a list of INSTANCE-NAME/INSTANCE_IDX to run the errand                                 |
-| lifecycle\_errands.pre\_delete.name       | string                   | Optional, name of pre-delete errand                                                                                                    |
-| lifecycle\_errands.pre\_delete.instances  | array of strings         | Optional, for a colocated errand, specify a list of INSTANCE-NAME/INSTANCE_IDX to run the errand                                 |
+| lifecycle\_errands.post\_deploy           | array of errands         | Optional, post-deploy errands configured for the plan                                                                                  |
+| lifecycle\_errands.pre\_delete            | array of errands         | Optional, pre-delete errands configured for the plan                                                                                   |
+| errand.name                               | string                   | Errand name                                                                                                                            |
+| errand.instances                          | array of strings         | Optional, for a colocated errand, specify a list of INSTANCE-NAME/INSTANCE-IDX to run the errand                                       |
 | update                                    | map                      | update block which the operator has configured for deployments of the current plan                                                     |
 | update.canaries                           | int                      | plan-specific number of canary instances                                                                                               |
 | update.max\_in\_flight                    | int                      | plan-specific maximum number of non-canary instances to update in parallel                                                             |
@@ -316,15 +316,21 @@ For example
     "example": "property"
   },
   "lifecycle_errands": {
-    "post_deploy": {
-      "name": "health-check"
-    },
-    "pre_delete": {
-      "name": "cleanup",
-      "instances": [
-        "example-server/0"
-      ]
-    }
+    "post_deploy": [
+      {
+        "name": "health-check"
+      },
+      {
+        "name": "init-replication",
+        "instances": ["master-node/0"]
+      }
+    ],
+    "pre_delete": [
+      {
+        "name": "cleanup",
+        "instances": ["example-server/0"]
+      }
+    ]
   },
   "update": {
     "canaries": 1,
@@ -453,8 +459,8 @@ For example
     "persistence": true
   },
   "lifecycle_errands": {
-    "post_deploy": {},
-    "pre_delete": {}
+    "post_deploy": [],
+    "pre_delete": []
   },
   "instance_groups": [
     {
@@ -791,8 +797,8 @@ For example
     "persistence": true
   },
   "lifecycle_errands": {
-    "post_deploy": {},
-    "pre_delete": {}
+    "post_deploy": [],
+    "pre_delete": []
   },
   "instance_groups": [
     {
