@@ -7,7 +7,7 @@ For example:
 
 | Branch name | Use for… |
 |-------------| ------|
-| master      | Next unreleased version (edge) https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-20-edge|
+| master      | Next unreleased version (edge) https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-21|
 | v0.20.x         | live |
 | v0.19.x         | live | 
 | v0.18.x         | live | 
