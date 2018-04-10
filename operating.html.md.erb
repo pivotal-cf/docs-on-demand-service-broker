@@ -440,7 +440,7 @@ The credentials for a given Service Binding are stored with the following format
 The plain-text credentials are stored in CredHub under this key, and the key is
 available under the VCAP_SERVICES environment variable for the application.
 
-## <a id="plan-schemas"></a>Enabling plan schemas
+## <a id="plan-schemas"></a>Enable Plan Schemas
 
 As of [OSBAPI Spec v2.13](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#changes-since-v212),
 ODB supports plan schemas in the service catalog. 
@@ -448,13 +448,14 @@ ODB supports plan schemas in the service catalog.
 To use
 this feature, do the following:
 
-1. Set the `enable_plan_schemas` flag to `true` (the default is `false`). 
-2. Ensure that the service adapter implements the command `generate-plan-schemas` , 
+1. Set the `enable_plan_schemas` flag to `true`.
+   The default is `false`. 
+2. Ensure that the service adapter implements the command `generate-plan-schemas`, 
 otherwise the broker fails to deploy. 
 For more information, see [generate-plan-schemas](creating.html#generate-plan-schemas).
 
 During provision, bind, and update, the broker validates the incoming configuration 
-parameters against the schema, and produces an error if the parameters do not conform.
+parameters against the schema and produces an error if the parameters do not conform.
 
 ## <a id="route"></a>Route Registration
 
