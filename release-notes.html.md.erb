@@ -32,7 +32,10 @@ owner: London Services Enablement
 - Expose BOSH error messages to application developers when `expose_bosh_errors`
   flag is enabled in manifest.
 - Bump to Golang 1.10
-- Addons support in the BOSH manifest
+- Exposed the BOSH manifest property
+  [Addons](https://bosh.io/docs/manifest-v2.html#addons) for service authors via
+  the sdk `bosh.BoshManifest.Addons` field. Use this to apply add-ons to
+  on-demand service instances.
 - Added `instance_groups.env` to `service_catalog.plans`. This property accepts
   an arbitrary hash, to support passing through undocumented properties
 - Added support for optional `features` block, which enables BOSH features
