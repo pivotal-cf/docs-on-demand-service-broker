@@ -590,11 +590,13 @@ service_catalog:
 Changing a plan's lifecycle errands configuration while an existing deployment is in progress is not supported.
 Lifecycle errands will not be run.
 
-##### Colocated Errands
+### <a id="colocated-errands"></a> Colocated Errands
 
 <p class="note"><strong>Note</strong>: This feature requires BOSH Director v263 or later.</p>
 
-It is possible to run the errand as a colocated job, for both `post-deploy` and `pre-delete`. Colocated errands run on an existing service instance group, avoiding additional resource allocation. For more information see the [BOSH documentation](https://bosh.io/docs/errands.html).
+Both `post-deploy` and `pre-delete` errands can be run as colocated errands. 
+Colocated errands run on an existing service instance group, avoiding additional resource allocation. 
+For more information see the [BOSH documentation](https://bosh.io/docs/errands.html).
 
 Similarly to the other lifecycle errands, colocated errands are deployed on a per-plan basis. Currently the ODB supports only colocated post-deploy or pre-delete errands.
 In order to enable a colocated errand, the errand job must be:
@@ -674,7 +676,13 @@ Add the following instance group to your manifest:
   azs: [AZ]
 ```
 
-Run the errand with `bosh run errand register-broker`. For v2 of the BOSH CLI, use `bosh2 run-errand register-broker`.
+Run the errand with one of the following commands depending on your Ops Manager version:
+
+| Ops Manager Version | BOSH Command |
+|-----|---------|
+| 1.10 and earlier | `bosh run errand register-broker`|
+| 1.11 | `bosh2 run-errand register-broker` |
+| 1.12 and later | `bosh run-errand register-broker` |
 
 ### <a id="delete-instances-and-deregister"></a>Delete All Service Instances and Deregister Broker
 
@@ -746,7 +754,13 @@ Add the following instance group to your manifest:
   azs: [AZ]
 ```
 
-Run the errand with `bosh run errand deregister-broker`. For v2 of the BOSH CLI, use `bosh2 run-errand deregister-broker`.
+Run the errand with one of the following commands depending on your Ops Manager version:
+
+| Ops Manager Version | BOSH Command |
+|-----|---------|
+| 1.10 and earlier | `bosh run errand deregister-broker`|
+| 1.11 | `bosh2 run-errand deregister-broker` |
+| 1.12 and later | `bosh run-errand deregister-broker` |
 
 ### <a id="delete-instances"></a>Delete All Service Instances
 
@@ -826,7 +840,13 @@ Add the following instance group to your manifest:
   azs: [AZ]
 ```
 
-Run the errand with `bosh run errand orphan-deployments`. For v2 of the BOSH CLI, use `bosh2 run-errand orphan-deployments`.
+Run the errand with one of the following commands depending on your Ops Manager version:
+
+| Ops Manager Version | BOSH Command |
+|-----|---------|
+| 1.10 and earlier | `bosh run errand orphan-deployments` |
+| 1.11 | `bosh2 run-errand orphan-deployments` |
+| 1.12 and later | `bosh run-errand orphan-deployments` |
 
 If orphan deployments are present, the errand will output a list of deployment
 names
@@ -841,7 +861,7 @@ None
 Errand 'orphan-deployments' completed successfully (exit code 0)
 ```
 
-**Warning:** Deleting the bosh deployment will destroy the vm, any data present will be lost.
+<p class="note warning">Warning:** Deleting the bosh deployment will destroy the vm, any data present will be lost.
 
 To delete the orphan deployment run `bosh delete deployment service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3`.
 

@@ -45,7 +45,8 @@ In the [generate-manifest](#generate-manifest) command ensure to validate and in
 
 <p class="note"><strong>Note</strong>: This feature requires BOSH director v263 or later.</p>
 
-It is possible to run errands as a colocated job, both on `post-deploy` and `pre-delete`. Colocated errands run on an existing service instance group, avoiding additional resource allocation.
+Both `post-deploy` and `pre-delete` errands can be run as colocated errands. 
+Colocated errands run on an existing service instance group, avoiding additional resource allocation.
 
 In order to enable a new colocated errand, they must be added to the list of jobs of an instance group.
 
