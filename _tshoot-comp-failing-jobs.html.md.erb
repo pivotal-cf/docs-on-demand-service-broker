@@ -2,16 +2,17 @@ To determine whether there is an issue with <%=vars.service_name_article_full%> 
 
 | Ops Manager Version | BOSH Command |
 |-----|---------|
-| 1.10 or earlier | `bosh vms --vitals service-instance_GUID`|
-| 1.11 to 2.0 | `bosh2 -d service-instance_GUID vms --vitals` |
-
+| 1.10 and earlier | `bosh vms --vitals service-instance_GUID`|
+| 1.11 | `bosh2 -d service-instance_GUID vms --vitals` |
+| 1.12 and later | `bosh -d service-instance_GUID vms --vitals` |
 
 For additional information, run one of the following commands:
 
 | Ops Manager Version | BOSH Command |
 |-----|---------|
 | 1.10 and earlier | `bosh instances --ps --vitals`|
-| 1.11 and later | `bosh2 instances --ps --vitals` |
+| 1.11 | `bosh2 instances --ps --vitals` |
+| 1.12 and later | `bosh instances --ps --vitals` |
 
 
 If the VM is failing, follow the service-specific information.
