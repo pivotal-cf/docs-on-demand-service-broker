@@ -5,11 +5,19 @@
    1. `cd /var/vcap/sys/log` and look for the errand output log
    1. `tail -f LOG` and see if the errand is still attempting to upgrade instances. If it is, then allow the errand to continue. 
    1. If the errand appears to be stuck, cancel the errand task:
+
    		1. Identify the errand task by running one of these commands, depending on your Ops Manager version. 
-    		- 1.10 and earlier: `bosh tasks`
-    		- 1.11 and later: `bosh2 tasks`
-    	1. Cancel the errand task by running one of these commands, depending on your Ops Manager version.
-    		- 1.10 and earlier: `bosh cancel task TASK-ID`
-    		- 1.11 and later: `bosh2 cancel-task TASK-ID`
+        <ul>        
+          <li>1.10 and earlier: <code>bosh tasks</code></li>
+          <li>1.11: <code>bosh2 tasks</code></li>
+          <li>1.12 and later: <code>bosh tasks</code></li>
+        </ul>
+  
+    	1. Cancel the errand task by running one of these commands, depending on your Ops Manager version.<br><br>
+        <ul>
+    		  <li>1.10 and earlier: `bosh cancel task TASK-ID`</li>
+    		  <li>1.11: `bosh2 cancel-task TASK-ID`</li>
+          <li>1.12 and later: `bosh cancel-task TASK-ID`</li>
+        </ul>
 
 1. Retry [running the errand](#upgrade-all).
