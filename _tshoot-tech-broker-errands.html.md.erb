@@ -16,8 +16,8 @@ To run errands:
 	| Ops Manager Version | BOSH Command |
 	|-----|---------|
 	| 1.10 and earlier | `bosh run errand ERRAND_NAME`|
-	| 1.11 and later | `bosh2 -d DEPLOYMENT_NAME run-errand ERRAND_NAME` |
-
+	| 1.11 | `bosh2 -d DEPLOYMENT_NAME run-errand ERRAND_NAME` |
+	| 1.12 and later | `bosh -d DEPLOYMENT_NAME run-errand ERRAND_NAME` |
 
 	<br>Examples:
 	<br>`bosh run errand deregister-broker`
