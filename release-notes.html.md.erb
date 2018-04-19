@@ -3,18 +3,23 @@ title: On-Demand Services SDK Release Notes
 owner: London Services Enablement
 ---
 
-# <a id="release-notes"></a>v0.20.0 Release Notes
+## <a id="release-notes"></a>v0.20.0 Release Notes
 
-## <a id="minimum-version-requirements"></a>Minimum Version Requirements
+### <a id="minimum-version-requirements"></a>Minimum Version Requirements
 
 - BOSH 257+ (261+ for lifecycle errands) / BOSH lite v9000.131.0
 - CF 238+
 
-# <a id="known-issues"></a>Known Issues
+### <a id="breaking-changes"></a>Breaking Changes
 
-- None
+- The `polling_interval` property has been renamed to `polling_interval_seconds`
+  for the following errands: 
+    - `upgrade-all-service-instances`
+    - `delete-all-service-instances`
+    - `delete-all-service-instances-and-deregister-broker`
 
-## <a id="new-features"></a>New Features
+
+### <a id="new-features"></a>New Features
 
 - `upgrade-all-service-instances` errand supports parallel upgrades and
   the ability to select the number of canary instances that should be upgraded
@@ -23,13 +28,13 @@ owner: London Services Enablement
   greater than 1, specifies the number of service instances that must upgrade 
   successfully before the `upgrade-all-instances-errand` attempts to upgrade 
   the remaining instances. For more information, see
-  [Upgrade All Service Instances](https://docs.pivotal.io/svc-sdk/odb/operating.html#upgrade-all-instances).
+  [Upgrade All Service Instances](./operating.html#upgrade-all-instances).
 - Adds support for CredHub v1.7.
 - Adds support for the Open Service Broker API (OSBAPI) v2.13
   [context object](https://github.com/openservicebrokerapi/servicebroker/blob/master/profile.md#context-object).
   This allows service authors to obtain platform-specific information
   that is sent on provision, update, and bind requests.
-- Provides a summary message for `upgrade-all-service-instances` errand.
+- Provides a summary message for the `upgrade-all-service-instances` errand.
 - Exposes BOSH error messages to application developers when `expose_bosh_errors`
   flag is enabled in manifest.
 - Updates Golang to  v1.10.
@@ -38,20 +43,14 @@ owner: London Services Enablement
   on-demand service instances. For more information about `addons`, see the 
   [BOSH Documentation](https://bosh.io/docs/manifest-v2.html#addons).
 - Adds `instance_groups.env` to `service_catalog.plans`. This property accepts
-  an arbitrary hash, to support passing through undocumented properties.
+  an arbitrary hash to support passing through undocumented properties.
 - Adds support for optional `features` block, which enables BOSH features
   to be toggled in service instance deployments.
   For more information, see [BOSH Features](https://docs.pivotal.io/svc-sdk/odb/creating.html#bosh_features).
 - Amends endpoints for deleting service instances and fetching catalog to be
-  compliant with [OSBAPI v2.13 specification](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md).
+  compliant with the [OSBAPI v2.13 specification](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md).
 
-## <a id="breaking-changes"></a>Breaking Changes
 
-- The `polling_interval` property has been renamed to `polling_interval_seconds`
-  for the following errands: `upgrade-all-service-instances`,
-  `delete-all-service-instances`,
-  `delete-all-service-instances-and-deregister-broker`.
-
-## <a id="bug-fixes"></a>Bug fixes
+### <a id="known-issues"></a>Known Issues
 
 - None
