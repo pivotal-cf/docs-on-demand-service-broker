@@ -20,22 +20,24 @@
 	| Ops Manager Version | BOSH Command |
 	|-----|---------|
 	| 1.10 and earlier | `bosh instances`|
-	| 1.11 and later | `bosh2 -d DEPLOYMENT-NAME instances` |
-
+	| 1.11 | `bosh2 -d DEPLOYMENT-NAME instances` |
+	| 1.12 and later | `bosh -d DEPLOYMENT-NAME instances` |
 
 1. SSH onto a VM by running one of the following commands:
 
 	| Ops Manager Version | BOSH Command |
 	|-----|---------|
 	| 1.10 and earlier | `bosh ssh service-instance_GUID`|
-	| 1.11 and later | `bosh2 -d service-instance_GUID ssh` |
-
+	| 1.11 | `bosh2 -d service-instance_GUID ssh` |
+	| 1.12 and later | `bosh -d service-instance_GUID ssh` |
 
 1. Download the instance logs by running one of the following commands:
 
 	| Ops Manager Version | BOSH Command |
 	-----|---------|
 	| 1.10 and earlier | `bosh logs service-instance_GUID`|
-	| 1.11 and later | `bosh2 -d service-instance_GUID logs` |
+	| 1.11 | `bosh2 -d service-instance_GUID logs` |
+	| 1.12 and later | `bosh -d service-instance_GUID logs` |
+
 
 
