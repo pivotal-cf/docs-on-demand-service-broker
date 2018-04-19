@@ -14,8 +14,8 @@ To run the errand, do the following:
 	| Ops Manager Version | BOSH Command |
 	|-----|---------|
 	| 1.10 and earlier | `bosh run errand orphan-deployments`|
-	| 1.11 and later | `bosh2 -d DEPLOYMENT-NAME run-errand orphan-deployments` |
-
+	| 1.11 | `bosh2 -d DEPLOYMENT-NAME run-errand orphan-deployments` |
+  | 1.12 and later | `bosh -d DEPLOYMENT-NAME run-errand orphan-deployments` |
 
 If orphan deployments exist, the errand script will:
 
@@ -81,7 +81,8 @@ To clean up orphaned instances, run the following command on each instance:
 | Ops Manager Version | BOSH Command |
 |-----|---------|
 | 1.10 and earlier | `bosh delete deployment service-instance_SERVICE-INSTANCE-GUID`|
-| 1.11 and later | `bosh2 delete-deployment service-instance_SERVICE-INSTANCE-GUID` |
+| 1.11 | `bosh2 delete-deployment service-instance_SERVICE-INSTANCE-GUID` |
+| 1.12 and later | `bosh delete-deployment service-instance_SERVICE-INSTANCE-GUID` |
 
 
 
