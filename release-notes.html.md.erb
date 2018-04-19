@@ -3,36 +3,40 @@ title: On-Demand Services SDK Release Notes
 owner: London Services Enablement
 ---
 
-# <a id="release-notes"></a>v0.21.0 Release Notes
+## <a id="release-notes"></a>v0.21.0 Release Notes
 
-## <a id="minimum-version-requirements"></a>Minimum Version Requirements
+### <a id="minimum-version-requirements"></a>Minimum Version Requirements
 
 - BOSH 257+ (261+ for lifecycle errands) / BOSH lite v9000.131.0
 - CF 238+
 
-# <a id="known-issues"></a>Known Issues
+### <a id="breaking-changes"></a>Breaking Changes
 
-- None
+- Plan-level `pre-delete` and `post-deploy` lifecycle errands value
+  must be an array.
+- Service instance provision requests now require `X-Broker-API-Version: 2.13`
+  in the header for OSBAPI compliance. The version must be 2.x and later.
 
-## <a id="new-features"></a>New Features
+### <a id="new-features"></a>New Features
 
-- Adds support for defining [multiple pre-delete and post-deploy lifecycle
-  errands](https://docs.pivotal.io/svc-sdk/odb/operating.html#lifecycle-errands).
-  Errands can be configured with different colocation preferences.
+- Adds support for defining multiple pre-delete and post-deploy lifecycle
+  errands. Errands can be configured with different colocation preferences. 
+  For more information, see [Service Instance Lifecycle Errands](./operating.html#lifecycle-errands).  
 - Improved flexibility to select canary service instances to upgrade
   during `upgrade-all-service-instances` errand. Operators can specify a number
   of instances to upgrade first, and/or they may specify a Cloud Foundry 
   organization and space from which canary instances will be selected.
   Alternatively, arbitrary parameters can be supported if using
-  [the Service Instances API](https://docs.pivotal.io/svc-sdk/odb/operating.html#upgrade-all-instances).
+  the Service Instances API. 
+  For more information, see [Upgrade All Service Instances](./operating.html#upgrade-all-instances).
 - Enabled broker validation for plan-level [configuration parameter schemas](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#catalog-management).
   Service adapters may opt into having ODB validate request configuration
-  parameters by turning on the `enable_plan_schemas` [feature flag](https://docs.pivotal.io/svc-sdk/odb/operating.html#plan-schemas) and
-  [implementing](https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-21/creating.html#generate-plan-schemas) `generate-plan-schemas`.
-- Improved status messages for `upgrade-all-service-instances`
+  parameters by turning on the `enable_plan_schemas` feature flag and
+  implementing [`generate-plan-schemas`](./creating.html#generate-plan-schemas).
+- Improved status messages for `upgrade-all-service-instances`.
 - Improved error messages for CredHub misconfiguration in service broker
-  manifest. If `secure_binding_credentials.enabled: true`, then ODB will
-  validate that CredHub links are provided and resolvable from Runtime deployment.
+  manifest. If the setting `secure_binding_credentials.enabled: true` is specified, then ODB
+  validates that CredHub links are provided and resolvable from Runtime deployment.
 - `PATCH /v2/service_instance/:instance_guid` and
   `PUT /v2/service_instance/:instance_guid` are fully compliant with
   [OSBAPI v2.13 specification](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md).
@@ -40,15 +44,10 @@ owner: London Services Enablement
   [service plan definition metadata](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/profile.md#service-metadata).
 - Golang bumped to 1.10.1
 - CF CLI bumped to v6.36.1
-- Note: PCF 1.10 integration is no longer supported
+<p class="note"><strong>Note</strong>: PCF 1.10 integration is no longer supported. </p>
 
-## <a id="breaking-changes"></a>Breaking Changes
 
-- Plan-level `pre-delete` and `post-deploy` lifecycle errands value
-  must be an array.
-- Service instance provision requests now require `X-Broker-API-Version: 2.13`
-  in the header for OSBAPI compliance. The version must be 2.* and upwards.
-
-## <a id="bug-fixes"></a>Bug fixes
+### <a id="known-issues"></a>Known Issues
 
 - None
+
