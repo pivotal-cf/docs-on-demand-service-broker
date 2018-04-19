@@ -676,13 +676,9 @@ Add the following instance group to your manifest:
   azs: [AZ]
 ```
 
-Run the errand with one of the following commands depending on your Ops Manager version:
+Run the errand with the following command:
+`bosh2 -d DEPLOYMENT-NAME run-errand register-broker`
 
-| Ops Manager Version | BOSH Command |
-|-----|---------|
-| 1.10 and earlier | `bosh run errand register-broker`|
-| 1.11 | `bosh2 run-errand register-broker` |
-| 1.12 and later | `bosh run-errand register-broker` |
 
 ### <a id="delete-instances-and-deregister"></a>Delete All Service Instances and Deregister Broker
 
@@ -731,7 +727,8 @@ if the instance has been deleted.
     The `polling_initial_offset_seconds` default is set to 5 seconds.
     In systems with more load, consider increasing the polling offset.
 
-Run the errand with `bosh run errand delete-all-service-instances-and-deregister-broker`.
+Run the errand with the following command: 
+`bosh2 -d DEPLOYMENT-NAME run-errand delete-all-service-instances-and-deregister-broker`
 
 ### <a id="deregister-broker"></a>Deregister Broker
 
@@ -754,13 +751,8 @@ Add the following instance group to your manifest:
   azs: [AZ]
 ```
 
-Run the errand with one of the following commands depending on your Ops Manager version:
-
-| Ops Manager Version | BOSH Command |
-|-----|---------|
-| 1.10 and earlier | `bosh run errand deregister-broker`|
-| 1.11 | `bosh2 run-errand deregister-broker` |
-| 1.12 and later | `bosh run-errand deregister-broker` |
+Run the errand with the following command:
+|`bosh2 -d DEPLOYMENT-NAME run-errand deregister-broker`
 
 ### <a id="delete-instances"></a>Delete All Service Instances
 
@@ -813,7 +805,8 @@ if the instance has been deleted.
     In systems with more load on cloudfoundry, this process could take a longer,
     in which case you might consider increasing the polling offset.</p>
 
-Run the errand with `bosh run errand delete-all-service-instances`.
+Run the errand with the following command: 
+`bosh2 -d DEPLOYMENT-NAME run-errand delete-all-service-instances`
 
 ### <a id="orphan-deployments"></a>Delete Orphaned Deployments
 
@@ -840,13 +833,8 @@ Add the following instance group to your manifest:
   azs: [AZ]
 ```
 
-Run the errand with one of the following commands depending on your Ops Manager version:
-
-| Ops Manager Version | BOSH Command |
-|-----|---------|
-| 1.10 and earlier | `bosh run errand orphan-deployments` |
-| 1.11 | `bosh2 run-errand orphan-deployments` |
-| 1.12 and later | `bosh run-errand orphan-deployments` |
+Run the errand with the following command:
+`bosh2 -d DEPLOYMENT-NAME run-errand orphan-deployments`
 
 If orphan deployments are present, the errand will output a list of deployment
 names
@@ -864,7 +852,8 @@ Errand 'orphan-deployments' completed successfully (exit code 0)
 <p class="note warning"><strong>WARNING:</strong> Deleting the BOSH deployment destroys the VM.
   Any data present is lost.<br>
 
-To delete the orphan deployment, run: <code>bosh delete deployment service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3</code></p>
+To delete the orphan deployment, run: 
+<code>bosh2 -d DEPLOYMENT-NAME delete-deployment service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3</code></p>
 
 ## <a id="updates"></a>Updates
 
@@ -1029,11 +1018,8 @@ To upgrade all existing service instances after the service offering has been up
     </p>
 </li>
 <li>Deploy the broker manifest.</li>
-<li>Run the errand in one of two ways, depending on which version of the BOSH CLI you use:<br/>
-<ul>
-<li><strong>For v2 of the CLI:</strong> <code>bosh run-errand upgrade-all-service-instances</code>.</li>
-<li><strong>For v1 of the CLI:</strong> <code>bosh run errand upgrade-all-service-instances</code>.</li>
-</ul>
+<li>Run the errand withe the following command:<br/>
+  <code>bosh2 run-errand upgrade-all-service-instances</code>
 </li>
 </ol>
 
@@ -1175,8 +1161,8 @@ The actions that the ODB needs to be able to perform are:
 Modify:
 
 - `bosh deploy`
-- `bosh delete deployment`
-- `bosh run errand`
+- `bosh delete-deployment`
+- `bosh run-errand`
 
 Read only:
 
