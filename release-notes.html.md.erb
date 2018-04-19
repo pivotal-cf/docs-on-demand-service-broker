@@ -3,7 +3,7 @@ title: On-Demand Services SDK Release Notes
 owner: London Services Enablement
 ---
 
-# <a id="release-notes"></a>v0.20.0 Release Notes
+# <a id="release-notes"></a>v0.21.0 Release Notes
 
 ## <a id="minimum-version-requirements"></a>Minimum Version Requirements
 
@@ -16,41 +16,38 @@ owner: London Services Enablement
 
 ## <a id="new-features"></a>New Features
 
-- `upgrade-all-service-instances` errand supports parallel upgrades and
-  the ability to select the number of canary instances that should be upgraded
-  first. 
-  Upgrade `canaries`, when configured alongside a `max_in_flight`
-  greater than 1, specifies the number of service instances that must upgrade 
-  successfully before the `upgrade-all-instances-errand` attempts to upgrade 
-  the remaining instances. For more information, see
-  [Upgrade All Service Instances](https://docs.pivotal.io/svc-sdk/odb/operating.html#upgrade-all-instances).
-- Adds support for CredHub v1.7.
-- Adds support for the Open Service Broker API (OSBAPI) v2.13
-  [context object](https://github.com/openservicebrokerapi/servicebroker/blob/master/profile.md#context-object).
-  This allows service authors to obtain platform-specific information
-  that is sent on provision, update, and bind requests.
-- Provides a summary message for `upgrade-all-service-instances` errand.
-- Exposes BOSH error messages to application developers when `expose_bosh_errors`
-  flag is enabled in manifest.
-- Updates Golang to  v1.10.
-- Exposes the BOSH manifest property `addons` to service authors through
-  the SDK field `bosh.BoshManifest.Addons`. This can be used to apply add-ons to
-  on-demand service instances. For more information about `addons`, see the 
-  [BOSH Documentation](https://bosh.io/docs/manifest-v2.html#addons).
-- Adds `instance_groups.env` to `service_catalog.plans`. This property accepts
-  an arbitrary hash, to support passing through undocumented properties.
-- Adds support for optional `features` block, which enables BOSH features
-  to be toggled in service instance deployments.
-  For more information, see [BOSH Features](https://docs.pivotal.io/svc-sdk/odb/creating.html#bosh_features).
-- Amends endpoints for deleting service instances and fetching catalog to be
-  compliant with [OSBAPI v2.13 specification](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md).
+- Adds support for defining [multiple pre-delete and post-deploy lifecycle
+  errands](https://docs.pivotal.io/svc-sdk/odb/operating.html#lifecycle-errands).
+  Errands can be configured with different colocation preferences.
+- Improved flexibility to select canary service instances to upgrade
+  during `upgrade-all-service-instances` errand. Operators can specify a number
+  of instances to upgrade first, and/or they may specify a Cloud Foundry 
+  organization and space from which canary instances will be selected.
+  Alternatively, arbitrary parameters can be supported if using
+  [the Service Instances API](https://docs.pivotal.io/svc-sdk/odb/operating.html#upgrade-all-instances).
+- Enabled broker validation for plan-level [configuration parameter schemas](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#catalog-management).
+  Service adapters may opt into having ODB validate request configuration
+  parameters by turning on the `enable_plan_schemas` [feature flag](https://docs.pivotal.io/svc-sdk/odb/operating.html#plan-schemas) and
+  [implementing](https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-21/creating.html#generate-plan-schemas) `generate-plan-schemas`.
+- Improved status messages for `upgrade-all-service-instances`
+- Improved error messages for CredHub misconfiguration in service broker
+  manifest. If `secure_binding_credentials.enabled: true`, then ODB will
+  validate that CredHub links are provided and resolvable from Runtime deployment.
+- `PATCH /v2/service_instance/:instance_guid` and
+  `PUT /v2/service_instance/:instance_guid` are fully compliant with
+  [OSBAPI v2.13 specification](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md).
+- Supports arbitrary additional properties in
+  [service plan definition metadata](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/profile.md#service-metadata).
+- Golang bumped to 1.10.1
+- CF CLI bumped to v6.36.1
+- Note: PCF 1.10 integration is no longer supported
 
 ## <a id="breaking-changes"></a>Breaking Changes
 
-- The `polling_interval` property has been renamed to `polling_interval_seconds`
-  for the following errands: `upgrade-all-service-instances`,
-  `delete-all-service-instances`,
-  `delete-all-service-instances-and-deregister-broker`.
+- Plan-level `pre-delete` and `post-deploy` lifecycle errands value
+  must be an array.
+- Service instance provision requests now require `X-Broker-API-Version: 2.13`
+  in the header for OSBAPI compliance. The version must be 2.* and upwards.
 
 ## <a id="bug-fixes"></a>Bug fixes
 
