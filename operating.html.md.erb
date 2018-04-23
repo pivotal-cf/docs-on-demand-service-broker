@@ -1037,28 +1037,28 @@ If you configure an endpoint which does not satisfy these criteria, some service
 
 The Service Instances API definition is at version 0.1.0 and should be considered subject to change. The API consists of a single endpoint which should handle the following request with the appropriate response:
 
-<strong>Request:</strong>
+<strong>Example Request:</strong>
+
+<pre class="terminal">
+curl -u BASIC_AUTH_USERNAME:BASIC_AUTH_PASSWORD -X GET http://SERVICE_INSTANCES_API_URL
+</pre>
+
+<strong>Example Response:</strong>
 
 ```
-HTTP Method: GET
-Authentication: http/basic
-Body: None
-```
-
-<strong>Response:</strong>
-
-```
-Status: 200 OK if successful, 3xx, 4xx, 5xx HTTP codes for other scenarios.
+HTTP/1.1 200 OK
 Content-Type: application/json
-Body:
-"[
-  {
-    "service_instance_id": <text/guid>,
-    "plan_id": <text/guid>
-  },
-  ...
-]"
+
+[
+  {"service_instance_id": GUID_1, "plan_id": "dedicated"},
+  {"service_instance_id": GUID_2, "plan_id": "dedicated"},
+  {"service_instance_id": GUID_3, "plan_id": "dedicated"},
+  [...]
+]
 ```
+
+Note that the Services Instances API should return other status codes such as 3xx, 4xx, 5xx for non-successful scenarios.
+
 
 The plan\_ids listed in the response need to correspond to the plan\_ids that appear in each plan's definition in the On Demand Broker deployment manifest, not any other id that may be assigned by the service controller.
 
@@ -1078,29 +1078,23 @@ canary_selection_params:
 
 Then, the Service Instances API returns a filtered list of instances when `cf_org` and `cf_space` are passed as query parameters in the request.
 
-<strong>Request:</strong>
+<strong>Example Request:</strong>
+
+<pre class="terminal">
+curl -u BASIC_AUTH_USERNAME:BASIC_AUTH_PASSWORD -X GET http://SERVICE_INSTANCES_API_URL?cf_org=staging-org&cf_space=staging-space
+</pre>
+
+<strong>Example Response:</strong>
 
 ```
-HTTP Method: GET
-Query Parameters: ?cf_org=staging-org&cf_space=staging-space
-Authentication: http/basic
-Body: None
-```
-
-<strong>Response:</strong>
-
-```
-Status: 200 OK if successful, 3xx, 4xx, 5xx HTTP codes for other scenarios.
+HTTP/1.1 200 OK
 Content-Type: application/json
-Body:
-"[
-  {
-    "service_instance_id": <text/guid>,
-    "plan_id": <text/guid>
-  },
-  ...
-]"
+
+[
+  {"service_instance_id": GUID_1, "plan_id": "dedicated"}
+]
 ```
+
 The instances in the filtered list are used as canary instances and upgraded before the rest.
 The number of canaries taken from this list can be configured
 by specifying the `canaries` property in the on-demand service broker manifest.
