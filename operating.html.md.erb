@@ -49,8 +49,8 @@ This topic provides examples of using each version of the BOSH CLI. Your PCF ins
 <%= partial 'service_networks_table' %>
 
 <br>
-Regardless of the specific network layout, the operator must ensure network 
-rules are set up so that connections are open as described in the table below. 
+Regardless of the specific network layout, the operator must ensure network
+rules are set up so that connections are open as described in the table below.
 
 <table class="nice">
   <th>This component...</th>
@@ -79,10 +79,10 @@ rules are set up so that connections are open as described in the table below.
     <td><strong>ODB</strong></td>
     <td><strong>Deployed service instances</strong>
     </td>
-    <td>Specific to the service (such as RabbitMQ for PCF). 
+    <td>Specific to the service (such as RabbitMQ for PCF).
       May be one or more ports.</td>
     <td>One-way</td>
-    <td>This connection is for administrative tasks. 
+    <td>This connection is for administrative tasks.
       Avoid opening general use, app-specific ports for this connection.</td>
   </tr>
   <tr>
@@ -118,7 +118,7 @@ rules are set up so that connections are open as described in the table below.
     </td>
     <td>4222</td>
     <td>Two-way</td>
-    <td>The BOSH Agent runs on every VM in the system, including the BOSH Director VM. 
+    <td>The BOSH Agent runs on every VM in the system, including the BOSH Director VM.
       The BOSH Agent initiates the connection with the BOSH Director.<br>
       The default port is not configurable.  </td>
   </tr>
@@ -128,7 +128,7 @@ rules are set up so that connections are open as described in the table below.
     </td>
     <td>Specific to the service. May be one or more ports.</td>
     <td>One-way</td>
-    <td>This connection is for general use, app-specific tasks. 
+    <td>This connection is for general use, app-specific tasks.
       Avoid opening administrative ports for this connection.</td>
   </tr>
   <tr>
@@ -137,8 +137,8 @@ rules are set up so that connections are open as described in the table below.
     </td>
     <td>8080</td>
     <td>One-way</td>
-    <td>This port may be different for individual services. 
-      This port may also be configurable by the operator if allowed by the 
+    <td>This port may be different for individual services.
+      This port may also be configurable by the operator if allowed by the
       tile developer.</td>
   </tr>
 </table>
@@ -264,7 +264,7 @@ instance_groups:
           # There are more broker properties that are discussed below
 ```
 
-<p class="note"><strong>Note</strong>: The <code>disable_ssl_cert_verification</code> 
+<p class="note"><strong>Note</strong>: The <code>disable_ssl_cert_verification</code>
   option is dangerous and <strong>should not be set to true in production</strong>.</p>
 
 This snippet is using the BOSH v2 syntax and making use of global cloud config and job-level properties.
@@ -368,12 +368,12 @@ service_catalog:
 
 ## <a id="secure-binding"></a>Enabling Secure Binding
 
-Optionally, ODB allows the secure storage of service credentials in runtime CredHub. 
+Optionally, ODB allows the secure storage of service credentials in runtime CredHub.
 To use this feature, you must connect to CredHub v1.6.x or later.
 This may be provided as part of your Cloud Foundry deployment.
 
-The address for CredHub is a local domain name, therefore your instance group 
-requires access to the local DNS provider. 
+The address for CredHub is a local domain name, therefore your instance group
+requires access to the local DNS provider.
 Currently, most Cloud Foundry deployments use Consul as a DNS provider.
 
 To enable secure bindings, you must do the following in the ODB manifest:
@@ -384,8 +384,8 @@ set to `true`.
 * If you use Consul as a DNS provider, you might want to consume Consul links to enable DNS.
 
 If the Secure Binding Credentials section is omitted, or if
-`secure_binding_credentials.enabled` is `false`, service credentials, 
-as opposed to a secure reference, are passed through the network to the 
+`secure_binding_credentials.enabled` is `false`, service credentials,
+as opposed to a secure reference, are passed through the network to the
 application's container.
 
 An example manifest snippet, assuming you are connecting to a Cloud
@@ -443,18 +443,18 @@ available under the VCAP_SERVICES environment variable for the application.
 ## <a id="plan-schemas"></a>Enable Plan Schemas
 
 As of [OSBAPI Spec v2.13](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#changes-since-v212),
-ODB supports plan schemas in the service catalog. 
+ODB supports plan schemas in the service catalog.
 
 To use
 this feature, do the following:
 
 1. Set the `enable_plan_schemas` flag to `true`.
-   The default is `false`. 
-2. Ensure that the service adapter implements the command `generate-plan-schemas`, 
-otherwise the broker fails to deploy. 
+   The default is `false`.
+2. Ensure that the service adapter implements the command `generate-plan-schemas`,
+otherwise the broker fails to deploy.
 For more information, see [generate-plan-schemas](creating.html#generate-plan-schemas).
 
-During provision, bind, and update, the broker validates the incoming configuration 
+During provision, bind, and update, the broker validates the incoming configuration
 parameters against the schema and produces an error if the parameters do not conform.
 
 ## <a id="route"></a>Route Registration
@@ -594,8 +594,8 @@ Lifecycle errands will not be run.
 
 <p class="note"><strong>Note</strong>: This feature requires BOSH Director v263 or later.</p>
 
-Both `post-deploy` and `pre-delete` errands can be run as colocated errands. 
-Colocated errands run on an existing service instance group, avoiding additional resource allocation. 
+Both `post-deploy` and `pre-delete` errands can be run as colocated errands.
+Colocated errands run on an existing service instance group, avoiding additional resource allocation.
 For more information see the [BOSH documentation](https://bosh.io/docs/errands.html).
 
 Similarly to the other lifecycle errands, colocated errands are deployed on a per-plan basis. Currently the ODB supports only colocated post-deploy or pre-delete errands.
@@ -718,7 +718,7 @@ Add the following instance group to your manifest:
 
 Where: <br>
 `INTERVAL-IN-SECONDS`: The interval in seconds before a service instance is deleted. <br>
-`OFFSET-IN-SECONDS`: The offset in seconds before polling Cloud Foundry to check 
+`OFFSET-IN-SECONDS`: The offset in seconds before polling Cloud Foundry to check
 if the instance has been deleted.
 
  <p class="note"><strong>Note</strong>: The `polling_interval_seconds` default is set to 60 seconds
@@ -727,7 +727,7 @@ if the instance has been deleted.
     The `polling_initial_offset_seconds` default is set to 5 seconds.
     In systems with more load, consider increasing the polling offset.
 
-Run the errand with the following command: 
+Run the errand with the following command:
 `bosh2 -d DEPLOYMENT-NAME run-errand delete-all-service-instances-and-deregister-broker`
 
 ### <a id="deregister-broker"></a>Deregister Broker
@@ -793,7 +793,7 @@ Add the following instance group to your manifest:
 
 Where:<br>
 `INTERVAL-IN-SECONDS`: The interval in seconds before a service instance is deleted. <br>
-`OFFSET-IN-SECONDS`: The offset in seconds before polling Cloud Foundry to check 
+`OFFSET-IN-SECONDS`: The offset in seconds before polling Cloud Foundry to check
 if the instance has been deleted.
 
  <p class="note"><strong>Note</strong>: The `polling_interval_seconds` default is set to 60 seconds
@@ -805,7 +805,7 @@ if the instance has been deleted.
     In systems with more load on cloudfoundry, this process could take a longer,
     in which case you might consider increasing the polling offset.</p>
 
-Run the errand with the following command: 
+Run the errand with the following command:
 `bosh2 -d DEPLOYMENT-NAME run-errand delete-all-service-instances`
 
 ### <a id="orphan-deployments"></a>Delete Orphaned Deployments
@@ -852,7 +852,7 @@ Errand 'orphan-deployments' completed successfully (exit code 0)
 <p class="note warning"><strong>WARNING:</strong> Deleting the BOSH deployment destroys the VM.
   Any data present is lost.<br>
 
-To delete the orphan deployment, run: 
+To delete the orphan deployment, run:
 <code>bosh2 -d DEPLOYMENT-NAME delete-deployment service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3</code></p>
 
 ## <a id="updates"></a>Updates
@@ -1132,7 +1132,7 @@ To configure the `upgrade-all-service-instances` errand to connect to a Service 
 ```
 
 Where: <br>
-`POLLING-INTERVAL-IN-SECONDS`: The number of seconds to wait between checking the 
+`POLLING-INTERVAL-IN-SECONDS`: The number of seconds to wait between checking the
 status of a submitted upgrade job. <br>
 `ATTEMPT-INTERVAL-IN-SECONDS`: The number of seconds to wait between retrying upgrades. <br>
 `NUMBER-OF-ATTEMPTS`: The maximum number of times the errand will try a set of upgrades. <br>
@@ -1382,7 +1382,7 @@ There is a one to one mapping between the service instance id from CF and the de
 
 1. Get current tasks for the deployment by using
    <pre class="terminal">
-    $ bosh tasks --deployment service-instance_GUID
+    $ bosh tasks -d service-instance_GUID
    </pre>
 
 ### <a id="id-tasks"></a>Identify Tasks in BOSH
@@ -1396,8 +1396,7 @@ Most operations on the on demand service broker API are implemented by launching
 
 1. SSH on to the service broker VM:
    <pre class="terminal">
-    $ bosh deployment PATH-TO-BROKER-MANIFEST
-    $ bosh ssh
+    $ bosh -d BROKER-DEPLOYMENT-NAME ssh
    </pre>
 
 1. In the broker log, look for lines relating to the service, identified by the service ID. Lines recording the starting and finishing of BOSH tasks will also have the BOSH task ID:
@@ -1468,7 +1467,7 @@ deployments against the service instances registered in Cloud Foundry. When call
 the endpoint will return a list of orphaned deployments, if any are present.
 
 This endpoint is exercised in the [`orphan-deployments`](#orphan-deployments) errand. To call this endpoint
-without  running the errand, use curl
+without running the errand, use `curl`.
 
 **Request**
 `GET http://USERNAME:PASSWORD@ON-DEMAND-BROKER-IP:8080/mgmt/orphan_deployments`
