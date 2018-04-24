@@ -64,13 +64,16 @@ This topic provides examples of using each version of the BOSH CLI. Your PCF ins
 
 1. Target your BOSH Lite installation:
    <pre class="terminal">
-    $ bosh target
-    Current target is https<span>:</span>//192.168.50.4:25555 (Bosh Lite Director)
+    $ bosh alias-env lite -e 192.168.50.4
    </pre>
 
 1. Upload the [BOSH Lite stemcell](http://bosh.cloudfoundry.org/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent):
    <pre class="terminal">
+<<<<<<< HEAD
     $ bosh upload stemcell https<span>:</span>//bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent?v=<%= vars.odb_warden_stemcell_version %>
+=======
+    $ bosh -e lite upload-stemcell https<span>:</span>//bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent?v=<%= vars.odb_warden_stemcell_version %>
+>>>>>>> 737ece6... Update BOSH CLI commands
    </pre>
 
 ## <a id="set_up_kafka_sr"></a> Step 2: Set Up the Kafka Example Service
@@ -83,12 +86,20 @@ This topic provides examples of using each version of the BOSH CLI. Your PCF ins
 1. In the `kafka-example-service-release` directory, create and upload the kafka example service:
    <pre class="terminal">
     $ cd kafka-example-service-release
+<<<<<<< HEAD
     $ bosh create release --name kafka-example-service
+=======
+    $ bosh create-release --name kafka-example-service
+>>>>>>> 737ece6... Update BOSH CLI commands
    </pre>
 
 1. Upload the service to the BOSH director:
   <pre class="terminal">
+<<<<<<< HEAD
     $ bosh upload release
+=======
+    $ bosh -e lite upload-release
+>>>>>>> 737ece6... Update BOSH CLI commands
   </pre>
 
 ## <a id="set_up_kafka_sa"></a> Step 3: Set Up the Kafka Example Service Adapter
@@ -106,12 +117,20 @@ This topic provides examples of using each version of the BOSH CLI. Your PCF ins
 
 1. Create the example service adapter:
   <pre class="terminal">
+<<<<<<< HEAD
     $ bosh create release --name kafka-example-service-adapter
+=======
+    $ bosh create-release --name kafka-example-service-adapter
+>>>>>>> 737ece6... Update BOSH CLI commands
   </pre>
 
 1. Upload the example service adapter to the BOSH director:
   <pre class="terminal">
+<<<<<<< HEAD
     $ bosh upload release
+=======
+    $ bosh -e lite upload-release
+>>>>>>> 737ece6... Update BOSH CLI commands
   </pre>
 
 ## <a id="set_up_odb"></a> Step 4: Set Up the On-Demand Service Broker
@@ -120,7 +139,11 @@ This topic provides examples of using each version of the BOSH CLI. Your PCF ins
 
 1. Upload the `on-demand-service-broker` release (replace X.Y.Z with the ODB release version):
   <pre class="terminal">
+<<<<<<< HEAD
     $ bosh upload release on-demand-service-broker-X.Y.Z.tgz
+=======
+    $ bosh -e lite upload-release on-demand-service-broker-X.Y.Z.tgz
+>>>>>>> 737ece6... Update BOSH CLI commands
   </pre>
 
 ## <a id="create_bosh"></a> Step 5: Create a BOSH Deployment
@@ -160,16 +183,20 @@ This topic provides examples of using each version of the BOSH CLI. Your PCF ins
 
 1. Update the BOSH Lite cloud config using the deployment manifest created in the previous step:
   <pre class="terminal">
+<<<<<<< HEAD
     $ bosh update cloud-config cloud\_config.yml
+=======
+    $ bosh -e lite update-cloud-config cloud\_config.yml
+>>>>>>> 737ece6... Update BOSH CLI commands
   </pre>
 
-1. Obtain the URL and UUID BOSH Lite director information:
+1. Obtain the URL and UUID of your BOSH Lite director:
   <pre class="terminal">
-    $ bosh status
+    $ bosh environment
   </pre>
   This command produces output similar to the following:
   <pre class="terminal">
-    → bosh status
+    → bosh environment
     Config
                  /Users/pivotal/.bosh_config
 
@@ -286,39 +313,31 @@ This topic provides examples of using each version of the BOSH CLI. Your PCF ins
       max_in_flight: 4
     ```
 
-1. Change the BOSH deployment to use the deployment manifest created in the previous step:
+1. Deploy the broker:
     <pre class="terminal">
-    $ bosh deployment deployment\_manifest.yml
-    </pre>
-
-1. Deploy the manifest:
-    <pre class="terminal">
-    $ bosh deploy
+    $ bosh -e lite -d kafka-on-demand-broker deployment\_manifest.yml
     </pre>
 
 1. Obtain the IP address of the deployed broker:
     <pre class="terminal">
-    $ bosh instances
+    $ bosh -e lite -d kafka-on-demand-broker instances
     </pre>
 
     This command produces output similar to the following:
 
     <pre class="terminal">
-    Acting as client 'admin' on deployment 'kafka-on-demand-broker' on 'Bosh Lite Director'
+    Using environment 'lite' as user 'admin' (openid, bosh.admin)
 
-    Director task 147
+    Task 54727. Done
 
-    Task 147 done
+    Deployment 'redis-on-demand-broker-dev2'
 
-    +--------------------------------------------------+---------+-----+-----------+------------+
-    | Instance                                         | State   | AZ  | VM Type   | IPs        |
-    +--------------------------------------------------+---------+-----+-----------+------------+
-    | broker/0 (59231277-d7b8-46bb-8bbb-8154b6bae347)* | running | n/a | container | 10.244.1.2 |
-    +--------------------------------------------------+---------+-----+-----------+------------+
+    Instance                                     Process State  AZ  IPs
+    broker/84294753-84b9-4be1-a338-37c1f3e71919  running        z1  10.244.1.2
 
-    (*) Bootstrap node
+    1 instances
 
-    Instances total: 1
+    Succeeded
     </pre>
 
     Record the IP address of the broker. You will use this in the next step to create a service broker.
@@ -372,20 +391,20 @@ This topic provides examples of using each version of the BOSH CLI. Your PCF ins
 
 1. Verify that the on-demand service is provisioned in the BOSH deployment
     <pre class="terminal">
+<<<<<<< HEAD
     $ bosh deployments
+=======
+    $ bosh -e lite deployments
+>>>>>>> 737ece6... Update BOSH CLI commands
     </pre>
 
     The output of this command appears as follows:
 
     <pre class="terminal">
-    +-------------------------------------------------------+---------------------------------------+--------------------------------------------------+--------------+
-    | Name                                                  | Release(s)                            | Stemcell(s)                                      | Cloud Config |
-    +-------------------------------------------------------+---------------------------------------+--------------------------------------------------+--------------+
-    | kafka-on-demand-broker                                | kafka-example-service-adapter/0+dev.2 | bosh-warden-boshlite-ubuntu-trusty-go\_agent/<%= vars.odb_warden_stemcell_version %> | latest       |
-    |                                                       | on-demand-service-broker/0.2.0+dev.1  |                                                  |              |
-    +-------------------------------------------------------+---------------------------------------+--------------------------------------------------+--------------+
-    | service-instance\_2715262c-8564-4cd9-b629-0ae99e6aa4b9 | kafka-example-service/0+dev.2         | bosh-warden-boshlite-ubuntu-trusty-go\_agent/<%= vars.odb_warden_stemcell_version %> | latest       |
-    +-------------------------------------------------------+---------------------------------------+--------------------------------------------------+--------------+
+    Name                                                    Release(s)                              Stemcell(s)                                        Cloud Config
+    kafka-on-demand-broker                                  kafka-example-service-adapter/0+dev.2   bosh-warden-boshlite-ubuntu-trusty-go\_agent/<%= vars.odb_warden_stemcell_version %>   latest
+                                                            on-demand-service-broker/0.2.0+dev.1
+    service-instance_2715262c-8564-4cd9-b629-0ae99e6aa4b9   kafka-example-service/0+dev.2           bosh-warden-boshlite-ubuntu-trusty-go\_agent/<%= vars.odb_warden_stemcell_version %>   latest
     </pre>
 
     This example shows that the service instance is provisioned and the service releases are specified in the ODB deployment manifest.
