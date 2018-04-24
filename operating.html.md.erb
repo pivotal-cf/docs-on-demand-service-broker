@@ -49,8 +49,8 @@ This topic provides examples of using each version of the BOSH CLI. Your PCF ins
 <%= partial 'service_networks_table' %>
 
 <br>
-Regardless of the specific network layout, the operator must ensure network 
-rules are set up so that connections are open as described in the table below. 
+Regardless of the specific network layout, the operator must ensure network
+rules are set up so that connections are open as described in the table below.
 
 <table class="nice">
   <th>This component...</th>
@@ -79,10 +79,10 @@ rules are set up so that connections are open as described in the table below.
     <td><strong>ODB</strong></td>
     <td><strong>Deployed service instances</strong>
     </td>
-    <td>Specific to the service (such as RabbitMQ for PCF). 
+    <td>Specific to the service (such as RabbitMQ for PCF).
       May be one or more ports.</td>
     <td>One-way</td>
-    <td>This connection is for administrative tasks. 
+    <td>This connection is for administrative tasks.
       Avoid opening general use, app-specific ports for this connection.</td>
   </tr>
   <tr>
@@ -118,7 +118,7 @@ rules are set up so that connections are open as described in the table below.
     </td>
     <td>4222</td>
     <td>Two-way</td>
-    <td>The BOSH Agent runs on every VM in the system, including the BOSH Director VM. 
+    <td>The BOSH Agent runs on every VM in the system, including the BOSH Director VM.
       The BOSH Agent initiates the connection with the BOSH Director.<br>
       The default port is not configurable.  </td>
   </tr>
@@ -128,7 +128,7 @@ rules are set up so that connections are open as described in the table below.
     </td>
     <td>Specific to the service. May be one or more ports.</td>
     <td>One-way</td>
-    <td>This connection is for general use, app-specific tasks. 
+    <td>This connection is for general use, app-specific tasks.
       Avoid opening administrative ports for this connection.</td>
   </tr>
   <tr>
@@ -137,8 +137,8 @@ rules are set up so that connections are open as described in the table below.
     </td>
     <td>8080</td>
     <td>One-way</td>
-    <td>This port may be different for individual services. 
-      This port may also be configurable by the operator if allowed by the 
+    <td>This port may be different for individual services.
+      This port may also be configurable by the operator if allowed by the
       tile developer.</td>
   </tr>
 </table>
@@ -262,7 +262,7 @@ instance_groups:
           # There are more broker properties that are discussed below
 ```
 
-<p class="note"><strong>Note</strong>: The <code>disable_ssl_cert_verification</code> 
+<p class="note"><strong>Note</strong>: The <code>disable_ssl_cert_verification</code>
   option is dangerous and <strong>should not be set to true in production</strong>.</p>
 
 This snippet is using the BOSH v2 syntax and making use of global cloud config and job-level properties.
@@ -366,16 +366,28 @@ service_catalog:
 
 ## <a id="secure-binding"></a>Enabling Secure Binding
 
-ODB optionally allows secure storage of service credentials in CredHub. To use
-this feature, you will need to be able to connect to CredHub 1.6.X or later.
+Optionally, ODB allows the secure storage of service credentials in runtime CredHub.
+To use this feature, you must connect to CredHub v1.6.x or later.
 This may be provided as part of your Cloud Foundry deployment.
-Credhub depends on being addressed by a local domain name so your instance group
-will require access to the local DNS provider. Most Cloud Foundry deployments
-currently use Consul as a DNS provider. In the ODB manifest, you will need to consume
-the credhub link and include the secure binding credentials section.
-You may also wish to consume Consul links to enable DNS.
-An example manifest snippet assuming you are connecting to a Cloud Foundry deployment
-is shown below:
+
+The address for CredHub is a local domain name, therefore your instance group
+requires access to the local DNS provider.
+Currently, most Cloud Foundry deployments use Consul as a DNS provider.
+
+To enable secure bindings, you must do the following in the ODB manifest:
+
+* Consume the CredHub link.
+* Include the secure binding credentials section with `secure_binding_credentials.enabled`
+set to `true`.
+* If you use Consul as a DNS provider, you might want to consume Consul links to enable DNS.
+
+If the Secure Binding Credentials section is omitted, or if
+`secure_binding_credentials.enabled` is `false`, service credentials,
+as opposed to a secure reference, are passed through the network to the
+application's container.
+
+An example manifest snippet, assuming you are connecting to a Cloud
+Foundry deployment, is shown below:
 
 ```
 instance_groups:
@@ -634,7 +646,13 @@ Add the following instance group to your manifest:
   azs: [AZ]
 ```
 
-Run the errand with `bosh run errand register-broker`.
+Run the errand with one of the following commands:
+
+**For Ops Manager v1.10 and earlier**<br>
+`bosh run errand register-broker`
+
+**For Ops Manager v1.11 and later**<br>
+`bosh2 -d DEPLOYMENT-NAME run-errand register-broker`
 
 ### <a id="delete-instances-and-deregister"></a>Delete All Service Instances and Deregister Broker
 
@@ -674,7 +692,7 @@ Add the following instance group to your manifest:
 
 Where: <br>
 `INTERVAL-IN-SECONDS`: The interval in seconds before a service instance is deleted. <br>
-`OFFSET-IN-SECONDS`: The offset in seconds before polling Cloud Foundry to check 
+`OFFSET-IN-SECONDS`: The offset in seconds before polling Cloud Foundry to check
 if the instance has been deleted.
 
  <p class="note"><strong>Note</strong>: The `polling_interval_seconds` default is set to 60 seconds
@@ -683,13 +701,13 @@ if the instance has been deleted.
     The `polling_initial_offset` default is set to 5 seconds.
     In systems with more load, consider increasing the polling offset.
 
-#### <a id="cli-v1"></a>BOSH CLI v2
+Run the errand with one of the following commands:
 
-Run the errand with `bosh2 run-errand delete-all-service-instances-and-deregister-broker`.
+**For Ops Manager v1.10 and earlier**<br>
+`bosh run errand delete-all-service-instances-and-deregister-broker`
 
-#### <a id="cli-v1"></a>BOSH CLI v1
-
-Run the errand with `bosh run errand delete-all-service-instances-and-deregister-broker`.
+**For Ops Manager v1.11 and later**<br>
+`bosh2 -d DEPLOYMENT-NAME run-errand delete-all-service-instances-and-deregister-broker`
 
 ### <a id="deregister-broker"></a>Deregister Broker
 
@@ -712,15 +730,13 @@ Add the following instance group to your manifest:
   azs: [AZ]
 ```
 
-Execute the errand in one of two ways, depending on which version of the BOSH CLI you're using.
+Run the errand with one of the following commands:
 
-#### <a id="cli-v1"></a>BOSH CLI v2
+**For Ops Manager v1.10 and earlier**<br>
+ `bosh run errand deregister-broker`
 
-Run the errand with `bosh2 run-errand deregister-broker`.
-
-#### <a id="cli-v1"></a>BOSH CLI v1
-
-Run the errand with `bosh run errand deregister-broker`.
+**For Ops Manager v1.11 and later**<br>
+ `bosh2 -d DEPLOYMENT-NAME run-errand deregister-broker`
 
 ### <a id="delete-instances"></a>Delete All Service Instances
 
@@ -761,7 +777,7 @@ Add the following instance group to your manifest:
 
 Where:<br>
 `INTERVAL-IN-SECONDS`: The interval in seconds before a service instance is deleted. <br>
-`OFFSET-IN-SECONDS`: The offset in seconds before polling Cloud Foundry to check 
+`OFFSET-IN-SECONDS`: The offset in seconds before polling Cloud Foundry to check
 if the instance has been deleted.
 
  <p class="note"><strong>Note</strong>: The `polling_interval_seconds` default is set to 60 seconds
@@ -773,7 +789,14 @@ if the instance has been deleted.
     In systems with more load on cloudfoundry, this process could take a longer,
     in which case you might consider increasing the polling offset.</p>
 
-Run the errand with `bosh run errand delete-all-service-instances`.
+Run the errand with one of the following commands:
+
+**For Ops Manager v1.10 and earlier**<br>
+ `bosh run errand delete-all-service-instances`
+
+**For Ops Manager v1.11 and later**<br>
+ `bosh2 -d DEPLOYMENT-NAME run-errand delete-all-service-instances`
+
 
 ### <a id="orphan-deployments"></a>Delete Orphaned Deployments
 
@@ -800,7 +823,13 @@ Add the following instance group to your manifest:
   azs: [AZ]
 ```
 
-Run the errand with `bosh run errand orphan-deployments`.
+Run the errand with one of the following commands:
+
+**For Ops Manager v1.10 and earlier**<br>
+`bosh run errand orphan-deployments`.
+
+**For Ops Manager v1.10 and earlier**<br>
+`bosh2 -d DEPLOYMENT-NAME run-errand orphan-deployments`
 
 If orphan deployments are present, the errand will output a list of deployment
 names
@@ -817,7 +846,14 @@ Errand 'orphan-deployments' completed successfully (exit code 0)
 
 **Warning:** Deleting the bosh deployment will destroy the vm, any data present will be lost.
 
-To delete the orphan deployment run `bosh2 delete deployment service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3`.
+To delete the orphan deployment, run one of the following commands:
+
+**For Ops Manager v1.10 and earlier**<br>
+`bosh delete deployment service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3`
+
+**For Ops Manager v1.11 and later**<br>
+`bosh2 -d DEPLOYMENT-NAME delete-deployment service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3`
+
 
 ## <a id="updates"></a>Updates
 
@@ -931,10 +967,10 @@ Where: <br>
 status of a submitted upgrade job. <br>
 
 <li>Deploy the broker manifest.</li>
-<li>Run the errand in one of two ways, depending on which version of the BOSH CLI you use:<br/>  
+<li>Run the errand in one of two ways, depending on your version of Ops Manager:<br/>  
 <ul>
-<li><strong>For v2 of the CLI:</strong> <code>bosh2 run-errand upgrade-all-service-instances</code>.</li>
-<li><strong>For v1 of the CLI:</strong> <code>bosh run errand upgrade-all-service-instances</code>.</li>
+<li><strong>For Ops Manager v1.10 and earlier</strong> <br><code>bosh run errand upgrade-all-service-instances</code></li>
+<li><strong>For Ops Manager v1.10 and earlier</strong> <br><code>bosh2 run-errand upgrade-all-service-instances</code></li>
 </ul>
 </li>
 </ol>
@@ -1251,9 +1287,14 @@ There is a one to one mapping between the service instance id from CF and the de
 
 1. Identify deployment in `bosh deployments` by looking for `service-instance_GUID`
 
-1. Get current tasks for the deployment by using
+1. Get current tasks for the deployment by using  one of the following:<br>
+**For Ops Manager v1.10 and earlier**
    <pre class="terminal">
-    $ bosh2 tasks --deployment service-instance_GUID
+    $ bosh tasks --deployment service-instance\_GUID
+   </pre>
+**For Ops Manager v1.11 and later**
+   <pre class="terminal">
+    $ bosh2 tasks -d service-instance_GUID
    </pre>
 
 ### <a id="id-tasks"></a>Identify Tasks in BOSH
@@ -1265,10 +1306,15 @@ Most operations on the on demand service broker API are implemented by launching
     $ cf service --guid SERVICE-NAME
    </pre>
 
-1. SSH on to the service broker VM:
+1. SSH on to the service broker VM:<br>
+**For Ops Manager v1.10 and earlier**<br>
    <pre class="terminal">
     $ bosh2 deployment PATH-TO-BROKER-MANIFEST
     $ bosh2 ssh
+   </pre>
+**For Ops Manager v1.11 and later**<br>
+   <pre class="terminal">
+    $ bosh -d BROKER-DEPLOYMENT-NAME ssh
    </pre>
 
 1. In the broker log, look for lines relating to the service, identified by the service ID. Lines recording the starting and finishing of BOSH tasks will also have the BOSH task ID:
@@ -1284,7 +1330,12 @@ Most operations on the on demand service broker API are implemented by launching
     on-demand-service-broker: [on-demand-service-broker] [af6fab15-c95e-438b-aa6b-bc4329d4154f] 2016/04/13 09:19:56.803938 task 11474 success deleting deployment for instance 30d4a67f-d220-4d06-9989-58a976b86b35: delete deployment service-instance_30d4a67f-d220-4d06-9989-58a976b86b35
     ```
 
-1. Use the task ID to obtain the task log from BOSH (adding flags such as `--debug` or `--cpi` as necessary):
+1. Use the task ID to obtain the task log from BOSH (adding flags such as `--debug` or `--cpi` as necessary):<br>
+**For Ops Manager v1.10 and earlier**<br>
+   <pre class="terminal">
+    $ bosh task TASK-ID
+   </pre>
+**For Ops Manager v1.11 and later**<br>
    <pre class="terminal">
     $ bosh2 task TASK-ID
    </pre>
@@ -1339,7 +1390,7 @@ deployments against the service instances registered in Cloud Foundry. When call
 the endpoint will return a list of orphaned deployments, if any are present.
 
 This endpoint is exercised in the [`orphan-deployments`](#orphan-deployments) errand. To call this endpoint
-without  running the errand, use curl
+without running the errand, use `curl`.
 
 **Request**
 `GET http://USERNAME:PASSWORD@ON-DEMAND-BROKER-IP:8080/mgmt/orphan_deployments`

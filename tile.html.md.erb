@@ -29,6 +29,7 @@ The network for service instances should be flagged as a Service Network in Ops 
 Notes:
 
 1. The ELBs created by CloudFormation are both for CF, not Ops Manager. One of them will be configured with your wildcard certificate. This takes the place of HAProxy in AWS PCF deployments, and is therefore not used until you deploy the ERT tile.
+
 1. To target the bosh director from the Ops Manager VM: `bosh --ca-cert /var/tempest/workspaces/default/root_ca_certificate target 10.0.16.10`
 
 ## <a id="building"></a>Build a Tile
@@ -186,7 +187,8 @@ Please note, configuring this value to `false` will disable this feature.
 
 ## <a id="errands"></a>On-Demand Broker errands
 
-In the reference [Kafka tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile) we have demonstrated how the errands in the on-demand broker release can be used.
+In the reference [Kafka tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile) 
+we have demonstrated how the errands in the on-demand broker release can be used.
 
 The errands should be specified in the following order, as shown in the example Kafka tile:
 
@@ -201,10 +203,9 @@ Pre-delete:
 
 These errands are documented in the [operating section](operating.html#management).
 
-
 ## <a id="secure-creds"></a>Secure Binding Credentials
 
-Runtime CredHub can securely store service instance credentials. 
+Runtime CredHub can securely store service instance credentials.
 To include this feature in your tile, make some changes to the tile metadata, as described below:
 
 1. Add `secure_binding_credentials` to the top-level properties block in the on-demand broker manifest. For example:
@@ -227,7 +228,6 @@ For an example, see the **example-kafka-on-demand-tile**:
 * ['Enable Secure Bindings' form field](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L39-L46)
 * [`property_blueprint`](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L605-L632)
 * [broker manifest template](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L112)
-
 
 <p class="note">To use the secure binding credentials feature you must use Pivotal Cloud Foundry (PCF) 2.0 or later.</p>
 
