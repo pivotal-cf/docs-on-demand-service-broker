@@ -29,15 +29,15 @@ The network for service instances should be flagged as a Service Network in Ops 
 Notes:
 
 1. The ELBs created by CloudFormation are both for CF, not Ops Manager. One of them will be configured with your wildcard certificate. This takes the place of HAProxy in AWS PCF deployments, and is therefore not used until you deploy the ERT tile.
-1. To target the BOSH Director from the Ops Manager VM: `bosh --ca-cert /var/tempest/workspaces/default/root_ca_certificate target 10.0.16.10`
+1. To target the BOSH Director from the Ops Manager VM: `bosh --ca-cert /var/tempest/workspaces/default/root_ca_certificate -e 10.0.16.10 alias-env om-director`. Thereafter, use `bosh -e om-director` to make requests to the BOSH Director.
 
 ## <a id="building"></a>Build a Tile
 
-1. Follow the instructions in the topic 
-[Tile Generator](http://docs.pivotal.io/tiledev/tile-generator.html) 
-to build your service tile. 
-1. Enhance the tile metadata file, named `tile.yml` if using Tile Generator, with the 
-accessors listed in [Non-Exhaustive Accessors Reference](#accessors). To use the `$self` accessors, the `service-broker` 
+1. Follow the instructions in the topic
+[Tile Generator](http://docs.pivotal.io/tiledev/tile-generator.html)
+to build your service tile.
+1. Enhance the tile metadata file, named `tile.yml` if using Tile Generator, with the
+accessors listed in [Non-Exhaustive Accessors Reference](#accessors). To use the `$self` accessors, the `service-broker`
 flag must be `true` in the tile metadata file.
 
 <p class="note"><strong>Note</strong>: If you are publishing a tile to be consumed by Ops Manager 1.8.x or 1.9.x, you will need to build your tile using releases with SHA1 internal checksums. On Demand Broker releases are published using SHA2 internal checksums. You can convert these releases to use SHA1 internal checksums using the BOSH CLI command <code>sha1ify-release</code>.</p>
@@ -64,10 +64,10 @@ bosh:
 #### self
 
 Used to provide fields that belong to the specific tile (in this case, the broker tile).
-To enable `$self` accessors, set `service_broker: true` at the top level of your 
-tile metadata file. 
+To enable `$self` accessors, set `service_broker: true` at the top level of your
+tile metadata file.
 
-<p class="note"><strong>Note</strong>: Setting <code>service_broker: true</code> 
+<p class="note"><strong>Note</strong>: Setting <code>service_broker: true</code>
   will cause the BOSH Director to redeploy when installing or uninstalling the tile.</p>
 
 | Accessor                  | Description                                                     |
@@ -196,7 +196,7 @@ Please note, configuring this value to `false` will disable this feature.
 
 ## <a id="errands"></a>On-Demand Broker Errands
 
-In the reference [Kafka tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile) 
+In the reference [Kafka tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile)
 we have demonstrated how the errands in the on-demand broker release can be used.
 
 The errands should be specified in the following order, as shown in the example Kafka tile:
@@ -215,24 +215,24 @@ These errands are documented in the [operating section](operating.html#managemen
 ### Upgrade All Service Instances Errand
 
 The `upgrade-all-service-instances` errand can be configured with two
-parameters: 
+parameters:
 
 - The number of simultaneous upgrades
 
-- The number of canary instances 
+- The number of canary instances
 
-For more information about these parameters, see 
+For more information about these parameters, see
 [Upgrade All Service Instances](operating.html#upgrade-all-instances).
 
 The example [Kafka
 tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile)
-shows how to create a tab with fields to configure the parameters for this errand. 
+shows how to create a tab with fields to configure the parameters for this errand.
 The example tile has constraints to ensure the number of simultaneous
 upgrades is greater than one and the number of canaries is greater than zero.
 
 ## <a id="secure-creds"></a>Secure Binding Credentials
 
-Runtime CredHub can securely store service instance credentials. 
+Runtime CredHub can securely store service instance credentials.
 To include this feature in your tile, make some changes to the tile metadata, as described below:
 
 1. Add `secure_binding_credentials` to the top-level properties block in the on-demand broker manifest. For example:
@@ -248,16 +248,16 @@ To include this feature in your tile, make some changes to the tile metadata, as
     ```
 
 2. To let users enable and disable this feature in the Ops Manager UI, you need to make some changes to your tile's metadata file:
-  1. Add a form field to allow the user to enable/disable secure bindings 
+  1. Add a form field to allow the user to enable/disable secure bindings
   ([example](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L39-L46)).
-  1. Add an element in `property_blueprints` that reads the setting in the form 
-  field and exposes the appropriate manifest snippet for CredHub and secure binding 
+  1. Add an element in `property_blueprints` that reads the setting in the form
+  field and exposes the appropriate manifest snippet for CredHub and secure binding
   ([example](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L606-L632)).
-  1. Change the `broker` job so that it consumes the CredHub BOSH link from the 
-  above manifest snippet 
+  1. Change the `broker` job so that it consumes the CredHub BOSH link from the
+  above manifest snippet
   ([example](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L96)).
-  1. Change the `broker` job so that it consumes the generated secure bindings 
-  manifest snippet 
+  1. Change the `broker` job so that it consumes the generated secure bindings
+  manifest snippet
   ([example](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L112)).
 
 <p class="note">To use the secure binding credentials feature you must use Pivotal Cloud Foundry (PCF) 2.0 or later.</p>
