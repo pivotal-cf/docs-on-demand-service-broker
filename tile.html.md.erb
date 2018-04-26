@@ -17,14 +17,16 @@ The network for service instances should be flagged as a Service Network in Ops 
 ## <a id="deploying"></a>Deploying Ops Manager to AWS
 
 1. Follow the default Ops Manager deployment [docs](https://docs.pivotal.io/pivotalcf/customizing/cloudform-template.html), but with these modifications:
-  1. Create a self-signed wildcard SSL certificate for a domain you control: This will usually be `*.some-subdomain.cf-app.com`, and upload it (along with the associated private key) to AWS. Instructions [here](http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/ssl-server-cert.html#create-cert).
+  1. Create a self-signed wildcard SSL certificate for a domain you control. This will usually be `*.SOME-SUBDOMAIN.cf-app.com`. Upload the certificate (along with the associated private key) to AWS. 
+  For details, see [SSL/TLS Certificates for Classic Load Balancers](https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/ssl-server-cert.html#create-cert).
   1. Download the CloudFormation JSON and save it in the Ops Manager directory.
   1. Run the CloudFormation stack, saving any pertinent inputs (e.g BOSH DB credentials) you type into the web console into the Ops Manager directory for safe keeping (e.g. in `info.txt`).
   1. Launch an instance of the AMI. If possible, use an elastic IP so that we can always keep the same DNS record even if we recreate the VM. Failing that, auto-assign a public IP.
   1. Create a DNS record for `pcf.WILDCARD-CERTIFICATE-DOMAIN`. To use the earlier example, the record will be for `pcf.some-subdomain.cf-app.com`. It should point to the public IP of the Ops Manager VM.
-1. Keep following the docs to log in to Ops Manager (save the credentials).
+1. Continue following the docs to log in to Ops Manager. Save the login credentials.
 1. Configure the BOSH Director tile.
-1. Click "Apply Changes", and steal the BOSH init manifest for future reference. `scp -i private_key.pem ubuntu@opsmanIP:/var/tempest/workspaces/default/deployments/bosh.yml bosh.yml`
+1. Click **Apply Changes**, and steal the BOSH init manifest for future reference. 
+<code>scp -i private_key.pem ubuntu@opsmanIP:/var/tempest/workspaces/default/deployments/bosh.yml bosh.yml`</code>
 
 Notes:
 
