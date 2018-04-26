@@ -1035,17 +1035,18 @@ Configuring a Service Instances API is not required, unless you are operating in
 You will be required to provide an endpoint which satisfied the API requirements detailed below, and also guarantees that all service instances which need to be upgraded are part of that response.
 If you configure an endpoint which does not satisfy these criteria, some service instances may become unusable.</p>
 
-The Service Instances API definition is at version 0.1.0 and should be considered subject to change. The API consists of a single endpoint which should handle the following request with the appropriate response:
+The Service Instances API definition is at version 0.1.0 and should be considered subject to change. 
+The API consists of a single endpoint which should handle the following request with the appropriate response:
 
 <strong>Example Request:</strong>
 
-<pre class="terminal">
+<pre>
 curl -u BASIC-AUTH-USERNAME:BASIC-AUTH-PASSWORD -X GET http://SERVICE-INSTANCES-API-URL
 </pre>
 
 <strong>Example Response:</strong>
 
-```
+<pre class="terminal">
 HTTP/1.1 200 OK
 Content-Type: application/json
 
@@ -1055,7 +1056,7 @@ Content-Type: application/json
   {"service_instance_id": GUID-3, "plan_id": "dedicated"},
   [...]
 ]
-```
+</pre>
 
 The Services Instances API returns other status codes such as 3xx, 4xx, or 5xx for non-successful scenarios.
 
@@ -1080,20 +1081,20 @@ Then, the Service Instances API returns a filtered list of instances when `cf_or
 
 <strong>Example Request:</strong>
 
-<pre class="terminal">
+<pre>
 curl -u BASIC-AUTH-USERNAME:BASIC-AUTH-PASSWORD -X GET http://SERVICE-INSTANCES-API-URL?cf_org=staging-org&cf_space=staging-space
 </pre>
 
 <strong>Example Response:</strong>
 
-```
+<pre class="terminal">
 HTTP/1.1 200 OK
 Content-Type: application/json
 
 [
   {"service_instance_id": GUID-1, "plan_id": "dedicated"}
 ]
-```
+</pre>
 
 The instances in the filtered list are used as canary instances and upgraded before the rest.
 The number of canaries taken from this list can be configured
