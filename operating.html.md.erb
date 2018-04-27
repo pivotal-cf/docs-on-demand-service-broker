@@ -323,6 +323,9 @@ service_catalog:
   global_properties: {} # optional, applied to every plan.
   global_quotas: # optional
     service_instance_limit: INSTANCE-LIMIT # the maximum number of service instances across all plans
+    resource_limits: # optional - resource usage limits, determined by the 'cost' of each service instance plan
+      ips: 50
+      memory: 150
   plans:
     - name: CF-MARKETPLACE-PLAN-NAME
       plan_id: CF-MARKETPLACE-PLAN-ID
@@ -336,8 +339,12 @@ service_catalog:
           - amount:
               CURRENCY-CODE-STRING: CURRENCY-AMOUNT-FLOAT
             unit: FREQUENCY-OF-COST
+      resource_costs: # optional – the 'cost' of each instance in terms of resource quotas
+        memory: 5
       quotas: # optional
         service_instance_limit: INSTANCE-LIMIT # the maximum number of service instances for this plan
+        resource_limits: # optional - resource usage limits for this plan
+          memory: 25
       instance_groups: # resource mapping for the instance groups defined by the Service Author
         - name: SERVICE-AUTHOR-PROVIDED-INSTANCE-GROUP-NAME
           vm_type: VM-TYPE
@@ -480,6 +487,52 @@ If it has not been reached, it will check the plan service instance limit.
 
 <p class="note"><strong>Note</strong>: These limits do not include orphans. See <a href="#listing-orphans">List Orphan Deployments</a>
    and <a href="#orphan-deployments">Delete Orphaned Deployments</a>.</p>
+
+## <a id="service-instance-quotas"></a>Service Resource Quotas
+
+ODB also offers global and plan level resource quotas.
+
+Resource quotas restrict how much of a certain resource can be used, either globally or
+by instances of a specific plan. These resources are simply strings defined by the
+operator, e.g. "ips", "memory", "disk".
+
+Global resource quotas are defined as follows:
+
+```
+service_deployment:
+  ...
+  global_quotas:
+    resource_limits:
+      ips: 50
+      memory: 150
+      ...
+```
+
+Plan resource quotas are defined on the plan in question:
+
+```
+plans:
+- name: my-plan
+  quotas:
+    resource_limits:
+      memory: 25
+```
+
+The 'cost' of an instance of a plan is set on the plan:
+
+```
+plans:
+- name: my-plan
+  resource_costs:
+    memory: 5 # key will be string-matched against keys in the global and plan-level resource quotas
+```
+
+When creating a service instance, ODB will check the global resource limit.
+If it has not been reached, it will check the plan resource limit.
+
+<p class="note"><strong>Note</strong>: These limits do not include orphans. See <a href="#listing-orphans">List Orphan Deployments</a>
+   and <a href="#orphan-deployments">Delete Orphaned Deployments</a>.</p>
+
 
 ## <a id="broker-metrics"></a>Broker Metrics
 
