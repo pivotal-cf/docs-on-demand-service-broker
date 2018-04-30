@@ -367,18 +367,6 @@ service_catalog:
 
 ## <a id="secure-binding"></a>Enabling Secure Binding
 
-<<<<<<< HEAD
-ODB optionally allows secure storage of service credentials in CredHub. To use
-this feature, you will need to be able to connect to CredHub 1.6.X or later.
-This may be provided as part of your Cloud Foundry deployment.
-Credhub depends on being addressed by a local domain name so your instance group
-will require access to the local DNS provider. Most Cloud Foundry deployments
-currently use Consul as a DNS provider. In the ODB manifest, you will need to consume
-the credhub link and include the secure binding credentials section.
-You may also wish to consume Consul links to enable DNS.
-An example manifest snippet assuming you are connecting to a Cloud Foundry deployment
-is shown below:
-=======
 Optionally, ODB allows the secure storage of service credentials in runtime CredHub.
 To use this feature, you must connect to CredHub v1.6.x or later.
 This may be provided as part of your Cloud Foundry deployment.
@@ -401,7 +389,6 @@ application's container.
 
 An example manifest snippet, assuming you are connecting to a Cloud
 Foundry deployment, is shown below:
->>>>>>> 737ece6... Update BOSH CLI commands
 
 ```
 instance_groups:
@@ -453,26 +440,6 @@ The credentials for a given Service Binding are stored with the following format
 The plain-text credentials are stored in CredHub under this key, and the key is
 available under the VCAP_SERVICES environment variable for the application.
 
-<<<<<<< HEAD
-=======
-## <a id="plan-schemas"></a>Enable Plan Schemas
-
-As of [OSBAPI Spec v2.13](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#changes-since-v212),
-ODB supports plan schemas in the service catalog.
-
-To use
-this feature, do the following:
-
-1. Set the `enable_plan_schemas` flag to `true`.
-   The default is `false`.
-2. Ensure that the service adapter implements the command `generate-plan-schemas`,
-otherwise the broker fails to deploy.
-For more information, see [generate-plan-schemas](creating.html#generate-plan-schemas).
-
-During provision, bind, and update, the broker validates the incoming configuration
-parameters against the schema and produces an error if the parameters do not conform.
-
->>>>>>> 737ece6... Update BOSH CLI commands
 ## <a id="route"></a>Route Registration
 
 You can optionally colocate the `route_registrar` job from the [routing release](http://bosh.io/releases/github.com/cloudfoundry-incubator/cf-routing-release?all=1) with the on-demand-service-broker, in order to:
@@ -603,13 +570,9 @@ Lifecycle errands will not be run.
 
 <p class="note"><strong>Note</strong>: This feature requires BOSH Director v263 or later.</p>
 
-<<<<<<< HEAD
-A job errand can be run as a `post-deploy` or `pre-delete` colocated errand. Colocated errands run on an existing service instance group, avoiding additional resource allocation. For more information see the [BOSH documentation](https://bosh.io/docs/errands.html).
-=======
 Both `post-deploy` and `pre-delete` errands can be run as colocated errands.
 Colocated errands run on an existing service instance group, avoiding additional resource allocation.
 For more information see the [BOSH documentation](https://bosh.io/docs/errands.html).
->>>>>>> 737ece6... Update BOSH CLI commands
 
 Similarly to the other lifecycle errands, colocated errands are deployed on a per-plan basis. Currently the ODB supports only colocated post-deploy or pre-delete errands.
 In order to enable a colocated errand, the errand job must be:
@@ -735,12 +698,8 @@ if the instance has been deleted.
     The `polling_initial_offset_seconds` default is set to 5 seconds.
     In systems with more load, consider increasing the polling offset.
 
-<<<<<<< HEAD
-Run the errand with `bosh run errand delete-all-service-instances-and-deregister-broker`.
-=======
 Run the errand with the following command:
 `bosh2 -d DEPLOYMENT-NAME run-errand delete-all-service-instances-and-deregister-broker`
->>>>>>> 737ece6... Update BOSH CLI commands
 
 ### <a id="deregister-broker"></a>Deregister Broker
 
@@ -816,12 +775,8 @@ if the instance has been deleted.
     In systems with more load on cloudfoundry, this process could take a longer,
     in which case you might consider increasing the polling offset.</p>
 
-<<<<<<< HEAD
-Run the errand with `bosh run errand delete-all-service-instances`.
-=======
 Run the errand with the following command:
 `bosh2 -d DEPLOYMENT-NAME run-errand delete-all-service-instances`
->>>>>>> 737ece6... Update BOSH CLI commands
 
 ### <a id="orphan-deployments"></a>Delete Orphaned Deployments
 
@@ -865,12 +820,8 @@ Errand 'orphan-deployments' completed successfully (exit code 0)
 
 **Warning:** Deleting the bosh deployment will destroy the vm, any data present will be lost.
 
-<<<<<<< HEAD
-To delete the orphan deployment run `bosh delete deployment service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3`.
-=======
 To delete the orphan deployment, run:
 <code>bosh2 -d DEPLOYMENT-NAME delete-deployment service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3</code></p>
->>>>>>> 737ece6... Update BOSH CLI commands
 
 ## <a id="updates"></a>Updates
 

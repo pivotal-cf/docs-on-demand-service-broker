@@ -69,11 +69,7 @@ This topic provides examples of using each version of the BOSH CLI. Your PCF ins
 
 1. Upload the [BOSH Lite stemcell](http://bosh.cloudfoundry.org/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent):
    <pre class="terminal">
-<<<<<<< HEAD
-    $ bosh upload stemcell https<span>:</span>//bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent?v=<%= vars.odb_warden_stemcell_version %>
-=======
     $ bosh -e lite upload-stemcell https<span>:</span>//bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent?v=<%= vars.odb_warden_stemcell_version %>
->>>>>>> 737ece6... Update BOSH CLI commands
    </pre>
 
 ## <a id="set_up_kafka_sr"></a> Step 2: Set Up the Kafka Example Service
@@ -86,20 +82,12 @@ This topic provides examples of using each version of the BOSH CLI. Your PCF ins
 1. In the `kafka-example-service-release` directory, create and upload the kafka example service:
    <pre class="terminal">
     $ cd kafka-example-service-release
-<<<<<<< HEAD
-    $ bosh create release --name kafka-example-service
-=======
     $ bosh create-release --name kafka-example-service
->>>>>>> 737ece6... Update BOSH CLI commands
    </pre>
 
 1. Upload the service to the BOSH director:
   <pre class="terminal">
-<<<<<<< HEAD
-    $ bosh upload release
-=======
     $ bosh -e lite upload-release
->>>>>>> 737ece6... Update BOSH CLI commands
   </pre>
 
 ## <a id="set_up_kafka_sa"></a> Step 3: Set Up the Kafka Example Service Adapter
@@ -117,20 +105,12 @@ This topic provides examples of using each version of the BOSH CLI. Your PCF ins
 
 1. Create the example service adapter:
   <pre class="terminal">
-<<<<<<< HEAD
-    $ bosh create release --name kafka-example-service-adapter
-=======
     $ bosh create-release --name kafka-example-service-adapter
->>>>>>> 737ece6... Update BOSH CLI commands
   </pre>
 
 1. Upload the example service adapter to the BOSH director:
   <pre class="terminal">
-<<<<<<< HEAD
-    $ bosh upload release
-=======
     $ bosh -e lite upload-release
->>>>>>> 737ece6... Update BOSH CLI commands
   </pre>
 
 ## <a id="set_up_odb"></a> Step 4: Set Up the On-Demand Service Broker
@@ -139,11 +119,7 @@ This topic provides examples of using each version of the BOSH CLI. Your PCF ins
 
 1. Upload the `on-demand-service-broker` release (replace X.Y.Z with the ODB release version):
   <pre class="terminal">
-<<<<<<< HEAD
-    $ bosh upload release on-demand-service-broker-X.Y.Z.tgz
-=======
     $ bosh -e lite upload-release on-demand-service-broker-X.Y.Z.tgz
->>>>>>> 737ece6... Update BOSH CLI commands
   </pre>
 
 ## <a id="create_bosh"></a> Step 5: Create a BOSH Deployment
@@ -183,11 +159,7 @@ This topic provides examples of using each version of the BOSH CLI. Your PCF ins
 
 1. Update the BOSH Lite cloud config using the deployment manifest created in the previous step:
   <pre class="terminal">
-<<<<<<< HEAD
-    $ bosh update cloud-config cloud\_config.yml
-=======
     $ bosh -e lite update-cloud-config cloud\_config.yml
->>>>>>> 737ece6... Update BOSH CLI commands
   </pre>
 
 1. Obtain the URL and UUID of your BOSH Lite director:
@@ -391,11 +363,7 @@ This topic provides examples of using each version of the BOSH CLI. Your PCF ins
 
 1. Verify that the on-demand service is provisioned in the BOSH deployment
     <pre class="terminal">
-<<<<<<< HEAD
-    $ bosh deployments
-=======
     $ bosh -e lite deployments
->>>>>>> 737ece6... Update BOSH CLI commands
     </pre>
 
     The output of this command appears as follows:
