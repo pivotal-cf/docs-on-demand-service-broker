@@ -649,7 +649,8 @@ Add the following instance group to your manifest:
   azs: [AZ]
 ```
 
-Run the errand with `bosh run errand register-broker`. For v2 of the BOSH CLI, use `bosh2 run-errand register-broker`.
+Run the errand with the following command:
+`bosh2 -d DEPLOYMENT-NAME run-errand register-broker`
 
 ### <a id="delete-instances-and-deregister"></a>Delete All Service Instances and Deregister Broker
 
@@ -722,7 +723,8 @@ Add the following instance group to your manifest:
   azs: [AZ]
 ```
 
-Run the errand with `bosh run errand deregister-broker`. For v2 of the BOSH CLI, use `bosh2 run-errand deregister-broker`.
+Run the errand with the following command:
+`bosh2 -d DEPLOYMENT-NAME run-errand register-broker` 
 
 ### <a id="delete-instances"></a>Delete All Service Instances
 
@@ -803,7 +805,8 @@ Add the following instance group to your manifest:
   azs: [AZ]
 ```
 
-Run the errand with `bosh run errand orphan-deployments`. For v2 of the BOSH CLI, use `bosh2 run-errand orphan-deployments`.
+Run the errand with the following command:
+`bosh2 -d DEPLOYMENT-NAME run-errand orphan-deployments`
 
 If orphan deployments are present, the errand will output a list of deployment
 names
@@ -971,11 +974,8 @@ To upgrade all existing service instances after the service offering has been up
     </p>
 </li>
 <li>Deploy the broker manifest.</li>
-<li>Run the errand in one of two ways, depending on which version of the BOSH CLI you use:<br/>
-<ul>
-<li><strong>For v2 of the CLI:</strong> <code>bosh run-errand upgrade-all-service-instances</code>.</li>
-<li><strong>For v1 of the CLI:</strong> <code>bosh run errand upgrade-all-service-instances</code>.</li>
-</ul>
+<li>Run the errand with the following command:<br/>
+  <code>bosh2 run-errand upgrade-all-service-instances</code>
 </li>
 </ol>
 
@@ -1075,8 +1075,8 @@ The actions that the ODB needs to be able to perform are:
 Modify:
 
 - `bosh deploy`
-- `bosh delete deployment`
-- `bosh run errand`
+- `bosh delete-deployment`
+- `bosh run-errand`
 
 Read only:
 
