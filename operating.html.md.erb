@@ -1296,7 +1296,7 @@ There is a one to one mapping between the service instance id from CF and the de
 
 1. Get current tasks for the deployment by using
    <pre class="terminal">
-    $ bosh tasks -d service-instance_GUID
+    $ bosh2 tasks -d service-instance_GUID
    </pre>
 
 ### <a id="id-tasks"></a>Identify Tasks in BOSH
@@ -1310,7 +1310,7 @@ Most operations on the on demand service broker API are implemented by launching
 
 1. SSH on to the service broker VM:
    <pre class="terminal">
-    $ bosh -d BROKER-DEPLOYMENT-NAME ssh
+    $ bosh2 -d BROKER-DEPLOYMENT-NAME ssh
    </pre>
 
 1. In the broker log, look for lines relating to the service, identified by the service ID. Lines recording the starting and finishing of BOSH tasks will also have the BOSH task ID:
@@ -1328,7 +1328,7 @@ Most operations on the on demand service broker API are implemented by launching
 
 1. Use the task ID to obtain the task log from BOSH (adding flags such as `--debug` or `--cpi` as necessary):
    <pre class="terminal">
-    $ bosh task TASK-ID
+    $ bosh2 task TASK-ID
    </pre>
 
 ### <a id="id-uaa-issues"></a>Identify Issues When Connecting to BOSH or UAA
