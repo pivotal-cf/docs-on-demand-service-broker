@@ -29,7 +29,8 @@ The network for service instances should be flagged as a Service Network in Ops 
 Notes:
 
 1. The ELBs created by CloudFormation are both for CF, not Ops Manager. One of them will be configured with your wildcard certificate. This takes the place of HAProxy in AWS PCF deployments, and is therefore not used until you deploy the ERT tile.
-1. To target the BOSH Director from the Ops Manager VM: `bosh --ca-cert /var/tempest/workspaces/default/root_ca_certificate -e 10.0.16.10 alias-env om-director`. Thereafter, use `bosh -e om-director` to make requests to the BOSH Director.
+1. To target the BOSH Director from the Ops Manager VM: `bosh2 --ca-cert /var/tempest/workspaces/default/root_ca_certificate -e 10.0.16.10 alias-env om-director`. 
+Thereafter, use `bosh2 -e om-director` to make requests to the BOSH Director.
 
 ## <a id="building"></a>Build a Tile
 
