@@ -170,18 +170,38 @@ For more information, see [manifest snippets below](#core-broker-configuration).
 
 ### <a id="bosh-teams"></a>BOSH Teams
 
-BOSH has a teams feature that allows you to further control how BOSH operations are available to different clients. We strongly recommend using it to ensure that your on-demand service broker client can only modify deployments it created. For example, if you [use uaac](https://docs.cloudfoundry.org/adminguide/uaa-user-management.html) to create the client like this:
+BOSH has a teams feature that allows you to further control how BOSH operations are available to different clients. 
+Pivotal recommends using the feature to ensure that your on-demand service broker client can only modify deployments it created. 
 
-```bash
-uaac client add CLIENT-ID \
-  --secret CLIENT-SECRET \
-  --authorized_grant_types "refresh_token password client_credentials" \
-  --authorities "bosh.teams.TEAM-NAME.admin"
-```
+Perform the following steps:
 
-Then when you [configure the broker's BOSH authentication](#core-broker-configuration), you can use this client ID and secret. The broker will then only be able to perform BOSH operations on deployments it has created itself.
+1. Run the following UAA CLI (UAAC) command to create the client:
 
-For how to set up and use BOSH teams, see [Director teams and permissions configuration](https://bosh.io/docs/director-users-uaa-perms.html).
+    ```
+    uaac client add CLIENT-ID \
+      --secret CLIENT-SECRET \
+      --authorized_grant_types "refresh_token password client_credentials" \
+      --authorities "bosh.teams.TEAM-NAME.admin"
+    ```
+    <br>
+    Where:
+    * `CLIENT-ID` is your client ID.
+    * `CLIENT-SECRET` is your client secret.
+    <br><br>
+    For example:
+    <pre class="terminal">
+    uaac client add admin \
+      --secret 12345679 \
+      --authorized_grant_types "refresh\_token password client\_credentials" \
+      --authorities "bosh.teams.TEAM-NAME.admin"
+    </pre>
+    For more information about using the UAAC, see [Creating and Managing Users with the UAA CLI (UAAC)
+    ](https://docs.cloudfoundry.org/uaa/uaa-user-management.html).
+
+1. When [configuring the broker's BOSH authentication](#core-broker-configuration), use the client ID and secret you provided above. 
+The broker will then only be able to perform BOSH operations on deployments it has created itself.
+
+For more information about setting up and using BOSH teams, see the [BOSH documentation](https://bosh.io/docs/director-users-uaa-perms.html).
 
 For more details on securing how ODB uses BOSH, see [Security](#security).
 
@@ -198,9 +218,9 @@ Detailed broker configuration is covered [below](#core-broker-configuration).
 
 Upload the following releases to the BOSH Director:
 
-* on-demand-service-broker
-* your service adapter
-* your service release(s)
+* On-demand-service-broker
+* Your service adapter
+* Your service release(s)
 
 ## <a id="broker-manifest"></a>Write a Broker Manifest
 
@@ -438,7 +458,7 @@ The credentials for a given Service Binding are stored with the following format
 ```
 
 The plain-text credentials are stored in CredHub under this key, and the key is
-available under the VCAP_SERVICES environment variable for the application.
+available under the `VCAP_SERVICES` environment variable for the application.
 
 ## <a id="plan-schemas"></a>Enable Plan Schemas
 
@@ -461,8 +481,8 @@ parameters against the schema and produces an error if the parameters do not con
 
 You can optionally colocate the `route_registrar` job from the [routing release](http://bosh.io/releases/github.com/cloudfoundry-incubator/cf-routing-release?all=1) with the on-demand-service-broker, in order to:
 
-1. load balance multiple instances of ODB using Cloud Foundry's router
-1. access ODB from the public internet
+1. Load balance multiple instances of ODB using Cloud Foundry's router
+1. Access ODB from the public internet
 
 To do this, upload the release to your BOSH Director and [configure the job properties](http://bosh.io/jobs/route_registrar?source=github.com/cloudfoundry-incubator/cf-routing-release&version=0.136.0), replacing the version in that docs URL query string as appropriate.
 
@@ -677,8 +697,18 @@ Add the following instance group to your manifest:
 ```
 
 Run the errand with the following command:
-`bosh2 -d DEPLOYMENT-NAME run-errand register-broker`
 
+```
+bosh2 -d DEPLOYMENT-NAME run-errand register-broker
+```
+
+Where `DEPLOYMENT-NAME` is the name of your deployment.
+
+For example:
+
+<pre class="terminal">
+$ bosh2 -d cf run-errand register-broker
+</pre>
 
 ### <a id="delete-instances-and-deregister"></a>Delete All Service Instances and Deregister Broker
 
@@ -716,9 +746,10 @@ Add the following instance group to your manifest:
   azs: [AZ]
 ```
 
-Where: <br>
-`INTERVAL-IN-SECONDS`: The interval in seconds before a service instance is deleted. <br>
-`OFFSET-IN-SECONDS`: The offset in seconds before polling Cloud Foundry to check
+Where: 
+
+* `INTERVAL-IN-SECONDS`: The interval in seconds before a service instance is deleted. 
+* `OFFSET-IN-SECONDS`: The offset in seconds before polling Cloud Foundry to check
 if the instance has been deleted.
 
  <p class="note"><strong>Note</strong>: The `polling_interval_seconds` default is set to 60 seconds
@@ -728,7 +759,20 @@ if the instance has been deleted.
     In systems with more load, consider increasing the polling offset.
 
 Run the errand with the following command:
-`bosh2 -d DEPLOYMENT-NAME run-errand delete-all-service-instances-and-deregister-broker`
+
+```
+bosh2 -d DEPLOYMENT-NAME run-errand \
+delete-all-service-instances-and-deregister-broker
+```
+
+Where `DEPLOYMENT-NAME` is the name of your deployment.
+
+For example:
+
+<pre class="terminal">
+$ bosh2 -d cf run-errand \
+delete-all-service-instances-and-deregister-broker
+</pre>
 
 ### <a id="deregister-broker"></a>Deregister Broker
 
@@ -752,7 +796,19 @@ Add the following instance group to your manifest:
 ```
 
 Run the errand with the following command:
-|`bosh2 -d DEPLOYMENT-NAME run-errand deregister-broker`
+
+
+```
+bosh2 -d DEPLOYMENT-NAME run-errand deregister-broker
+```
+
+Where `DEPLOYMENT-NAME` is the name of your deployment.
+
+For example:
+
+<pre class="terminal">
+$ bosh2 -d cf run-errand deregister-broker
+</pre>
 
 ### <a id="delete-instances"></a>Delete All Service Instances
 
@@ -791,9 +847,10 @@ Add the following instance group to your manifest:
   azs: [AZ]
 ```
 
-Where:<br>
-`INTERVAL-IN-SECONDS`: The interval in seconds before a service instance is deleted. <br>
-`OFFSET-IN-SECONDS`: The offset in seconds before polling Cloud Foundry to check
+Where:
+
+* `INTERVAL-IN-SECONDS`: The interval in seconds before a service instance is deleted. 
+* `OFFSET-IN-SECONDS`: The offset in seconds before polling Cloud Foundry to check
 if the instance has been deleted.
 
  <p class="note"><strong>Note</strong>: The `polling_interval_seconds` default is set to 60 seconds
@@ -806,9 +863,25 @@ if the instance has been deleted.
     in which case you might consider increasing the polling offset.</p>
 
 Run the errand with the following command:
-`bosh2 -d DEPLOYMENT-NAME run-errand delete-all-service-instances`
+
+```
+bosh2 -d DEPLOYMENT-NAME run-errand \
+delete-all-service-instances
+```
+
+Where `DEPLOYMENT-NAME` is the name of your deployment.
+
+For example:
+
+<pre class="terminal">
+$ bosh2 -d cf run-errand \
+delete-all-service-instances
+</pre>
 
 ### <a id="orphan-deployments"></a>Delete Orphaned Deployments
+
+<p class="note warning"><strong>WARNING:</strong> Deleting the BOSH deployment destroys the VM.
+  Any data present is lost.</p>
 
 The deployment for a service instance is defined as 'Orphaned' when the BOSH
 deployment is still running, but the service is no longer registered in
@@ -834,45 +907,61 @@ Add the following instance group to your manifest:
 ```
 
 Run the errand with the following command:
-`bosh2 -d DEPLOYMENT-NAME run-errand orphan-deployments`
 
-If orphan deployments are present, the errand will output a list of deployment
-names
-
-```shell
-[stdout]
-[{"deployment_name":"service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3"}]
-
-[stderr]
-None
-
-Errand 'orphan-deployments' completed successfully (exit code 0)
+```
+bosh2 -d DEPLOYMENT-NAME run-errand orphan-deployments
 ```
 
-<p class="note warning"><strong>WARNING:</strong> Deleting the BOSH deployment destroys the VM.
-  Any data present is lost.<br>
+Where `DEPLOYMENT-NAME` is the name of your deployment.
 
-To delete the orphan deployment, run:
-<code>bosh2 -d DEPLOYMENT-NAME delete-deployment service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3</code></p>
+For example:
+<pre class="terminal">
+$ bosh2 -d cf run-errand orphan-deployments
+</pre>
+
+If orphan deployments are present, the errand will output a list of orphaned deployments that resembles the following:
+
+<pre class="terminal">
+[stdout]
+[{"deployment_name":"service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3"}]
+[stderr]
+None
+Errand 'orphan-deployments' completed successfully (exit code 0)
+</pre>
+
+To delete the orphan deployment, run the following command:
+
+```
+bosh2 -d DEPLOYMENT-NAME delete-deployment 
+```
+
+Where `DEPLOYMENT-NAME` is the name of the orphaned deployment returned in the output of the errand.
+
+For example:
+
+<pre class="terminal">
+bosh2 -d service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3 \
+delete-deployment
+</pre>
 
 ## <a id="updates"></a>Updates
 
 ### <a id="update-broker"></a>Update Broker
 
-To update the [core broker configuration](#core-broker-config):
+To update the [core broker configuration](#core-broker-config), do the following:
 
-* make any necessary changes to the core broker configuration in the broker manifest
-* deploy the broker
+* Make any necessary changes to the core broker configuration in the broker manifest.
+* Deploy the broker.
 
 ### <a id="updating-service-offering"></a>Update Service Offering
 
-To update the service offering:
+To update the service offering, do the following:
 
-* make any changes to properties in the `service_catalog` of the broker manifest. For example, update the service metadata.
-* make any changes to properties in the `service_deployment` of the broker manifest. For example, update the jobs used from a service release.
-* deploy the broker
+* Make any changes to properties in the `service_catalog` of the broker manifest. For example, update the service metadata.
+* Make any changes to properties in the `service_deployment` of the broker manifest. For example, update the jobs used from a service release.
+* Deploy the broker.
 
-**Warning:** Once the broker has been registered with Cloud Foundry do not change the `service_id` or the `plan_id` for any plan. When the ODB starts it checks that all existing service instances in Cloud Foundry have a `plan_id` that exists in the `service_catalog`.
+<p class="note warning"><strong>WARNING</strong>: Once the broker has been registered with Cloud Foundry do not change the <code>service_id</code> or the <code>plan_id</code> for any plan. When the ODB starts it checks that all existing service instances in Cloud Foundry have a <code>plan_id</code> that exists in the <code>service_catalog</code>.</p>
 
 After changing the `service_catalog`, you should run the [register-broker errand](#register) to update the Cloud Foundry marketplace.
 
@@ -880,10 +969,22 @@ When the plans are updated in the `service_catalog`, then upgrades will need to 
 
 ### <a id="disabling-service-plans"></a>Disable Service Plans
 
-Access to a service plan can be disabled by using the Cloud Foundry CLI:
+To disable access to a service plan, run the following Cloud Foundry CLI (cf CLI) command:
+
 ```
 cf disable-service-access SERVICE-NAME-FROM-CATALOG -p PLAN-NAME
 ```
+
+Where:
+
+* `SERVICE-NAME-FROM-CATALOG` is the name of the service from the service catalog.
+* `PLAN-NAME` is the name of the plan you want to disable.
+
+For example:
+
+<pre class="terminal">
+cf disable-service-access my-service -p small
+</pre>
 
 Also, when a plan has the property `cf_service_access: disable` in the `service_catalog` then the [register-broker errand](#register) errand will disable service access to that plan.
 
@@ -891,51 +992,55 @@ Also, when a plan has the property `cf_service_access: disable` in the `service_
 
 A service plans can be removed if there are no instances using the plan. To remove the a plan, remove it from the broker manifest and update the Cloud Foundry marketplace by running the [register-broker errand](#register).
 
-**Warning:** If any service instances remain on a plan that has been removed from the catalog then the ODB will fail to start.
+<p class="note warning"><strong>WARNING</strong>: If any service instances remain on a plan that has been removed from the catalog then the ODB will fail to start.</p>
 
 ## <a id="upgrades"></a>Upgrades
 
 ### <a id="upgrade-broker"></a>Upgrade the Broker
 
-The broker is upgraded in a similar manner to all BOSH releases:
+To upgrade the broker, do the following:
 
-* upload new version of `on-demand-service-broker-release` BOSH release to the BOSH Director
-* make any necessary changes to the core broker configuration in the broker manifest
-* deploy the broker
+* Upload new version of `on-demand-service-broker-release` BOSH release to the BOSH Director.
+* Make any necessary changes to the core broker configuration in the broker manifest.
+* Deploy the broker.
 
 ### <a id="upgrade-service-offering"></a>Upgrade Service Offering
 
-The service offering consists of:
+The service offering consists of the following:
 
-* service catalog
-* service adapter BOSH release
-* service BOSH release(s)
-* service stemcell
+* Service catalog
+* Service adapter BOSH release
+* Service BOSH release(s)
+* Service stemcell
 
-To upgrade a service offering:
+To upgrade a service offering, do the following:
 
-* make any changes to the service catalog in the broker manifest
-* upload any new service BOSH release(s) to the BOSH Director
-* make any changes to service release(s) in the broker manifest
-* upload any new service stemcell to the BOSH Director
-* make any changes to the service stemcell in the `service_deployment` broker manifest
-* deploy the broker
+* Make any changes to the service catalog in the broker manifest.
+* Upload any new service BOSH release(s) to the BOSH Director.
+* Make any changes to service release(s) in the broker manifest.
+* Upload any new service stemcell to the BOSH Director.
+* Make any changes to the service stemcell in the `service_deployment` broker manifest.
+* Deploy the broker.
 
 Any new service instances will be created using the latest service offering.
 
 To upgrade all existing instances you can run the [upgrade-all-service-instances errand](#upgrade-instances).
 
-**Warning:** Until a service instance has been upgraded, `cf update-service` operations will be blocked and an error will be shown, see [updating service offering](#updating-service-offering).
+<p class="note warning"><strong>WARNING</strong>: Until a service instance has been upgraded, <code>cf update-service</code> operations will be blocked and an error will be shown, see <a href="#updating-service-offering">updating service offering</a>.</p>
 
 ### <a id="upgrade-individual-instances"></a>Upgrade an Individual Service Instance
 
 Cloud Foundry users cannot upgrade their service instances to the latest service offering.
 
-Until a service instance has been upgraded, Cloud Foundry users cannot set parameters, or change plan until the service instance has been upgraded by an operator:<pre class="terminal">
-$ cf update-service my-redis -c '{"maxclients": 10000}'
-Updating service instance my-redis as admin...
+Until a service instance has been upgraded, Cloud Foundry users cannot set parameters, or change plan until the service instance has been upgraded by an operator.
+
+For example, a developer who tries to update a Redis service instance with the `cf update-service` command will see the following error message:
+
+<pre class="terminal">
 FAILED
-Server error, status code: 502, error code: 10001, message: Service broker error: Service cannot be updated at this time, please try again later or contact your operator for more information.
+Server error, status code: 502, error code: 10001, message: 
+Service broker error: Service cannot be updated at this time, 
+please try again later or contact your operator for more information.
 </pre>
 
 Operators should run the [upgrade-all-service-instances errand](#upgrade-instances) to upgrade all service instances to the latest service offering.
@@ -1018,8 +1123,7 @@ To upgrade all existing service instances after the service offering has been up
     </p>
 </li>
 <li>Deploy the broker manifest.</li>
-<li>Run the errand withe the following command:<br/>
-  <code>bosh2 run-errand upgrade-all-service-instances</code>
+<li>Run the errand with the following command:<pre>bosh2 run-errand upgrade-all-service-instances</pre>
 </li>
 </ol>
 
@@ -1131,11 +1235,12 @@ To configure the `upgrade-all-service-instances` errand to connect to a Service 
   azs: [AZ]
 ```
 
-Where: <br>
-`POLLING-INTERVAL-IN-SECONDS`: The number of seconds to wait between checking the
-status of a submitted upgrade job. <br>
-`ATTEMPT-INTERVAL-IN-SECONDS`: The number of seconds to wait between retrying upgrades. <br>
-`NUMBER-OF-ATTEMPTS`: The maximum number of times the errand will try a set of upgrades. <br>
+Where: 
+
+* `POLLING-INTERVAL-IN-SECONDS`: The number of seconds to wait between checking the
+status of a submitted upgrade job. 
+* `ATTEMPT-INTERVAL-IN-SECONDS`: The number of seconds to wait between retrying upgrades. 
+* `NUMBER-OF-ATTEMPTS`: The maximum number of times the errand will try a set of upgrades. 
 
 ## <a id="security"></a>Security
 
@@ -1280,7 +1385,7 @@ The ODB generates a UUID for each request and prefixes all the logs for that req
 [on-demand-service-broker] [4d63080d-e038-45a3-85f9-93910f6b40b1] 2016/09/05 16:43:26.123456 a valid UAA token was found in cache, will not obtain a new one
 </pre>
 
-NB: The ODB's negroni server and start up logs are not prefixed with a request ID.
+<p class="note"><strong>Note</strong>: The ODB's negroni server and start up logs are not prefixed with a request ID.</p>
 
 All ODB's logs have a UTC timestamp.
 
@@ -1373,31 +1478,67 @@ If `quota_remaining` is `0` then you need to increase your plan quota in the BOS
 
 There is a one to one mapping between the service instance id from CF and the deployment name in BOSH. The convention is the BOSH deployment name would be the service instance id prepended by `service-instance_`. To identify the BOSH deployment for a service instance you can.
 
-1. Determine the GUID of the service
-   <pre class="terminal">
-    $ cf service --guid SERVICE-NAME
-   </pre>
+1. Determine the GUID of the service.
+  Run the following command:
 
-1. Identify deployment in `bosh deployments` by looking for `service-instance_GUID`
+    ```
+    cf service --guid SERVICE-NAME
+    ```
+    Where `SERVICE-NAME` is the name of your service.
+    <br><br>
+    For example:
+    <pre class="terminal">
+    $ cf service --guid my-service
+    </pre>
+    Record the GUID in the output of the command.
 
-1. Get current tasks for the deployment by using
-   <pre class="terminal">
-    $ bosh2 tasks -d service-instance_GUID
-   </pre>
+1. Identify your deployment. 
+  Run `bosh deployments` and look for `service-instance_GUID`.
+
+1. Get current tasks for your deployment. 
+  Run the following command:
+
+    ```
+    bosh2 tasks -d service-instance_GUID
+    ```
+    Where `GUID` is the GUID for your service instance, which you retrieved above.
+    <br><br>
+    For example:
+    <pre class="terminal">
+    $ bosh2 tasks -d \
+    service-instance_30d4a67f-d220-4d06-9989-58a976b86b35
+    </pre>
 
 ### <a id="id-tasks"></a>Identify Tasks in BOSH
 
 Most operations on the on demand service broker API are implemented by launching BOSH tasks. If an operation fails, it may be useful to investigate the corresponding BOSH task. To do this:
 
-1. Determine the ID of the service for which an operation failed. You can do this using the Cloud Foundry CLI:
-   <pre class="terminal">
-    $ cf service --guid SERVICE-NAME
-   </pre>
+1. Determine the ID of the service for which an operation failed. 
+  Run the following command:
 
-1. SSH on to the service broker VM:
-   <pre class="terminal">
-    $ bosh2 -d BROKER-DEPLOYMENT-NAME ssh
-   </pre>
+    ```
+    cf service --guid SERVICE-NAME
+    ```
+    Where `SERVICE-NAME` is the name of your service.
+    <br><br>
+    For example:
+    <pre class="terminal">
+    $ cf service --guid my-service
+    </pre>
+    Record the GUID in the output of the command.
+
+1. SSH on to the service broker VM.
+  Run the following command:
+
+    ```
+    bosh2 -d BROKER-DEPLOYMENT-NAME ssh
+    ```
+    Where `BROKER-DEPLOYMENT-NAME` is the name of your broker deployment.
+    <br><br>
+    For example:
+    <pre class="terminal">
+    $ bosh2 -d my-broker ssh
+    </pre>
 
 1. In the broker log, look for lines relating to the service, identified by the service ID. Lines recording the starting and finishing of BOSH tasks will also have the BOSH task ID:
 
@@ -1412,9 +1553,10 @@ Most operations on the on demand service broker API are implemented by launching
     on-demand-service-broker: [on-demand-service-broker] [af6fab15-c95e-438b-aa6b-bc4329d4154f] 2016/04/13 09:19:56.803938 task 11474 success deleting deployment for instance 30d4a67f-d220-4d06-9989-58a976b86b35: delete deployment service-instance_30d4a67f-d220-4d06-9989-58a976b86b35
     ```
 
-1. Use the task ID to obtain the task log from BOSH (adding flags such as `--debug` or `--cpi` as necessary):
+1. Use the task ID to obtain the task log from BOSH, adding flags such as `--debug` or `--cpi` as necessary.
+  For example:
    <pre class="terminal">
-    $ bosh2 task TASK-ID
+    $ bosh2 task 11470
    </pre>
 
 ### <a id="id-uaa-issues"></a>Identify Issues When Connecting to BOSH or UAA
@@ -1423,10 +1565,13 @@ The ODB interacts with the BOSH Director to provision and deprovision instances,
 
 If BOSH and/or UAA are wrongly configured in the broker's manifest, then meaningful error messages will be displayed in the broker's log, indicating whether the issue is caused by an unreachable destination or bad credentials.
 
-For example
+For example:
 
 ```
-on-demand-service-broker: [on-demand-service-broker] [575afbc1-b541-481d-9cde-b3d3e67e87bf] 2016/05/18 15:56:40.100579 Error authenticating (401): {"error":"unauthorized","error_description":"Bad credentials"}, ensure that properties.BROKER-JOB.bosh.authentication.uaa is correct and try again.
+on-demand-service-broker: [on-demand-service-broker] 
+[575afbc1-b541-481d-9cde-b3d3e67e87bf] 2016/05/18 15:56:40.100579 
+Error authenticating (401): {"error":"unauthorized","error_description":
+"Bad credentials"}, ensure that properties.BROKER-JOB.bosh.authentication.uaa is correct and try again.
 ```
 
 ### <a id="listing-instances"></a>List Service Instances
