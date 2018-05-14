@@ -30,9 +30,9 @@ The network for service instances should be flagged as a Service Network in Ops 
 1. Click **Apply Changes**, and record the BOSH init manifest for future reference. 
 <pre class="terminal">scp -i private_key.pem ubuntu@opsmanIP:/var/tempest/workspaces/default/deployments/bosh.yml bosh.yml`</pre>
 
-<p class="note"><strong>Note</strong>: The ELBs created by CloudFormation are both for CF, not Ops Manager. 
-One of them will be configured with your wildcard certificate. This takes the place of HAProxy in AWS PCF deployments, 
-and is therefore not used until you deploy the ERT tile.</p>
+  <p class="note"><strong>Note</strong>: The ELBs created by CloudFormation are both for CF, not Ops Manager. 
+  One of them will be configured with your wildcard certificate. This takes the place of HAProxy in AWS PCF deployments, 
+  and is therefore not used until you deploy the ERT tile.</p>
 
 ###<a id="target_bosh"></a>Target the BOSH Director
 
@@ -54,7 +54,6 @@ flag must be `true` in the tile metadata file.
 <p class="note"><strong>Note</strong>: If you are publishing a tile to be consumed by Ops Manager 1.8.x or 1.9.x, you will need to build your tile using releases with SHA1 internal checksums. On Demand Broker releases are published using SHA2 internal checksums. You can convert these releases to use SHA1 internal checksums using the BOSH CLI command <code>sha1ify-release</code>.</p>
 
 ## <a id="accessors"></a>Non-Exhaustive Accessors Reference
-
 #### director
 
 Used to provide fields relating to the BOSH Director installation present.
