@@ -3,21 +3,25 @@ title: Creating an On-Demand Service Tile
 owner: London Services Enablement
 ---
 
-This documents the process for deploying an on-demand broker (ODB) with a service in a single tile, on a AWS installation of Ops Manager 1.8. We have built a reference [Kafka tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile).
+This documents the process for deploying an on-demand broker (ODB) with a service in a single tile, on a AWS installation of Ops Manager v1.8. 
+Pivotal has built a reference [Kafka tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile).
 
 ## <a id="requirements"></a>Requirements
 
-Before ODB, Ops Manager controlled the IP allocation of the private networks. So when using the ODB in a tile, you will need at least two private networks:
+Before ODB, Ops Manager controlled the IP allocation of the private networks.
+So when using the ODB in a tile, you need at least two private networks:
 
-- a network where Ops Manager will deploy the on-demand broker VM
-- a different network where the on-demand broker will deploy service instance VMs
+- A network where Ops Manager will deploy the on-demand broker VM
+- A different network where the on-demand broker will deploy service instance VMs
 
 The network for service instances should be flagged as a Service Network in Ops Manager.
 
 ## <a id="deploying"></a>Deploying Ops Manager to AWS
 
 1. Follow the default Ops Manager deployment [documentation](https://docs.pivotal.io/pivotalcf/customizing/cloudform-template.html), but with these modifications:
-  1. Create a self-signed wildcard SSL certificate for a domain you control. This will usually be `*.SOME-SUBDOMAIN.cf-app.com`. Upload the certificate (along with the associated private key) to AWS. 
+  1. Create a self-signed wildcard SSL certificate for a domain you control.
+     This is usually `*.SOME-SUBDOMAIN.cf-app.com`.
+     Upload the certificate (along with the associated private key) to AWS. 
   For details, see [SSL/TLS Certificates for Classic Load Balancers](https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/ssl-server-cert.html#create-cert).
   1. Download the CloudFormation JSON and save it in the Ops Manager directory.
   1. Run the CloudFormation stack. Save any pertinent inputs (e.g BOSH DB credentials) you type into the web console 
@@ -28,7 +32,11 @@ The network for service instances should be flagged as a Service Network in Ops 
 1. Continue following the docs to log in to Ops Manager. Save the login credentials.
 1. Configure the BOSH Director tile.
 1. Click **Apply Changes**, and record the BOSH init manifest for future reference. 
-<pre class="terminal">scp -i private_key.pem ubuntu@opsmanIP:/var/tempest/workspaces/default/deployments/bosh.yml bosh.yml`</pre>
+   For example, copy the manifest to your local machine, with the following command:
+
+    ```
+    scp -i PRIVATE-KEY.pem ubuntu@OPSMAN-IP:/var/tempest/workspaces/default/deployments/bosh.yml bosh.yml
+    ```
 
   <p class="note"><strong>Note</strong>: The ELBs created by CloudFormation are both for CF, not Ops Manager. 
   One of them will be configured with your wildcard certificate. This takes the place of HAProxy in AWS PCF deployments, 
@@ -36,9 +44,9 @@ The network for service instances should be flagged as a Service Network in Ops 
 
 ###<a id="target_bosh"></a>Target the BOSH Director
 
-To target the BOSH Director from the Ops Manager VM, use the following command:
+To target the BOSH Director from the Ops Manager VM, use a command like the following:
 
-<code>bosh2 --ca-cert /var/tempest/workspaces/default/root_ca_certificate -e 10.0.16.10 alias-env om-director</code>
+<pre class=terminal>$ bosh2 --ca-cert /var/tempest/workspaces/default/root_ca_certificate -e 10.0.16.10 alias-env om-director</pre>
 
 Thereafter, use `bosh2 -e om-director` to make requests to the BOSH Director.
 
@@ -51,7 +59,7 @@ to build your service tile.
 accessors listed in [Non-Exhaustive Accessors Reference](#accessors). To use the `$self` accessors, the `service-broker`
 flag must be `true` in the tile metadata file.
 
-<p class="note"><strong>Note</strong>: If you are publishing a tile to be consumed by Ops Manager 1.8.x or 1.9.x, you will need to build your tile using releases with SHA1 internal checksums. On Demand Broker releases are published using SHA2 internal checksums. You can convert these releases to use SHA1 internal checksums using the BOSH CLI command <code>sha1ify-release</code>.</p>
+<p class="note"><strong>Note</strong>: If you are publishing a tile to be consumed by Ops Manager v1.8.x or v1.9.x, you need to build your tile using releases with SHA1 internal checksums. On Demand Broker releases are published using SHA2 internal checksums. You can convert these releases to use SHA1 internal checksums using the BOSH CLI command <code>sha1ify-release</code>.</p>
 
 ## <a id="accessors"></a>Non-Exhaustive Accessors Reference
 #### director
@@ -133,7 +141,8 @@ For more accessors you can see the [ops-manager-example product](https://github.
 
 ## <a id="public-ip"></a>Public IP Address for On-Demand Service Instance Groups
 
-Ops Manager 1.9 RC1+ provides a VM extension called `public_ip` in the BOSH Director's cloud config. This can be used in the on-demand service broker's manifest to give instance groups a public IP address. This IP is only used for outgoing traffic to the internet from VMs with the `public_ip` extension. All internal traffic / incoming connections need to go over the private IP.
+Ops Manager v1.9 and later provides a VM extension called `public_ip` in the BOSH Director's cloud config.
+This can be used in the on-demand service broker's manifest to give instance groups a public IP address. This IP is only used for outgoing traffic to the internet from VMs with the `public_ip` extension. All internal traffic / incoming connections need to go over the private IP.
 
 Here is an example showing how to allow operators to assign a public IP address to an on-demand service instance group in the tile handcraft:
 
@@ -171,7 +180,8 @@ job_types:
 
 Ops Manager provides a feature called [Floating Stemcells](https://docs.pivotal.io/pivotalcf/1-9/customizing/understanding-stemcells.html) that allows PCF to quickly propagate a patched stemcell to all VMs in the deployment that have the same compatible stemcell. Both the broker deployment and the service instances deployed by the On-Demand Broker can make use of this feature. Enabling this feature can help ensure that all of your service instances are patched to the latest stemcell.
 
-In order for the service instances to be installed automatically with the latest stemcell, you will need to make sure the `upgrade-all-service-instances` errand is ticked.
+For the service instances to be installed automatically with the latest stemcell,
+you need to make sure the `upgrade-all-service-instances` errand is ticked.
 
 Here is an example of how to implement floating stemcells in `handcraft.yml`:
 
@@ -202,7 +212,7 @@ stemcell_criteria:
   enable_patch_security_updates: true
 ```
 
-Please note, configuring this value to `false` will disable this feature.
+<p class="note"><strong>Note</strong>: Configuring this value to <code>false</code> disables this feature.</p>
 
 ## <a id="errands"></a>On-Demand Broker Errands
 
