@@ -118,11 +118,17 @@ For example, the [Kafka service adapter](https://github.com/pivotal-cf-experimen
 
 ### <a id="prev-props"></a>Previous Manifest Properties
 
-Service authors must migrate certain properties for the service from the previous manifest when updating a service instance. If the previous manifest specified arbitrary params (e.g. from the CLI user), the service adapter **must** get those params from the previous manifest and add them to the new manifest.
+When updating a service instance, service authors must migrate certain properties 
+for the service from the previous manifest. 
+If the previous manifest contains values specified by arbitrary parameters, 
+the service adapter **must** get those values from the previous manifest and add them to the new manifest.
 
-<p class="note warning">If the service adapter does not migrate properties from the old manifest to the new one, the update will fail.</p>
+<p class="note warning"><strong>WARNING</strong>:
+  If the service adapter does not migrate properties from the old manifest to 
+  the new one, the update fails.</p>
 
-For example, the [Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go) migrates the `auto_create_topics` previous plan property to configure auto-creation of topics on the cluster.
+For example, the [Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/94efd8e495c7f2008ad8c2bdb322affd56b3ead9/adapter/generate_manifest.go#L100-L109) 
+migrates the `auto_create_topics` previous plan property to configure auto-creation of topics on the cluster.
 
 ### <a id="plan-props"></a>Service Plan Properties
 
