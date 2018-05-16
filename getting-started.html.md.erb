@@ -59,8 +59,7 @@ This topic provides examples of using each version of the BOSH CLI. Your PCF ins
     </tr>
 </table>
 
-
-## <a id="set_up_bosh"></a>Step 1: Set Up BOSH Lite
+## <a id="set_up_bosh"></a>Step 1: Prepare BOSH Lite
 
 1. Target your BOSH Lite installation:
    <pre>
@@ -195,7 +194,7 @@ This topic provides examples of using each version of the BOSH CLI. Your PCF ins
   Record the URL and UUID from your output. You will add them to the `deployment_manifest.yml` in the next step.
 
 1. Create a BOSH Lite deployment manifest in a file called `deployment_manifest.yml` using the following as a base.
-<p class="note">Replace `BOSH_LITE_UUID`, `BOSH_LITE_URL` and `PCF_DEV_DOMAIN` with the values obtained in the previous steps.</p>
+<p class="note">Replace `BOSH-LITE-UUID`, `BOSH-LITE-URL` and `PCF-DEV-DOMAIN` with the values obtained in the previous steps.</p>
 
     ```yaml
     name: kafka-on-demand-broker
