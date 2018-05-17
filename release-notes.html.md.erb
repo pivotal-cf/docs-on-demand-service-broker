@@ -17,8 +17,12 @@ owner: London Services Enablement
   must be an array.
 - Service instance provision requests now require `X-Broker-API-Version: 2.13`
   in the header for OSBAPI compliance. The version must be 2.x and later.
-- When service instance quotas reached, error messages updated to format
-  "global instance limit exceeded for service ID: p.redis. Total instances: 100".
+- When service instance quotas are reached, error messages are updated to the following format:
+    `Global instance limit exceeded for service ID: SERVICE-ID. Total instances: NUMBER` 
+
+    <br>For example:<br>
+    `Global instance limit exceeded for service ID: p.redis. Total instances: 100`
+
 
 ### <a id="new-features"></a>New Features
 
