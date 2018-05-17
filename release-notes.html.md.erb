@@ -3,8 +3,8 @@ title: On-Demand Services SDK Release Notes
 owner: London Services Enablement
 ---
 
-## <a id="release-notes"></a>v0.21.1 Release Notes
-**Release Date: April 23, 2018**
+## <a id="release-notes"></a>v0.21.2 Release Notes
+**Release Date: May 14, 2018**
 
 ### <a id="minimum-version-requirements"></a>Minimum Version Requirements
 
@@ -17,18 +17,25 @@ owner: London Services Enablement
   must be an array.
 - Service instance provision requests now require `X-Broker-API-Version: 2.13`
   in the header for OSBAPI compliance. The version must be 2.x and later.
+- When service instance quotas are reached, error messages are updated to the following format:
+    `Global instance limit exceeded for service ID: SERVICE-ID. Total instances: NUMBER` 
+
+    <br>For example:<br>
+    `Global instance limit exceeded for service ID: p.redis. Total instances: 100`
+
 
 ### <a id="new-features"></a>New Features
 
+- Golang downgraded to 1.9.5
 - Adds support for defining multiple pre-delete and post-deploy lifecycle
-  errands. Errands can be configured with different colocation preferences. 
-  For more information, see [Service Instance Lifecycle Errands](./operating.html#lifecycle-errands).  
+  errands. Errands can be configured with different colocation preferences.
+  For more information, see [Service Instance Lifecycle Errands](./operating.html#lifecycle-errands).
 - Improved flexibility to select canary service instances to upgrade
   during `upgrade-all-service-instances` errand. Operators can specify a number
-  of instances to upgrade first, and/or they may specify a Cloud Foundry 
+  of instances to upgrade first, and/or they may specify a Cloud Foundry
   organization and space from which canary instances will be selected.
   Alternatively, arbitrary parameters can be supported if using
-  the Service Instances API. 
+  the Service Instances API.
   For more information, see [Upgrade All Service Instances](./operating.html#upgrade-all-instances).
 - Enabled broker validation for plan-level [configuration parameter schemas](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#catalog-management).
   Service adapters may opt into having ODB validate request configuration
@@ -43,7 +50,6 @@ owner: London Services Enablement
   [OSBAPI v2.13 specification](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md).
 - Supports arbitrary additional properties in
   [service plan definition metadata](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/profile.md#service-metadata).
-- Golang bumped to 1.10.1
 - CF CLI bumped to v6.36.1
 <p class="note"><strong>Note</strong>: PCF 1.10 integration is no longer supported. </p>
 
@@ -51,4 +57,3 @@ owner: London Services Enablement
 ### <a id="known-issues"></a>Known Issues
 
 - None
-
