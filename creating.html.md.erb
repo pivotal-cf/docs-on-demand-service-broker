@@ -159,63 +159,73 @@ The [generate manifest subcommand for the Kafka example](https://github.com/pivo
 
 ## <a id="interface"></a>Service Adapter Interface
 
-Implement your service adapter as a binary with the following interface:
+Implement your service adapter as a binary that receives its parameters as a JSON document via STDIN.
 
-```
-service-adapter SUBCOMMAND PARAMETERS
-```
+For a list of possible subcommands and the structure of the JSON document
+passed via STDIN, see the [Subcommands](#sub-commands) section below.
 
-For a list of possible subcommands, see the [Subcommands](#sub-commands) section below. Each subcommand requires its own specific parameters.
-
-For example service adapter interfaces, see the following:
+For example service adapters, see the following:
 
 * [Redis](https://github.com/pivotal-cf-experimental/redis-example-service-adapter)
-* [Kafka](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter). 
+* [Kafka](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter).
 
-These examples are written in Golang. 
-They use the SDK to help with cross-cutting concerns such as unmarshalling the JSON command line parameters. 
-For example, see the use of `HandleCommandLineInvocation` in the [redis-adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/cmd/service-adapter/main.go#L15).
+These examples are written in Golang.  They use the SDK to help with
+cross-cutting concerns such as reading the JSON document from STDIN.
 
 ### <a id="sub-commands"></a>Subcommands
 
 #### <a id="generate-manifest"></a>generate-manifest
 
-The `generate-manifest` subcommand takes in five arguments and returns a BOSH deployment manifest YAML:
-
-```
-service-adapter generate-manifest \
-SERVICE-DEPLOYMENT-JSON \
-PLAN-JSON REQUEST-PARAMS-JSON \
-PREVIOUS-MANIFEST-YAML PREVIOUS-PLAN-JSON
-```
-
-See the [Output](#generate-manifest-output) section for more information about the command output and the [Parameters](#generate-manifest-parameters) section for more information about each argument.
+- [Input Parameters](#generate-manifest-parameters)
+- [Output](#generate-manifest-output)
 
 <div class="note">
   <strong>Notes</strong>:
   <ul>
-    <li>ODB requires <code>generate-manifest</code> to be a <strong>pure function</strong>. Given the same arguments when a previous manifest is supplied&mdash;which happens during a deployment update&mdash;the command should always output the same BOSH manifest.</li>
-    <li>When determing whether there are pending changes for an instance during an update, ODB <em>ignores</em> any configuration supplied in the <a href="https://bosh.io/docs/deployment-manifest.html#update" target="_blank">update block of the manifest</a> returned by the <code>generate-manifest</code> subcommand.</li>
+  <li>ODB requires <code>generate-manifest</code> to be <strong>idempotent</strong>.
+    Given the same arguments when a previous manifest is
+    supplied&mdash;which happens during a deployment update&mdash;the command
+    should always output the same BOSH manifest.</li> <li>When determing
+    whether there are pending changes for an instance during an update, ODB
+    <em>ignores</em> any configuration supplied in the <a
+    href="https://bosh.io/docs/deployment-manifest.html#update"
+    target="_blank">update block of the manifest</a> returned by the
+    <code>generate-manifest</code> subcommand.</li>
   </ul>
 </div>
 
-##### <a id="generate-manifest-output"></a>Output
 
-The following table describes the supported exit codes and output for the `generate-manifest` subcommand:
+##### <a id="generate-manifest-parameters"></a>Input Parameters
 
-| exit code     | Description     | Output                                                                                                                           |
-|:--------------|:----------------|:---------------------------------------------------------------------------------------------------------------------------------|
-| 0             | success         | Stdout: BOSH manifest YAML                                                                                                       |
-| 10            | not implemented |                                                                                                                                  |
-| anything else | failure         | Stdout: optional error message for CF CLI users<br/> Stderr: error message for operator<br/> ODB will log both stdout and stderr |
+This section describes the parameters provided to the `generate-manifest` subcommand via STDIN:
 
-##### <a id="generate-manifest-parameters"></a>Parameters
+```json
+{
+  "generate_manifest": {
+    "service_deployment": "SERVICE-DEPLOYMENT-JSON",
+    "plan": "PLAN-JSON",
+    "previous_plan": "PREVIOUS-PLAN-JSON",
+    "previous_manifest": "PREVIOUS-MANIFEST",
+    "request_parameters": "REQUEST-PARAMETERS-JSON"
+  }
+}
+```
 
-This section describes the parameters required by the `generate-manifest` subcommand.
+**Note:** All the arguments will be passed as strings, not as JSON objects. For example:
+
+```not-json
+{
+  "generate_manifest": {
+    "service_deployment": "{\"deployment_name\":\"some-name\"...}"
+    // ...
+  }
+}
+
+```
 
 **<a id="service-deployment"></a>SERVICE-DEPLOYMENT-JSON**
 
-The following table describes the JSON file required for `SERVICE-DEPLOYMENT-JSON`:
+The following table describes the JSON structure required for `SERVICE-DEPLOYMENT-JSON`:
 
 Provides information regarding the BOSH Director
 
@@ -259,7 +269,7 @@ Keep in mind the following:
 
 **<a id="plan-json"></a>PLAN-JSON**
 
-`PLAN-JSON` specifies the plan for which the manifest is supposed to be generated. The following table describes the schema of the JSON file required for `PLAN-JSON`:
+`PLAN-JSON` specifies the plan for which the manifest is supposed to be generated. The following table describes the schema of the JSON structure required for `PLAN-JSON`:
 
 | field                                     | Type                     | Description                                                                                                                            |
 |:------------------------------------------|:-------------------------|:---------------------------------------------------------------------------------------------------------------------------------------|
@@ -405,8 +415,7 @@ For example:
 
 **<a id="previous-manifest"></a>PREVIOUS-MANIFEST-YAML**
 
-This argument takes the previous manifest as YAML. 
-The previous manifest is nil if this is a new deployment. The format of the manifest should match the [BOSH v2 manifest](https://bosh.io/docs/manifest-v2.html).
+When available, it is the previous BOSH deployment manifest for the service instance, in YAML format. It is empty if this is a new deployment. The format of the manifest should match the [BOSH v2 manifest](https://bosh.io/docs/manifest-v2.html).
 
 The service author must perform any necessary service-specific migration logic if previous manifest is non-nil.
 
@@ -416,56 +425,54 @@ For example see the [example Redis service adapter](https://github.com/pivotal-c
 
 **<a id="previous-plan"></a>PREVIOUS-PLAN-JSON**
 
-This argument takes the previous plan as JSON. 
+This argument takes the previous plan as a JSON string.
 
-The previous plan is nil if this is a new deployment. 
+The previous plan is nil if this is a new deployment.
 
 The format of the plan should match the [plan schema](#plan-schema). The previous plan can be used for complex plan migration logic. For an example, the [Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go#L27:L33) rejects a plan migration if the new plan reduces the number of instances, to prevent data loss.
+
+##### <a id="generate-manifest-output"></a>Output
+
+The following table describes the supported exit codes and output for the `generate-manifest` subcommand:
+
+| exit code     | Description     | Output                                                                                                                           |
+|:--------------|:----------------|:---------------------------------------------------------------------------------------------------------------------------------|
+| 0             | success         | Stdout: BOSH manifest YAML                                                                                                       |
+| 10            | not implemented |                                                                                                                                  |
+| anything else | failure         | Stdout: optional error message for CF CLI users<br/> Stderr: error message for operator<br/> ODB will log both stdout and stderr |
 
 ---
 
 #### <a id="dashboard-url"></a>dashboard-url
 
-```
-service-adapter dashboard-url \
-INSTANCE-ID PLAN-JSON MANIFEST-YAML
-```
+- [Input Parameters](#dashboard-url-parameters)
+- [Output](#dashboard-url-output)
 
-The `dashboard-url` subcommand takes in three arguments and returns a JSON with the `dashboard_url`. 
-The dashboard URL is optional. 
-If no dashboard URL is relevant to the service, the subcommand should exit with code 10. 
-Provisioning will be successful without the dashboard URL.
+#####<a id="dashboard-url-parameters"></a>Input Parameters
 
-See the [Output](#dashboard-url-output) section for more information about the command output and the [Parameters](#dashboard-url-parameters) section for more information about each argument.
+This section describes the parameters provided to the dashboard-url subcommand via STDIN:
 
-##### <a id="dashboard-url-output"></a>Output
-
-If the `dashboard-url` command generates a url successfully, it should exit with 0 and return a dashboard URL JSON with the following structure:
-
-
-| field         | Type   | Description                           |
-|:--------------|:-------|:--------------------------------------|
-| dashboard_url | string | dashboard url returned to the cf user |
-
-For example:
-
-```
+```json
 {
-   "dashboard_url":"https://someurl.example.com"
+  "dashboard_url": {
+    "instance_id": "SERVICE-INSTANCE-ID",
+    "plan": "PLAN-JSON",
+    "manifest": "MANIFEST-YAML"
+  }
 }
 ```
 
-#### Supported Exit Codes for dashboard-url
+**Note:** All the arguments will be passed as strings, not as JSON objects. For example:
 
-| exit code     | Description     | Output                                                                                                                           |
-|:--------------|:----------------|:---------------------------------------------------------------------------------------------------------------------------------|
-| 0             | success         | Stdout: dashboard URL JSON                                                                                                       |
-| 10            | not implemented |                                                                                                                                  |
-| anything else | failure         | Stdout: optional error message for CF CLI users<br/> Stderr: error message for operator<br/> ODB will log both stdout and stderr |
+```not-json
+{
+  "dashboard_url": {
+    // ...
+    "manifest": "---\nname: some-name\n..."
+  }
+}
 
-#####<a id="dashboard-url-parameters"></a> Parameters
-
-This section describes the parameters required by the `dashboard-url` subcommand.
+```
 
 **<a id="dashboard-url-instance-id"></a>INSTANCE-ID**
 
@@ -505,7 +512,7 @@ For example:
 
 <br>
 
-<a id="dashboard-url-manifest"></a>MANIFEST-YAML
+**<a id="dashboard-url-manifest"></a>MANIFEST-YAML**
 
 This parameter is the current manifest as YAML. The format of the manifest should match the [BOSH v2 manifest](https://bosh.io/docs/manifest-v2.html).
 
@@ -551,58 +558,73 @@ addons:
     release: my-service
 ```
 
+##### <a id="dashboard-url-output"></a>Output
+
+If the `dashboard-url` command generates a url successfully, it should exit with 0 and return a dashboard URL JSON with the following structure:
+
+
+| field         | Type   | Description                           |
+|:--------------|:-------|:--------------------------------------|
+| dashboard_url | string | dashboard url returned to the cf user |
+
+For example:
+
+```
+{
+   "dashboard_url":"https://someurl.example.com"
+}
+```
+
+#### Supported Exit Codes for dashboard-url
+
+| exit code     | Description     | Output                                                                                                                           |
+|:--------------|:----------------|:---------------------------------------------------------------------------------------------------------------------------------|
+| 0             | success         | Stdout: dashboard URL JSON                                                                                                       |
+| 10            | not implemented |                                                                                                                                  |
+| anything else | failure         | Stdout: optional error message for CF CLI users<br/> Stderr: error message for operator<br/> ODB will log both stdout and stderr |
+
 ---
 
 #### <a id="create-binding"></a>create-binding
 
-The `create-binding` subcommand takes in four arguments.
+Binding credentials for a service instance should share a namespace, and should
+be unique if possible.
 
-```
-service-adapter create-binding \
-BINDING-ID BOSH-VMS-JSON \
-MANIFEST-YAML REQUEST-PARAMS-JSON
-```
+For MySQL, two bindings could include a different username/password pairs, but
+share the same MySQL database tables and data.  The first step is to determine
+which credentials are best to supply in the context of your service.  Pivotal
+recommends that users can be identified statelessly from the binding ID, and
+the simplest way to do this is to name the user after the binding ID.
 
-See the [Output](#create-binding-output) section for more information about the command output and the [Parameters](#create-binding-parameters) section for more information about each argument.
+- [Input Parameters](#create-binding-parameters)
+- [Output](#create-binding-output)
 
-Binding credentials for a service instance should share a namespace, and should be unique if possible. 
+##### <a id="create-binding-parameters"></a>Input Parameters
 
-For MySQL, two bindings could include a different username/password pairs, but share the same MySQL database tables and data. 
-The first step is to determine which credentials are best to supply in the context of your service. 
-Pivotal recommends that users can be identified statelessly from the binding ID, and the simplest way to do this is to name the user after the binding ID.
-
-##### <a id="create-binding-output"></a>Output
-
-If the `create-binding` command is successful, it should return an exit code of 0 and print a [service broker API binding JSON response](http://docs.cloudfoundry.org/services/api.html#binding) on stdout. 
-
-If the command failed, it should return any non-zero exit code. See the [supported exit code table](#create-binding-exit-codes) for details of supported failure cases. Stdout and stderr from the command will be logged by the ODB.
-
-The following is an example success response to `create-binding`:
+This section describes the parameters required by the `create-binding` subcommand as a JSON document via STDIN:
 
 ```json
 {
-  "credentials": {
-    "username": "user1",
-    "password": "reallysecret"
-  },
-  "syslog_drain_url": "optional: for syslog drain services only",
-  "route_service_url": "optional: for route services only"
+  "create_binding": {
+    "binding_id": "BINDING-ID",
+    "bosh_vms": "BOSH-VMS-JSON",
+    "manifest": "MANIFEST-YAML",
+    "request_parameters": "REQUEST-PARAMETERS-JSON"
+  }
 }
 ```
 
-**<a id="create-binding-exit-codes"></a>Supported Exit Codes for Binding**
+**Note:** All the arguments will be passed as strings, not as JSON objects. For example:
 
-| exit code     | Description                                       | Output                                                                                                                           |
-|:--------------|:--------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------|
-| 0             | success                                           | Stdout: binding credentials JSON                                                                                                 |
-| 10            | subcommand not implemented                        |                                                                                                                                  |
-| 42            | app_guid not provided in the binding request body | Stderr: error message for operator<br/> ODB will log both stdout and stderr                                                      |
-| 49            | binding already exists                            | Stderr: error message for operator<br/> ODB will log both stdout and stderr                                                      |
-| anything else | failure                                           | Stdout: optional error message for CF CLI users<br/> Stderr: error message for operator<br/> ODB will log both stdout and stderr |
+```not-json
+{
+  "create_binding": {
+    // ...
+    "bosh_vms": "{\"mysql_node\": [\"192.0.2.1\", \"192.0.2.2\", \"192.0.2.3\"]}"
+  }
+}
 
-##### <a id="create-binding-parameters"></a>Parameters
-
-This section describes the parameters required by the `create-binding` subcommand.
+```
 
 **<a id="create-binding-id"></a>BINDING-ID**
 
@@ -722,37 +744,72 @@ instance_groups:
         release: credentials-agent-release
 ```
 
+##### <a id="create-binding-output"></a>Output
+
+If the `create-binding` command is successful, it should return an exit code of 0 and print a [service broker API binding JSON response](http://docs.cloudfoundry.org/services/api.html#binding) on stdout. 
+
+If the command failed, it should return any non-zero exit code. See the [supported exit code table](#create-binding-exit-codes) for details of supported failure cases. Stdout and stderr from the command will be logged by the ODB.
+
+The following is an example success response to `create-binding`:
+
+```json
+{
+  "credentials": {
+    "username": "user1",
+    "password": "reallysecret"
+  },
+  "syslog_drain_url": "optional: for syslog drain services only",
+  "route_service_url": "optional: for route services only"
+}
+```
+
+**<a id="create-binding-exit-codes"></a>Supported Exit Codes for Binding**
+
+| exit code     | Description                                       | Output                                                                                                                           |
+|:--------------|:--------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------|
+| 0             | success                                           | Stdout: binding credentials JSON                                                                                                 |
+| 10            | subcommand not implemented                        |                                                                                                                                  |
+| 42            | app_guid not provided in the binding request body | Stderr: error message for operator<br/> ODB will log both stdout and stderr                                                      |
+| 49            | binding already exists                            | Stderr: error message for operator<br/> ODB will log both stdout and stderr                                                      |
+| anything else | failure                                           | Stdout: optional error message for CF CLI users<br/> Stderr: error message for operator<br/> ODB will log both stdout and stderr |
+
 ---
 
 #### <a id="delete-binding"></a>delete-binding
 
-The `delete-binding` subcommand takes in four arguments:
+- [Input Parameters](#delete-binding-parameters)
+- [Output](#delete-binding-output)
 
-```
-service-adapter delete-binding \
-BINDING-ID BOSH-VMs-JSON \
-MANIFEST-YAML DELETE-PARAMS-JSON
-```
+This subcommand should invalidate the credentials that were generated by
+`create-binding` if possible.  In MySQL, for example, the subcommand would
+delete the binding user.
 
-See the [Output](#delete-binding-output) section for more information about the command output and the [Parameters](#delete-binding-parameters) section for more information about each argument.
-
-This subcommand should invalidate the credentials that were generated by `create-binding` if possible. 
-In MySQL, for example, the subcommand would delete the binding user.
-
-##### <a id="delete-binding-output"></a>Output
-
-The following table describes the supported exit codes and output for the `delete-binding` subcommand:
-
-| exit code     | Description            | Output                                                                                                                           |
-|:--------------|:-----------------------|:---------------------------------------------------------------------------------------------------------------------------------|
-| 0             | success                | No output is required                                                                                                            |
-| 10            | not implemented        |                                                                                                                                  |
-| 41            | binding does not exist | Stderr: error message for operator<br/> ODB will log both stdout and stderr                                                      |
-| anything else | failure                | Stdout: optional error message for CF CLI users<br/> Stderr: error message for operator<br/> ODB will log both stdout and stderr |
-
-##### <a id="delete-binding-parameters"></a>Parameters
+##### <a id="delete-binding-parameters"></a>Input Parameters
 
 This section describes the parameters required by the `delete-binding` subcommand.
+
+```json
+{
+  "delete_binding": {
+    "binding_id": "BINDING-ID",
+    "bosh_vms": "BOSH-VMS-JSON",
+    "manifest": "MANIFEST-YAML",
+    "delete_parameters": "DELETE-PARAMETERS-JSON"
+  }
+}
+```
+
+**Note:** All the arguments will be passed as strings, not as JSON objects. For example:
+
+```not-json
+{
+  "delete_binding": {
+    // ...
+    "manifest": "---\nname: some-name\n..."
+  }
+}
+
+```
 
 **<a id="delete-binding-id"></a>BINDING-ID**
 
@@ -770,13 +827,10 @@ For example:
 }
 ```
 
-This can be used to connect to the actual VMs if required, to delete a service specific binding. 
-For example, this can be used to delete a user in MySQL.
-
 **<a id="delete-binding-manifest"></a>MANIFEST-YAML**
 
-This parameter is the current manifest as YAML. 
-This is used to extract information about the deployment that is necessary for the binding, such as the credentials. 
+This parameter is the current manifest as YAML.
+This is used to extract information about the deployment that is necessary for the binding, such as the credentials.
 The format of the manifest should match the [BOSH v2 manifest](https://bosh.io/docs/manifest-v2.html)
 
 For an example, see the [Kafka delete binding](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/delete_binding.go).
@@ -794,53 +848,69 @@ For example:
 }
 ```
 
-
-<p class="note"><strong>Note</strong>: This parameter is different from the 
-  create-binding <code>request-params-JSON</code> parameter, and in particular
+<p class="note"><strong>Note</strong>: This parameter is different from the
+  create-binding <code>request_parameters</code> parameter, and in particular
   does not include <code>parameters</code> or <code>bind_resource</code>.</p>
+
+##### <a id="delete-binding-output"></a>Output
+
+The following table describes the supported exit codes and output for the `delete-binding` subcommand:
+
+| exit code     | Description            | Output                                                                                                                           |
+|:--------------|:-----------------------|:---------------------------------------------------------------------------------------------------------------------------------|
+| 0             | success                | No output is required                                                                                                            |
+| 10            | not implemented        |                                                                                                                                  |
+| 41            | binding does not exist | Stderr: error message for operator<br/> ODB will log both stdout and stderr                                                      |
+| anything else | failure                | Stdout: optional error message for CF CLI users<br/> Stderr: error message for operator<br/> ODB will log both stdout and stderr |
+
+
+This can be used to connect to the actual VMs if required, to delete a service specific binding.
+For example, this can be used to delete a user in MySQL.
 
 ---
 
 #### <a id="generate-plan-schemas"></a>generate-plan-schemas
 
-The `generate-plan-schemas` subcommand takes in the JSON for a service plan as an argument and returns a schema:
-
-```
-service-adapter generate-plan-schemas \
---plan-json JSON-FOR-A-SERVICE-PLAN
-```
-
-See the [Output](#generate-plan-schemas-output) section for more information about the command output and the [Parameters](#generate-plan-schemas-parameters) section for more information about each argument.
+- [Input Parameters](#generate-plan-schemas-parameters)
+- [Output](#generate-plan-schemas-output)
 
 The broker uses the schema returned by the subcommand to validate service-specific configuration parameters.
 Apps Manager uses the schema to generate a form that users can use to populate those parameters.
 The schema must be in the JSON Schema draft-04 format.
 
-For more information about the plan schema, see the [Open Service Broker API (OSBAPI) v2.13 
+For more information about the plan schema, see the [Open Service Broker API (OSBAPI) v2.13
 specification](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#schema-object).
 
-If you do not want to validate all parameters and want additional parameters to 
-be accepted without constraints, set the JSON schema field `additionalProperties` to `true`. 
+If you do not want to validate all parameters and want additional parameters to
+be accepted without constraints, set the JSON schema field `additionalProperties` to `true`.
 For the location of this field, see the [Kafka example
 adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_plan_schemas.go#L43-L59).
-For example, you might use this if you want to accept an 
-undocumented optional parameter, for administration purposes, that should not be 
+For example, you might use this if you want to accept an
+undocumented optional parameter, for administration purposes, that should not be
 exposed through the Apps Manager UI.
 
-##### <a id="generate-plan-schemas-output"></a>Output
+##### <a id="generate-plan-schemas-parameters"></a>Input Parameters
 
-The following table describes the supported exit codes and output for the 
-`generate-plan-schemas` subcommand:
+This section describes the parameters required by the `generate-plan-schemas` subcommand, passed via STDIN.
 
-| exit code     | Description            | Output                                                                                                                           |
-|:--------------|:-----------------------|:---------------------------------------------------------------------------------------------------------------------------------|
-| 0             | success                | No output is required                                                                                                            |
-| 10            | not implemented        |                                                  |
-| anything else | failure                | Stdout: optional error message for cf CLI users<br/> Stderr: error message for operator<br/> ODB will log both stdout and stderr |
+```json
+{
+  "generate_plan_schemas": {
+    "plan": "PLAN-JSON"
+  }
+}
+```
 
-##### <a id="generate-plan-schemas-parameters"></a>Parameters
+**Note:** All the arguments will be passed as strings, not as JSON objects. For example:
 
-This section describes the parameters required by the `generate-plan-schemas` subcommand.
+```not-json
+{
+  "generate_plan_schemas": {
+    "plan": "{\"instance_groups\":[]}"
+  }
+}
+
+```
 
 **<a id="plan-json"></a>PLAN-JSON**
 
@@ -873,6 +943,17 @@ For example:
   ]
 }
 ```
+
+##### <a id="generate-plan-schemas-output"></a>Output
+
+The following table describes the supported exit codes and output for the 
+`generate-plan-schemas` subcommand:
+
+| exit code     | Description            | Output                                                                                                                           |
+|:--------------|:-----------------------|:---------------------------------------------------------------------------------------------------------------------------------|
+| 0             | success                | No output is required                                                                                                            |
+| 10            | not implemented        |                                                  |
+| anything else | failure                | Stdout: optional error message for cf CLI users<br/> Stderr: error message for operator<br/> ODB will log both stdout and stderr |
 
 ## <a id="packaging"></a>Packaging
 
