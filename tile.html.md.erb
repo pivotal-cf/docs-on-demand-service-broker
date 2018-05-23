@@ -38,7 +38,7 @@ The network for service instances should be flagged as a Service Network in Ops 
     scp -i PRIVATE-KEY.pem ubuntu@OPSMAN-IP:/var/tempest/workspaces/default/deployments/bosh.yml bosh.yml
     ```
 
-  <p class="note"><strong>Note</strong>: The ELBs created by CloudFormation are both for CF, not Ops Manager. 
+<p class="note"><strong>Note</strong>: The ELBs created by CloudFormation are both for CF, not Ops Manager. 
   One of them will be configured with your wildcard certificate. This takes the place of HAProxy in AWS PCF deployments, 
   and is therefore not used until you deploy the ERT tile.</p>
 
@@ -55,16 +55,25 @@ Thereafter, use `bosh2 -e om-director` to make requests to the BOSH Director.
 1. Follow the instructions in the topic
 [Tile Generator](http://docs.pivotal.io/tiledev/tile-generator.html)
 to build your service tile.
-1. Enhance the tile metadata file, named `tile.yml` if using Tile Generator, with the
-accessors listed in [Non-Exhaustive Accessors Reference](#accessors). To use the `$self` accessors, the `service-broker`
-flag must be `true` in the tile metadata file.
+1. Add the accessors listed in [Accessors](#accessors) to the tile metadata file, named `tile.yml` if using Tile Generator.
+To use the `$self` accessors, set the `service-broker` flag to `true` in the tile metadata file.
 
-<p class="note"><strong>Note</strong>: If you are publishing a tile to be consumed by Ops Manager v1.8.x or v1.9.x, you need to build your tile using releases with SHA1 internal checksums. On Demand Broker releases are published using SHA2 internal checksums. You can convert these releases to use SHA1 internal checksums using the BOSH CLI command <code>sha1ify-release</code>.</p>
+## <a id="accessors"></a>Accessors
 
-## <a id="accessors"></a>Non-Exhaustive Accessors Reference
+The on-demand broker requires configuration information about the bosh director. 
+Tile authors are required to add accessors to the tile metadata file to configure 
+the manifest with values that Ops Manager operators cannot access. 
+
+The following sections list the accessors that must be added to the tile metadata file 
+of an on-demand tile.
+
 #### director
 
-Used to provide fields relating to the BOSH Director installation present.
+Ops Manager uses these accessors to get values relating to the BOSH Director installation.
+For the on-demand broker to interact with bosh director, the on-demand service tile 
+must be configured with credentials for managing bosh deployments.  
+
+The following table lists the accessors you must add:
 
 | Accessor                  | Description                                                                                                                    |
 |:--------------------------|:-------------------------------------------------------------------------------------------------------------------------------|
@@ -79,25 +88,30 @@ bosh:
   root_ca_cert: (( $director.ca_public_key ))
 ```
 
+To see these accessors in the tile metadata file, see [example-kafka-on-demand-tile]()
+
 #### self
 
-Used to provide fields that belong to the specific tile (in this case, the broker tile).
+Ops Manager uses these accessors to get values that have been assigned to the tile after installation.
+
 To enable `$self` accessors, set `service_broker: true` at the top level of your
 tile metadata file.
 
 <p class="note"><strong>Note</strong>: Setting <code>service_broker: true</code>
   will cause the BOSH Director to redeploy when installing or uninstalling the tile.</p>
 
+The following table lists the accessors you must add:
+
 | Accessor                  | Description                                                     |
 |:--------------------------|:----------------------------------------------------------------|
 | $self.uaa\_client_name    | UAA client name, that can authenticate with the BOSH Director   |
 | $self.uaa\_client\_secret | UAA client secret, that can authenticate with the BOSH Director |
+| $self.stemcell\_version   | The stemcell that the service deployment uses                   |
 | $self.service\_network    | Service network configured for the on-demand instances          |
 
-
-The service network has to be created manually. Create a subnet on AWS and then add it to the director. In the director tile, under Create Networks > ADD network > fill in the subnet/vpc details.
-
-
+The service network has to be created manually. 
+Create a subnet on AWS and then add it to the director. 
+In the director tile, under Create Networks > ADD network > fill in the subnet/vpc details.
 
 For example
 
@@ -110,9 +124,16 @@ bosh:
       client_secret: (( $self.uaa_client_secret ))
 ```
 
-#### cf
+To see these accessors in the tile metadata file, see [example-kafka-on-demand-tile]()
 
-Used to provide fields from the Elastic Runtime Tile (i.e. Cloud Foundry) present in the Ops Manager installation.
+#### (Optional) cf
+
+If you want to use Pivotal Application Service (PAS) or Elastic Runtime, add 
+these accessors to your tile metadata file.
+Ops Manager uses these accessors to get values from the PAS (or Elastic Runtime) 
+tile in the Ops Manager installation.
+
+The following table lists the accessors you must add to use Cloud Foundry:
 
 | Accessor                                        | Description                                                                        |
 |:------------------------------------------------|:-----------------------------------------------------------------------------------|
@@ -121,6 +142,7 @@ Used to provide fields from the Elastic Runtime Tile (i.e. Cloud Foundry) presen
 | ..cf.cloud\_controller.system\_domain.value     | The system domain configured in the CF installation                                |
 | ..cf.uaa.system\_services\_credentials.identity | Username of a CF user in the cloud\_controller.admin group, to be used by services |
 | ..cf.uaa.system\_services\_credentials.password | Password of a CF user in the cloud\_controller.admin group, to be used by services |
+| ..cf.deployment\_name                           | 
 
 For example
 
@@ -135,9 +157,13 @@ cf:
       password: (( ..cf.uaa.system_services_credentials.password ))
 ```
 
-#### Reference
+To see these accessors in the tile metadata file, see [example-kafka-on-demand-tile]()
 
-For more accessors you can see the [ops-manager-example product](https://github.com/pivotal-cf-experimental/ops-manager-example)
+### Other Accessors
+
+Other accessors are not mandatory for an on-demand tile. 
+To see other accessors in use, see the 
+[ops-manager-example product](https://github.com/pivotal-cf-experimental/ops-manager-example/blob/master/example-product/metadata/example-product.yml.erb).
 
 ## <a id="public-ip"></a>Public IP Address for On-Demand Service Instance Groups
 
