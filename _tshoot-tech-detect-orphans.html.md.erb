@@ -1,4 +1,4 @@
-A service instance is defined as ‘orphaned’ when the BOSH deployment for the instance is still running, but the service is no longer registered in Cloud Foundry.
+A service instance is defined as "orphaned" when the BOSH deployment for the instance is still running, but the service is no longer registered in Cloud Foundry.
 
 The `orphan-deployments` errand collates a list of service deployments that have no matching service instances in Cloud Foundry and return the list to the operator. It is then up to the operator to remove the orphaned BOSH deployments.
 
