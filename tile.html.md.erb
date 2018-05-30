@@ -55,17 +55,21 @@ Thereafter, use `bosh2 -e om-director` to make requests to the BOSH Director.
 1. Follow the instructions in the topic
 [Tile Generator](http://docs.pivotal.io/tiledev/tile-generator.html)
 to build your service tile.
-1. Add the accessors listed in [Accessors](#accessors) to the tile metadata file, named `tile.yml` if using Tile Generator.
+1. Add the accessors listed in [Accessors](#accessors) to the tile metadata file. 
+This file is named `tile.yml` if you used the Tile Generator.
 To use the `$self` accessors, set the `service-broker` flag to `true` in the tile metadata file.
 
-## <a id="accessors"></a>Accessors
+## <a id="accessors"></a>Mandatory Accessors to Configure an On-Demand Tile
 
 The on-demand broker requires configuration information about the bosh director. 
-Tile authors are required to add accessors to the tile metadata file to configure 
+Tile authors must add accessors to the tile metadata file to configure 
 the manifest with values that Ops Manager operators cannot access. 
+<br><br>
+The following accessors are mandatory for the on-demand broker configuration:
 
-The following sections list the accessors that must be added to the tile metadata file 
-of an on-demand tile.
+<p class="note"><strong>Note</strong>: For more accessors, see the 
+[ops-manager-example product](https://github.com/pivotal-cf-experimental/ops-manager-example/blob/master/example-product/metadata/example-product.yml.erb).
+</p>
 
 #### director
 
@@ -88,12 +92,12 @@ bosh:
   root_ca_cert: (( $director.ca_public_key ))
 ```
 
-To see these accessors in the tile metadata file, see [example-kafka-on-demand-tile]()
+To see this example in context, see the 
+[example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L104-L106).
 
 #### self
 
 Ops Manager uses these accessors to get values that have been assigned to the tile after installation.
-
 To enable `$self` accessors, set `service_broker: true` at the top level of your
 tile metadata file.
 
@@ -124,16 +128,17 @@ bosh:
       client_secret: (( $self.uaa_client_secret ))
 ```
 
-To see these accessors in the tile metadata file, see [example-kafka-on-demand-tile]()
+To see this example in context, see the 
+[example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L107-L111).
 
 #### (Optional) cf
 
-If you want to use Pivotal Application Service (PAS) or Elastic Runtime, add 
-these accessors to your tile metadata file.
 Ops Manager uses these accessors to get values from the PAS (or Elastic Runtime) 
 tile in the Ops Manager installation.
+If you want to use Pivotal Application Service (PAS) or Elastic Runtime, add 
+these accessors to your tile metadata file.
 
-The following table lists the accessors you must add to use Cloud Foundry:
+The following table lists the accessors you must add to use PAS (or Elastic Runtime):
 
 | Accessor                                        | Description                                                                        |
 |:------------------------------------------------|:-----------------------------------------------------------------------------------|
@@ -142,7 +147,6 @@ The following table lists the accessors you must add to use Cloud Foundry:
 | ..cf.cloud\_controller.system\_domain.value     | The system domain configured in the CF installation                                |
 | ..cf.uaa.system\_services\_credentials.identity | Username of a CF user in the cloud\_controller.admin group, to be used by services |
 | ..cf.uaa.system\_services\_credentials.password | Password of a CF user in the cloud\_controller.admin group, to be used by services |
-| ..cf.deployment\_name                           | 
 
 For example
 
@@ -157,13 +161,8 @@ cf:
       password: (( ..cf.uaa.system_services_credentials.password ))
 ```
 
-To see these accessors in the tile metadata file, see [example-kafka-on-demand-tile]()
-
-### Other Accessors
-
-Other accessors are not mandatory for an on-demand tile. 
-To see other accessors in use, see the 
-[ops-manager-example product](https://github.com/pivotal-cf-experimental/ops-manager-example/blob/master/example-product/metadata/example-product.yml.erb).
+To see this example in context, see the
+[example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L103-L119).
 
 ## <a id="public-ip"></a>Public IP Address for On-Demand Service Instance Groups
 
