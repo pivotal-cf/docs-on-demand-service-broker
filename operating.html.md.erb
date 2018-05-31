@@ -504,53 +504,58 @@ ODB offers global and plan level service quotas to set service instance limits.
 Plan quotas restrict the number of service instances for a given plan, while
 the global limit restricts the number of service instances across all plans.
 
-When creating a service instance, ODB will check the global service instance limit.
-If it has not been reached, it will check the plan service instance limit.
+When creating a service instance, ODB checks the global service instance limit.
+If this limit has not been reached, ODB checks the plan service instance limit.
 
 <p class="note"><strong>Note</strong>: These limits do not include orphans. See <a href="#listing-orphans">List Orphan Deployments</a>
    and <a href="#orphan-deployments">Delete Orphaned Deployments</a>.</p>
 
 ## <a id="service-instance-quotas"></a>Service Resource Quotas
 
-ODB also offers global and plan level resource quotas.
+ODB offers resource quotas which allow you to limit resources more effectively when combining 
+plans that consume different amounts of resources.
 
-Resource quotas restrict how much of a certain resource can be used, either globally or
-by instances of a specific plan. These resources are simply strings defined by the
-operator, e.g. "ips", "memory", "disk".
+Global resource quotas limit how much of a certain resource is consumed across all plans.
+ODB allows new instances to be created until their total resources reach the global quota.
+You can also set resource quotas at the plan level.
 
-Global resource quotas are defined as follows:
+When creating a service instance, ODB checks the global resource limit.
+If this limit has not been reached, ODB checks the plan resource limit.
 
-```
-service_deployment:
-  ...
-  global_quotas:
-    resource_limits:
-      ips: 50
-      memory: 150
+To set resource quotas, do the following:
+
+1. Define the resources you want to limit with strings -- for example, `ips`, `memory`, or `disk` --
+and the total amount allowed for the resource.<br><br>
+  Global resource quotas are defined as follows:
+
+    ```
+    service_deployment:
       ...
-```
+      global_quotas:
+        resource_limits:
+          ips: 50
+          memory: 150
+          ...
+    ```
 
-Plan resource quotas are defined on the plan in question:
+    Plan resource quotas are defined in each plan:
 
-```
-plans:
-- name: my-plan
-  quotas:
-    resource_limits:
-      memory: 25
-```
+    ```
+    plans:
+    - name: my-plan
+      quotas:
+        resource_limits:
+          memory: 25
+    ```
 
-The 'cost' of an instance of a plan is set on the plan:
+1. For each plan, define the resources used by one service instance as follows:
 
-```
-plans:
-- name: my-plan
-  resource_costs:
-    memory: 5 # key will be string-matched against keys in the global and plan-level resource quotas
-```
-
-When creating a service instance, ODB will check the global resource limit.
-If it has not been reached, it will check the plan resource limit.
+    ```
+    plans:
+    - name: my-plan
+      resource_costs:
+        memory: 5 # the key is string-matched against keys in the global and plan-level resource quotas
+    ```
 
 <p class="note"><strong>Note</strong>: These limits do not include orphans. See <a href="#listing-orphans">List Orphan Deployments</a>
    and <a href="#orphan-deployments">Delete Orphaned Deployments</a>.</p>
