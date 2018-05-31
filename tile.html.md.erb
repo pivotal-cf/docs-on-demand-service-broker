@@ -55,17 +55,17 @@ Thereafter, use `bosh2 -e om-director` to make requests to the BOSH Director.
 1. Follow the instructions in the topic
 [Tile Generator](http://docs.pivotal.io/tiledev/tile-generator.html)
 to build your service tile.
-1. Add the accessors listed in [Mandatory Accessors for On-Demand Service Tiles](#accessors) to the tile metadata file. 
+1. Add the accessors listed in [Mandatory Accessors for On-Demand Tiles](#accessors) to the tile metadata file. 
 This file is named `tile.yml` if you used the Tile Generator.
 To use the `$self` accessors, set the `service-broker` flag to `true` in the tile metadata file.
 
-## <a id="accessors"></a>Mandatory Accessors for On-Demand Service Tiles
+## <a id="accessors"></a>Mandatory Accessors for On-Demand Tiles
 
-The on-demand broker requires configuration information about the bosh director. 
+The on-demand broker requires configuration information about the BOSH director. 
 Tile authors must add accessors to the tile metadata file to configure it with 
 values that Ops Manager operators cannot access. 
 
-Add the following accessors to your on-demand service tile:
+Add the following accessors to your on-demand tile:
 
 <p class="note"><strong>Note</strong>: The accessors in this section are mandatory.
   For other accessors, see 
