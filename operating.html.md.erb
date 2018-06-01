@@ -346,8 +346,8 @@ service_catalog:
   global_quotas: # optional
     service_instance_limit: INSTANCE-LIMIT # the maximum number of service instances across all plans
     resource_limits: # optional - resource usage limits, determined by the 'cost' of each service instance plan
-      ips: 50
-      memory: 150
+      ips: RESOURCE-LIMIT
+      memory: RESOURCE-LIMIT
   plans:
     - name: CF-MARKETPLACE-PLAN-NAME
       plan_id: CF-MARKETPLACE-PLAN-ID
@@ -362,11 +362,11 @@ service_catalog:
               CURRENCY-CODE-STRING: CURRENCY-AMOUNT-FLOAT
             unit: FREQUENCY-OF-COST
       resource_costs: # optional – the 'cost' of each instance in terms of resource quotas
-        memory: 5
+        memory: AMOUNT-OF-RESOURCE-IN-THIS-PLAN
       quotas: # optional
         service_instance_limit: INSTANCE-LIMIT # the maximum number of service instances for this plan
         resource_limits: # optional - resource usage limits for this plan
-          memory: 25
+          memory: RESOURCE-LIMIT
       instance_groups: # resource mapping for the instance groups defined by the Service Author
         - name: SERVICE-AUTHOR-PROVIDED-INSTANCE-GROUP-NAME
           vm_type: VM-TYPE
@@ -527,10 +527,10 @@ If this limit has not been reached, ODB checks the plan resource limit.
 
 To set resource quotas, do the following:
 
-1. Define the resources you want to limit with strings, for example `ips`, `memory`, or `disk`.
-Then decide the total amount allowed for each resource.
-
-1. Define resources in the manifest as follows: <br><br>
+1. In the manifest, define the resources you want to limit. 
+Use strings to define the resource, for example `ips`, `memory`, or `disk`.
+Then decide the total amount allowed for each resource. <br><br>
+For example: <br><br>
     - **Global resource quota**
 
     ```
@@ -552,8 +552,9 @@ Then decide the total amount allowed for each resource.
           memory: 25
     ```
 
-1. In order to use resource quotas, for each plan, you must define the `resources_costs` 
-used by one service instance.
+1. In order to use resource quotas, for each plan, you must define the `resource_costs` 
+used by one service instance. <br><br>
+For example:
 
     ```
     plans:
