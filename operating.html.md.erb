@@ -501,8 +501,8 @@ Remember to set the `broker_uri` property in the [register-broker errand](#regis
 
 ODB offers global and plan level service quotas to set service instance limits.
 
-Plan quotas restrict the number of service instances for a given plan, while
-the global limit restricts the number of service instances across all plans.
+- **Global quotas**---restrict the number of service instances across all plans.
+- **Plan quotas**---restrict the number of service instances for a given plan.
 
 When creating a service instance, ODB checks the global service instance limit.
 If this limit has not been reached, ODB checks the plan service instance limit.
@@ -521,6 +521,9 @@ ODB allows new instances to be created until their total resources reach the glo
 
 When creating a service instance, ODB checks the global resource limit.
 If this limit has not been reached, ODB checks the plan resource limit.
+
+<p class="note"><strong>Note</strong>: These limits do not include orphans. See <a href="#listing-orphans">List Orphan Deployments</a>
+   and <a href="#orphan-deployments">Delete Orphaned Deployments</a>.</p>
 
 To set resource quotas, do the following:
 
@@ -549,7 +552,8 @@ Then decide the total amount allowed for each resource.
           memory: 25
     ```
 
-1. In order to use resource quotas, for each plan, you must define the `resources_costs` used by one service instance.
+1. In order to use resource quotas, for each plan, you must define the `resources_costs` 
+used by one service instance.
 
     ```
     plans:
@@ -560,10 +564,6 @@ Then decide the total amount allowed for each resource.
       resource_costs:
         memory: 5 # the key is string-matched against keys in the global and plan-level resource quotas
     ```
-
-<p class="note"><strong>Note</strong>: These limits do not include orphans. See <a href="#listing-orphans">List Orphan Deployments</a>
-   and <a href="#orphan-deployments">Delete Orphaned Deployments</a>.</p>
-
 
 ## <a id="broker-metrics"></a>Broker Metrics
 
