@@ -512,21 +512,23 @@ If this limit has not been reached, ODB checks the plan service instance limit.
 
 ## <a id="service-instance-quotas"></a>Service Resource Quotas
 
-ODB offers resource quotas which allow you to limit resources more effectively when combining 
-plans that consume different amounts of resources.
+ODB offers resource quotas allow you to limit resources more effectively when combining 
+plans that consume different amounts of resources. You can set these quotas for service resources: 
 
-Global resource quotas limit how much of a certain resource is consumed across all plans.
+- **Global resource quotas**---limit how much of a certain resource is consumed across all plans.
 ODB allows new instances to be created until their total resources reach the global quota.
-You can also set resource quotas at the plan level.
+- **Plan resource quotas**---limit how much of a certain resource is consumed by a specific plan.
 
 When creating a service instance, ODB checks the global resource limit.
 If this limit has not been reached, ODB checks the plan resource limit.
 
 To set resource quotas, do the following:
 
-1. Define the resources you want to limit with strings -- for example, `ips`, `memory`, or `disk` --
-and the total amount allowed for the resource.<br><br>
-  Global resource quotas are defined as follows:
+1. Define the resources you want to limit with strings, for example `ips`, `memory`, or `disk`.
+Then decide the total amount allowed for each resource.
+
+1. Define resources in the manifest as follows: <br><br>
+    - **Global resource quota**
 
     ```
     service_deployment:
@@ -537,8 +539,7 @@ and the total amount allowed for the resource.<br><br>
           memory: 150
           ...
     ```
-
-    Plan resource quotas are defined in each plan:
+    - **Resource quota for each plan**
 
     ```
     plans:
@@ -548,11 +549,14 @@ and the total amount allowed for the resource.<br><br>
           memory: 25
     ```
 
-1. For each plan, define the resources used by one service instance as follows:
+1. In order to use resource quotas, for each plan, you must define the `resources_costs` used by one service instance.
 
     ```
     plans:
     - name: my-plan
+      quotas:
+        resource_limits:
+            memory: 25
       resource_costs:
         memory: 5 # the key is string-matched against keys in the global and plan-level resource quotas
     ```
