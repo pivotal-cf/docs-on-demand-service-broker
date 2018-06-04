@@ -1,15 +1,16 @@
 ---
-title: Frequently asked questions
+title: Data on Deployment Performance and Sizing
 owner: London Services Enablement
 ---
 
-## <a id="odb_instance_test"></a>How many dedicated service instances has Pivotal managed in a PCF environment?
 
-The on-demand broker has been tested with 500 dedicated service instances using the [example Kafka on-demand tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/tree/15-rc1://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/tree/v0.15.1).
+This topic contains test data on on-demand service instances managed in a PCF environment.
 
-We recorded how long it took to create, upgrade all and delete all, with 50, 101 and 500 dedicated service instances.
+Pivotal tested the on-demand broker with 500 on-demand service instances using 
+the [example Kafka on-demand tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/tree/15-rc1://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/tree/v0.15.1).
+We recorded how long it took to create, upgrade all, and delete all, with 50, 101, and 500 dedicated service instances. Setup and results are shown below. 
 
-### <a id="test_setup"></a>Set up
+## <a id="test_setup"></a>Set up
 
 | Environment                  |                       |
 |:-----------------------------|:----------------------|
@@ -28,7 +29,7 @@ We recorded how long it took to create, upgrade all and delete all, with 50, 101
 | Zookeeper VM type            | small (1 CPU, 2GB RAM, 8GB Disk) |
 | Kafka VM type                | small (1 CPU, 2GB RAM, 8GB Disk) |
 
-### <a id="test_running"></a>Test
+## <a id="test_running"></a>Test
 
 1. Upload the example Kafka on-demand tile
 1. Configure the on-demand plan
@@ -38,7 +39,7 @@ We recorded how long it took to create, upgrade all and delete all, with 50, 101
 1. Apply pending changes, ensuring that `Upgrade all on-demand service instances` is checked
 1. Delete the tile and apply changes, ensuring that `Delete all on-demand service instances` is checked
 
-### <a id="test_results"></a>Results
+## <a id="test_results"></a>Results
 
 Durations presented in HH:MM:SS format.
 
@@ -68,7 +69,7 @@ These durations may vary for a number of reasons, for example:
 - Activity of Elastic Runtime
 - Activity of BOSH Director
 
-### <a id="test_notes"></a>Notes
+## <a id="test_notes"></a>Notes
 
 For create operations, the on-demand broker creates a BOSH deployment for each service instance. By default, the BOSH Director in Operations Manager v1.9 has three workers with a dedicated status worker, so only two workers are available to process deployment tasks. Therefore, only two service instances can be created at the same time.
 
