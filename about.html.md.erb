@@ -47,13 +47,25 @@ lifecycle errands, and BOSH manifests for deploying the service instances.
 
 The on-demand services SDK is an SDK you can use to create on-demand brokers for single-tenant service offerings.
 
-The on-demand services SDK simplifies broker and tile authoring, and is the standard approach for both Pivotal internal services teams and Pivotal partner independent software vendors (ISVs) to develop on-demand services for PCF.
+The on-demand services SDK simplifies broker and tile authoring, 
+and is the standard approach for both Pivotal internal services teams and Pivotal 
+partner independent software vendors (ISVs) to develop on-demand services for PCF.
 
-The ODB SDK provides a generic on-demand broker (ODB) that answers API calls from the Cloud Controller. The service author plugs service-specific functionality into the ODB SDK via an executable called a **Service Adapter**. For more information about the responsibilities of service authors, please see [Creating the Service Author Deliverables](creating.html).
+The ODB SDK provides a generic on-demand broker (ODB) that answers API calls from the Cloud Controller. 
+The service author plugs service-specific functionality into the ODB SDK via an 
+executable called a **Service Adapter**. 
+For more information about the responsibilities of service authors, see 
+[Creating the Service Author Deliverables](creating.html).
 
-No additional or third-party components other than the service broker and the BOSH release for the service itself are required. This simplifies the setup. Everything is done through the single install process. This approach also simplifies support because there are fewer moving parts, and your customer's network needs less customizing of DNS rules and additional firewall ports.
+No additional or third-party components other than the service broker and the 
+BOSH release for the service itself are required. This simplifies the setup. 
+Everything is done through the single install process. 
+This approach also simplifies support because there are fewer moving parts, 
+and your customer's network needs less customizing of DNS rules and additional firewall ports.
 
-The on-demand services SDK imposes no constraints on the service authors' ability to offer new functionality or expose configuration options in their service plans, such as rate limiting and external load balancers.
+The on-demand services SDK imposes no constraints on the service authors' ability 
+to offer new functionality or expose configuration options in their service plans, 
+such as rate limiting and external load balancers.
 
 ## <a id="adapter"></a>Service Adapters
 
@@ -63,11 +75,19 @@ A service adapter is a binary that is called out by the ODB when it wants to do 
 
 The above diagram shows where responsibility lies for each aspect of the ODB workflow.
 
-The service author can focus on building the BOSH release of their service and provide a service adapter binary that manages manifest generation, schema generation, binding, and unbinding. The ODB manages all interactions with Cloud Foundry and BOSH.
+The service author can focus on building the BOSH release of their service and provide 
+a service adapter binary that manages manifest generation, schema generation, binding, and unbinding. 
+The ODB manages all interactions with Cloud Foundry and BOSH.
 
-Thanks to BOSH v2, service authors can define resources globally (in **Cloud Config**). This makes manifests portable across BOSH CPIs and lets them be substantially smaller than old-style manifests. The ODB takes advantage of other BOSH v2 features as well, including dynamic IP management, availability zones, and links through which deployed BOSH instances can access IP addresses and other information from other instances.
+Thanks to BOSH v2, service authors can define resources globally (in **Cloud Config**). 
+This makes manifests portable across BOSH CPIs and lets them be substantially smaller than old-style manifests. 
+The ODB takes advantage of other BOSH v2 features as well, including dynamic IP management, 
+availability zones, and links through which deployed BOSH instances can access 
+IP addresses and other information from other instances.
 
-Once an on-demand tile is authored and distributed, the operator installs and configures it the same way they do with any other Pivotal products. In the process, they select which of the tile's available service plans to offer their developers.
+Once an on-demand tile is authored and distributed, the operator installs and configures 
+it the same way they do with any other Pivotal products. 
+In the process, they select which of the tile's available service plans to offer their developers.
 
 ## <a id="steps"></a>Get Started Using ODB
 
