@@ -1,0 +1,274 @@
+---
+title: Troubleshooting for BOSH Operators
+owner: London Services Enablement
+---
+
+## <a id="troubleshooting"></a>Troubleshooting for BOSH Operators
+
+### <a id="admin-instances"></a>Administer Service Instances
+
+We recommend using the [BOSH CLI gem](https://bosh.io/docs/bosh-cli.html) for administering the deployments created by ODB; for example for checking VMs, ssh, viewing logs.
+
+Pivotal does **not** recommend using the BOSH CLI to update or delete ODB service deployments as it might accidentally trigger a race condition with Cloud Controller-induced updates/deletes or result in ODB overriding your [snowflake](http://martinfowler.com/bliki/SnowflakeServer.html) changes at the next deploy. All updates to the service instances must be done using the [errand to upgrade all service instances](#upgrade-instances).
+
+### <a id="logs"></a>Logs
+
+The on-demand broker writes logs to a log file, and to syslog.
+
+The broker log contains error messages and non-zero exit codes returned by the service adapter, as well as the stdout and stderr streams of the adapter.
+
+The log file is located at `/var/vcap/sys/log/broker/broker.log`. In syslog, logging is written with the tag `on-demand-service-broker`, under the facility `user`, with priority `info`.
+
+If you want to forward syslog to a syslog aggregator, we recommend co-locating [syslog release](https://github.com/cloudfoundry/syslog-release) with the broker.
+
+The ODB generates a UUID for each request and prefixes all the logs for that request, e.g.
+
+<pre class="terminal">
+[on-demand-service-broker] [4d63080d-e038-45a3-85f9-93910f6b40b1] 2016/09/05 16:43:26.123456 a valid UAA token was found in cache, will not obtain a new one
+</pre>
+
+<p class="note"><strong>Note</strong>: The ODB's negroni server and start up logs are not prefixed with a request ID.</p>
+
+All ODB's logs have a UTC timestamp.
+
+#### <a id="errands-syslog"></a> Syslog forwarding for errands logs
+
+If you want to forward your errand logs to a syslog aggregator, we recommend
+co-locating [syslog release](https://github.com/cloudfoundry/syslog-release)
+with the errand job. The manifest will look similar to the following:
+
+```
+- name: delete-all-service-instances-and-deregister-broker
+  lifecycle: errand
+  ...
+  jobs:
+  - name: delete-all-service-instances-and-deregister-broker
+    release: on-demand-service-broker
+    ...
+  - name: syslog_forwarder
+    release: syslog
+    properties:
+      syslog:
+        address: ((syslog.address))
+        port: ((syslog.port))
+        transport: udp
+        forward_files: false
+        custom_rule: |
+          module(load="imfile" mode="polling")
+          input(type="imfile"
+                File="/var/vcap/sys/log/delete-all-service-instances-and-deregister-broker/errand.stdout.log"
+                Tag="delete-all-service-instances-and-deregister-broker")
+          input(type="imfile"
+                File="/var/vcap/sys/log/delete-all-service-instances-and-deregister-broker/errand.stderr.log"
+                Tag="delete-all-service-instances-and-deregister-broker")
+```
+
+<p class="note"><strong>Note</strong>: The errand is configured to redirect stdout and stderr to
+<code>/var/vcap/sys/log/ERRAND_NAME/errand.stdout.log</code> and
+<code>/var/vcap/sys/log/ERRAND_NAME/errand.stderr.log</code>. When configuring your errand,
+be careful to match the actual log file paths in the <code>custom_rule</code> section.</p>
+
+### <a id="secure-binding-troubleshooting"></a> Secure Binding Credentials
+
+If you have [configured secure binding credentials](#secure-binding), the broker
+will store credentials on CredHub. You can see and consume these credentials by
+using the [CredHub CLI](https://github.com/cloudfoundry-incubator/credhub-cli).
+
+<p class="note"><strong>Note</strong>: Usually, CredHub is not accessible from
+outside the Cloud Foundry network. Use the CredHub CLI from within the internal
+network, or connect using an appropriate tunnel.</p>
+
+In failure scenarios, like when CredHub is down or when the CredHub client
+credentials are wrong, the broker will log to the file at
+`/var/vcap/sys/log/broker/broker.log` where the root cause will be generally
+given. See [Troubleshooting > Logs](#logs) for details.
+
+**Common causes of errors**
+
+* CredHub down / Wrong CredHub URL / Cannot access URL
+* Wrong credentials to access CredHub
+* Problem with CA certs for CredHub or UAA
+* Binding credentials in an exotic format (the broker only accepts string and
+string map credentials)
+
+
+### <a id="metrics"></a>Metrics
+
+If you have [configured broker metrics](#broker-metrics), the broker will emit metrics to the CF firehose. You can, for example, consume these metrics by using the [CF CLI firehose plugin](https://github.com/cloudfoundry/firehose-plugin).
+
+<p class="note"><strong>Note</strong>: The broker must be <a href="#register">registered with a Cloud Foundry</a> in order for metrics to be successfully emitted</p>
+
+#### Service-level Metrics
+The broker will emit a metric indicating the total number of instances across all plans. In addition, if there is a global quota set for the service, a metric showing how much of that quota is remaining will be emitted. Service-level metrics use the format shown below.
+
+```
+origin:"BROKER-DEPLOYMENT-NAME" eventType:ValueMetric timestamp:TIMESTAMP deployment:"BROKER-DEPLOYMENT-NAME" job:"broker" index:"BOSH-JOB-INDEX" ip:"IP" valueMetric:<name:"/on-demand-broker/SERVICE-OFFERING-NAME/total_instances" value:INSTANCE-COUNT unit:"count" >
+origin:"BROKER-DEPLOYMENT-NAME" eventType:ValueMetric timestamp:TIMESTAMP deployment:"BROKER-DEPLOYMENT-NAME" job:"broker" index:"BOSH-JOB-INDEX>" ip:"IP" valueMetric:<name:"/on-demand-broker/SERVICE-OFFERING-NAME/quota_remaining" value:QUOTA-REMAINING unit:"count" >
+```
+
+#### Plan-level Metrics
+For each service plan, the metrics will report the total number of instances for that plan. If there is a quota set for the plan, the metrics will also report how much of that quota is remaining. Plan-level metrics are emitted in the following format.
+
+```
+origin:"BROKER-DEPLOYMENT-NAME" eventType:ValueMetric timestamp:TIMESTAMP deployment:"BROKER-DEPLOYMENT-NAME" job:"broker" index:"BOSH-JOB-INDEX" ip:"IP" valueMetric:<name:"/on-demand-broker/SERVICE-OFFERING-NAME/PLAN-NAME/total_instances" value:INSTANCE-COUNT unit:"count" >
+origin:"BROKER-DEPLOYMENT-NAME" eventType:ValueMetric timestamp:TIMESTAMP deployment:"BROKER-DEPLOYMENT-NAME" job:"broker" index:"BOSH-JOB-INDEX" ip:"IP" valueMetric:<name:"/on-demand-broker/SERVICE-OFFERING-NAME/PLAN-NAME/quota_remaining" value:QUOTA-REMAINING unit:"count" >
+```
+
+If `quota_remaining` is `0` then you need to increase your plan quota in the BOSH manifest.
+
+### <a id="identifying-deployments"></a>Identify Deployments in BOSH
+
+There is a one to one mapping between the service instance id from CF and the deployment name in BOSH. The convention is the BOSH deployment name would be the service instance id prepended by `service-instance_`. To identify the BOSH deployment for a service instance you can.
+
+1. Determine the GUID of the service.
+  Run the following command:
+
+    ```
+    cf service --guid SERVICE-NAME
+    ```
+    Where `SERVICE-NAME` is the name of your service.
+    <br><br>
+    For example:
+    <pre class="terminal">
+    $ cf service --guid my-service
+    </pre>
+    Record the GUID in the output of the command.
+
+1. Identify your deployment. 
+  Run `bosh deployments` and look for `service-instance_GUID`.
+
+1. Get current tasks for your deployment. 
+  Run the following command:
+
+    ```
+    bosh2 tasks -d service-instance_GUID
+    ```
+    Where `GUID` is the GUID for your service instance, which you retrieved above.
+    <br><br>
+    For example:
+    <pre class="terminal">
+    $ bosh2 tasks -d \
+    service-instance_30d4a67f-d220-4d06-9989-58a976b86b35
+    </pre>
+
+### <a id="id-tasks"></a>Identify Tasks in BOSH
+
+Most operations on the on demand service broker API are implemented by launching BOSH tasks. If an operation fails, it may be useful to investigate the corresponding BOSH task. To do this:
+
+1. Determine the ID of the service for which an operation failed. 
+  Run the following command:
+
+    ```
+    cf service --guid SERVICE-NAME
+    ```
+    Where `SERVICE-NAME` is the name of your service.
+    <br><br>
+    For example:
+    <pre class="terminal">
+    $ cf service --guid my-service
+    </pre>
+    Record the GUID in the output of the command.
+
+1. SSH on to the service broker VM.
+  Run the following command:
+
+    ```
+    bosh2 -d BROKER-DEPLOYMENT-NAME ssh
+    ```
+    Where `BROKER-DEPLOYMENT-NAME` is the name of your broker deployment.
+    <br><br>
+    For example:
+    <pre class="terminal">
+    $ bosh2 -d my-broker ssh
+    </pre>
+
+1. In the broker log, look for lines relating to the service, identified by the service ID. Lines recording the starting and finishing of BOSH tasks will also have the BOSH task ID:
+
+    ```
+    on-demand-service-broker: [on-demand-service-broker] [4d63080d-e038-45a3-85f9-93910f6b40b1] 2016/04/13 09:01:50.793965 Bosh task id for Create instance 30d4a67f-d220-4d06-9989-58a976b86b35 was 11470
+    on-demand-service-broker: [on-demand-service-broker] [4d63080d-e038-45a3-85f9-93910f6b40b1] 2016/04/13 09:06:55.793976 task 11470 success creating deployment for instance 30d4a67f-d220-4d06-9989-58a976b86b35: create deployment
+
+    on-demand-service-broker: [on-demand-service-broker] [8bf5c9f6-7acd-4ab4-9214-363a6f6bef79] 2016/04/13 09:16:20.795035 Bosh task id for Update instance 30d4a67f-d220-4d06-9989-58a976b86b35 was 11473
+    on-demand-service-broker: [on-demand-service-broker] [8bf5c9f6-7acd-4ab4-9214-363a6f6bef79] 2016/04/13 09:17:20.795181 task 11473 success updating deployment for instance 30d4a67f-d220-4d06-9989-58a976b86b35: create deployment
+
+    on-demand-service-broker: [on-demand-service-broker] [af6fab15-c95e-438b-aa6b-bc4329d4154f] 2016/04/13 09:17:52.803824 Bosh task id for Delete instance 30d4a67f-d220-4d06-9989-58a976b86b35 was 11474
+    on-demand-service-broker: [on-demand-service-broker] [af6fab15-c95e-438b-aa6b-bc4329d4154f] 2016/04/13 09:19:56.803938 task 11474 success deleting deployment for instance 30d4a67f-d220-4d06-9989-58a976b86b35: delete deployment service-instance_30d4a67f-d220-4d06-9989-58a976b86b35
+    ```
+
+1. Use the task ID to obtain the task log from BOSH, adding flags such as `--debug` or `--cpi` as necessary.
+  For example:
+   <pre class="terminal">
+    $ bosh2 task 11470
+   </pre>
+
+### <a id="id-uaa-issues"></a>Identify Issues When Connecting to BOSH or UAA
+
+The ODB interacts with the BOSH Director to provision and deprovision instances, and is authenticated via the Director's UAA. See [Core Broker Configuration](#core-broker-configuration) for an example configuration.
+
+If BOSH and/or UAA are wrongly configured in the broker's manifest, then meaningful error messages will be displayed in the broker's log, indicating whether the issue is caused by an unreachable destination or bad credentials.
+
+For example:
+
+```
+on-demand-service-broker: [on-demand-service-broker] 
+[575afbc1-b541-481d-9cde-b3d3e67e87bf] 2016/05/18 15:56:40.100579 
+Error authenticating (401): {"error":"unauthorized","error_description":
+"Bad credentials"}, ensure that properties.BROKER-JOB.bosh.authentication.uaa is correct and try again.
+```
+
+### <a id="listing-instances"></a>List Service Instances
+
+The ODB persists the list of ODB-deployed service instances and provides an endpoint to retrieve them. This endpoint requires basic authentication.
+
+During disaster recovery this endpoint could be used to assess the situation.
+
+**Request**
+
+`GET http://USERNAME:PASSWORD@ON-DEMAND-BROKER-IP:8080/mgmt/service_instances`
+
+**Response**
+
+200 OK
+
+Example JSON body:
+
+  ```json
+  [
+    {
+      "instance_id": "4d19462c-33cf-11e6-91cc-685b3585cc4e",
+      "plan_id": "60476620-33cf-11e6-a841-685b3585cc4e",
+      "bosh_deployment_name": "service-instance_4d19462c-33cf-11e6-91cc-685b3585cc4e"
+    },
+    {
+      "instance_id": "57014734-33cf-11e6-ba8d-685b3585cc4e",
+      "plan_id": "60476620-33cf-11e6-a841-685b3585cc4e",
+      "bosh_deployment_name": "service-instance_57014734-33cf-11e6-ba8d-685b3585cc4e"
+    }
+  ]
+  ```
+
+### <a id="listing-orphans"></a>List Orphan Deployments
+
+The On-Demand Broker provides an endpoint that compares the list of service instance
+deployments against the service instances registered in Cloud Foundry. When called,
+the endpoint will return a list of orphaned deployments, if any are present.
+
+This endpoint is exercised in the [`orphan-deployments`](#orphan-deployments) errand. To call this endpoint
+without running the errand, use `curl`.
+
+**Request**
+`GET http://USERNAME:PASSWORD@ON-DEMAND-BROKER-IP:8080/mgmt/orphan_deployments`
+
+**Response**
+
+200 OK
+
+Example JSON body:
+
+```json
+[
+  {
+	  "deployment_name": "service-instance_d482abd3-8051-48d2-8067-9ccdf02327f3"
+  }
+]
+```

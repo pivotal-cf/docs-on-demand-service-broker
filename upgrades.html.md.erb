@@ -1,0 +1,252 @@
+---
+title: Upgrades
+owner: London Services Enablement
+---
+
+## <a id="upgrades"></a>Upgrades
+
+### <a id="upgrade-broker"></a>Upgrade the Broker
+
+To upgrade the broker, do the following:
+
+* Upload new version of `on-demand-service-broker-release` BOSH release to the BOSH Director.
+* Make any necessary changes to the core broker configuration in the broker manifest.
+* Deploy the broker.
+
+### <a id="upgrade-service-offering"></a>Upgrade Service Offering
+
+The service offering consists of the following:
+
+* Service catalog
+* Service adapter BOSH release
+* Service BOSH release(s)
+* Service stemcell
+
+To upgrade a service offering, do the following:
+
+* Make any changes to the service catalog in the broker manifest.
+* Upload any new service BOSH release(s) to the BOSH Director.
+* Make any changes to service release(s) in the broker manifest.
+* Upload any new service stemcell to the BOSH Director.
+* Make any changes to the service stemcell in the `service_deployment` broker manifest.
+* Deploy the broker.
+
+Any new service instances will be created using the latest service offering.
+
+To upgrade all existing instances you can run the [upgrade-all-service-instances errand](#upgrade-instances).
+
+<p class="note warning"><strong>WARNING</strong>: Until a service instance has been upgraded, <code>cf update-service</code> operations will be blocked and an error will be shown, see <a href="#updating-service-offering">updating service offering</a>.</p>
+
+### <a id="upgrade-individual-instances"></a>Upgrade an Individual Service Instance
+
+Cloud Foundry users cannot upgrade their service instances to the latest service offering.
+
+Until a service instance has been upgraded, Cloud Foundry users cannot set parameters, or change plan until the service instance has been upgraded by an operator.
+
+For example, a developer who tries to update a Redis service instance with the `cf update-service` command will see the following error message:
+
+<pre class="terminal">
+FAILED
+Server error, status code: 502, error code: 10001, message: 
+Service broker error: Service cannot be updated at this time, 
+please try again later or contact your operator for more information.
+</pre>
+
+Operators should run the [upgrade-all-service-instances errand](#upgrade-instances) to upgrade all service instances to the latest service offering.
+
+### <a id="upgrade-all-instances"></a>Upgrade All Service Instances
+
+To upgrade all existing service instances after the service offering has been updated or upgraded:
+
+<ol>
+<li>Add the following instance group to your broker manifest:
+    <pre>
+    - name: upgrade-all-service-instances
+      lifecycle: errand
+      instances: 1
+      jobs:
+        - name: upgrade-all-service-instances
+          release: ODB-RELEASE-NAME
+          properties:
+            canaries: NUMBER-OF-CANARIES # defaults to 0
+            canary_selection_params:
+              cf_org: ORG # specifying service instances to upgrade as canaries
+              cf_space: SPACE # specifying service instances to upgrade as canaries
+            max_in_flight: NUMBER-OF-PARALLEL-UPGRADES # defaults to 1
+            polling_interval_seconds: POLLING-INTERVAL-IN-SECONDS # defaults to 60
+            attempt_interval_seconds: ATTEMPT-INTERVAL-IN-SECONDS # defaults to 60
+            attempt_limit: NUMBER-OF-ATTEMPTS # defaults to 5
+      vm_type: VM-TYPE
+      stemcell: STEMCELL
+      networks: [{name: NETWORK}]
+      azs: [AZ]
+    </pre>
+    <p>
+      The errand properties allow fine-tuning of the behavior of the upgrade job.
+      <ul>
+      <li><code>max_in_flight</code> sets the limit for the number of upgrades
+      occurring concurrently.  The number of simultaneous upgrades is limited by
+      the number of available BOSH workers. See the <a
+      href="https://bosh.io/jobs/director?source=github.com/cloudfoundry/bosh#p=director.workers">BOSH
+      docs</a>.  Set the <code>max_in_flight</code> value to lower than this
+      limit to avoid over-saturating BOSH.  </li>
+
+      <li>
+        <code>canaries</code> sets the number of canary instances to upgrade first.
+        If all canary instances upgrade, the remaining instances are upgraded.
+        If a canary instance fails to upgrade or the <code>attempt_limit</code>
+        is reached, the upgrade fails.
+        No further instances are upgraded, and the errand exits with an error;
+        however, all in-flight upgrades can complete.
+        Canary instances are upgraded in parallel, respecting the <code>max_in_flight</code> value.
+
+        <p class="note"> <strong>Note:</strong> Canary instances are selected in
+          a non-deterministic way using all available instances.
+          If a selected instance is busy or was deleted, another instance is selected.
+          If all instances are busy, the errand retries, respecting the
+          <code>attempt_limit</code> and <code>attempt_interval_seconds</code>.</p>
+
+        <li>
+          (Optional) Use <code>canary_selection_params</code> to specify an org and a space
+          that you want canaries to be sourced from during an upgrade.
+          If <code>canaries</code> is specified, the broker upgrades that number of instances present in the org and space.
+          If fewer instances are present than specified, the broker upgrades as many instances as possible
+          in that org and space.
+        </li>
+        <p class="note"> <strong>Note:</strong> If <code>canary_selection_params</code>
+           are specified and no instances exist in that org or space, no canaries will be chosen.
+           If other instances exist, the broker will fail alerting you to chose different selection criteria.
+         </p>
+      </li>
+
+      <li><code>polling_interval_seconds</code> controls
+      the wait between checking the status of the successfully submitted BOSH upgrade job. </li>
+    </ul>
+    If service instances
+      have in-progress BOSH operations, upgrade requests are rejected and the errand queues those instances
+      for a retry:
+    <ul>
+      <li><code>attempt_interval_seconds</code> determines the time to wait between retrying upgrades.</li>
+      <li><code>attempt_limit</code> sets the number of times these instances are retried for upgrade.</li>
+    </ul>
+    </p>
+</li>
+<li>Deploy the broker manifest.</li>
+<li>Run the errand with the following command:<pre>bosh2 run-errand upgrade-all-service-instances</pre>
+</li>
+</ol>
+
+<p class="note"><strong>Note:</strong> The <code>upgrade-all-service-instances</code> errand triggers service instance lifecycle errands configured for the broker.
+   For more information, see <a href="#lifecycle-errands">Service Instance Lifecycle Errands</a> below.</p>
+
+#### <a id="service-instances-api"></a> Service Instances API
+
+The service instances API consists of a single HTTP endpoint that the errand will utilise to collect the required state to drive the upgrade process against your On Demand Service Broker. The API endpoint called is configurable in the upgrade-all-service-instances errand.
+
+<p class="warning note"><strong>WARNING:</strong> The Service Instances API is an advanced feature.
+Configuring a Service Instances API is not required, unless you are operating in very specific circumstances, such as running an On Demand Service Broker with no connection to Cloud Foundry.
+You will be required to provide an endpoint which satisfied the API requirements detailed below, and also guarantees that all service instances which need to be upgraded are part of that response.
+If you configure an endpoint which does not satisfy these criteria, some service instances may become unusable.</p>
+
+The Service Instances API definition is at version 0.1.0 and should be considered subject to change. 
+The API consists of a single endpoint which should handle the following request with the appropriate response:
+
+<strong>Example Request:</strong>
+
+<pre>
+curl -u BASIC-AUTH-USERNAME:BASIC-AUTH-PASSWORD \
+-X GET \
+http://SERVICE-INSTANCES-API-URL
+</pre>
+
+<strong>Example Response:</strong>
+
+<pre class="terminal">
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+[
+  {"service_instance_id": GUID-1, "plan_id": "dedicated"},
+  {"service_instance_id": GUID-2, "plan_id": "dedicated"},
+  {"service_instance_id": GUID-3, "plan_id": "dedicated"},
+  [...]
+]
+</pre>
+
+The Services Instances API returns other status codes such as 3xx, 4xx, or 5xx for non-successful scenarios.
+
+
+The plan\_ids listed in the response need to correspond to the plan\_ids that appear in each plan's definition in the On Demand Broker deployment manifest, not any other id that may be assigned by the service controller.
+
+When the on-demand service broker is configured to use `canary_selection_params`,
+you need to change the Service Instances API accordingly.
+The `canary_selection_params` property defines how to filter the canary instances from of a set of instances.
+Therefore, you need to change the Service Instances API so that it responds with a filtered list of instances
+when the `canary_selection_params` are passed as query parameters.
+
+For example, if the `canary_selection_params` are configured as following:
+
+```
+canary_selection_params:
+  cf_org: staging-org
+  cf_space: staging-space
+```
+
+Then, the Service Instances API returns a filtered list of instances when `cf_org` and `cf_space` are passed as query parameters in the request.
+
+<strong>Example Request:</strong>
+
+<pre>
+curl -u BASIC-AUTH-USERNAME:BASIC-AUTH-PASSWORD \
+-X GET \
+http://SERVICE-INSTANCES-API-URL?cf_org=staging-org&cf_space=staging-space
+</pre>
+
+<strong>Example Response:</strong>
+
+<pre class="terminal">
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+[
+  {"service_instance_id": GUID-1, "plan_id": "dedicated"}
+]
+</pre>
+
+The instances in the filtered list are used as canary instances and upgraded before the rest.
+The number of canaries taken from this list can be configured
+by specifying the `canaries` property in the on-demand service broker manifest.
+
+To configure the `upgrade-all-service-instances` errand to connect to a Service Instances API provider, update the errand's configuration in the deployment manifest to include the following additional properties:
+
+```
+- name: upgrade-all-service-instances
+  lifecycle: errand
+  instances: 1
+  jobs:
+    - name: upgrade-all-service-instances
+      release: ODB-RELEASE-NAME
+      properties:
+        polling_interval_seconds: POLLING-INTERVAL-IN-SECONDS # defaults to 60
+        attempt_interval_seconds: ATTEMPT-INTERVAL-IN-SECONDS # defaults to 60
+        attempt_limit: NUMBER-OF-ATTEMPTS # defaults to 5
+        service_instances_api: # optional
+          url: URL-OF-SERVICE-INSTANCES-API-PROVIDER # required
+          root_ca_cert: ROOT-CA-CERT # optional
+          authentication:
+            basic: # required - currently the only supported authentication type
+              username: USERNAME
+              password: PASSWORD
+  vm_type: VM-TYPE
+  stemcell: STEMCELL
+  networks: [NETWORK]
+  azs: [AZ]
+```
+
+Where: 
+
+* `POLLING-INTERVAL-IN-SECONDS`: The number of seconds to wait between checking the
+status of a submitted upgrade job. 
+* `ATTEMPT-INTERVAL-IN-SECONDS`: The number of seconds to wait between retrying upgrades. 
+* `NUMBER-OF-ATTEMPTS`: The maximum number of times the errand will try a set of upgrades. 
+
