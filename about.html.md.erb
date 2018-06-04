@@ -5,17 +5,33 @@ owner: London Services Enablement
 
 ## <a id="cf-broker"></a>Cloud Foundry Service Brokers and PCF Tiles
 
-Service brokers let developers create service instances in their development spaces that they can call from their code. To do this, the brokers provide an interface between the Cloud Controller and the add-on software service that they represent. The service can run internal or external to a CF deployment, but the service broker always runs inside the cloud.
+Service brokers let developers create service instances in their development spaces that they can call from their code. 
+To do this, the brokers provide an interface between the Cloud Controller and the add-on software service that they represent. 
+The service can run internal or external to a CF deployment, but the service broker always runs inside the cloud.
 
-The service broker works by providing an API which the Cloud Controller calls to create service instances, bind them to apps, and perform other operations. Cloud Foundry service brokers are implemented as HTTP servers that conform to the [service broker API](http://docs.cloudfoundry.org/services/api.html).
+The service broker works by providing an API which the Cloud Controller calls to create service instances, 
+bind them to apps, and perform other operations. 
+Cloud Foundry service brokers are implemented as HTTP servers that conform to the 
+[Open Service Broker API](http://docs.cloudfoundry.org/services/api.html).
 
-In addition to providing an API, a service broker publishes a service catalog that may include multiple service plans, such as a free tier and a metered tier. Brokers register their service plans with the Cloud Controller to populate the services marketplace, which developers access with `cf marketplace` or through the Pivotal Cloud Foundry (PCF) Apps Manager.
+In addition to providing an API, a service broker publishes a service catalog 
+that may include multiple service plans, such as a free tier and a metered tier. 
+Brokers register their service plans with the Cloud Controller to populate the services marketplace, 
+which developers access with `cf marketplace` or through the Pivotal Cloud Foundry (PCF) Apps Manager.
 
-On PCF, cloud operators make software services available to developers by finding them on [Pivotal Network](https://network.pivotal.io/) and then installing and configuring them through a tile interface in the Ops Manager **Installation Dashboard**. Installing a service tile creates a service broker, registers it with the Cloud Controller, and publishes the service plans that the broker offers. Developers can then create service instances in their spaces and bind them to their apps.
+On PCF, operators find services on [Pivotal Network](https://network.pivotal.io/), 
+and install and configure them through a tile interface in the Ops Manager **Installation Dashboard** 
+to make them available to developers. 
+Installing a service tile creates a service broker, registers it with the Cloud Controller, 
+and publishes the service plans that the broker offers. 
+Developers can then create service instances in their spaces and bind them to their apps.
 
 ![Your Service Tile in Ops Manager](img/your-service-here.png)
 
-The central element behind a service tile is the service broker, but the tile software includes other components that make the service easy for operators to install and maintain, and easy for developers to use. These components include configuration layouts, upgrade rules, lifecycle errands, and BOSH manifests for deploying the service instances.
+The central element behind a service tile is the service broker, 
+but the tile software includes other components that make the service easy for operators to install and maintain, 
+and easy for developers to use. These components include configuration layouts, upgrade rules, 
+lifecycle errands, and BOSH manifests for deploying the service instances.
 
 ## <a id="service-network"></a>BOSH 2.0 and Service Networks
 
@@ -53,12 +69,16 @@ Thanks to BOSH v2, service authors can define resources globally (in **Cloud Con
 
 Once an on-demand tile is authored and distributed, the operator installs and configures it the same way they do with any other Pivotal products. In the process, they select which of the tile's available service plans to offer their developers.
 
-## <a id="steps"></a>Procedures for Using ODB
+## <a id="steps"></a>Get Started Using ODB
 
-The following procedures outline how to set up, create and maintain a service tile based on the ODB SDK:
+This documentation provides information for operators and developers in the following sections.
 
-* [Setting up networking](operating.html#networking) — The operators ensure that network rules are set up to allow the necessary communication between components.
-* [Setting up your BOSH director](operating.html#configure-bosh) — The operators ensure that minimum versions of Cloud Foundry and BOSH are available.
-* [Creating the Service Author Deliverables](creating.html) — The service authors provide their deliverables.
-* [Deploying an On-Demand Broker](operating.html) — The operators upload their releases and write a manifest.
 
+### <a id="operator"></a>Operator Guide
+
+This section provides information about how to operate an on-demand broker 
+for BOSH operators and Ops Manager operators. 
+
+### <a id="service-author"></a>Service and Tile Developer Guide
+
+This section provides information about creating on-demand services and tiles.
