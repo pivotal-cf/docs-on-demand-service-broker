@@ -61,9 +61,9 @@ To use the `$self` accessors, set the `service-broker` flag to `true` in the til
 
 ## <a id="accessors"></a>Mandatory Accessors for On-Demand Tiles
 
-The on-demand broker requires configuration information about the BOSH director. 
-Tile authors must add accessors to the tile metadata file to configure it with 
-values that Ops Manager operators cannot access. 
+The on-demand broker requires on-demand tiles to be configured with some information 
+that is not accessible to operators.
+This configuration information must be supplied using tile accessors.
 
 Add the following accessors to your on-demand tile:
 
