@@ -69,7 +69,7 @@ There are two types of job links, implicit and explicit. The [example Kafka rele
 A Service Adapter is an executable invoked by ODB. It is expected to respond to these subcommands:
 
 - `generate-manifest`:
-  Generate a BOSH manifest for your service instance deployment and output to stdout as YAML, given information about the:
+  Generate a BOSH manifest for your service instance deployment and output to stdout a JSON document containing the manifest as YAML, given information about the:
   - BOSH Director (stemcells, release names)
   - service instance (ID, request parameters, plan properties, IAAS resources)
   - previous manifest, if this is an upgrade deployment
@@ -437,10 +437,17 @@ The following table describes the supported exit codes and output for the `gener
 
 | exit code     | Description     | Output                                                                                                                           |
 |:--------------|:----------------|:---------------------------------------------------------------------------------------------------------------------------------|
-| 0             | success         | Stdout: BOSH manifest YAML                                                                                                       |
+| 0             | success         | Stdout: JSON document containing the BOSH manifest YAML                                                                          |
 | 10            | not implemented |                                                                                                                                  |
 | anything else | failure         | Stdout: optional error message for CF CLI users<br/> Stderr: error message for operator<br/> ODB will log both stdout and stderr |
 
+**Output JSON format**
+
+```json
+{
+  "manifest": "<generated BOSH manifest, as YAML>"
+}
+```
 ---
 
 #### <a id="dashboard-url"></a>dashboard-url
