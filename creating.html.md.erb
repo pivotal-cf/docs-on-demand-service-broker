@@ -83,8 +83,7 @@ A Service Adapter is an executable invoked by ODB. It is expected to respond to 
   Generate an optional URL of a web-based management user interface for the service instance.
 
 - `generate-plan-schemas`:
-  Generate a JSON schema to validate service-specific configuration parameters. 
-  It requires the JSON of a service plan passed via the `--plan-json` flag.
+  Generate a JSON schema to validate service-specific configuration parameters.
 
 - `create-binding`:
   Create (unique, if possible) credentials for the service instance, printing them to stdout as JSON.
@@ -104,65 +103,13 @@ Both the stdout and stderr streams will be printed in the broker log for the ope
 
 See an example implementation [here](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/892d48b066c9b1d2651080484a53531001e9e920/adapter/create_binding.go#L27-L29).
 
-## <a id="manifest"></a>Inputs for Manifest Generation
-
-### <a id="request-params"></a>Request Parameters
-
-The [body](https://docs.cloudfoundry.org/services/api.html#provisioning) of the provision request from Cloud Controller, including arbitrary parameters from the CLI user.
-
-Service authors can choose to allow Cloud Foundry users to configure service instances with arbitrary parameters. See the PCF docs on [Managing Service Instances with the CLI](https://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html). Arbitrary parameters can be passed to the service adapter when creating, or updating a service instance. They allow Cloud Foundry users to override the default configuration for a service plan.
-
-Service authors must document the usage of arbitrary parameters for Cloud Foundry users.
-
-For example, the [Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go) supports the `auto_create_topics` arbitrary parameter to configure auto-creation of topics on the cluster.
-
-### <a id="prev-props"></a>Previous Manifest Properties
-
-When updating a service instance, service authors must migrate certain properties 
-for the service from the previous manifest. 
-If the previous manifest contains values specified by arbitrary parameters, 
-the service adapter **must** get those values from the previous manifest and add them to the new manifest.
-
-<p class="note warning"><strong>WARNING</strong>:
-  If the service adapter does not migrate properties from the old manifest to 
-  the new one, the update fails.</p>
-
-For example, the [Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/94efd8e495c7f2008ad8c2bdb322affd56b3ead9/adapter/generate_manifest.go#L100-L109) 
-migrates the `auto_create_topics` previous plan property to configure auto-creation of topics on the cluster.
-
-### <a id="plan-props"></a>Service Plan Properties
-
-Service authors can choose to support certain properties for the service in the adapter code. These properties are service-specific traits used to customize the service. They do not necessarily map to jobs one to one; a plan property may affect multiple jobs in the deployment. Plan properties are a mechanism for the operator to define different plans.
-
-Service authors must document the usage of plan properties for the operator.
-
-For example:
-
-- The [Redis service adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/<%= vars.odb_example_redis_service_adapter_version %>/adapter/redis_manifest_generator.go) supports the `persistence` property which can be used to attach a disk to the VM.
-- The [Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go) supports the `auto_create_topics` property to enable auto-creation of topics on the cluster.
-
-### <a id="precedence"></a>Order of Precedence
-
-Note, we recommend service authors use the following order of precedence in their service adapters when generating manifests:
-
-1. Arbitrary parameters
-1. Previous manifest properties
-1. Plan properties
-
-For example, see `auto_create_topics` in the [example Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go#L68-L77).
-
-### <a id="defensive-upgrade-behaviors"></a> Defensive Upgrade Behaviors for Stemcells or Releases
-
-Service Authors should ensure that the service release or the stemcell satisfies the functional requirements of the service adapter. This can be achieved, for example, by checking that the service release satisfies a minimum version constraint.
-
-The [generate manifest subcommand for the Kafka example](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/ab99f9086c63396464347b585fb3f2abad6e332c/adapter/generate_manifest.go#L86) has an example of this approach.
 
 ## <a id="interface"></a>Service Adapter Interface
 
 Implement your service adapter as a binary that receives its parameters as a JSON document via STDIN.
 
 For a list of possible subcommands and the structure of the JSON document
-passed via STDIN, see the [Subcommands](#sub-commands) section below.
+passed via STDIN, see the section for each subcommand below.
 
 For example service adapters, see the following:
 
@@ -172,9 +119,7 @@ For example service adapters, see the following:
 These examples are written in Golang.  They use the SDK to help with
 cross-cutting concerns such as reading the JSON document from STDIN.
 
-### <a id="sub-commands"></a>Subcommands
-
-#### <a id="generate-manifest"></a>generate-manifest
+### <a id="generate-manifest"></a>generate-manifest
 
 - [Input Parameters](#generate-manifest-parameters)
 - [Output](#generate-manifest-output)
@@ -191,11 +136,16 @@ cross-cutting concerns such as reading the JSON document from STDIN.
     href="https://bosh.io/docs/deployment-manifest.html#update"
     target="_blank">update block of the manifest</a> returned by the
     <code>generate-manifest</code> subcommand.</li>
+    <li>
+    Service Authors should ensure that the service release or the stemcell
+    satisfies the functional requirements of the service adapter. This can be
+    achieved, for example, by checking that the service release satisfies a minimum
+    version constraint.
+    </li>
   </ul>
 </div>
 
-
-##### <a id="generate-manifest-parameters"></a>Input Parameters
+#### <a id="generate-manifest-parameters"></a>Input Parameters
 
 This section describes the parameters provided to the `generate-manifest` subcommand via STDIN:
 
@@ -220,8 +170,19 @@ This section describes the parameters provided to the `generate-manifest` subcom
     // ...
   }
 }
-
 ```
+
+<div class="note">
+  <strong>Note</strong>:
+  We recommend service authors use the following order of precedence in their service adapters when generating manifests:</br>
+1. Arbitrary parameters</br>
+2. Previous manifest properties</br>
+3. Plan properties</br>
+
+For example, see `auto_create_topics` in the [example Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go#L68-L77).
+</div>
+
+
 
 **<a id="service-deployment"></a>SERVICE-DEPLOYMENT-JSON**
 
@@ -384,13 +345,26 @@ Plans are composed by the operator and consist of resource mappings, properties 
 
 **<a id="generate-request-params-JSON"></a>REQUEST-PARAMS-JSON**
 
-This is a JSON object that holds the entire body of the [service provision](http://docs.cloudfoundry.org/services/api.html#provisioning) or [service update](http://docs.cloudfoundry.org/services/api.html#updating_service_instance) request sent by the Cloud Controller to the service broker. The request parameters JSON will be `null` for upgrades.
+This is a JSON object that holds the entire body of the [service
+provision](http://docs.cloudfoundry.org/services/api.html#provisioning) or
+[service
+update](http://docs.cloudfoundry.org/services/api.html#updating_service_instance)
+request sent by the Cloud Controller to the service broker. The request
+parameters JSON will be `null` for upgrades.
 
-The field `context` holds platform specific contextual information under which the service instance is to be provisioned.
+The field `context` holds platform specific contextual information under which
+the service instance is to be provisioned.
 
-The field `parameters` contains arbitrary key-value pairs which were passed by the application developer as a `cf` CLI parameter when creating, or updating the service instance.
+The field `parameters` contains arbitrary key-value pairs which were passed by
+the application developer as a `cf` CLI parameter when creating, or updating
+the service instance. They allow Cloud Foundry users to override the
+default configuration for a service plan. For example, the [Kafka service
+adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go)
+supports the `auto_create_topics` arbitrary parameter to configure
+auto-creation of topics on the cluster.
 
 <p class="note"><strong>Note</strong>: When updating an existing service instance, any arbitrary parameters passed on a previous create or update will not be passed again. Therefore, for arbitrary parameters to stay the same across multiple deployments they must be retrieved from the previous manifest.</p>
+
 
 For example:
 
@@ -423,6 +397,10 @@ Another use-case of the previous manifest is for the migration of deployment pro
 
 For example see the [example Redis service adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_manifest_generator.go#L333-L338).
 
+<p class="note warning"><strong>WARNING</strong>:
+  If the service adapter does not migrate properties from the old manifest to
+  the new one, the update fails.</p>
+
 **<a id="previous-plan"></a>PREVIOUS-PLAN-JSON**
 
 This argument takes the previous plan as a JSON string.
@@ -431,7 +409,8 @@ The previous plan is nil if this is a new deployment.
 
 The format of the plan should match the [plan schema](#plan-schema). The previous plan can be used for complex plan migration logic. For an example, the [Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go#L27:L33) rejects a plan migration if the new plan reduces the number of instances, to prevent data loss.
 
-##### <a id="generate-manifest-output"></a>Output
+
+#### <a id="generate-manifest-output"></a>Output
 
 The following table describes the supported exit codes and output for the `generate-manifest` subcommand:
 
@@ -450,12 +429,12 @@ The following table describes the supported exit codes and output for the `gener
 ```
 ---
 
-#### <a id="dashboard-url"></a>dashboard-url
+### <a id="dashboard-url"></a>dashboard-url
 
 - [Input Parameters](#dashboard-url-parameters)
 - [Output](#dashboard-url-output)
 
-#####<a id="dashboard-url-parameters"></a>Input Parameters
+####<a id="dashboard-url-parameters"></a>Input Parameters
 
 This section describes the parameters provided to the dashboard-url subcommand via STDIN:
 
@@ -565,7 +544,7 @@ addons:
     release: my-service
 ```
 
-##### <a id="dashboard-url-output"></a>Output
+#### <a id="dashboard-url-output"></a>Output
 
 If the `dashboard-url` command generates a url successfully, it should exit with 0 and return a dashboard URL JSON with the following structure:
 
@@ -592,7 +571,7 @@ For example:
 
 ---
 
-#### <a id="create-binding"></a>create-binding
+### <a id="create-binding"></a>create-binding
 
 Binding credentials for a service instance should share a namespace, and should
 be unique if possible.
@@ -606,7 +585,7 @@ the simplest way to do this is to name the user after the binding ID.
 - [Input Parameters](#create-binding-parameters)
 - [Output](#create-binding-output)
 
-##### <a id="create-binding-parameters"></a>Input Parameters
+#### <a id="create-binding-parameters"></a>Input Parameters
 
 This section describes the parameters required by the `create-binding` subcommand as a JSON document via STDIN:
 
@@ -700,7 +679,7 @@ For example:
   }
   ```
 
-##### <a id="create-binding-credentials"></a>Credentials for Bindings
+#### <a id="create-binding-credentials"></a>Credentials for Bindings
 
 You can take one of three approaches to credentials for a service binding:
 
@@ -751,7 +730,7 @@ instance_groups:
         release: credentials-agent-release
 ```
 
-##### <a id="create-binding-output"></a>Output
+#### <a id="create-binding-output"></a>Output
 
 If the `create-binding` command is successful, it should return an exit code of 0 and print a [service broker API binding JSON response](http://docs.cloudfoundry.org/services/api.html#binding) on stdout. 
 
@@ -782,7 +761,7 @@ The following is an example success response to `create-binding`:
 
 ---
 
-#### <a id="delete-binding"></a>delete-binding
+### <a id="delete-binding"></a>delete-binding
 
 - [Input Parameters](#delete-binding-parameters)
 - [Output](#delete-binding-output)
@@ -791,7 +770,7 @@ This subcommand should invalidate the credentials that were generated by
 `create-binding` if possible.  In MySQL, for example, the subcommand would
 delete the binding user.
 
-##### <a id="delete-binding-parameters"></a>Input Parameters
+#### <a id="delete-binding-parameters"></a>Input Parameters
 
 This section describes the parameters required by the `delete-binding` subcommand.
 
@@ -859,7 +838,7 @@ For example:
   create-binding <code>request_parameters</code> parameter, and in particular
   does not include <code>parameters</code> or <code>bind_resource</code>.</p>
 
-##### <a id="delete-binding-output"></a>Output
+#### <a id="delete-binding-output"></a>Output
 
 The following table describes the supported exit codes and output for the `delete-binding` subcommand:
 
@@ -876,7 +855,7 @@ For example, this can be used to delete a user in MySQL.
 
 ---
 
-#### <a id="generate-plan-schemas"></a>generate-plan-schemas
+###<a id="generate-plan-schemas"></a>generate-plan-schemas
 
 - [Input Parameters](#generate-plan-schemas-parameters)
 - [Output](#generate-plan-schemas-output)
@@ -896,7 +875,7 @@ For example, you might use this if you want to accept an
 undocumented optional parameter, for administration purposes, that should not be
 exposed through the Apps Manager UI.
 
-##### <a id="generate-plan-schemas-parameters"></a>Input Parameters
+#### <a id="generate-plan-schemas-parameters"></a>Input Parameters
 
 This section describes the parameters required by the `generate-plan-schemas` subcommand, passed via STDIN.
 
@@ -951,16 +930,24 @@ For example:
 }
 ```
 
-##### <a id="generate-plan-schemas-output"></a>Output
+#### <a id="generate-plan-schemas-output"></a>Output
 
 The following table describes the supported exit codes and output for the 
 `generate-plan-schemas` subcommand:
 
 | exit code     | Description            | Output                                                                                                                           |
 |:--------------|:-----------------------|:---------------------------------------------------------------------------------------------------------------------------------|
-| 0             | success                | No output is required                                                                                                            |
+| 0             | success                | Stdout: JSON document containing the plan schemas
 | 10            | not implemented        |                                                  |
 | anything else | failure                | Stdout: optional error message for cf CLI users<br/> Stderr: error message for operator<br/> ODB will log both stdout and stderr |
+
+**Output Example**
+
+```json
+{
+  "schemas": "{\"service_instance\":{\"create\":{\"parameters\":{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"additionalProperties\":true,\"properties\":{\"auto_create_topics\":{\"description\":\"Auto create topics\",\"type\":\"boolean\"},\"default_replication_factor\":{\"description\":\"Replication factor\",\"type\":\"integer\"}},\"type\":\"object\"}},\"update\":{\"parameters\":{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"additionalProperties\":true,\"properties\":{\"auto_create_topics\":{\"description\":\"Auto create topics\",\"type\":\"boolean\"},\"default_replication_factor\":{\"description\":\"Replication factor\",\"type\":\"integer\"}},\"type\":\"object\"}}},\"service_binding\":{\"create\":{\"parameters\":{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"additionalProperties\":false,\"properties\":{\"topic\":{\"description\":\"The name of the topic\",\"type\":\"string\"}},\"type\":\"object\"}}}}"
+}
+```
 
 ## <a id="packaging"></a>Packaging
 
