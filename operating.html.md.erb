@@ -3,29 +3,31 @@ title: Operating an On-Demand Broker
 owner: London Services Enablement
 ---
 
-## <a id="operator"></a>Operator Responsibilities
-The operator is responsible for performing the following:
+This topic provides information for Ops Manager or BOSH operators. These roles may be combined or separate.
+
+## <a id="operator"></a>Introduction for Operators
+
+### <a id="deliverables"></a> Operator Deliverables
+
+The operator is responsible for the following:
 
 * Request appropriate networking rules for on-demand service tiles.
-* Configure the BOSH Director
+* Configure the BOSH Director.
 * Upload the required releases for the broker deployment and service instance deployments.
-* Write a broker manifest
-  * If you are unfamiliar with writing BOSH v2 manifests, see [Manifest v2 Schema](http://bosh.io/docs/manifest-v2.html).
-  * Core broker configuration
-  * Service catalog and plan composition
-* Manage brokers
-* Documentation for the operator
+* Write a broker manifest. See [Write a Broker Manifest](#broker-manifest).
+* Manage brokers and service plans. See [Broker and Service Management](./management.html).
+* Provide any necessary documentation.
 
-For a list of deliverables provided by the Service Author, see [Required Deliverables](creating.html#what-is-required-of-the-service-authors).
+For a list of deliverables provided by the Service Author, see [Creating Service Author Deliverables](./creating.html).
 
-For an example manifest for a Redis service, see [redis-example-service-adapter-release](https://github.com/pivotal-cf-experimental/redis-example-service-adapter-release/blob/master/docs/example-manifest.yml).
 
-For an example manifest for a Kafka service, see [kafka-example-service-adapter-release](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml).
+### <a id="about-cli"></a>About the BOSH CLI
 
-## <a id="about-cli"></a>About the BOSH CLI
-The BOSH CLI is available in two major versions, v1 and v2. Pivotal recommends that you use the BOSH CLI v2 when possible.
+You use the BOSH CLI to perform many of the operator tasks.
+The BOSH CLI is available in two major versions, v1 and v2. Pivotal recommends that you use the BOSH CLI v2 when possible. 
+Instructions in this document are shown only for the v2 version.
 
-This topic provides examples of using each version of the BOSH CLI. Your PCF installation may affect which version of the BOSH CLI you can use. Consult the table below to determine which version of the CLI is supported for your installation.
+The table below shows the version of the BOSH CLI supported for different versions of PCF.
 
 <table class="nice">
     <th>PCF Version</th>
@@ -144,36 +146,54 @@ rules are set up so that connections are open as described in the table below.
 </table>
 
 ## <a id="configure-bosh"></a>Set Up Your BOSH Director
-Dependencies for the On-Demand Broker:
 
-- BOSH Director v257 or later (PCF 1.8) **Note:** does not support BOSH Windows
+See the following topics for how to set up your BOSH Director:
+
+* [Software Requirements](#software-reqs)
+* [SSL Certificates](#ssl-certs)
+* [BOSH Teams](#bosh-teams)
+* [Cloud Controller](#cloud-controller)
+
+### <a id="software-reqs"></a> Software Requirements
+
+The On-Demand Broker requires the following:
+
+- BOSH Director v257 or later (PCF 1.8) 
 - Cloud Foundry v238 or later (PCF 1.8)
 
- <p class="note"><strong>Note</strong>: [Service instance lifecycle errands](#lifecycle-errands) require BOSH Director v261 (PCF 1.10) or later.</p>
+<div class="note"><strong>Notes</strong>: <ul><li>ODB does not support BOSH Windows.</li>
+<li><a href="#lifecycle-errands"> Service Instance Lifecycle Errands</a> require BOSH Director v261 (PCF 1.10) or later.</li></ul></div>
+
 
 ### <a id="ssl-certs"></a>SSL Certificates
 
-If ODB is configured to communicate with BOSH on the Director's public IP you may be using a self-signed certificate unless you have a domain for your BOSH Director. ODB does not ignore TLS certificate validation errors by default (as expected). You have two options to configure certificate-based authentication between the BOSH Director and the ODB:
+If ODB is configured to communicate with BOSH on the Director's public IP, you may be using a self-signed certificate unless you have a domain for your BOSH Director. 
+ODB does not ignore TLS certificate validation errors by default. 
 
-1. Add the BOSH Director's root certificate to ODB's trusted pool in the ODB manifest:
+You have two options to configure certificate-based authentication between the BOSH Director and the ODB:
+
+* Add the BOSH Director's root certificate to ODB's trusted pool in the ODB manifest as follows:
 
     ```yaml
     bosh:
       root_ca_cert: ROOT-CA-CERT
     ```
 
-1. Use BOSH's `trusted_certs` feature to add a self-signed CA certificate to each VM BOSH deploys. For more details on how to generate and use self-signed certificates for BOSH Director and UAA, see [Director SSL Certificate Configuration](https://bosh.io/docs/director-certs.html).
+* Use BOSH's `trusted_certs` feature to add a self-signed CA certificate to each VM that BOSH deploys. 
+For more details on how to generate and use self-signed certificates for BOSH Director and UAA, 
+see the [BOSH documentation](https://bosh.io/docs/director-certs.html).
 
-You can also configure a separate root CA certificate that is used when ODB communicates with the Cloud Foundry API (Cloud Controller).
-This is done in a similar way to above.
-For more information, see [manifest snippets below](#core-broker-configuration).
+Optionally, you can configure a separate root CA certificate that is used when ODB communicates with the Cloud Foundry API (Cloud Controller).
+For an example of how to add this in the manifest, see the line containing 
+`CA-CERT-FOR-CLOUD-CONTROLLER` in the manifest snippet in [Core Broker Configuration](#core-broker-config) below.
+
 
 ### <a id="bosh-teams"></a>BOSH Teams
 
 BOSH has a teams feature that allows you to further control how BOSH operations are available to different clients. 
-Pivotal recommends using the feature to ensure that your on-demand service broker client can only modify deployments it created. 
+Pivotal recommends using this feature to ensure that your on-demand service broker client can only modify deployments it created. 
 
-Perform the following steps:
+To use this feature do the following:
 
 1. Run the following UAA CLI (UAAC) command to create the client:
 
@@ -187,32 +207,35 @@ Perform the following steps:
     Where:
     * `CLIENT-ID` is your client ID.
     * `CLIENT-SECRET` is your client secret.
+    * `TEAM-NAME` is the name of the team authorized to modify this deployment.
     <br><br>
     For example:
     <pre class="terminal">
     uaac client add admin \
       --secret 12345679 \
-      --authorized_grant_types "refresh\_token password client\_credentials" \
-      --authorities "bosh.teams.TEAM-NAME.admin"
+      --authorized\_grant\_types "refresh\_token password client\_credentials" \
+      --authorities "bosh.teams.my-team.admin"
     </pre>
     For more information about using the UAAC, see [Creating and Managing Users with the UAA CLI (UAAC)
     ](https://docs.cloudfoundry.org/uaa/uaa-user-management.html).
 
-1. When [configuring the broker's BOSH authentication](#core-broker-configuration), use the client ID and secret you provided above. 
-The broker will then only be able to perform BOSH operations on deployments it has created itself.
+1. When configuring the broker's BOSH authentication, use the client ID and secret you provided above. 
+The broker can then only perform BOSH operations on deployments it has created. See [Core Broker Configuration](#core-broker-config) below.
 
 For more information about setting up and using BOSH teams, see the [BOSH documentation](https://bosh.io/docs/director-users-uaa-perms.html).
 
-For more details on securing how ODB uses BOSH, see [Security](#security).
+For more details on securing how ODB uses BOSH, see [Security](./security.html).
 
 ### <a id="cloud-controller"></a>Cloud Controller
 
-ODB used the Cloud Controller as a source of truth about service offerings, plans, and instances. To reach Cloud Controller, ODB needs to be configured with credentials. These can be either client or user credentials:
+ODB uses the Cloud Controller as a source of truth about service offerings, plans, and instances. 
+To reach the Cloud Controller, configure ODB with either client or user credentials in the broker manifest. 
+The client or user must have the following permissions:
 
-* Client credentials: as of Cloud Foundry v238, the UAA client must have authority `cloud_controller.admin`.
-* User credentials: a Cloud Foundry admin user, i.e. a member of the `scim.read` and `cloud_controller.admin` groups as a minimum.
+* **If using client credentials**: As of Cloud Foundry v238, the UAA client must have the authority `cloud_controller.admin`.<br><br>
+* **If using user credentials**: The user must be a Cloud Foundry admin user, that is, a member of the `scim.read` and `cloud_controller.admin` groups as a minimum.
 
-Detailed broker configuration is covered [below](#core-broker-configuration).
+For detailed information, see [Write a Broker Manifest](#broker-manifest) below.
 
 ## <a id="upload-releases"></a>Upload Required Releases
 
@@ -224,16 +247,35 @@ Upload the following releases to the BOSH Director:
 
 ## <a id="broker-manifest"></a>Write a Broker Manifest
 
+The broker manifest contains:
+
+* [Core Broker Configuration](#core-broker-config)
+* [Service Catalog and Plan Composition](#catalog)
+
+If you are unfamiliar with writing BOSH v2 manifests, see [Manifest v2 Schema](http://bosh.io/docs/manifest-v2.html).
+
+For example manifests, see the following:
+
+  * For a Redis service---[redis-example-service-adapter-release](https://github.com/pivotal-cf-experimental/redis-example-service-adapter-release/blob/master/docs/example-manifest.yml).
+
+  * For a Kafka service---[kafka-example-service-adapter-release](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml).
+
+
 ### <a id="core-broker-config"></a>Core Broker Configuration
 
-Your manifest should contain one non-errand instance group, that co-locates both:
+Your manifest should contain one non-errand instance group that is colocated with both of the following:
 
 * the `broker` job from on-demand-service-broker
 * your service adapter job from your service adapter release
 
-The broker is stateless and does not need a persistent disk. The VM type can be quite small: a single CPU and 1 GB of memory should be sufficient in most cases.
+The broker is stateless and does not need a persistent disk. 
+The VM type can be small: a single CPU and 1 GB of memory is sufficient in most cases.
 
-An example snippet is shown below:
+An example snippet is shown below. This snippet uses the BOSH v2 syntax and 
+makes use of global cloud config and job-level properties.
+
+<p class="note warning"><strong>WARNING</strong>: The <code>disable_ssl_cert_verification</code>
+  option is dangerous and should be set to <code>false</code> in production</strong>.</p>
 
 ```yaml
 instance_groups:
@@ -284,35 +326,51 @@ instance_groups:
           # There are more broker properties that are discussed below
 ```
 
-<p class="note"><strong>Note</strong>: The <code>disable_ssl_cert_verification</code>
-  option is dangerous and <strong>should not be set to true in production</strong>.</p>
-
-This snippet is using the BOSH v2 syntax and making use of global cloud config and job-level properties.
 
 ### <a id="catalog"></a>Service Catalog and Plan Composition
 
-The operator must:
+The operator must provide the following in the manifest. To do so, use the starter [snippet](#starter-snippet) 
+provided below in the broker job properties section of the manifest.
 
 1. Supply each release job specified by the Service Author exactly once. You can include releases that provide many jobs, as long as each required job is provided by exactly one release.
+
 1. Supply one stemcell that is used on each VM in the service deployments. ODB does not currently support service instance deployments that use a different stemcell for different instance groups.
+
 1. Use exact versions for releases and stemcells. The use of `latest` and floating stemcells are not supported.
+
 1. Create Cloud Foundry [service metadata](https://docs.pivotal.io/pivotalcf/services/catalog-metadata.html#services-metadata-fields) in the catalog for the service offering. 
   You can use other arbitrary field names as needed in addition to the OSBAPI recommended fields.
-  This metadata will be aggregated in the Cloud Foundry marketplace and displayed in Apps Manager and the `cf` CLI.
-1. Compose plans. In ODB, service authors do not define plans but instead expose plan properties. The operator's role is to compose combinations of these properties, along with IAAS resources and catalog metadata into as many plans as they like.
-  1. Create Cloud Foundry [plan metadata](https://docs.pivotal.io/pivotalcf/services/catalog-metadata.html#plan-metadata-fields) in the service catalog for each plan. 
-    You can use other arbitrary field names as needed in addition to the OSBAPI recommended fields.
-  1. Provide resource mapping for each instance group specified by the Service Author for each plan.
-     The resource values must correspond to valid resource definitions in the BOSH Director's global cloud config.
-     In some cases Service Authors will recommend resource configuration: e.g. in single-node Redis deployments, an instance count greater than 1 does not make sense.
-     Here the operator can configure the deployment to span multiple availability zones, by using the [BOSH multi-az feature](https://bosh.io/docs/azs.html). For example the [kafka multi az plan](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml#L100). In some cases, service authors will provide errands for the service release. You can add an instance group of type errand by setting the lifecycle field. For example the [smoke_tests for the kafka deployment](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml#L93).
-  1. Provide values for plan properties.
-     Plan properties are key-value pairs defined by the Service Author. Some examples include a boolean to enable disk persistence for Redis, and a list of strings representing RabbitMQ plugins to load. The Service Author should document whether these properties are mandatory or optional, whether the use of one property precludes the use of another, and whether certain properties affect recommended instance group to resource mappings.
-     Properties can also be specified at the service offering level, where they will be applied to every plan. If there is a conflict between global and plan-level properties, the plan properties will take precedence.
-  1. Provide an (optional) update block for each plan.
-     You may require plan-specific configuration for BOSH's update instance operation. The ODB passes the plan-specific update block to the service adapter. Plan-specific update blocks should have the same structure as [the update block in a BOSH manifest](https://bosh.io/docs/manifest-v2.html#update). The Service Author can define a default update block to be used when a plan-specific update block is not provided, and whether the service adapter supports their configuration in the manifest.
+  This metadata will be aggregated in the Cloud Foundry marketplace and displayed in Apps Manager and the cf CLI.
 
-Add the snippet below to your broker job properties section:
+1. Compose plans. In ODB, service authors do not define plans but instead expose plan properties. 
+The operator's role is to compose combinations of these properties, along with IAAS resources and catalog metadata into as many plans as they wish.
+  1. Create Cloud Foundry [plan metadata](https://docs.pivotal.io/pivotalcf/services/catalog-metadata.html#plan-metadata-fields) in the service catalog for each plan. 
+    You can use other arbitrary field names as needed in addition to the OSBAPI recommended fields.<br><br>
+  1. Provide resource mapping for each instance group specified by the Service Author for each plan.
+     The resource values must correspond to valid resource definitions in the BOSH Director's global cloud config.<br><br>
+     In some cases Service Authors recommend resource configuration: for example, 
+     in single-node Redis deployments, an instance count greater than 1 does not make sense.
+     Here the operator can configure the deployment to span multiple availability zones 
+     by using the [BOSH multi-az feature](https://bosh.io/docs/azs.html). <br><br>
+     In some cases, service authors will provide errands for the service release. 
+     You can add an instance group of type `errand` by setting the `lifecycle` field. 
+     For an example see `register-broker` in the [example kafka deployment](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml).<br><br>
+  1. Provide values for plan properties.
+     Plan properties are key-value pairs defined by the Service Author.<br><br> 
+     Some examples of these could be to include a boolean to enable disk persistence for Redis, 
+     or a list of strings representing RabbitMQ plugins to load.<br><br>
+     The Service Author should document whether these properties are mandatory or optional, 
+     whether the use of one property precludes the use of another, and whether certain properties affect recommended instance group to resource mappings.<br><br>
+     You can also specify properties at the service offering level, where they will be applied to every plan. 
+     If there is a conflict between global and plan-level properties, the plan properties take precedence.<br><br>
+  1. (Optional) Provide an  update block for each plan.<br><br>
+     You may require plan-specific configuration for BOSH's update instance operation. <br><br>
+     The ODB passes the plan-specific update block to the service adapter. 
+     Plan-specific update blocks should have the same structure as [the update block in a BOSH manifest](https://bosh.io/docs/manifest-v2.html#update). <br><br>
+     The Service Author can define a default update block to be used when a plan-specific update block is not provided, 
+     if the service adapter supports configuring update blocks in the manifest.
+
+<a id="starter-snippet"></a>Add this Snippet to your broker job properties section:
 
 ```yaml
 service_deployment:
