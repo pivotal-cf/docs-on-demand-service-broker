@@ -159,7 +159,8 @@ Perform the following steps to log in to CredHub, provide or generate a CA certi
 1. Navigate to the Ops Manager **Installation Dashboard** and select the Ops Manager Director tile. 
 Click **Security**.
 1. Paste the contents of the CA certificate into **Trusted Certificates** and click **Save**.
-1. After preparing your environment for TLS, you must enable TLS in the tile configuration while installing MySQL for PCF: 
-    * **Existing Installation**: If you have already installed the MySQL for PCF tile, perform the procedures in [Configure TLS](install-config.html#tls) to enable TLS in the **Security** section of the tile. Then return to the Ops Manager Installation Dashboard and click **Apply Changes**. This restarts all the VMs in your PCF deployment and applies your CA certificate.
-    * **New Installation**: If you have not yet installed the MySQL for PCF tile, perform all of the procedures in [Installing and Configuring MySQL for PCF](install-config.html). When you click **Apply Changes**, this deploys MySQL for PCF, restarts all the VMs in your PCF deployment, and applies your CA certificate.
+1. After preparing your environment for TLS, you must enable TLS in the tile configuration while installing <%= vars.service_name %>: 
+    * **Existing Installation**: If you have already installed the <%= vars.service_name %> tile, perform the procedures in [Configure TLS](install-config.html#tls) to enable TLS in the **Security** section of the tile. Then return to the Ops Manager Installation Dashboard and click **Apply Changes**. This restarts all the VMs in your PCF deployment and applies your CA certificate.
+    * **New Installation**: If you have not yet installed the <%= vars.service_name %> tile, perform all of the procedures in [Installing and Configuring <%= vars.service_name %>](install-config.html). When you click **Apply Changes**, this deploys <%= vars.service_name %>, restarts all the VMs in your PCF deployment, and applies your CA certificate.
     <p class="note warning"><strong>WARNING</strong>: Restarting all of the VMs in your PCF deployment in order to apply a CA certificate takes a long time to complete.</p>
+    
