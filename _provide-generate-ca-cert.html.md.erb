@@ -86,7 +86,8 @@ Perform the following steps to create a UAA client for CredHub on your UAA serve
       created_by: f609e861-39ec-4a16-8aee-cba9e9b079e3
     </pre>
 
-1. If you are using PCF v1.12, perform the steps in [Downloading the CredHub CLI](credhub-cli.html) to download the CredHub CLI on the Ops Manager VM. 
+[//]: # (replace the link in this step with a link to Credhub documentation)
+1. If you are using PCF v1.12, perform the steps in [Downloading the CredHub CLI] to download the CredHub CLI on the Ops Manager VM. 
   In PCF v2.0 and later, the Ops Manager VM ships with the CredHub CLI already installed.
 
 ###<a id='add-ca-cert'></a> Add the CA Certificate
@@ -159,8 +160,16 @@ Perform the following steps to log in to CredHub, provide or generate a CA certi
 1. Navigate to the Ops Manager **Installation Dashboard** and select the Ops Manager Director tile. 
 Click **Security**.
 1. Paste the contents of the CA certificate into **Trusted Certificates** and click **Save**.
+[//]: # (replace the links in this step with links to relevant installing/congiguration topics)
 1. After preparing your environment for TLS, you must enable TLS in the tile configuration while installing <%= vars.service_name %>: 
-    * **Existing Installation**: If you have already installed the <%= vars.service_name %> tile, perform the procedures in [Configure TLS](install-config.html#tls) to enable TLS in the **Security** section of the tile. Then return to the Ops Manager Installation Dashboard and click **Apply Changes**. This restarts all the VMs in your PCF deployment and applies your CA certificate.
-    * **New Installation**: If you have not yet installed the <%= vars.service_name %> tile, perform all of the procedures in [Installing and Configuring <%= vars.service_name %>](install-config.html). When you click **Apply Changes**, this deploys <%= vars.service_name %>, restarts all the VMs in your PCF deployment, and applies your CA certificate.
-    <p class="note warning"><strong>WARNING</strong>: Restarting all of the VMs in your PCF deployment in order to apply a CA certificate takes a long time to complete.</p>
+    * **Existing Installation**: If you have already installed the <%= vars.service_name %> tile, perform the procedures in 
+			[Configure TLS] to enable TLS in the **Security** section of the tile. 
+			Then return to the Ops Manager Installation Dashboard and click **Apply Changes**. 
+			This restarts all the VMs in your PCF deployment and applies your CA certificate.
+    * **New Installation**: If you have not yet installed the <%= vars.service_name %> tile, perform all of the procedures in 
+			[Installing] <%= vars.service_name %>. 
+			When you click **Apply Changes**, this deploys <%= vars.service_name %>, restarts all the VMs in your PCF 
+			deployment, and applies your CA certificate.
+    <p class="note warning"><strong>WARNING</strong>: Restarting all of the VMs in your PCF deployment in order to apply a CA 
+certificate takes a long time to complete.</p>
     
