@@ -3,9 +3,55 @@ title: About the On-Demand Services SDK
 owner: London Services Enablement
 ---
 
-##<a id="provide-generate-pcf"></a> Provide or Generate a CA Certificate
+This topic provides information about what the on-demand services SDK is and who uses it.
+It also explains the concepts behind on-demand brokers such as service brokers, 
+service networks, on-demand services and service adapters.
 
-<%= partial 'provide-generate-ca-cert' %>
+## <a id="odb-sdk"></a>On-Demand Services SDK and the On-Demand Broker
+
+You can use the on-demand services SDK to create on-demand brokers for single-tenant service offerings.
+
+The on-demand services SDK simplifies broker and tile authoring, 
+and is the standard approach for both Pivotal internal services teams and Pivotal 
+partner independent software vendors (ISVs) to develop on-demand services for PCF.
+It provides a generic on-demand broker (ODB) that answers API calls from the Cloud Controller. 
+The service author adds service-specific functionality to the on-demand services SDK through an 
+executable called a **Service Adapter**. 
+The service adapter and on-demand broker along with other combine to create the 
+BOSH deployment as can be seen in the diagram below.
+This can be combined with other BOSH releases to generate a tile.
+
+![ODB Service Adapter](img/odb-service-adapter.png)
+
+The on-demand services SDK imposes no constraints on the service authors' ability 
+to offer new functionality, or expose configuration options in their service plans, 
+such as rate limiting and external load balancers.
+
+## <a id="roles"></a>On-Demand Broker Roles
+
+This documentation provides information for several roles. 
+Some of these roles might be carried out by the same person or team.
+This section provides a summary of the responsibilities for each of these roles.
+
+### <a id="service-author"></a>Service Author
+Service authors write and maintain the service adapter. 
+For more information about service author responsibilities, see [Creating the Service Author Deliverables](creating.html).
+
+### <a id="operator"></a>Operator
+Operators deploy and maintain the broker. 
+They also manage access control for CF developers. 
+The following list describes the responsibilities of the two types of operator which might be combined or separate:  
+
+- **Ops Manager Operator**: Configures plans and provides service specific configurations using Ops Manager. 
+For more information about configuring a specific service, see the [Pivotal Documentation](https://docs.pivotal.io/) 
+for the service.
+- **BOSH Operator**: Configures the on-demand service broker manifest to 
+provide broker and service specific configurations.
+For more information about operator responsibilities, see [Operating an On-Demand Broker](./operating.html).
+
+### <a id="tile-author"></a>Tile Author
+Tile authors determine which configuration options to expose to in Ops Manager,
+create the tile, and publish it on Pivotal Network.
 
 ## <a id="cf-broker"></a>Cloud Foundry Service Brokers and PCF Tiles
 
@@ -48,29 +94,6 @@ and BOSH manifests for deploying the service instances.
 <%= partial 'on_demand_architecture' %>
 
 ![Default Network and Service Network](http://docs.pivotal.io/svc-sdk/odb/img/ODB-create-service.png)
-
-## <a id="odb-sdk"></a>On-Demand Services SDK and the On-Demand Broker
-
-You can use the on-demand services SDK to create on-demand brokers for single-tenant service offerings.
-
-The on-demand services SDK simplifies broker and tile authoring, 
-and is the standard approach for both Pivotal internal services teams and Pivotal 
-partner independent software vendors (ISVs) to develop on-demand services for PCF.
-It provides a generic on-demand broker (ODB) that answers API calls from the Cloud Controller. 
-The service author plugs service-specific functionality into the ODB SDK via an 
-executable called a **Service Adapter**. 
-For more information about the responsibilities of service authors, see 
-[Creating the Service Author Deliverables](creating.html).
-
-No additional or third-party components other than the service broker and the 
-BOSH release for the service itself are required. This simplifies the setup. 
-Everything is done through the single install process. 
-This approach also simplifies support because there are fewer moving parts, 
-and your customer needs to customize fewer DNS rules and firewall ports for their network.
-
-The on-demand services SDK imposes no constraints on the service authors' ability 
-to offer new functionality, or expose configuration options in their service plans, 
-such as rate limiting and external load balancers.
 
 ## <a id="adapter"></a>Service Adapters
 
