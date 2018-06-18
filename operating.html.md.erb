@@ -548,8 +548,8 @@ parameters against the schema and produces an error if the parameters do not con
 
 You can optionally colocate the `route_registrar` job from the [routing release](http://bosh.io/releases/github.com/cloudfoundry-incubator/cf-routing-release?all=1) with the on-demand-service-broker, in order to:
 
-1. Load balance multiple instances of ODB using Cloud Foundry's router
-1. Access ODB from the public internet
+* Load balance multiple instances of ODB using Cloud Foundry's router
+* Access ODB from the public internet
 
 To do this, upload the release to your BOSH Director and [configure the job properties](http://bosh.io/jobs/route_registrar?source=github.com/cloudfoundry-incubator/cf-routing-release&version=0.136.0), replacing the version in that docs URL query string as appropriate.
 
