@@ -200,7 +200,7 @@ see the following sections:
 
 ##### <a id="generate-manifest-parameters"></a>Input Parameters
 
-This section describes the parameters provided to the `generate-manifest` 
+The following section details the parameters provided to the `generate-manifest` 
 subcommand using stdin.
 
 See the following example:
@@ -472,7 +472,7 @@ For more information about the `dashboard-url` subcommand, see the following sec
 
 #####<a id="dashboard-url-parameters"></a>Input Parameters
 
-This section describes the parameters provided to the `dashboard-url` subcommand using stdin.
+The following section details the parameters provided to the `dashboard-url` subcommand using stdin.
 
 See the following example:
 
@@ -489,14 +489,14 @@ See the following example:
 All the arguments are passed as strings and not JSON objects. 
 See the following example:
 
-```not-json
+```
+not-json
 {
   "dashboard_url": {
     // ...
     "manifest": "---\nname: some-name\n..."
   }
 }
-
 ```
 
 **<a id="dashboard-url-instance-id"></a>INSTANCE-ID**
@@ -511,7 +511,8 @@ The structure should be the same as the [plan given in the generate manifest](#p
 
 See the following example:
 
-```json
+```
+json
 {
   "properties": {
     "persistence": true
@@ -609,7 +610,7 @@ See the following example:
 
 #### Supported Exit Codes for dashboard-url
 
-See the following table for supported exit codes for the `dashboard-url` subcommand.
+See the following table for supported exit codes for the `dashboard-url` subcommand:
 
 | exit code     | Description     | Output                                                                                                                           |
 |:--------------|:----------------|:---------------------------------------------------------------------------------------------------------------------------------|
@@ -637,7 +638,7 @@ the simplest way to do this is to name the user after the binding ID.
 
 ##### <a id="create-binding-parameters"></a>Input Parameters
 
-This section describes the parameters required by the `create-binding` subcommand as 
+The following section details the parameters required by the `create-binding` subcommand as 
 a JSON document using stdin.
 
 ```json
@@ -810,7 +811,8 @@ for Binding](#create-binding-exit-codes) below.
 
 The following is an example success response to `create-binding`:
 
-<pre class="terminal">json
+```
+json
 {
   "credentials": {
     "username": "user1",
@@ -819,7 +821,7 @@ The following is an example success response to `create-binding`:
   "syslog_drain_url": "optional: for syslog drain services only",
   "route_service_url": "optional: for route services only"
 }
-</pre>
+```
 
 **<a id="create-binding-exit-codes"></a>Supported Exit Codes for Binding**
 
