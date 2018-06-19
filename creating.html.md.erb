@@ -159,22 +159,24 @@ The [generate manifest subcommand for the Kafka example](https://github.com/pivo
 
 ## <a id="interface"></a>Service Adapter Interface
 
-Implement your service adapter as a binary that receives its parameters as a JSON document via STDIN.
+Implement your service adapter as a binary. The service adapter receives its parameters as a JSON document using stdin.
 
-For a list of possible subcommands and the structure of the JSON document
-passed via STDIN, see the [Subcommands](#sub-commands) section below.
+For a list of possible subcommands and the JSON document structure, 
+see the [Subcommands](#sub-commands) section below.
 
-For example service adapters, see the following:
+For example service adapters, see the following examples written in Golang:
 
 * [Redis](https://github.com/pivotal-cf-experimental/redis-example-service-adapter)
 * [Kafka](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter).
 
-These examples are written in Golang.  They use the SDK to help with
-cross-cutting concerns such as reading the JSON document from STDIN.
+<p class="note"><strong>Note: </strong> The examples above show using SDK to help with cross-cutting concerns such as reading the JSON document from stdin.</p>
 
 ### <a id="sub-commands"></a>Subcommands
 
 #### <a id="generate-manifest"></a>generate-manifest
+
+For more information about the `generate-manifest` subcommand, 
+see the following sections:
 
 - [Input Parameters](#generate-manifest-parameters)
 - [Output](#generate-manifest-output)
@@ -197,7 +199,10 @@ cross-cutting concerns such as reading the JSON document from STDIN.
 
 ##### <a id="generate-manifest-parameters"></a>Input Parameters
 
-This section describes the parameters provided to the `generate-manifest` subcommand via STDIN:
+This section describes the parameters provided to the `generate-manifest` 
+subcommand using stdin.
+
+See the following example.
 
 ```json
 {
@@ -211,7 +216,8 @@ This section describes the parameters provided to the `generate-manifest` subcom
 }
 ```
 
-**Note:** All the arguments will be passed as strings, not as JSON objects. For example:
+All the arguments will be passed as strings and not JSON objects. 
+See the following example.
 
 ```not-json
 {
@@ -415,11 +421,22 @@ For example:
 
 **<a id="previous-manifest"></a>PREVIOUS-MANIFEST-YAML**
 
-When available, it is the previous BOSH deployment manifest for the service instance, in YAML format. It is empty if this is a new deployment. The format of the manifest should match the [BOSH v2 manifest](https://bosh.io/docs/manifest-v2.html).
+`PREVIOUS-MANIFEST-YAML` represents the previous BOSH deployment manifest for 
+the service instance. If you have a new deployment, the YAML file is empty. 
 
-The service author must perform any necessary service-specific migration logic if previous manifest is non-nil.
+The manifest format matches the BOSH v2 manifest. For more information about the 
+BOSH v2 manifest, see [Deployment Config](https://bosh.io/docs/manifest-v2/) in 
+the BOSH documentation.
 
-Another use-case of the previous manifest is for the migration of deployment properties which need to stay the same across multiple deployments of a manifest. In the Redis example, we [generate a password](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_manifest_generator.go#L112-L123) when we do a new deployment. But when the previous deployment manifest is provided, we copy the password over from [the previous deployment](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_manifest_generator.go#L333-L338), as generating a new password for existing deployments will break existing bindings.
+The service author must perform any necessary service-specific migration logic if 
+previous manifest is non-nil.
+
+Another use-case of the previous manifest is for the migration of deployment properties 
+which need to stay the same across multiple deployments of a manifest. In the Redis example, 
+we [generate a password](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_manifest_generator.go#L112-L123) when we do a new deployment. 
+But when the previous deployment manifest is provided, we copy the password over from [the 
+previous deployment](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_manifest_generator.go#L333-L338), as generating a new 
+password for existing deployments will break existing bindings.
 
 For example see the [example Redis service adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_manifest_generator.go#L333-L338).
 
@@ -429,7 +446,9 @@ This argument takes the previous plan as a JSON string.
 
 The previous plan is nil if this is a new deployment.
 
-The format of the plan should match the [plan schema](#plan-schema). The previous plan can be used for complex plan migration logic. For an example, the [Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go#L27:L33) rejects a plan migration if the new plan reduces the number of instances, to prevent data loss.
+The format of the plan should match the [plan schema](#plan-schema). The previous plan 
+can be used for complex plan migration logic. For an example, the [Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go#L27:L33)
+ rejects a plan migration if the new plan reduces the number of instances, to prevent data loss.
 
 ##### <a id="generate-manifest-output"></a>Output
 
@@ -445,12 +464,16 @@ The following table describes the supported exit codes and output for the `gener
 
 #### <a id="dashboard-url"></a>dashboard-url
 
+For more information about the `dashboard-url` subcommand, see the following sections:
+
 - [Input Parameters](#dashboard-url-parameters)
 - [Output](#dashboard-url-output)
 
 #####<a id="dashboard-url-parameters"></a>Input Parameters
 
-This section describes the parameters provided to the dashboard-url subcommand via STDIN:
+This section describes the parameters provided to the `dashboard-url` subcommand using stdin.
+
+See the following example:
 
 ```json
 {
@@ -514,9 +537,13 @@ For example:
 
 **<a id="dashboard-url-manifest"></a>MANIFEST-YAML**
 
-This parameter is the current manifest as YAML. The format of the manifest should match the [BOSH v2 manifest](https://bosh.io/docs/manifest-v2.html).
+This parameter is the current manifest as YAML.
 
-For example:
+The manifest format matches the BOSH v2 manifest. For more information about the 
+BOSH v2 manifest, see [Deployment Config](https://bosh.io/docs/manifest-v2/) in 
+the BOSH documentation.
+
+See the following example:
 
 ```yaml
 name: my-service-instance
@@ -560,14 +587,15 @@ addons:
 
 ##### <a id="dashboard-url-output"></a>Output
 
-If the `dashboard-url` command generates a url successfully, it should exit with 0 and return a dashboard URL JSON with the following structure:
+If the `dashboard-url` command generates a url successfully, the shell 
+exits with 0 and outputs JSON with the following structure:
 
 
 | field         | Type   | Description                           |
 |:--------------|:-------|:--------------------------------------|
 | dashboard_url | string | dashboard url returned to the cf user |
 
-For example:
+See the following example:
 
 ```
 {
@@ -576,6 +604,8 @@ For example:
 ```
 
 #### Supported Exit Codes for dashboard-url
+
+See the following table for supported exit codes for the `dashboard-url` subcommand.
 
 | exit code     | Description     | Output                                                                                                                           |
 |:--------------|:----------------|:---------------------------------------------------------------------------------------------------------------------------------|
@@ -601,7 +631,8 @@ the simplest way to do this is to name the user after the binding ID.
 
 ##### <a id="create-binding-parameters"></a>Input Parameters
 
-This section describes the parameters required by the `create-binding` subcommand as a JSON document via STDIN:
+This section describes the parameters required by the `create-binding` subcommand as 
+a JSON document using stdin.
 
 ```json
 {
@@ -651,7 +682,10 @@ As part of the binding, the `mysql_node` IPs would be returned, but  not the `ma
 
 This parameter is the current manifest as YAML. 
 This is used to extract information about the deployment that is necessary for the binding, such as admin credentials with which to create users. 
-The format of the manifest should match the [BOSH v2 manifest](https://bosh.io/docs/manifest-v2.html)
+
+The manifest format matches the BOSH v2 manifest. For more information about the 
+BOSH v2 manifest, see [Deployment Config](https://bosh.io/docs/manifest-v2/) in 
+the BOSH documentation.
 
 **<a id="create-request-params-JSON"></a>REQUEST-PARAMS-JSON**
 
@@ -746,13 +780,16 @@ instance_groups:
 
 ##### <a id="create-binding-output"></a>Output
 
-If the `create-binding` command is successful, it should return an exit code of 0 and print a [service broker API binding JSON response](http://docs.cloudfoundry.org/services/api.html#binding) on stdout. 
+If the `create-binding` command is successful, the shell outputs an exit code of 0 
+and prints a service broker API binding JSON response on stdout. 
 
-If the command failed, it should return any non-zero exit code. See the [supported exit code table](#create-binding-exit-codes) for details of supported failure cases. Stdout and stderr from the command will be logged by the ODB.
+If the command fails, the shell returns a non-zero exit code. Stdout and stderr from the command will be logged by the ODB.
+
+For more information about supported failure cases, see [Supported Exit Codes for Binding](#create-binding-exit-codes) below.
 
 The following is an example success response to `create-binding`:
 
-```json
+<pre class="terminal">json
 {
   "credentials": {
     "username": "user1",
@@ -761,7 +798,7 @@ The following is an example success response to `create-binding`:
   "syslog_drain_url": "optional: for syslog drain services only",
   "route_service_url": "optional: for route services only"
 }
-```
+</pre>
 
 **<a id="create-binding-exit-codes"></a>Supported Exit Codes for Binding**
 
@@ -788,6 +825,8 @@ delete the binding user.
 
 This section describes the parameters required by the `delete-binding` subcommand.
 
+See the following example:
+
 ```json
 {
   "delete_binding": {
@@ -799,7 +838,8 @@ This section describes the parameters required by the `delete-binding` subcomman
 }
 ```
 
-**Note:** All the arguments will be passed as strings, not as JSON objects. For example:
+All the arguments will be passed as strings and not JSON objects. 
+See the following example.
 
 ```not-json
 {
@@ -829,9 +869,13 @@ For example:
 
 **<a id="delete-binding-manifest"></a>MANIFEST-YAML**
 
-This parameter is the current manifest as YAML.
-This is used to extract information about the deployment that is necessary for the binding, such as the credentials.
-The format of the manifest should match the [BOSH v2 manifest](https://bosh.io/docs/manifest-v2.html)
+`MANIFEST-YAML` represents the parameter for the current manifest.
+BOSH uses the manifest to extract information about the deployment 
+such as the credentials.
+
+The manifest format matches the BOSH v2 manifest. For more information about the 
+BOSH v2 manifest, see [Deployment Config](https://bosh.io/docs/manifest-v2/) in 
+the BOSH documentation.
 
 For an example, see the [Kafka delete binding](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/delete_binding.go).
 
@@ -891,7 +935,8 @@ exposed through the Apps Manager UI.
 
 ##### <a id="generate-plan-schemas-parameters"></a>Input Parameters
 
-This section describes the parameters required by the `generate-plan-schemas` subcommand, passed via STDIN.
+This section describes the parameters required by the `generate-plan-schemas` 
+subcommand, passed using stdin.
 
 ```json
 {
@@ -901,7 +946,8 @@ This section describes the parameters required by the `generate-plan-schemas` su
 }
 ```
 
-**Note:** All the arguments will be passed as strings, not as JSON objects. For example:
+All the arguments will be passed as strings and not JSON objects. 
+See the following example.
 
 ```not-json
 {
