@@ -1,65 +1,20 @@
 ---
-title: About the On-Demand Services SDK
+title: About the On-Demand Brokers
 owner: London Services Enablement
 ---
 
-This topic provides information about what the on-demand services SDK is and who uses it.
-It also explains the concepts behind on-demand brokers such as service brokers, 
-service networks, on-demand services and service adapters.
-
-## <a id="odb-sdk"></a>On-Demand Services SDK and the On-Demand Broker
-
-You can use the on-demand services SDK to create on-demand brokers for single-tenant service offerings.
-
-The on-demand services SDK simplifies broker and tile authoring, 
-and is the standard approach for both Pivotal internal services teams and Pivotal 
-partner independent software vendors (ISVs) to develop on-demand services for PCF.
-It provides a generic on-demand broker (ODB) that answers API calls from the Cloud Controller. 
-The service author adds service-specific functionality to the on-demand services SDK through an 
-executable called a **Service Adapter**. 
-The service adapter and on-demand broker along with other combine to create the 
-BOSH deployment as can be seen in the diagram below.
-This can be combined with other BOSH releases to generate a tile.
-
-![ODB Service Adapter](img/odb-service-adapter.png)
-
-The on-demand services SDK imposes no constraints on the service authors' ability 
-to offer new functionality, or expose configuration options in their service plans, 
-such as rate limiting and external load balancers.
-
-## <a id="roles"></a>On-Demand Broker Roles
-
-This documentation provides information for several roles. 
-Some of these roles might be carried out by the same person or team.
-This section provides a summary of the responsibilities for each of these roles.
-
-### <a id="service-author"></a>Service Author
-Service authors write and maintain the service adapter. 
-For more information about service author responsibilities, see [Creating the Service Author Deliverables](creating.html).
-
-### <a id="operator"></a>Operator
-Operators deploy and maintain the broker. 
-They also manage access control for CF developers. 
-The following list describes the responsibilities of the two types of operator which might be combined or separate:  
-
-- **Ops Manager Operator**: Configures plans and provides service specific configurations using Ops Manager. 
-For more information about configuring a specific service, see the [Pivotal Documentation](https://docs.pivotal.io/) 
-for the service.
-- **BOSH Operator**: Configures the on-demand service broker manifest to 
-provide broker and service specific configurations.
-For more information about operator responsibilities, see [Operating an On-Demand Broker](./operating.html).
-
-### <a id="tile-author"></a>Tile Author
-Tile authors determine which configuration options to expose to in Ops Manager,
-create the tile, and publish it on Pivotal Network.
+This topic provides information about on-demand brokers for people who want to 
+create on-demand service tiles for Pivotal Cloud Foundry (PCF).
 
 ## <a id="cf-broker"></a>Cloud Foundry Service Brokers and PCF Tiles
 
 Service brokers let developers create service instances in their development spaces 
 that they can call from their code. 
-To do this, the brokers provide an interface between the Cloud Controller and the 
-add-on software service that they represent. 
 
+### Cloud Foundry Service Brokers 
+
+Cloud Foundry Service Brokers provide an interface between the Cloud Controller and the 
+add-on software service that they represent. 
 The service broker works by providing an API which the Cloud Controller calls to create service instances, 
 bind them to apps, and perform other operations. 
 Cloud Foundry service brokers are implemented as HTTP servers that conform to the 
@@ -69,6 +24,8 @@ In addition to providing an API, a service broker publishes a service catalog
 that may include multiple service plans, such as a free tier and a metered tier. 
 Brokers register their service plans with the Cloud Controller to populate the services marketplace, 
 which developers access with `cf marketplace` or through the Pivotal Cloud Foundry (PCF) Apps Manager.
+
+### PCF Tiles
 
 On PCF, operators find services on [Pivotal Network](https://network.pivotal.io/), 
 and install and configure them through a tile interface in the Ops Manager **Installation Dashboard** 
@@ -85,11 +42,64 @@ and easy for developers to use.
 These components include configuration layouts, upgrade rules, lifecycle errands, 
 and BOSH manifests for deploying the service instances.
 
+## <a id="odb-sdk"></a>On-Demand Services SDK and the On-Demand Broker
+
+The on-demand services SDK provides a generic on-demand broker (ODB) that answers API calls from the Cloud Controller. 
+Service authors add service-specific functionality to the on-demand services SDK through an 
+executable called a **Service Adapter**. 
+These components combine to create a BOSH deployment.
+For more information about BOSH deployments, see [What is a Deployment](https://bosh.io/docs/deployment/).
+
+The tile consumes the BOSH deployment to generate a BOSH manifest for deploying on-demand instances of the service.
+The diagram below illustrates this process.
+
+![The service adapter plugs into the on-demand broker to create a BOSH deployment. 
+For details read the text above](img/odb-service-adapter.png)
+
+The on-demand services SDK imposes no constraints on the service authors' ability 
+to offer new functionality, or expose configuration options in their service plans, 
+such as rate limiting and external load balancers.
+
+### <a id="roles"></a>On-Demand Service Roles
+
+There are several roles involved with creating and managing on-demand service tiles.
+These roles may be separate or combined.
+This section provides a summary of the responsibilities for each role.
+
+#### <a id="service-author"></a>Service Author
+
+Service authors write and maintain the service adapter. 
+For more information about service author responsibilities, see [Creating the Service Author Deliverables](creating.html).
+
+#### <a id="operator"></a>Operator
+
+Operators deploy and maintain the broker. 
+They also manage access control for Cloud Foundry (CF) developers. 
+This documentation provides information for two types of operator, Ops Manager operators and BOSH operators.
+These roles may be separate or combined.
+The following describes each type of operator:  
+
+- **Ops Manager Operator**: Uses the Ops Manager UI to configure plans and provide service specific configurations. 
+For more information about configuring a specific service, see the [Pivotal Documentation](https://docs.pivotal.io/) 
+for the service.
+- **BOSH Operator**: Creates and modifies the on-demand service broker manifest to provide service specific configurations.
+For more information about operator responsibilities, see [Operating an On-Demand Broker](./operating.html).
+
+#### <a id="tile-author"></a>Tile Author
+
+Tile authors determine which configuration options to expose to Ops Manager operators,
+create the tile, and publish it on Pivotal Network.
+For more information, see [Creating an On-Demand Service Tile](./tile.html).
+
+
 ## <a id="service-network"></a>BOSH 2.0 and Service Networks
 
 <%= partial 'service_networks' %>
 
-## <a id="on-demand"></a>On-Demand Services
+## <a id="on-demand"></a>Default Network and Service Network
+
+On-demand services rely on the BOSH 2.0 ability to dynamically deploy VMs in a dedicated service network. 
+The on-demand service broker uses this capability to create single-tenant service instances in a dedicated service network.
 
 <%= partial 'on_demand_architecture' %>
 
@@ -98,10 +108,9 @@ and BOSH manifests for deploying the service instances.
 ## <a id="adapter"></a>Service Adapters
 
 A service adapter is a binary that is called out by the ODB for service-specific tasks.
+The diagram below shows where responsibility lies for each aspect of the ODB workflow.
 
 ![responsibility-diagram](img/responsibility-diagram.png)
-
-The above diagram shows where responsibility lies for each aspect of the ODB workflow.
 
 The service author can focus on building the BOSH release of their service and provide 
 a service adapter binary that manages manifest generation, schema generation, binding, and unbinding. 
