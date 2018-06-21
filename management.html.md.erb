@@ -9,41 +9,11 @@ Management tasks on the broker are performed with BOSH errands.
 
 ### <a id="register-broker"></a> Register Broker
 
-`register-broker` registers the broker with Cloud Foundry and enables access to plans in the service catalog. Run this errand whenever the broker is re-deployed with new catalog metadata to update the Cloud Foundry catalog.
+The `register-broker` errand registers the broker with Cloud Foundry and enables access to plans in the service catalog. Run this errand whenever the broker is re-deployed with new catalog metadata to update the Cloud Foundry catalog.
 
-#### <a id="register-broker-properties"></a> Manifest Properties
+#### Add the Register-Broker Errand to the Manifest
 
-See the following manifest properties for the register broker instance group:
-
-<table>
-  <tr>
-    <th>Field</th>
-    <th>Values</th>
-    <th>Description</th>
-  </tr>
-  <tr>
-    <td><code>broker_uri</code></td>
-    <td><code>BROKER-URI</code></td>
-    <td>Registers a route for your broker with Cloud Foundry. See the <a href="#route-registration">Route registration</a> section for more details.</td>
-  </tr>
-  <tr>
-    <td><code>enable_service_access:</code></td>
-    <td><code>false</code></td>
-    <td>Does not change service access for any plan.</td>
-  </tr>
-  <tr>
-    <td><code>cf_service_access:</code></td>
-    <td><code>enable</code>, <code>disable</code>, or <code>manual</code></td>
-    <td>Enables or disables access for that plan or performs no action if set to manual. Enabled by default</td>
-  </tr>
-</table>
-
-Only admin Cloud Foundry users can see plans with disabled service access. Org Managers and Space Managers cannot see these plans.
-
-
-#### <a id="create-register-broker"></a> Create a Register Broker Instance
-
-To register the broker, perform the following steps.
+To add the `register-broker` errand to the manifest, do the following.
 
 1. Add the following instance group to your manifest:
 
@@ -59,6 +29,7 @@ To register the broker, perform the following steps.
             broker_uri: BROKER-URI # optional, only required when a route has been registered
             disable_ssl_cert_verification: TRUE|FALSE # defaults to false
             enable_service_access: TRUE|FALSE # defaults to true
+            cf_service_access: ENABLE|DISABLE|MANUAL #optional, defaults to enable
             cf:
               api_url: CF-API-URL
               admin_username: CF-API-ADMIN-USERNAME
@@ -68,20 +39,32 @@ To register the broker, perform the following steps.
       networks: [NETWORK]
       azs: [AZ]
     ```
+      - If the `broker_uri` property is set, you must register a route for your broker with Cloud Foundry. See the [Route Registration]() section for more details.
+      - When `enable_service_access`: `false` is set, the errand does not change service access for any plan.
+      - You can enable individual plans by using the optional `cf_service_access` property. The values accepted are the following:
+        - `enable`: the errand enables access for that plan. This is the default value.
+        - `disable`: the errand disables access for that plan
+        - `manual`: the errand performs no action.
 
-1. Run the errand with the following command:
+        Only Cloud Foundry admin users can see plans with disabled service access. Org Managers and Space Managers cannot see these plans.
 
-    ```
-    bosh2 -d DEPLOYMENT-NAME run-errand register-broker
-    ```
+#### Run the Register-Broker Errand
 
-    Where `DEPLOYMENT-NAME` is the name of your deployment.
+To run the errand, use the following command:
 
-    For example:
+```
+bosh2 -d DEPLOYMENT-NAME run-errand register-broker
+```
 
-    <pre class="terminal">
-    $ bosh2 -d cf run-errand register-broker
-    </pre>
+Where:
+
+- `DEPLOYMENT-NAME` is the name of your deployment.
+
+For example:
+
+<pre class="terminal">
+$ bosh2 -d cf run-errand register-broker
+</pre>
 
 ### <a id="delete-instances-and-deregister"></a>Delete All Service Instances and Deregister Broker
 
