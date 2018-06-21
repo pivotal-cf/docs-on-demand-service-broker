@@ -27,7 +27,8 @@ For examples of a service release, see the following:
 * [Kafka](https://github.com/pivotal-cf-experimental/kafka-example-service-release)
 
 For more information about how to create a BOSH release, see the [BOSH docs](http://bosh.io/docs). 
-Pivotal recommends creating sample manifests that deploy the service release(s), as this will help you write the `generate-manifest` component of the Service Adapter later.
+Pivotal recommends creating sample manifests that deploy the service release(s),
+because later this helps you write the `generate-manifest` component of the Service Adapter.
 
 ### <a id="service-instance-lifecycle-errands"></a>Service Instance Lifecycle Errands
 
@@ -90,17 +91,22 @@ A Service Adapter is an executable invoked by ODB. It is expected to respond to 
   Create (unique, if possible) credentials for the service instance, printing them to stdout as JSON.
 
 - `delete-binding`:
-  Invalidate the created credentials, if possible. Some services (e.g. Redis) are single-user, and this endpoint will do nothing.
+  Invalidate the created credentials, if possible.
+  Some services (e.g. Redis) are single-user, and this endpoint will do nothing.
 
-The parameters, and expected output from these subcommands will be explained in detail below. For each of these subcommands, exit status 0 indicates that the command succeeded exit status 10 indicates not implemented, and any non-zero status indicates failure.
+The parameters and expected output from these subcommands are explained in detail below.
+For each of these subcommands, exit status 0 indicates that the command succeeded exit status 10 indicates not implemented,
+and any non-zero status indicates failure.
 
 ### <a id="handling-errors"></a>Handle Errors
 
 If a subcommand fails, the adapter must return a non-zero exit status, and may optionally print to stdout and/or stderr.
 
-When a subcommand exits with an unrecognized exit code anything printed to stdout will be returned to the CF CLI user.
+When a subcommand exits with an unrecognized exit code anything printed to stdout is returned to the CF CLI user.
 
-Both the stdout and stderr streams will be printed in the broker log for the operator. For that reason, we recommend not printing the manifest or other sensitive details to stdout/stderr, as the ODB does no validation on this output.
+Both the stdout and stderr streams are printed in the broker log for the operator.
+For that reason, Pivotal recommends not printing the manifest or other sensitive details to stdout/stderr,
+because the ODB does no validation on this output.
 
 See an example implementation [here](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/892d48b066c9b1d2651080484a53531001e9e920/adapter/create_binding.go#L27-L29).
 
@@ -162,12 +168,12 @@ The [generate manifest subcommand for the Kafka example](https://github.com/pivo
 Implement your service adapter as a binary. The service adapter receives its parameters as a JSON document using stdin.
 
 For a list of possible subcommands and the JSON document structure, 
-see the [Subcommands](#sub-commands) section below.
+see [Subcommands](#sub-commands) below.
 
-For example service adapters, see the following examples written in Golang:
+For example service adapters, see the following examples written in golang:
 
 * [Redis](https://github.com/pivotal-cf-experimental/redis-example-service-adapter)
-* [Kafka](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter).
+* [Kafka](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter)
 
 <p class="note"><strong>Note: </strong> The Redis and Kafka examples above use SDK to help with 
   cross-cutting concerns. For example, reading the JSON document from stdin.</p>
@@ -217,7 +223,7 @@ See the following example:
 }
 ```
 
-All the arguments will be passed as strings and not JSON objects. 
+All the arguments are passed as strings and not JSON objects. 
 See the following example:
 
 ```not-json
@@ -271,7 +277,14 @@ Keep in mind the following:
 
 * ODB only supports injecting one stemcell into each service deployment. Different instance groups cannot have different stemcells.
 * ODB only supports using exact release and stemcell versions. The use of `latest` and floating stemcells are not supported.
-* Your Service Adapter should be opinionated about which jobs it requires to generate its manifest. For example, the Kafka example requires `kafka_node` and `zookeeper`. It should not be opinionated about the mapping of BOSH release to job. The jobs can all be provided by one release, or across many. The SDK provides the helper function [`GenerateInstanceGroupsWithNoProperties`](https://github.com/pivotal-cf/on-demand-services-sdk/blob/master/serviceadapter/instance_group_mapping.go) for generating instance groups without any properties. The Kafka example service adapter [uses this helper function](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/adapter.go) and [invokes it](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go) to map the service releases parameter to the BOSH manifest `releases` and `instance_groups` sections.
+* Your Service Adapter should be opinionated about which jobs it requires to generate its manifest.
+  For example, the Kafka example requires `kafka_node` and `zookeeper`.
+  It should not be opinionated about the mapping of BOSH release to job.
+  The jobs can all be provided by one release or across many.
+  The SDK provides the helper function [`GenerateInstanceGroupsWithNoProperties`](https://github.com/pivotal-cf/on-demand-services-sdk/blob/master/serviceadapter/instance_group_mapping.go) for generating instance groups without any properties.
+  The Kafka example service adapter [uses this helper function](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/adapter.go)
+  and [invokes it](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go)
+  to map the service releases parameter to the BOSH manifest `releases` and `instance_groups` sections.
 * You should provide documentation about which jobs are required by your Service Adapter, and which BOSH releases operators should get these jobs from.
 
 **<a id="plan-json"></a>PLAN-JSON**
@@ -375,7 +388,13 @@ Plans are composed by the operator and consist of resource mappings, properties 
 
 * **Resource Mappings**
 
-  The `instance_groups` section of the plan JSON. This maps service deployment instance groups (defined by the service author) to resources (defined by the operator). The service developers should document the list of instance group names required for their deployment (e.g. "redis-server") and any constraints they recommend on resources (e.g. operator must add a persistent disk if persistence property is enabled). These constraints can of course be enforced in code. The `instance_groups` section also contains a field for `lifecycle`, which can be set by the operator. The service adapter will add a lifecycle field to the instance group within the BOSH manifest when specified.
+  The `instance_groups` section of the plan JSON.
+  This maps service deployment instance groups (defined by the service author) to resources (defined by the operator).
+  The service developers should document the list of instance group names required for their deployment (e.g. "redis-server") 
+  and any constraints they recommend on resources (e.g. operator must add a persistent disk if persistence property is enabled).
+  These constraints can of course be enforced in code.
+  The `instance_groups` section also contains a field for `lifecycle`, which can be set by the operator.
+  The service adapter adds a lifecycle field to the instance group within the BOSH manifest when specified.
 
 * **Properties**
 
@@ -391,13 +410,18 @@ Plans are composed by the operator and consist of resource mappings, properties 
 
 **<a id="generate-request-params-JSON"></a>REQUEST-PARAMS-JSON**
 
-This is a JSON object that holds the entire body of the [service provision](http://docs.cloudfoundry.org/services/api.html#provisioning) or [service update](http://docs.cloudfoundry.org/services/api.html#updating_service_instance) request sent by the Cloud Controller to the service broker. The request parameters JSON will be `null` for upgrades.
+This is a JSON object that holds the entire body of the [service provision](http://docs.cloudfoundry.org/services/api.html#provisioning)
+or [service update](http://docs.cloudfoundry.org/services/api.html#updating_service_instance)
+request sent by the Cloud Controller to the service broker.
+The request parameters JSON are `null` for upgrades.
 
 The field `context` holds platform specific contextual information under which the service instance is to be provisioned.
 
 The field `parameters` contains arbitrary key-value pairs which were passed by the application developer as a `cf` CLI parameter when creating, or updating the service instance.
 
-<p class="note"><strong>Note</strong>: When updating an existing service instance, any arbitrary parameters passed on a previous create or update will not be passed again. Therefore, for arbitrary parameters to stay the same across multiple deployments they must be retrieved from the previous manifest.</p>
+<p class="note"><strong>Note</strong>: When updating an existing service instance,
+   any arbitrary parameters passed on a previous create or update are not passed again.
+   Therefore, for arbitrary parameters to stay the same across multiple deployments they must be retrieved from the previous manifest.</p>
 
 See the following example:
 
@@ -432,11 +456,11 @@ the BOSH documentation.
 The service author must perform any necessary service-specific migration logic if 
 previous manifest is non-nil.
 
-Another use-case of the previous manifest is for the migration of deployment properties 
+Another use case of the previous manifest is for the migration of deployment properties 
 which need to stay the same across multiple deployments of a manifest. In the Redis example, 
 we [generate a password](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_manifest_generator.go#L112-L123) when we do a new deployment. 
-But when the previous deployment manifest is provided, we copy the password over from [the 
-previous deployment](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_manifest_generator.go#L333-L338), as generating a new 
+But, when the previous deployment manifest is provided, we copy the password over from [the 
+previous deployment](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_manifest_generator.go#L333-L338), because generating a new 
 password for existing deployments will break existing bindings.
 
 For example see the [example Redis service adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_manifest_generator.go#L333-L338).
@@ -459,7 +483,7 @@ The following table describes the supported exit codes and output for the `gener
 |:--------------|:----------------|:---------------------------------------------------------------------------------------------------------------------------------|
 | 0             | success         | Stdout: BOSH manifest YAML                                                                                                       |
 | 10            | not implemented |                                                                                                                                  |
-| anything else | failure         | Stdout: optional error message for CF CLI users<br/> Stderr: error message for operator<br/> ODB will log both stdout and stderr |
+| anything else | failure         | Stdout: optional error message for CF CLI users<br/> Stderr: error message for operator<br/> ODB logs both stdout and stderr |
 
 ---
 
@@ -616,15 +640,13 @@ See the following table for supported exit codes for the `dashboard-url` subcomm
 |:--------------|:----------------|:---------------------------------------------------------------------------------------------------------------------------------|
 | 0             | success         | Stdout: dashboard URL JSON                                                                                                       |
 | 10            | not implemented |                                                                                                                                  |
-| anything else | failure         | Stdout: optional error message for CF CLI users<br> 
-Stderr: error message for operator<br> 
-ODB will log both stdout and stderr |
+| anything else | failure         | Stdout: optional error message for CF CLI users<br> Stderr: error message for operator<br> ODB logs both stdout and stderr |
 
 ---
 
 #### <a id="create-binding"></a>create-binding
 
-Binding credentials for a service instance should share a namespace, and should
+Binding credentials for a service instance should share a namespace and should
 be unique if possible.
 
 For MySQL, two bindings could include a different username/password pairs, but
@@ -683,7 +705,7 @@ See the following example:
 }
 ```
 
-This can be used to connect to the instance deployment if required, or to create a service specific binding. 
+This can be used to connect to the instance deployment, if required, or to create a service specific binding. 
 In the example above, the Service Adapter may connect to MySQL as the admin and create a user. 
 As part of the binding, the `mysql_node` IPs would be returned, but  not the `management_box`.
 
@@ -777,7 +799,7 @@ in the service manifest. Moreover, the service and agent jobs should be co-locat
 in the same instance group.
 
 This option is useful for services where the adapter cannot or prefers not to 
-directly call out to the service instance, and instead delegates responsibility 
+directly call out to the service instance and instead delegates responsibility 
 for setting up new credentials to an agent.
 
 See the following example:
@@ -804,7 +826,7 @@ If the `create-binding` command is successful, the shell outputs an exit code of
 and prints a service broker API binding JSON response on stdout. 
 
 If the command fails, the shell returns a non-zero exit code. Stdout and stderr 
-from the command will be logged by the ODB.
+from the command are logged by the ODB.
 
 For more information about supported failure cases, see [Supported Exit Codes 
 for Binding](#create-binding-exit-codes) below.
@@ -829,9 +851,9 @@ json
 |:--------------|:--------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------|
 | 0             | success                                           | Stdout: binding credentials JSON                                                                                                 |
 | 10            | subcommand not implemented                        |                                                                                                                                  |
-| 42            | app_guid not provided in the binding request body | Stderr: error message for operator<br/> ODB will log both stdout and stderr                                                      |
-| 49            | binding already exists                            | Stderr: error message for operator<br/> ODB will log both stdout and stderr                                                      |
-| anything else | failure                                           | Stdout: optional error message for CF CLI users<br/> Stderr: error message for operator<br/> ODB will log both stdout and stderr |
+| 42            | app_guid not provided in the binding request body | Stderr: error message for operator<br/> ODB logs both stdout and stderr                                                      |
+| 49            | binding already exists                            | Stderr: error message for operator<br/> ODB logs both stdout and stderr                                                      |
+| anything else | failure                                           | Stdout: optional error message for CF CLI users<br/> Stderr: error message for operator<br/> ODB logs both stdout and stderr |
 
 ---
 
@@ -916,7 +938,7 @@ See the following example:
 ```
 
 <p class="note"><strong>Note</strong>: This parameter is different from the
-  create-binding <code>request_parameters</code> parameter, and in particular
+  create-binding <code>request_parameters</code> parameter and, in particular,
   does not include <code>parameters</code> or <code>bind_resource</code>.</p>
 
 ##### <a id="delete-binding-output"></a>Output
@@ -927,8 +949,8 @@ The following table describes the supported exit codes and output for the `delet
 |:--------------|:-----------------------|:---------------------------------------------------------------------------------------------------------------------------------|
 | 0             | success                | No output is required                                                                                                            |
 | 10            | not implemented        |                                                                                                                                  |
-| 41            | binding does not exist | Stderr: error message for operator<br/> ODB will log both stdout and stderr                                                      |
-| anything else | failure                | Stdout: optional error message for CF CLI users<br/> Stderr: error message for operator<br/> ODB will log both stdout and stderr |
+| 41            | binding does not exist | Stderr: error message for operator<br/> ODB logs both stdout and stderr                                                      |
+| anything else | failure                | Stdout: optional error message for CF CLI users<br/> Stderr: error message for operator<br/> ODB logs both stdout and stderr |
 
 
 This can be used to connect to the actual VMs if required, to delete a service specific binding.
@@ -1022,7 +1044,7 @@ The following table describes the supported exit codes and output for the
 |:--------------|:-----------------------|:---------------------------------------------------------------------------------------------------------------------------------|
 | 0             | success                | No output is required                                                                                                            |
 | 10            | not implemented        |                                                  |
-| anything else | failure                | Stdout: optional error message for cf CLI users<br/> Stderr: error message for operator<br/> ODB will log both stdout and stderr |
+| anything else | failure                | Stdout: optional error message for cf CLI users<br/> Stderr: error message for operator<br/> ODB logs both stdout and stderr |
 
 ## <a id="packaging"></a>Packaging
 
@@ -1149,7 +1171,7 @@ platform or application is executing. If the platform does not provide a `contex
 
 ### <a id="error_handling"></a>Error Handling
 
-Any error returned by the interface functions is considered to be for the Cloud Foundry CLI user and will accordingly be printed to stdout.
+Any error returned by the interface functions is considered to be for the Cloud Foundry CLI user and is printed to stdout.
 
 The adapter code is responsible for performing any error logging to stderr that the authors think is relevant for the operator logs.
 
