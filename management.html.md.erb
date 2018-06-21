@@ -11,7 +11,7 @@ Management tasks on the broker are performed with BOSH errands.
 
 The `register-broker` errand registers the broker with Cloud Foundry and enables access to plans in the service catalog. Run this errand whenever the broker is re-deployed with new catalog metadata to update the Cloud Foundry catalog.
 
-#### Add the Register-Broker Errand to the Manifest
+#### Add the Errand to the Manifest
 
 To add the `register-broker` errand to the manifest, do the following.
 
@@ -39,7 +39,7 @@ To add the `register-broker` errand to the manifest, do the following.
       networks: [NETWORK]
       azs: [AZ]
     ```
-      - If the `broker_uri` property is set, you must register a route for your broker with Cloud Foundry. See the [Route Registration]() section for more details.
+      - If the `broker_uri` property is set, you must register a route for your broker with Cloud Foundry. See the [Route Registration](./operating.html#route) section for more details.
       - When `enable_service_access`: `false` is set, the errand does not change service access for any plan.
       - You can enable individual plans by using the optional `cf_service_access` property. The values accepted are the following:
         - `enable`: the errand enables access for that plan. This is the default value.
@@ -48,7 +48,7 @@ To add the `register-broker` errand to the manifest, do the following.
 
         Only Cloud Foundry admin users can see plans with disabled service access. Org Managers and Space Managers cannot see these plans.
 
-#### Run the Register-Broker Errand
+#### Run the Errand
 
 To run the errand, use the following command:
 
@@ -68,9 +68,9 @@ $ bosh2 -d cf run-errand register-broker
 
 ### <a id="delete-instances-and-deregister"></a>Delete All Service Instances and Deregister Broker
 
-This errand performs a similar operation to the errand [delete-all-service-instances](#delete-instances) and [deregister-broker](#deregister-broker).
-
 <p class="note warning"><strong>WARNING:</strong> Use this errand with extreme caution when you want to destroy all of the on-demand service instances and deregister the broker from Cloud Foundry.</p>
+
+The `delete-all-service-instances-and-deregister-broker` errand performs a similar operation to the errands [delete-all-service-instances](#delete-instances) and [deregister-broker](#deregister-broker).
 
 This errand does the following:
 
@@ -79,46 +79,56 @@ This errand does the following:
 1. Deletes all service instances sequentially.
 1. Deregisters the broker from Cloud Foundry.
 
-Add the following instance group to your manifest:
+#### Add the Errand to the Manifest
 
-```yaml
-- name: delete-all-service-instances-and-deregister-broker
-  lifecycle: errand
-  instances: 1
-  jobs:
+To add the errand to the manifest, do the following.
+
+1. Add the following instance group to your manifest:
+
+    ```yaml
     - name: delete-all-service-instances-and-deregister-broker
-      release: ODB-RELEASE-NAME
-      properties:
-        broker_name: BROKER-NAME
-        polling_interval_seconds: INTERVAL-IN-SECONDS # defaults to 60
-        polling_initial_offset_seconds: OFFSET-IN-SECONDS # defaults to 5
+      lifecycle: errand
+      instances: 1
+      jobs:
+        - name: delete-all-service-instances-and-deregister-broker
+          release: ODB-RELEASE-NAME
+          properties:
+            broker_name: BROKER-NAME
+            polling_interval_seconds: INTERVAL-IN-SECONDS # defaults to 60
+            polling_initial_offset_seconds: OFFSET-IN-SECONDS # defaults to 5
 
-  vm_type: VM-TYPE
-  stemcell: STEMCELL
-  networks: [{name: NETWORK}]
-  azs: [AZ]
-```
+      vm_type: VM-TYPE
+      stemcell: STEMCELL
+      networks: [{name: NETWORK}]
+      azs: [AZ]
+    ```
 
-Where: 
+      Where: 
+      * `INTERVAL-IN-SECONDS`: The interval in seconds before a service instance is deleted. 
+      * `OFFSET-IN-SECONDS`: The offset in seconds before polling Cloud Foundry to check
+      if the instance has been deleted.
 
-* `INTERVAL-IN-SECONDS`: The interval in seconds before a service instance is deleted. 
-* `OFFSET-IN-SECONDS`: The offset in seconds before polling Cloud Foundry to check
-if the instance has been deleted.
+       <div class="note"><strong>Notes</strong>:
+        <ul>
+          <li>The <code>polling\_interval\_seconds</code> default is set to 60 seconds
+          because the Cloud Controller itself polls the on-demand broker every 60 seconds.Setting your polling interval to anything lower than 60 seconds will not speed up the errand.</li>
+          <li>The <code>polling\_initial\_offset_seconds</code> default is set to 5 seconds.
+          In systems with more load, consider increasing the polling offset.</li>
+        </ul>
+        </div>
 
- <p class="note"><strong>Note</strong>: The `polling_interval_seconds` default is set to 60 seconds
-    because the Cloud Controller itself polls the on-demand broker every 60 seconds.
-    Setting your polling interval to anything lower than 60 seconds will not speed up the errand.<br/>
-    The `polling_initial_offset_seconds` default is set to 5 seconds.
-    In systems with more load, consider increasing the polling offset.
+#### Run the Errand
 
-Run the errand with the following command:
+To run the errand, use the following command:
 
 ```
 bosh2 -d DEPLOYMENT-NAME run-errand \
 delete-all-service-instances-and-deregister-broker
 ```
 
-Where `DEPLOYMENT-NAME` is the name of your deployment.
+Where:
+
+- `DEPLOYMENT-NAME` is the name of your deployment.
 
 For example:
 
@@ -222,7 +232,9 @@ bosh2 -d DEPLOYMENT-NAME run-errand \
 delete-all-service-instances
 ```
 
-Where `DEPLOYMENT-NAME` is the name of your deployment.
+Where:
+
+- `DEPLOYMENT-NAME` is the name of your deployment.
 
 For example:
 
