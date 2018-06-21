@@ -330,8 +330,9 @@ instance_groups:
 
 ### <a id="catalog"></a>Service Catalog and Plan Composition
 
-The operator must provide the following in the manifest. To do so, use the starter [snippet](#starter-snippet) 
-provided below in the broker job properties section of the manifest.
+The operator configures the Service Catalog and composes plans in the manifest.  
+
+To do so, use the starter [Starter Snippet](#starter-snippet) below in the broker job properties section of the manifest, and provide the following:
 
 1. Supply each release job specified by the Service Author exactly once. You can include releases that provide many jobs, as long as each required job is provided by exactly one release.
 
@@ -371,7 +372,9 @@ The operator's role is to compose combinations of these properties, along with I
      The Service Author can define a default update block to be used when a plan-specific update block is not provided, 
      if the service adapter supports configuring update blocks in the manifest.
 
-<a id="starter-snippet"></a>Add this Snippet to your broker job properties section:
+#### <a id="starter-snippet"></a>Starter Snippet
+
+Add this Snippet to your broker job properties section, and provide the information listed in [Service Catalog and Plan Composition](#catalog) above.
 
 ```yaml
 service_deployment:
@@ -698,8 +701,8 @@ You cannot change the plan_id of a plan that has existing service instances.
 ## <a id="broker-stop"></a>Broker Shutdown
 
 The broker tries to wait for any incomplete https requests to complete before shutting down. 
-This allows us to reduce the risk of leaving orphan deployments in the event that 
-the BOSH Director does not respond to our initial `bosh deploy` request. 
+This reduces the risk of leaving orphan deployments in the event that 
+the BOSH Director does not respond to the initial `bosh deploy` request. 
 
 You can determine how long the broker waits before being forced to shut down 
 using the `broker.shutdown_timeout` property in the manifest. 
@@ -710,104 +713,121 @@ For more information, see <a href="#broker-manifest">Write a Broker Manifest</a>
 
  <p class="note"><strong>Note</strong>: This feature requires BOSH Director v261 or later.</p>
 
-Service Instance lifecycle errands allow additional short lived jobs to be run as part of service instance deployment. A deployment is only considered successful if all lifecycle errands successfully exit.
+Service Instance lifecycle errands allow additional short-lived jobs to run as part of service instance deployment. 
+A deployment is only considered successful if all lifecycle errands successfully exit.
 
-The service adapter must offer the errands as part of the service instance deployment.
+The service adapter must offer the errands as part of the service instance deployment. 
+For more information, see [Create a Service Release](./creating.html#create-a-service-release).
 
 ODB supports the following lifecycle errands:
 
-- `post_deploy` - Runs after the creation or updating of a service instance. An example use case is running a health check to ensure the service instance is functioning. See the workflow [here](./concepts.html#post-deploy)
-- `pre_delete` - Runs before the deletion of a service instance. An example use case is cleaning up data prior to a service shutdown. See the workflow [here](./concepts.html#pre-delete)
+- `post_deploy` - Runs after creating or updating a service instance. An example use case is 
+  running a health check to ensure the service instance is functioning. 
+  For more information, see [Create/Update Service Instance with Post-Deploy Errands](./concepts.html#post-deploy).
+- `pre_delete` - Runs before the deletion of a service instance. 
+  An example use case is cleaning up data prior to a service shutdown. 
+  For more information, see [Delete Service Instance with Pre-Delete Errand](./concepts.html#pre-delete).
 
-Service Instance lifecycle errands are configured on a per-plan basis. To enable lifecycle errands, the errand job must be:
+### <a id="enable-errands"></a> Enable Service Instance Lifecycle Errands
 
-- Added to the service instance deployment.
-- Added to the plan's instance groups.
-- Set in the plan's lifecycle errands configuration.
+Service Instance lifecycle errands are configured on a per-plan basis. 
+Lifecycle errands will not run if you change a plan's lifecycle errand configuration while an existing deployment is in progress.
 
-An example manifest snippet configuring lifecycle errands for a plan:
+To enable lifecycle errands, do the following.
 
-```yaml
-service_deployment:
-  releases:
-    - name: SERVICE-RELEASE
-      version: SERVICE-RELEASE-VERSION
-      jobs:
-      - SERVICE-RELEASE-JOB
-      - POST-DEPLOY-ERRAND-JOB
-      - PRE-DELETE-ERRAND-JOB
-service_catalog:
-  plans:
-      - name: CF-MARKETPLACE-PLAN-NAME
-        lifecycle_errands:
-          post_deploy:
-          - name: POST-DEPLOY-ERRAND-JOB
-          - name: ANOTHER-POST-DEPLOY-ERRAND-JOB
-          pre_delete:
-          - name: PRE-DELETE-ERRAND-JOB
-        instance_groups:
-          - name: SERVICE-RELEASE-JOB
-            ...
-          - name: POST-DEPLOY-ERRAND-JOB
-            lifecycle: errand
-            vm_type: VM-TYPE
-            instances: INSTANCE-COUNT
-            networks: [NETWORK]
-            azs: [AZ]
-          - name: ANOTHER-POST-DEPLOY-ERRAND-JOB
-            lifecycle: errand
-            vm_type: VM-TYPE
-            instances: INSTANCE-COUNT
-            networks: [NETWORK]
-            azs: [AZ]
-          - name: PRE-DELETE-ERRAND-JOB
-            lifecycle: errand
-            vm_type: VM-TYPE
-            instances: INSTANCE-COUNT
-            networks: [NETWORK]
-            azs: [AZ]
-```
+1. Add each errand job in the manifest as follows:<br><br>
+    - In the `service_deployment`.  See (1) in the example below.
+    - In the plan's `lifecycle_errands` configuration.  See (2) in the example below.
+    - In the plan's `instance_groups`.  See (3) in the example below.
 
-Changing a plan's lifecycle errands configuration while an existing deployment is in progress is not supported.
-Lifecycle errands will not be run.
+    Below is an example manifest snippet that configures lifecycle errands for a plan:
+
+    ```yaml
+    service_deployment:
+      releases:
+        - name: SERVICE-RELEASE
+          version: SERVICE-RELEASE-VERSION
+          jobs:
+          - SERVICE-RELEASE-JOB
+          - POST-DEPLOY-ERRAND-JOB                   # (1)
+          - PRE-DELETE-ERRAND-JOB
+          - ANOTHER-POST-DEPLOY-ERRAND-JOB
+    service_catalog:
+      plans:
+          - name: CF-MARKETPLACE-PLAN-NAME
+            lifecycle_errands:
+              post_deploy:
+              - name: POST-DEPLOY-ERRAND-JOB          # (2)
+              - name: ANOTHER-POST-DEPLOY-ERRAND-JOB
+              pre_delete:
+              - name: PRE-DELETE-ERRAND-JOB
+            instance_groups:
+              - name: SERVICE-RELEASE-JOB
+                ...
+              - name: POST-DEPLOY-ERRAND-JOB          # (3)
+                lifecycle: errand
+                vm_type: VM-TYPE
+                instances: INSTANCE-COUNT
+                networks: [NETWORK]
+                azs: [AZ]
+              - name: ANOTHER-POST-DEPLOY-ERRAND-JOB
+                lifecycle: errand
+                vm_type: VM-TYPE
+                instances: INSTANCE-COUNT
+                networks: [NETWORK]
+                azs: [AZ]
+              - name: PRE-DELETE-ERRAND-JOB
+                lifecycle: errand
+                vm_type: VM-TYPE
+                instances: INSTANCE-COUNT
+                networks: [NETWORK]
+                azs: [AZ]
+    ```
+
+
 
 ### <a id="colocated-errands"></a> Colocated Errands
 
 <p class="note"><strong>Note</strong>: This feature requires BOSH Director v263 or later.</p>
 
-Both `post-deploy` and `pre-delete` errands can be run as colocated errands.
-Colocated errands run on an existing service instance group, avoiding additional resource allocation.
+You can run both `post-deploy` and `pre-delete` errands as colocated errands.
+Colocated errands run on an existing service instance group, instead of a separate one. 
+This avoids additional resource allocation.
+
+Like other lifecycle errands, colocated errands are deployed on a per-plan basis. 
+Currently the ODB supports colocating only the `post-deploy` or `pre-delete` errands.
+
 For more information see the [BOSH documentation](https://bosh.io/docs/errands.html).
 
-Similarly to the other lifecycle errands, colocated errands are deployed on a per-plan basis. Currently the ODB supports only colocated post-deploy or pre-delete errands.
-In order to enable a colocated errand, the errand job must be:
+To enable colocated errands for a plan, do the following.
 
-- Added to the service instance deployment (1).
-- Set in the plan's lifecycle errands configuration (2).
-- Set the instances where the errand should run on (3).
+1. Add each colocated errand job to the manifest as follows:<br><br>
+    - Add the errand in `service_deployment`. See (1) in the example below.
+    - Add the errand in the plan's `lifecycle_errands` configuration. See (2) in the example below.
+    - Set the instances the errand should run on in the `lifecycle_errands`. See (3) in the example below.
 
-An example manifest for colocated post-deploy errand looks like the following:
+    Below is an example manifest that includes a colocated post-deploy errand:
 
-```yaml
-service_deployment:
-  releases:
-    - name: SERVICE-RELEASE
-      version: SERVICE-RELEASE-VERSION
-      jobs:
-      - SERVICE-RELEASE-JOB
-      - COLOCATED-POST-DEPLOY-ERRAND-JOB # (1)
-service_catalog:
-  plans:
-      - name: CF-MARKETPLACE-PLAN-NAME
-        lifecycle_errands:
-          post_deploy:
-            - name: COLOCATED-POST-DEPLOY-ERRAND-JOB # (2)
-              instances: [SERVICE-RELEASE-JOB/0] # (3)
-            - name: NON-COLOCATED-POST-DEPLOY-ERRAND
-        instance_groups:
-          - name: NON-COLOCATED-POST-DEPLOY-ERRAND
-            ...
-          - name: SERVICE-RELEASE-JOB
-            ...
-```
+    ```yaml
+    service_deployment:
+      releases:
+        - name: SERVICE-RELEASE
+          version: SERVICE-RELEASE-VERSION
+          jobs:
+          - SERVICE-RELEASE-JOB
+          - COLOCATED-POST-DEPLOY-ERRAND-JOB               # (1)
+    service_catalog:
+      plans:
+          - name: CF-MARKETPLACE-PLAN-NAME
+            lifecycle_errands:
+              post_deploy:
+                - name: COLOCATED-POST-DEPLOY-ERRAND-JOB   # (2)
+                  instances: [SERVICE-RELEASE-JOB/0]       # (3)
+                - name: NON-COLOCATED-POST-DEPLOY-ERRAND
+            instance_groups:
+              - name: NON-COLOCATED-POST-DEPLOY-ERRAND
+                ...
+              - name: SERVICE-RELEASE-JOB
+                ...
+    ```
 
