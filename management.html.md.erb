@@ -50,21 +50,146 @@ To add the `register-broker` errand to the manifest, do the following.
 
 #### Run the Errand
 
-To run the errand, use the following command:
+To run the `register-broker` errand, do the following.
 
-```
-bosh2 -d DEPLOYMENT-NAME run-errand register-broker
-```
+1. Run the command:
 
-Where:
+    ```
+    bosh2 -d DEPLOYMENT-NAME run-errand register-broker
+    ```
 
-- `DEPLOYMENT-NAME` is the name of your deployment.
+    Where:
+    - `DEPLOYMENT-NAME` is the name of your deployment.
 
-For example:
+    For example:
 
-<pre class="terminal">
-$ bosh2 -d cf run-errand register-broker
-</pre>
+    <pre class="terminal">
+    $ bosh2 -d cf run-errand register-broker
+    </pre>
+
+### <a id="delete-instances"></a>Delete All Service Instances
+
+<p class="note warning"><strong>WARNING:</strong> Use this errand with extreme caution when you want to destroy
+   all of the on-demand service instances from Cloud Foundry.</p>
+
+The `delete-all-service-instances` errand deletes service instances of your broker's service offering in every org and space of Cloud Foundry.
+Because the errand uses the Cloud Controller API, it only deletes instances the Cloud Controller knows about.
+
+The errand does not delete orphan BOSH deployments, which do not correspond to a known service instance.
+Orphan BOSH deployments should never happen, but in practice they do.
+Use the [orphan-deployments errand](#listing-orphans) to identify them.
+
+The errand does the following:
+
+1. Unbinds all applications from the service instances
+1. Deletes all service instances sequentially
+1. Checks if any instances have been created while the errand was running
+1. If instances are detected the errand fails
+1. Re-runs the errand
+
+#### Add the Errand to the Manifest
+
+To add the `delete-all-service-instances` errand to the manifest, do the following.
+
+1. Add the following instance group to your manifest:
+
+    ```yaml
+    - name: delete-all-service-instances
+      lifecycle: errand
+      instances: 1
+      jobs:
+        - name: delete-all-service-instances
+          release: ODB-RELEASE-NAME
+          properties:
+            polling_interval_seconds: INTERVAL-IN-SECONDS # defaults to 60
+            polling_initial_offset_seconds: OFFSET-IN-SECONDS # defaults to 5
+
+      vm_type: VM-TYPE
+      stemcell: STEMCELL
+      networks: [{name: NETWORK}]
+      azs: [AZ]
+    ```
+
+    Where:    
+    * `INTERVAL-IN-SECONDS`: The interval in seconds before a service instance is deleted. 
+    * `OFFSET-IN-SECONDS`: The offset in seconds before polling Cloud Foundry to check
+    if the instance has been deleted.
+    
+       <div class="note"><strong>Notes</strong>:
+        <ul>
+          <li>The <code>polling\_interval\_seconds</code> default is set to 60 seconds
+          because the Cloud Controller itself polls the on-demand broker every 60 seconds.
+          Setting your polling interval to anything lower than 60 seconds does not speed up the errand.</li>
+          <li>The <code>polling\_initial\_offset_seconds</code> default is set to 5 seconds.
+          In systems with more load, consider increasing the polling offset.</li>
+        </ul>
+        </div>
+
+#### Run the Errand
+
+To run the `delete-all-service-instances` errand, do the following.
+
+1. Run the command:
+
+    ```
+    bosh2 -d DEPLOYMENT-NAME run-errand \
+    delete-all-service-instances
+    ```
+
+    Where:
+    - `DEPLOYMENT-NAME` is the name of your deployment.
+
+    For example:
+
+    <pre class="terminal">
+    $ bosh2 -d cf run-errand \
+    delete-all-service-instances
+    </pre>
+
+### <a id="deregister-broker"></a>Deregister Broker
+
+The `deregister-broker` errand deregisters a broker from Cloud Foundry.
+It requires that there are no existing service instances.
+
+#### Add the Errand to the Manifest
+
+To add the `deregister-broker` errand to the manifest, do the following.
+
+1. Add the following instance group to your manifest:
+
+    ```yaml
+    - name: deregister-broker
+      lifecycle: errand
+      instances: 1
+      jobs:
+        - name: deregister-broker
+          release: ODB-RELEASE-NAME
+          properties:
+            broker_name: BROKER-NAME
+      vm_type: VM-TYPE
+      stemcell: STEMCELL
+      networks: [{name: SERVICE-NETWORK}]
+      azs: [AZ]
+    ```
+
+#### Run the Errand
+
+To run the `deregister-broker` errand, do the following.
+
+1. Run the command:
+
+    ```
+    bosh2 -d DEPLOYMENT-NAME run-errand deregister-broker
+    ```
+
+    Where:
+    *  `DEPLOYMENT-NAME` is the name of your deployment.
+
+    For example:
+
+    <pre class="terminal">
+    $ bosh2 -d cf run-errand deregister-broker
+    </pre>
 
 ### <a id="delete-instances-and-deregister"></a>Delete All Service Instances and Deregister Broker
 
@@ -81,7 +206,8 @@ This errand does the following:
 
 #### Add the Errand to the Manifest
 
-To add the errand to the manifest, do the following.
+To add the `delete-all-service-instances-and-deregister-broker` errand to the manifest, 
+do the following.
 
 1. Add the following instance group to your manifest:
 
@@ -111,7 +237,8 @@ To add the errand to the manifest, do the following.
        <div class="note"><strong>Notes</strong>:
         <ul>
           <li>The <code>polling\_interval\_seconds</code> default is set to 60 seconds
-          because the Cloud Controller itself polls the on-demand broker every 60 seconds.Setting your polling interval to anything lower than 60 seconds will not speed up the errand.</li>
+          because the Cloud Controller itself polls the on-demand broker every 60 seconds.
+          Setting your polling interval to anything lower than 60 seconds does not speed up the errand.</li>
           <li>The <code>polling\_initial\_offset_seconds</code> default is set to 5 seconds.
           In systems with more load, consider increasing the polling offset.</li>
         </ul>
@@ -119,141 +246,37 @@ To add the errand to the manifest, do the following.
 
 #### Run the Errand
 
-To run the errand, use the following command:
+To run the  `delete-all-service-instances-and-deregister-broker` errand, do the following.
 
-```
-bosh2 -d DEPLOYMENT-NAME run-errand \
-delete-all-service-instances-and-deregister-broker
-```
+1. Run the command:
 
-Where:
+    ```
+    bosh2 -d DEPLOYMENT-NAME run-errand \
+    delete-all-service-instances-and-deregister-broker
+    ```
 
-- `DEPLOYMENT-NAME` is the name of your deployment.
+    Where:
+    - `DEPLOYMENT-NAME` is the name of your deployment.
 
-For example:
+    For example:
 
-<pre class="terminal">
-$ bosh2 -d cf run-errand \
-delete-all-service-instances-and-deregister-broker
-</pre>
+    <pre class="terminal">
+    $ bosh2 -d cf run-errand \
+    delete-all-service-instances-and-deregister-broker
+    </pre>
 
-### <a id="deregister-broker"></a>Deregister Broker
-
-This errand deregisters a broker from Cloud Foundry. It requires that there are no existing service instances.
-
-Add the following instance group to your manifest:
-
-```yaml
-- name: deregister-broker
-  lifecycle: errand
-  instances: 1
-  jobs:
-    - name: deregister-broker
-      release: ODB-RELEASE-NAME
-      properties:
-        broker_name: BROKER-NAME
-  vm_type: VM-TYPE
-  stemcell: STEMCELL
-  networks: [{name: SERVICE-NETWORK}]
-  azs: [AZ]
-```
-
-Run the errand with the following command:
-
-
-```
-bosh2 -d DEPLOYMENT-NAME run-errand deregister-broker
-```
-
-Where `DEPLOYMENT-NAME` is the name of your deployment.
-
-For example:
-
-<pre class="terminal">
-$ bosh2 -d cf run-errand deregister-broker
-</pre>
-
-### <a id="delete-instances"></a>Delete All Service Instances
-
-This errand deletes all service instances of your broker's service offering in every org and space of Cloud Foundry.
-It uses the Cloud Controller API to do this, and therefore only deletes instances the Cloud Controller knows about.
-It does not delete orphan BOSH deployments: those that don't correspond to a known service instance.
-Orphan BOSH deployments *should* never happen, but in practice they might.
-Use the [orphan-deployments errand](#listing-orphans) to identify them.
-
-The errand does the following:
-
-1. Unbinds all applications from the service instances
-1. Deletes all service instances sequentially
-1. Checks if any instances have been created while the errand was running
-1. If instances are detected the errand fails
-1. Re-runs the errand
-
-**This errand should only be used with extreme caution when you want to totally destroy all of the on-demand service instances from Cloud Foundry.**
-
-Add the following instance group to your manifest:
-
-```yaml
-- name: delete-all-service-instances
-  lifecycle: errand
-  instances: 1
-  jobs:
-    - name: delete-all-service-instances
-      release: ODB-RELEASE-NAME
-      properties:
-        polling_interval_seconds: INTERVAL-IN-SECONDS # defaults to 60
-        polling_initial_offset_seconds: OFFSET-IN-SECONDS # defaults to 5
-
-  vm_type: VM-TYPE
-  stemcell: STEMCELL
-  networks: [{name: NETWORK}]
-  azs: [AZ]
-```
-
-Where:
-
-* `INTERVAL-IN-SECONDS`: The interval in seconds before a service instance is deleted. 
-* `OFFSET-IN-SECONDS`: The offset in seconds before polling Cloud Foundry to check
-if the instance has been deleted.
-
- <p class="note"><strong>Note</strong>: The `polling_interval_seconds` default is set to 60 seconds
-    because the Cloud Controller itself polls the on-demand broker every 60 seconds.
-    Setting your polling interval to anything lower than 60 seconds will not speed up the errand.<br/>
-    The `polling_initial_offset_seconds` default is set to 5 seconds
-    because we don't want the delete all errand to start polling cloudfoundry before
-    cloudfoundry has finished processing the delete request and has contacted the broker.
-    In systems with more load on cloudfoundry, this process could take a longer,
-    in which case you might consider increasing the polling offset.</p>
-
-Run the errand with the following command:
-
-```
-bosh2 -d DEPLOYMENT-NAME run-errand \
-delete-all-service-instances
-```
-
-Where:
-
-- `DEPLOYMENT-NAME` is the name of your deployment.
-
-For example:
-
-<pre class="terminal">
-$ bosh2 -d cf run-errand \
-delete-all-service-instances
-</pre>
 
 ### <a id="orphan-deployments"></a>Delete Orphaned Deployments
 
 <p class="note warning"><strong>WARNING:</strong> Deleting the BOSH deployment destroys the VM.
   Any data present is lost.</p>
 
-The deployment for a service instance is defined as 'Orphaned' when the BOSH
+The deployment for a service instance is orphaned when the BOSH
 deployment is still running, but the service is no longer registered in
 Cloud Foundry.
 
-The `orphan-deployments` errand will collate a list of service deployments that
-have no matching service instances in Cloud Foundry and return the list to the
+The `orphan-deployments` errand lists service deployments that
+have no matching service instances in Cloud Foundry and returns the list to the
 operator. It is then up to the operator to remove the orphaned BOSH deployments.
 
 Add the following instance group to your manifest:
@@ -313,14 +336,14 @@ delete-deployment
 
 ### <a id="update-broker"></a>Update Broker
 
-To update the [core broker configuration](#core-broker-config), do the following:
+To update the [core broker configuration](#core-broker-config), do the following.
 
 * Make any necessary changes to the core broker configuration in the broker manifest.
 * Deploy the broker.
 
 ### <a id="updating-service-offering"></a>Update Service Offering
 
-To update the service offering, do the following:
+To update the service offering, do the following.
 
 * Make any changes to properties in the `service_catalog` of the broker manifest. For example, update the service metadata.
 * Make any changes to properties in the `service_deployment` of the broker manifest. For example, update the jobs used from a service release.
