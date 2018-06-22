@@ -5,7 +5,7 @@ owner: London Services Enablement
 
 ## <a id="management"></a>Broker Management
 
-Management tasks on the broker are performed with BOSH errands.
+This section describes broker management tasks on the broker. You can perform these broker management tasks with BOSH errands.
 
 ### <a id="register-broker"></a> Register Broker
 
@@ -266,119 +266,140 @@ To run the  `delete-all-service-instances-and-deregister-broker` errand, do the 
     </pre>
 
 
-### <a id="orphan-deployments"></a>Delete Orphaned Deployments
+### <a id="orphan-deployments"></a> Orphan Deployments
 
-<p class="note warning"><strong>WARNING:</strong> Deleting the BOSH deployment destroys the VM.
-  Any data present is lost.</p>
-
-The deployment for a service instance is orphaned when the BOSH
-deployment is still running, but the service is no longer registered in
-Cloud Foundry.
+<p class="note"><strong>Note:</strong> The deployment for a service instance is orphaned when the BOSH
+deployment is still running but the service is no longer registered in
+Cloud Foundry.</p>
 
 The `orphan-deployments` errand lists service deployments that
 have no matching service instances in Cloud Foundry and returns the list to the
-operator. It is then up to the operator to remove the orphaned BOSH deployments.
+operator. 
 
-Add the following instance group to your manifest:
+#### Add the Errand to the Manifest
 
-```yaml
-- name: orphan-deployments
-  lifecycle: errand
-  instances: 1
-  jobs:
-  - name: orphan-deployments
-    release: ODB-RELEASE-NAME
-  vm_type: VM-TYPE
-  stemcell: STEMCELL
-  networks: [{name: NETWORK}]
-  azs: [AZ]
-```
+To add the `orphan-deployments` errand to the manifest, do the following.
 
-Run the errand with the following command:
+1. Add the following instance group to your manifest:
 
-```
-bosh2 -d DEPLOYMENT-NAME run-errand orphan-deployments
-```
+    ```yaml
+    - name: orphan-deployments
+      lifecycle: errand
+      instances: 1
+      jobs:
+      - name: orphan-deployments
+        release: ODB-RELEASE-NAME
+      vm_type: VM-TYPE
+      stemcell: STEMCELL
+      networks: [{name: NETWORK}]
+      azs: [AZ]
+    ```
 
-Where `DEPLOYMENT-NAME` is the name of your deployment.
+#### Run the Errand
 
-For example:
-<pre class="terminal">
-$ bosh2 -d cf run-errand orphan-deployments
-</pre>
+To run the `orphan-deployments` errand, do the following.
 
-If orphan deployments are present, the errand will output a list of orphaned deployments that resembles the following:
+1. Run the command:
 
-<pre class="terminal">
-[stdout]
-[{"deployment_name":"service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3"}]
-[stderr]
-None
-Errand 'orphan-deployments' completed successfully (exit code 0)
-</pre>
+    ```
+    bosh2 -d DEPLOYMENT-NAME run-errand orphan-deployments
+    ```
 
-To delete the orphan deployment, run the following command:
+    Where: 
+    - `DEPLOYMENT-NAME` is the name of your deployment.
 
-```
-bosh2 -d DEPLOYMENT-NAME delete-deployment 
-```
+    For example:
+    <pre class="terminal">
+    $ bosh2 -d cf run-errand orphan-deployments
+    </pre>
 
-Where `DEPLOYMENT-NAME` is the name of the orphaned deployment returned in the output of the errand.
+1. See if orphan deployments are present. If orphan deployments are present, the errand outputs a list that resembles the following:
 
-For example:
+    <pre class="terminal">
+    [stdout]
+    [{"deployment_name":"service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3"}]
+    [stderr]
+    None
+    Errand 'orphan-deployments' completed successfully (exit code 0)
+    </pre>
 
-<pre class="terminal">
-bosh2 -d service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3 \
-delete-deployment
-</pre>
+#### Delete an Orphan Deployment
 
-## <a id="update-service-plans"></a>Update Service Plans
+<%# Need technical clarification for the note below from the ODB team. %>
+<p class="note warning"><strong>WARNING:</strong> Deleting the BOSH deployment destroys the VM.
+  Any data present is lost.</p>
+
+To delete an orphan deployment, do the following:
+
+1. Run the command:
+
+    ```
+    bosh2 -d DEPLOYMENT-NAME delete-deployment 
+    ```
+
+    Where: 
+    - `DEPLOYMENT-NAME` is the name of the orphaned deployment returned in the output of the errand.
+
+    For example:
+
+    <pre class="terminal">
+    bosh2 -d service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3 \
+    delete-deployment
+    </pre>
+
+## <a id="update-service-plans"></a> Service Management
+
+This section describes how to manage and update your service plans.
 
 ### <a id="update-broker"></a>Update Broker
 
-To update the [core broker configuration](#core-broker-config), do the following.
+To update the [core broker configuration](./operating.html#core-broker-config), do the following.
 
-* Make any necessary changes to the core broker configuration in the broker manifest.
-* Deploy the broker.
+1. Make any necessary changes to the core broker configuration in the broker manifest.
+1. Deploy the broker.
 
 ### <a id="updating-service-offering"></a>Update Service Offering
 
 To update the service offering, do the following.
 
-* Make any changes to properties in the `service_catalog` of the broker manifest. For example, update the service metadata.
-* Make any changes to properties in the `service_deployment` of the broker manifest. For example, update the jobs used from a service release.
-* Deploy the broker.
+1. Change properties in the `service_catalog` of the broker manifest. For example, update the service metadata.
+1. Run the [register-broker errand](#register-broker) to update the Cloud Foundry marketplace.
+1. Run the [upgrading all service instances](./tshooting-techniques.html#upgrade-all) errand to apply updated plans to existing service instances.
+1. Change properties in the `service_deployment` of the broker manifest. For example, update the jobs used from a service release.
+1. Deploy the broker.
 
-<p class="note warning"><strong>WARNING</strong>: Once the broker has been registered with Cloud Foundry do not change the <code>service_id</code> or the <code>plan_id</code> for any plan. When the ODB starts it checks that all existing service instances in Cloud Foundry have a <code>plan_id</code> that exists in the <code>service_catalog</code>.</p>
-
-After changing the `service_catalog`, you should run the [register-broker errand](#register) to update the Marketplace.
-
-When the plans are updated in the `service_catalog`, then upgrades will need to be applied to existing service instances. See [upgrading all service instances](#upgrade-all-instances).
+<p class="note warning"><strong>WARNING</strong>: When Cloud Foundry registers the broker, do not change <code>service_id</code> or <code>plan_id</code> for any plan.</p>
 
 ### <a id="disabling-service-plans"></a>Disable Service Plans
 
-To disable access to a service plan, run the following Cloud Foundry CLI (cf CLI) command:
+To disable access to a service plan, do the following.
 
-```
-cf disable-service-access SERVICE-NAME-FROM-CATALOG -p PLAN-NAME
-```
+1. Run the following command:
 
-Where:
+    ```
+    cf disable-service-access SERVICE-NAME-FROM-CATALOG -p PLAN-NAME
+    ```
 
-* `SERVICE-NAME-FROM-CATALOG` is the name of the service from the service catalog.
-* `PLAN-NAME` is the name of the plan you want to disable.
+    Where:
+    * `SERVICE-NAME-FROM-CATALOG` is the name of the service from the service catalog.
+    * `PLAN-NAME` is the name of the plan you want to disable.
 
-For example:
+    For example:
 
-<pre class="terminal">
-cf disable-service-access my-service -p small
-</pre>
+    <pre class="terminal">
+    cf disable-service-access my-service -p small
+    </pre>
 
-Also, when a plan has the property `cf_service_access: disable` in the `service_catalog` then the [register-broker errand](#register) errand will disable service access to that plan.
+<p class="note"><strong>Note:</strong> When a plan has the property <code>cf_service_access: disable</code> in the <code>service_catalog</code> the <a href="#register-broker">Register Broker</a> errand disables service access to that plan.</p>
 
 ### <a id="remove-plans"></a>Remove Service Plans
 
-A service plans can be removed if there are no instances using the plan. To remove the a plan, remove it from the broker manifest and update the Marketplace by running the [register-broker errand](#register).
+You can remove service plans if there are no instances using the plan.
+ 
+To remove a plan, do the following:
 
-<p class="note warning"><strong>WARNING</strong>: If any service instances remain on a plan that has been removed from the catalog then the ODB will fail to start.</p>
+1. Remove the service plan from the broker manifest.
+1. Run the [Register Broker](#register-broker) errand to update the Cloud Foundry marketplace.
+
+<p class="note warning"><strong>WARNING</strong>: If any service instances remain on a plan that has been removed from the catalog, the On-Demand Service Broker fails to start.</p>
 
