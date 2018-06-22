@@ -417,7 +417,7 @@ The request parameters JSON are `null` for upgrades.
 
 The field `context` holds platform specific contextual information under which the service instance is to be provisioned.
 
-The field `parameters` contains arbitrary key-value pairs which were passed by the application developer as a `cf` CLI parameter when creating, or updating the service instance.
+The field `parameters` contains arbitrary key-value pairs which were passed by the app developer as a `cf` CLI parameter when creating, or updating the service instance.
 
 <p class="note"><strong>Note</strong>: When updating an existing service instance,
    any arbitrary parameters passed on a previous create or update are not passed again.
@@ -725,7 +725,7 @@ binding](http://docs.cloudfoundry.org/services/api.html#binding) request sent
 by the Cloud Controller to the service broker.
 
 The field `parameters` contains arbitrary key-value pairs which were passed by
-the application developer as a `cf` CLI parameter when creating, or updating
+the app developer as a `cf` CLI parameter when creating, or updating
 the service instance. 
 If using the <a href="#sdk">golang SDK</a>, it can be
 obtained using the `ArbitraryParams()` helper method on requestParams.
@@ -1167,7 +1167,7 @@ used to extract the `context` property from the request parameters and the `plat
 The context in the response is a feature of [Open Service Broker API (OSBAPI) v2.13 
 specification](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md)
 and is used to pass through information about the environment in which the
-platform or application is executing. If the platform does not provide a `context`, the SDK returns empty values.
+platform or app is executing. If the platform does not provide a `context`, the SDK returns empty values.
 
 ### <a id="error_handling"></a>Error Handling
 

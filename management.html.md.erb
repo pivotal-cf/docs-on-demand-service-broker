@@ -81,7 +81,7 @@ Use the [orphan-deployments errand](#listing-orphans) to identify them.
 
 The errand does the following:
 
-1. Unbinds all applications from the service instances
+1. Unbinds all apps from the service instances
 1. Deletes all service instances sequentially
 1. Checks if any instances have been created while the errand was running
 1. If instances are detected the errand fails
@@ -200,7 +200,7 @@ The `delete-all-service-instances-and-deregister-broker` errand performs a simil
 This errand does the following:
 
 1. Disables service access to the service offering for all orgs and spaces. The errand disables service access to ensure that new instances cannot be provisioned during the lifetime of the errand.
-1. Unbinds all applications from the service instances.
+1. Unbinds all apps from the service instances.
 1. Deletes all service instances sequentially.
 1. Deregisters the broker from Cloud Foundry.
 
