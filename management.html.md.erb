@@ -351,7 +351,7 @@ To update the service offering, do the following.
 
 <p class="note warning"><strong>WARNING</strong>: Once the broker has been registered with Cloud Foundry do not change the <code>service_id</code> or the <code>plan_id</code> for any plan. When the ODB starts it checks that all existing service instances in Cloud Foundry have a <code>plan_id</code> that exists in the <code>service_catalog</code>.</p>
 
-After changing the `service_catalog`, you should run the [register-broker errand](#register) to update the Cloud Foundry marketplace.
+After changing the `service_catalog`, you should run the [register-broker errand](#register) to update the Marketplace.
 
 When the plans are updated in the `service_catalog`, then upgrades will need to be applied to existing service instances. See [upgrading all service instances](#upgrade-all-instances).
 
@@ -378,7 +378,7 @@ Also, when a plan has the property `cf_service_access: disable` in the `service_
 
 ### <a id="remove-plans"></a>Remove Service Plans
 
-A service plans can be removed if there are no instances using the plan. To remove the a plan, remove it from the broker manifest and update the Cloud Foundry marketplace by running the [register-broker errand](#register).
+A service plans can be removed if there are no instances using the plan. To remove the a plan, remove it from the broker manifest and update the Marketplace by running the [register-broker errand](#register).
 
 <p class="note warning"><strong>WARNING</strong>: If any service instances remain on a plan that has been removed from the catalog then the ODB will fail to start.</p>
 
