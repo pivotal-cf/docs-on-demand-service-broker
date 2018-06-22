@@ -457,13 +457,13 @@ service_catalog:
         pre_delete: ERRAND-NAME #optional
 ```
 
-## <a id="secure-binding"></a>Enabling Secure Binding
+## <a id="secure-binding"></a>Enable Secure Binding
 
 Optionally, ODB allows the secure storage of service credentials in runtime CredHub.
 To use this feature, you must connect to CredHub v1.6.x or later.
 This may be provided as part of your Cloud Foundry deployment.
 
-The address for CredHub is a local domain name, therefore your instance group
+Because the address for CredHub is a local domain name, your instance group
 requires access to the local DNS provider.
 Currently, most Cloud Foundry deployments use Consul as a DNS provider.
 
@@ -477,10 +477,10 @@ To enable secure bindings, you must do the following in the ODB manifest:
 set to `true`.
 * If you use Consul as a DNS provider, you might want to consume Consul links to enable DNS.
 
-If the Secure Binding Credentials section is omitted, or if
+If the Secure Binding Credentials section is omitted or if
 `secure_binding_credentials.enabled` is `false`, service credentials,
 as opposed to a secure reference, are passed through the network to the
-application's container.
+application container.
 
 An example manifest snippet, assuming you are connecting to a Cloud
 Foundry deployment, is shown below:
@@ -521,16 +521,16 @@ instance_groups:
 
 
 
-### <a id="credhub-key-format"></a> How credentials are stored on CredHub
+### <a id="credhub-key-format"></a> How Credentials Are Stored on CredHub
 
-The credentials for a given Service Binding are stored with the following format:
+The credentials for a given service binding are stored with the following format:
 
 ```
 /C/:SERVICE-GUID/:SERVICE-INSTANCE-GUID/:BINDING-GUID/CREDENTIALS
 ```
 
 The plain-text credentials are stored in CredHub under this key, and the key is
-available under the `VCAP_SERVICES` environment variable for the application.
+available under the `VCAP_SERVICES` environment variable for the app.
 
 ## <a id="plan-schemas"></a>Enable Plan Schemas
 
@@ -553,7 +553,7 @@ parameters against the schema and produces an error if the parameters do not con
 
 You can optionally colocate the `route_registrar` job from the [routing release](http://bosh.io/releases/github.com/cloudfoundry-incubator/cf-routing-release?all=1) with the on-demand-service-broker, in order to:
 
-* Load balance multiple instances of ODB using Cloud Foundry's router
+* Load balance multiple instances of ODB using Cloud Foundry router
 * Access ODB from the public internet
 
 To do this:
@@ -649,9 +649,9 @@ For example:
 
 ## <a id="broker-metrics"></a>Broker Metrics
 
-The ODB BOSH release contains a metrics job, that can be used to emit metrics 
+The ODB BOSH release contains a metrics job, which can be used to emit metrics 
 when colocated with [Pivotal Cloud Foundry Service Metrics SDK](https://network.pivotal.io/products/service-metrics-sdk/). 
-You must include the [loggregator](https://github.com/cloudfoundry/loggregator) release in order to do this.
+To do this, you must include the [Loggregator](https://github.com/cloudfoundry/loggregator) release.
 
 Add the following jobs to the broker instance group:
 
@@ -674,7 +674,7 @@ You can see an example of how the service metrics can be configured for an on-de
 deployment in the [kafka-example-service-adapter-release](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml#L106) 
 manifest.
 
-Pivotal has tested this example configuration with loggregator v58 and service-metrics v1.5.0.
+Pivotal has tested this example configuration with Loggregator v58 and service-metrics v1.5.0.
 
 For more information about service metrics, see [Service Metrics for Pivotal Cloud Foundry](http://docs.pivotal.io/service-metrics).
 
@@ -721,17 +721,17 @@ For more information, see [Create a Service Release](./creating.html#create-a-se
 
 ODB supports the following lifecycle errands:
 
-- `post_deploy` - Runs after creating or updating a service instance. An example use case is 
+- `post_deploy`---Runs after creating or updating a service instance. An example use case is 
   running a health check to ensure the service instance is functioning. 
   For more information, see [Create/Update Service Instance with Post-Deploy Errands](./concepts.html#post-deploy).
-- `pre_delete` - Runs before the deletion of a service instance. 
-  An example use case is cleaning up data prior to a service shutdown. 
+- `pre_delete`---Runs before the deletion of a service instance. 
+  An example use case is cleaning up data before a service shutdown. 
   For more information, see [Delete Service Instance with Pre-Delete Errand](./concepts.html#pre-delete).
 
 ### <a id="enable-errands"></a> Enable Service Instance Lifecycle Errands
 
 Service Instance lifecycle errands are configured on a per-plan basis. 
-Lifecycle errands will not run if you change a plan's lifecycle errand configuration while an existing deployment is in progress.
+Lifecycle errands do not run if you change a plan's lifecycle errand configuration while an existing deployment is in progress.
 
 To enable lifecycle errands, do the following.
 
@@ -797,7 +797,7 @@ This avoids additional resource allocation.
 Like other lifecycle errands, colocated errands are deployed on a per-plan basis. 
 Currently the ODB supports colocating only the `post-deploy` or `pre-delete` errands.
 
-For more information see the [BOSH documentation](https://bosh.io/docs/errands.html).
+For more information, see the [BOSH documentation](https://bosh.io/docs/errands.html).
 
 To enable colocated errands for a plan, do the following.
 
