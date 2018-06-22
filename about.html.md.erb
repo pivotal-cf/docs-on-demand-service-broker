@@ -45,8 +45,11 @@ and BOSH manifests for deploying the service instances.
 ## <a id="odb-sdk"></a>On-Demand Services SDK and the On-Demand Broker
 
 The on-demand services SDK provides a generic on-demand broker (ODB) that answers API calls from the Cloud Controller. 
-Service authors add service-specific functionality to the on-demand services SDK through an 
+
+**Service authors** add service-specific functionality to the on-demand services SDK through an 
 executable called a **Service Adapter**. 
+**Tile authors** customize the tile interface used by operators.
+
 These components combine to create a BOSH deployment.
 For more information about BOSH deployments, see [What is a Deployment](https://bosh.io/docs/deployment/).
 
