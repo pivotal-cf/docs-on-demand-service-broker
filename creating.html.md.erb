@@ -1084,38 +1084,37 @@ Perform the following steps to use the SDK:
 
 1. Run the following `go get` command to install the SDK:
 
-  ```
-  go get github.com/pivotal-cf/on-demand-services-sdk
-  ```
-
+    ```
+    go get github.com/pivotal-cf/on-demand-services-sdk
+    ```
 1. In the main function for the service adapter, call the `HandleCLI` function: 
 
-  ```go
-  package main
+    ```go
+    package main
 
-  import (
-  	"log"
-  	"os"
+    import (
+    	"log"
+    	"os"
 
-  	"github.com/bar-org/foo-service-adapter/adapter"
-  	"github.com/pivotal-cf/on-demand-services-sdk/serviceadapter"
-  )
+    	"github.com/bar-org/foo-service-adapter/adapter"
+    	"github.com/pivotal-cf/on-demand-services-sdk/serviceadapter"
+    )
 
-  func main() {
-    logger := log.New(os.Stderr, "[foo-service-adapter] ", log.LstdFlags)
-    manifestGenerator := adapter.ManifestGenerator{}
-    binder := adapter.Binder{}
-    dashboardUrlGenerator := adapter.DashboardUrlGenerator{}
-  	handler := serviceadapter.CommandLineHandler{
-    	ManifestGenerator:     manifestGenerator,
-    	Binder:                binder,
-    	DashboardURLGenerator: &adapter.DashboardUrlGenerator{},
-    	SchemaGenerator:       adapter.SchemaGenerator{},
-  	}
-    serviceadapter.HandleCLI(os.Args, handler)
-  }
-  ```
-<p class="note"><strong>Note</strong>: The HandleCommandLineInvocation function is being deprecated but its functionality can be seen <a href="https://docs.pivotal.io/svc-sdk/odb/0-19/creating.html#usage">here</a>.</p>
+    func main() {
+      logger := log.New(os.Stderr, "[foo-service-adapter] ", log.LstdFlags)
+      manifestGenerator := adapter.ManifestGenerator{}
+      binder := adapter.Binder{}
+      dashboardUrlGenerator := adapter.DashboardUrlGenerator{}
+    	handler := serviceadapter.CommandLineHandler{
+      	ManifestGenerator:     manifestGenerator,
+      	Binder:                binder,
+      	DashboardURLGenerator: &adapter.DashboardUrlGenerator{},
+      	SchemaGenerator:       adapter.SchemaGenerator{},
+    	}
+      serviceadapter.HandleCLI(os.Args, handler)
+    }
+    ```
+  <p class="note"><strong>Note</strong>: The HandleCommandLineInvocation function is being deprecated but its functionality can be seen <a href="https://docs.pivotal.io/svc-sdk/odb/0-19/creating.html#usage">here</a>.</p>
 
 ### <a id="interfaces"></a>Interfaces
 
