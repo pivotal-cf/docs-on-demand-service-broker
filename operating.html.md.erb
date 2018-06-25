@@ -3,12 +3,10 @@ title: Operating an On-Demand Broker
 owner: London Services Enablement
 ---
 
-This topic provides information for Ops Manager or BOSH operators. These roles 
-may be combined or separate.
+This topic provides information about operating the on-demand broker for 
+Pivotal Cloud Foundry (PCF) Ops Manager operators and BOSH operators.
 
-## <a id="operator"></a>Introduction for Operators
-
-### <a id="deliverables"></a> Operator Deliverables
+## <a id="deliverables"></a> Operator Checklist
 
 The operator is responsible for the following:
 
@@ -19,36 +17,11 @@ deployments.
 * Write a broker manifest. See [Write a Broker Manifest](#broker-manifest).
 * Manage brokers and service plans. See 
 [Broker and Service Management](./management.html).
-* Provide any necessary documentation.
+
+<p class="note"><strong>Note</strong>: Pivotal recommends that you provide documentation
+ when you make changes to the manifest so that other operators the new configurations.</p>
 
 For a list of deliverables provided by the Service Author, see [Creating Service Author Deliverables](./creating.html).
-
-
-### <a id="about-cli"></a>About the BOSH CLI
-
-You use the BOSH CLI to perform many of the operator tasks.
-The BOSH CLI is available in two major versions, v1 and v2. 
-Pivotal recommends that you use the BOSH CLI v2 or later when possible. 
-Instructions in this document are for v2 and later.
-
-The table below shows the version of the BOSH CLI supported for different versions of PCF.
-
-<table class="nice">
-    <th>PCF Version</th>
-    <th>BOSH CLI Version</th>
-    <tr>
-        <td>1.10</td>
-        <td>CLI v1</td>
-    </tr>
-    <tr>
-        <td>1.11</td>
-        <td>CLI v1 or CLI v2 or later (Pivotal recommends CLI v2 or later)</td>
-    </tr>
-    <tr>
-        <td>1.12 and later</td>
-        <td>CLI v2 or later</td>
-    </tr>
-</table>
 
 ## <a id="networking"></a>Set Up Networking
 
@@ -93,7 +66,7 @@ rules are set up so that connections are open as described in the table below.
   </tr>
   <tr>
     <td><strong>ODB</strong></td>
-    <td><strong>PAS (or Elastic Runtime)</strong>
+    <td><strong>PAS or Elastic Runtime</strong>
     </td>
     <td>8443</td>
     <td>One-way</td>
@@ -103,7 +76,7 @@ rules are set up so that connections are open as described in the table below.
     <td><strong>Errand VMs</strong></td>
     <td>
       <ul>
-        <li><strong>PAS (or Elastic Runtime) </strong></li>
+        <li><strong>PAS or Elastic Runtime </strong></li>
         <li><strong>ODB</strong></li>
         <li><strong>Deployed Service Instances</strong></li>
       </ul>
@@ -129,7 +102,7 @@ rules are set up so that connections are open as described in the table below.
       The default port is not configurable.  </td>
   </tr>
   <tr>
-    <td><strong>Deployed apps on PAS (or Elastic Runtime)</strong></td>
+    <td><strong>Deployed apps on PAS or Elastic Runtime</strong></td>
     <td><strong>Deployed service instances</strong>
     </td>
     <td>Specific to the service. May be one or more ports.</td>
@@ -138,7 +111,7 @@ rules are set up so that connections are open as described in the table below.
       Avoid opening administrative ports for this connection.</td>
   </tr>
   <tr>
-    <td><strong>PAS (or Elastic Runtime)</strong></td>
+    <td><strong>PAS or Elastic Runtime</strong></td>
     <td><strong>ODB</strong>
     </td>
     <td>8080</td>
@@ -195,10 +168,14 @@ For an example of how to add this in the manifest, see the line containing
 
 ### <a id="bosh-teams"></a>BOSH Teams
 
-BOSH has a teams feature that allows you to further control how BOSH operations are available to different clients. 
-Pivotal recommends using this feature to ensure that your on-demand service broker client can only modify deployments it created. 
+You can use BOSH teams to further control how BOSH operations are available to 
+different clients. For more information about using BOSH teams, 
+see [Using Teams](https://bosh.io/docs/director-users-uaa-perms.html)
+in the BOSH documentation.
 
-To use this feature do the following:
+
+To use BOSH teams to ensure that your on-demand service broker client can only modify deployments it 
+created, do the following:
 
 1. Run the following UAA CLI (UAAC) command to create the client:
 
@@ -227,9 +204,6 @@ To use this feature do the following:
 1. When configuring the broker's BOSH authentication, use the client ID and secret you provided above. 
 The broker can then only perform BOSH operations on deployments it has created. See [Core Broker Configuration](#core-broker-config) below.
 
-For more information about setting up and using BOSH teams, 
-see [Using Teams](https://bosh.io/docs/director-users-uaa-perms.html)
-in the BOSH documentation.
 
 For more details on securing how ODB uses BOSH, see [Security](./security.html).
 
