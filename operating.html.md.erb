@@ -3,7 +3,8 @@ title: Operating an On-Demand Broker
 owner: London Services Enablement
 ---
 
-This topic provides information for Ops Manager or BOSH operators. These roles may be combined or separate.
+This topic provides information for Ops Manager or BOSH operators. These roles 
+may be combined or separate.
 
 ## <a id="operator"></a>Introduction for Operators
 
@@ -13,9 +14,11 @@ The operator is responsible for the following:
 
 * Request appropriate networking rules for on-demand service tiles.
 * Configure the BOSH Director.
-* Upload the required releases for the broker deployment and service instance deployments.
+* Upload the required releases for the broker deployment and service instance 
+deployments.
 * Write a broker manifest. See [Write a Broker Manifest](#broker-manifest).
-* Manage brokers and service plans. See [Broker and Service Management](./management.html).
+* Manage brokers and service plans. See 
+[Broker and Service Management](./management.html).
 * Provide any necessary documentation.
 
 For a list of deliverables provided by the Service Author, see [Creating Service Author Deliverables](./creating.html).
@@ -59,7 +62,7 @@ rules are set up so that connections are open as described in the table below.
   <th>This component...</th>
   <th>Must communicate with...</th>
   <th>Default TCP Port</th>
-  <th>Communication direction(s)</th>
+  <th>Communication directions</th>
   <th>Notes</th>
   <tr>
     <td><strong>ODB</strong></td>
@@ -244,7 +247,7 @@ Upload the following releases to the BOSH Director:
 
 * On-demand-service-broker
 * Your service adapter
-* Your service release(s)
+* Your service releases
 
 ## <a id="broker-manifest"></a>Write a Broker Manifest
 
