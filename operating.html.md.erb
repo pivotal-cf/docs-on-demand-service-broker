@@ -162,11 +162,12 @@ See the following topics for how to set up your BOSH Director:
 
 The On-Demand Broker requires the following:
 
-- BOSH Director v257 or later (PCF 1.8) 
-- Cloud Foundry v238 or later (PCF 1.8)
+- BOSH Director v257 or later (PCF v1.8) 
+- Cloud Foundry v238 or later (PCF v1.8)
 
 <div class="note"><strong>Notes</strong>: <ul><li>ODB does not support BOSH Windows.</li>
-<li><a href="#lifecycle-errands"> Service Instance Lifecycle Errands</a> require BOSH Director v261 (PCF 1.10) or later.</li></ul></div>
+<li>Service instance lifecycle errands require BOSH Director v261 on PCF v1.10 or later.
+For more information, see <a href="#lifecycle-errands"> Service Instance Lifecycle Errands</a>.</li></ul></div>
 
 
 ### <a id="ssl-certs"></a>SSL Certificates
@@ -184,8 +185,8 @@ You have two options to configure certificate-based authentication between the B
     ```
 
 * Use BOSH's `trusted_certs` feature to add a self-signed CA certificate to each VM that BOSH deploys. 
-For more details on how to generate and use self-signed certificates for BOSH Director and UAA, 
-see the [BOSH documentation](https://bosh.io/docs/director-certs.html).
+For how to generate and use self-signed certificates for BOSH Director and UAA, 
+see [Configuring SSL Certificates](https://bosh.io/docs/director-certs.html) in the BOSH documentation.
 
 Optionally, you can configure a separate root CA certificate that is used when ODB communicates with the Cloud Foundry API (Cloud Controller).
 For an example of how to add this in the manifest, see the line containing 
@@ -226,7 +227,9 @@ To use this feature do the following:
 1. When configuring the broker's BOSH authentication, use the client ID and secret you provided above. 
 The broker can then only perform BOSH operations on deployments it has created. See [Core Broker Configuration](#core-broker-config) below.
 
-For more information about setting up and using BOSH teams, see the [BOSH documentation](https://bosh.io/docs/director-users-uaa-perms.html).
+For more information about setting up and using BOSH teams, 
+see [Using Teams](https://bosh.io/docs/director-users-uaa-perms.html)
+in the BOSH documentation.
 
 For more details on securing how ODB uses BOSH, see [Security](./security.html).
 
@@ -269,8 +272,8 @@ For example manifests, see the following:
 
 Your manifest should contain one non-errand instance group that is colocated with both of the following:
 
-* the `broker` job from on-demand-service-broker
-* your service adapter job from your service adapter release
+* The broker job from `on-demand-service-broker`
+* Your service adapter job from your service adapter release
 
 The broker is stateless and does not need a persistent disk. 
 The VM type can be small: a single CPU and 1 GB of memory is sufficient in most cases.
@@ -554,7 +557,9 @@ parameters against the schema and produces an error if the parameters do not con
 
 ## <a id="route"></a>Route Registration
 
-You can optionally colocate the `route_registrar` job from the [routing release](http://bosh.io/releases/github.com/cloudfoundry-incubator/cf-routing-release?all=1) with the on-demand-service-broker, in order to:
+You can optionally colocate the `route_registrar` job from the 
+[routing release](http://bosh.io/releases/github.com/cloudfoundry-incubator/cf-routing-release?all=1) 
+with the on-demand-service-broker, to do the following:
 
 * Load balance multiple instances of ODB using Cloud Foundry router
 * Access ODB from the public internet
