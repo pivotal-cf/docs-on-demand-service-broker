@@ -1,32 +1,47 @@
-Prior to deploying any service tile that uses the on-demand broker (ODB), the operator must request the network connections needed to allow various components of Pivotal Cloud Foundry (PCF) to communicate with ODB. The specifics of how to open those connections varies for each IaaS.
+Before deploying a service tile that uses the on-demand service broker (ODB), 
+request the needed network connections to allow components of Pivotal 
+Cloud Foundry (PCF) to communicate with ODB.
 
-The following table shows the responsibilities of the key components in an on-demand architecture.
+The specifics of how to open those connections varies for each IaaS.
+
+See the following table for key components and their responsibilities in an on-demand 
+architecture. 
 
 <table class="nice">
 	<th>Key Components</th>
-	<th>Their Responsibility</th>
+	<th>Their Responsibilities</th>
 	<tr>
 		<td><strong>BOSH Director</strong></td>
-		<td>Creates and updates service instances as instructed by ODB</td>
+		<td>Creates and updates service instances as instructed by ODB.</td>
 	</tr>
 	<tr>
 		<td><strong>BOSH Agent</strong></td>
-		<td>BOSH includes an Agent on every VM that it deploys. The Agent listens for instructions from the Director and carries out those instructions. The Agent receives job specifications from the Director and uses them to assign a role, or Job, to the VM.</td>
+		<td>Includes an agent on every VM that it deploys. The agent
+ listens for instructions from the BOSH Director and carries out those instructions.
+ The agent receives job specifications from the BOSH Director and uses them to assign 
+a role, or job, to the VM.</td>
 	</tr>
 	<tr>
 		<td><strong>BOSH UAA</strong></td>
-		<td>As an OAuth2 provider, BOSH UAA issues tokens for clients to use when they act on behalf of BOSH users.</td>
+		<td>Issues OAuth2 tokens for clients to 
+use when they act on behalf of BOSH users.</td>
 	</tr>
 	<tr>
-		<td><strong>ERT</strong></td>
-		<td>Contains the apps that are consuming services</td>
+		<td><strong>PAS<sup>*</sup></strong></td>
+		<td>Contains the apps that are consuming services.</td>
 	</tr>
 	<tr>
 		<td><strong>ODB</strong></td>
-		<td>Instructs BOSH to create and update services, and connects to services to create bindings</td>
+		<td>Instructs BOSH to create and update services, and connects 
+to services to create bindings.</td>
 	</tr>
 	<tr>
 		<td><strong>Deployed service instance</strong></td>
-		<td>Runs the given data service (for example, the deployed Redis for PCF service instance runs the Redis for PCF data service)</td>
+		<td>Runs the given data service. For example, the deployed Redis
+ for PCF service instance runs the Redis for PCF data service.</td>
 	</tr>
 </table>
+
+\* As of PCF v2.0, _Elastic Runtime_ is renamed _Pivotal Application Service (PAS)_.
+For more information, see 
+[Pivotal Application Service (PAS) Highlights](http://docs-pcf-staging.cfapps.io/pivotalcf/2-0/installing/highlights.html#ert).

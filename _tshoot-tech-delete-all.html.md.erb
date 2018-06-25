@@ -4,7 +4,7 @@ Orphan BOSH deployments don’t correspond to a known service instance. While ra
 
 The errand does the following:
 
-* Unbinds all applications from the service instances.
+* Unbinds all apps from the service instances.
 * Deletes all service instances sequentially.
 * Checks if any instances have been created while the errand was running.
 * If newly-created instances are detected, the errand fails.
