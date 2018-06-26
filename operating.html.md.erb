@@ -6,7 +6,7 @@ owner: London Services Enablement
 This topic provides information about operating the on-demand broker for 
 Pivotal Cloud Foundry (PCF) Ops Manager operators and BOSH operators.
 
-## <a id="deliverables"></a> Operator Checklist
+## <a id="operator-checklist"></a> Operator Checklist
 
 The operator is responsible for the following:
 
@@ -138,14 +138,20 @@ The On-Demand Broker requires the following:
 - BOSH Director v257 or later (PCF v1.8) 
 - Cloud Foundry v238 or later (PCF v1.8)
 
-<div class="note"><strong>Notes</strong>: <ul><li>ODB does not support BOSH Windows.</li>
-<li>Service instance lifecycle errands require BOSH Director v261 on PCF v1.10 or later.
-For more information, see <a href="#lifecycle-errands"> Service Instance Lifecycle Errands</a>.</li></ul></div>
+<div class="note">
+  <strong>Notes: </strong>
+  <ul>
+    <li>ODB does not support BOSH Windows.</li>
+    <li>Service instance lifecycle errands require BOSH Director v261 on PCF v1.10 or later.
+For more information, see <a href="#lifecycle-errands"> Service Instance Lifecycle Errands</a>.</li>
+  </ul>
+</div>
 
 
-### <a id="ssl-certs"></a>SSL Certificates
+### <a id="ssl-certs"></a>Configure SSL Certificates
 
-If ODB is configured to communicate with BOSH on the Director's public IP, you may be using a self-signed certificate unless you have a domain for your BOSH Director. 
+If ODB is configured to communicate with BOSH on the Director's public IP, you may 
+be using a self-signed certificate unless you have a domain for your BOSH Director. 
 ODB does not ignore TLS certificate validation errors by default. 
 
 You have two options to configure certificate-based authentication between the BOSH Director and the ODB:
@@ -166,7 +172,7 @@ For an example of how to add this in the manifest, see the line containing
 `CA-CERT-FOR-CLOUD-CONTROLLER` in the manifest snippet in [Core Broker Configuration](#core-broker-config) below.
 
 
-### <a id="bosh-teams"></a>BOSH Teams
+### <a id="bosh-teams"></a>Use BOSH Teams
 
 You can use BOSH teams to further control how BOSH operations are available to 
 different clients. For more information about using BOSH teams, 
@@ -201,22 +207,55 @@ created, do the following:
     For more information about using the UAAC, see [Creating and Managing Users with the UAA CLI (UAAC)
     ](https://docs.cloudfoundry.org/uaa/uaa-user-management.html).
 
-1. When configuring the broker's BOSH authentication, use the client ID and secret you provided above. 
-The broker can then only perform BOSH operations on deployments it has created. See [Core Broker Configuration](#core-broker-config) below.
+1. Configure the broker's BOSH authentication. Use the `CLIENT-ID` and 
+`CLIENT-SECRET` you provided above. 
+The broker can then only perform BOSH operations on deployments it has created. 
+See [Core Broker Configuration](#core-broker-config) below.
 
 
 For more details on securing how ODB uses BOSH, see [Security](./security.html).
 
-### <a id="cloud-controller"></a>Cloud Controller
+### <a id="cloud-controller"></a>Set Up Cloud Controller
+<%# This "Set Up Cloud Controller" section needs to be improved for technical accuracy.  %>
 
 ODB uses the Cloud Controller as a source of truth about service offerings, plans, and instances. 
-To reach the Cloud Controller, configure ODB with either client or user credentials in the broker manifest. 
-The client or user must have the following permissions:
 
-* **If using client credentials**: As of Cloud Foundry v238, the UAA client must have the authority `cloud_controller.admin`.<br><br>
-* **If using user credentials**: The user must be a Cloud Foundry admin user, that is, a member of the `scim.read` and `cloud_controller.admin` groups as a minimum.
+To reach the Cloud Controller, configure ODB with either client or user credentials 
+in the broker manifest. 
 
-For detailed information, see [Write a Broker Manifest](#broker-manifest) below.
+
+See the following for the client credentials broker manifest snippet:
+
+```
+authentication:
+  . . .
+  client_credentials:
+    client_id: UAA-CLIENT-ID # with cloud_controller.admin authority and client_credentials in the authorized_grant_type
+    secret: UAA-CLIENT-SECRET
+```
+
+See the following for the user credentials broker manifest snippet:
+
+```
+authentication:
+  . . . 
+  user_credentials:
+    username: CF-ADMIN-USERNAME # in the cloud_controller.admin and scim.read groups
+    password: CF-ADMIN-PASSWORD
+```
+
+For information, see [Write a Broker Manifest](#broker-manifest) below.
+
+<div class="note">
+  <p style="margin-top: 0"><strong>Note: </strong> The client or user must have the following permissions.</p>
+  <ul>
+    <li><strong>If using client credentials</strong>: As of Cloud Foundry v238, the UAA client must 
+  have the authority <code>cloud_controller.admin</code>.</li>
+    <li><strong>If using user credentials</strong>: The user must be a Cloud Foundry admin user, that 
+  is, a member of the <code>scim.read</code> and <code>cloud_controller.admin</code> groups 
+  as a minimum.</li>
+  </ul>
+</div>
 
 ## <a id="upload-releases"></a>Upload Required Releases
 
@@ -228,7 +267,7 @@ Upload the following releases to the BOSH Director:
 
 ## <a id="broker-manifest"></a>Write a Broker Manifest
 
-The broker manifest contains:
+The broker manifest contains the following:
 
 * [Core Broker Configuration](#core-broker-config)
 * [Service Catalog and Plan Composition](#catalog)
@@ -244,7 +283,8 @@ For example manifests, see the following:
 
 ### <a id="core-broker-config"></a>Core Broker Configuration
 
-Your manifest should contain one non-errand instance group that is colocated with both of the following:
+Your manifest must contain one non-errand instance group that is colocated with 
+both of the following:
 
 * The broker job from `on-demand-service-broker`
 * Your service adapter job from your service adapter release
@@ -252,8 +292,8 @@ Your manifest should contain one non-errand instance group that is colocated wit
 The broker is stateless and does not need a persistent disk. 
 The VM type can be small: a single CPU and 1 GB of memory is sufficient in most cases.
 
-An example snippet is shown below. This snippet uses the BOSH v2 syntax and 
-makes use of global cloud config and job-level properties.
+The snippet below uses the BOSH v2 syntax as well as global cloud 
+config and job-level properties.
 
 <p class="note warning"><strong>WARNING</strong>: The <code>disable_ssl_cert_verification</code>
   option is dangerous and should be set to <code>false</code> in production</strong>.</p>
@@ -306,7 +346,6 @@ instance_groups:
 
           # There are more broker properties that are discussed below
 ```
-
 
 ### <a id="catalog"></a>Service Catalog and Plan Composition
 
