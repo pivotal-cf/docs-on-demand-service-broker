@@ -168,7 +168,7 @@ see [Configuring SSL Certificates](https://bosh.io/docs/director-certs.html) in 
 
 Optionally, you can configure a separate root CA certificate that is used when ODB communicates with the Cloud Foundry API (Cloud Controller).
 For an example of how to add this in the manifest, see the line containing 
-`CA-CERT-FOR-CLOUD-CONTROLLER` in the manifest snippet in [Core Broker Configuration](#core-broker-config) below.
+`CA-CERT-FOR-CLOUD-CONTROLLER` in the manifest snippet in [Configure Your Manifest](#core-broker-config) below.
 
 
 ### <a id="bosh-teams"></a>Use BOSH Teams
@@ -209,7 +209,7 @@ created, do the following:
 1. Configure the broker's BOSH authentication. Use the `CLIENT-ID` and 
 `CLIENT-SECRET` you provided above. 
 The broker can then only perform BOSH operations on deployments it has created. 
-See [Core Broker Configuration](#core-broker-config) below.
+See [Configure Your Manifest](#core-broker-config) below.
 
 
 For more details on securing how ODB uses BOSH, see [Security](./security.html).
@@ -266,10 +266,10 @@ Upload the following releases to the BOSH Director:
 
 ## <a id="broker-manifest"></a>Write a Broker Manifest
 
-The broker manifest contains the following:
+There are two parts to writing your broker manifest:
 
-* [Core Broker Configuration](#core-broker-config)
-* [Service Catalog and Plan Composition](#catalog)
+* [Configure Your Manifest](#core-broker-config)
+* [Configure the Service Catalog and Plan Composition](#catalog)
 
 If you are unfamiliar with writing BOSH v2 manifests, see [Manifest v2 Schema](http://bosh.io/docs/manifest-v2.html).
 
@@ -280,7 +280,7 @@ For example manifests, see the following:
   * For a Kafka service---[kafka-example-service-adapter-release](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml).
 
 
-### <a id="core-broker-config"></a>Core Broker Configuration
+### <a id="core-broker-config"></a> Configure Your Manifest
 
 Your manifest must contain one non-errand instance group that is colocated with 
 both of the following:
@@ -346,7 +346,7 @@ instance_groups:
           # There are more broker properties that are discussed below
 ```
 
-### <a id="catalog"></a>Service Catalog and Plan Composition
+### <a id="catalog"></a>Configure the Service Catalog and Plan Composition
 
 The operator configures the Service Catalog and composes plans in the manifest.  
 
@@ -392,7 +392,7 @@ The operator's role is to compose combinations of these properties, along with I
 
 #### <a id="starter-snippet"></a>Starter Snippet
 
-Add this Snippet to your broker job properties section, and provide the information listed in [Service Catalog and Plan Composition](#catalog) above.
+Add this Snippet to your broker job properties section, and provide the information listed in [Configure the Service Catalog and Plan Composition](#catalog) above.
 
 ```yaml
 service_deployment:
@@ -567,24 +567,26 @@ For more information, see [generate-plan-schemas](creating.html#generate-plan-sc
 During provision, bind, and update, the broker validates the incoming configuration
 parameters against the schema and produces an error if the parameters do not conform.
 
-## <a id="route"></a>Route Registration
+## <a id="route"></a>(Optional) Register the Route
 
-You can optionally colocate the `route_registrar` job from the 
-[routing release](http://bosh.io/releases/github.com/cloudfoundry-incubator/cf-routing-release?all=1) 
-with the on-demand-service-broker, to do the following:
+You can colocate the `route_registrar` job from the routing release 
+with the `on-demand-service-broker`.
 
-* Load balance multiple instances of ODB using Cloud Foundry router
-* Access ODB from the public internet
+The `route_registration` job achieves the following:
 
-To do this:
+* Load balances multiple instances of ODB using Cloud Foundry router
+* Allows access of ODB from the public internet
 
-1. Download the [routing release](http://bosh.io/releases/github.com/cloudfoundry-incubator/cf-routing-release?all=1).
+To register the route, do the following:
+
+1. Download the routing release.
+   See [cf-routing Release](http://bosh.io/releases/github.com/cloudfoundry-incubator/cf-routing-release?all=1).
 1. Upload the routing release to your BOSH Director. 
-1. [Configure the job properties](http://bosh.io/jobs/route_registrar?source=github.com/cloudfoundry-incubator/cf-routing-release&version=0.136.0), 
-replacing the URL query string as appropriate.
+1. Configure the job properties, replacing the URL query string as appropriate.
+   For more information, see [route_registrar job](http://bosh.io/jobs/route_registrar?source=github.com/cloudfoundry-incubator/cf-routing-release).
 1. If you configure a route, set the `broker_uri` property in the [register-broker errand](#register-broker).
 
-## <a id="service-instance-quotas"></a>Service Instance Quotas
+## <a id="service-instance-quotas"></a>Set Service Instance Quotas
 
 You can set global and plan level service quotas to set service instance limits in the manifest.
 
@@ -611,7 +613,7 @@ If this limit has not been reached, ODB checks the plan service instance limit.
 <p class="note"><strong>Note</strong>: These limits do not include orphans. See <a href="./troubleshooting-bosh.html#listing-orphans">List Orphan Deployments</a>
    and <a href="./management.html#orphan-deployments">Delete Orphaned Deployments</a>.</p>
 
-## <a id="service-resource-quotas"></a>Service Resource Quotas
+## <a id="service-resource-quotas"></a>Set Service Resource Quotas
 
 ODB offers resource quotas to allow you to limit resources more effectively when combining 
 plans that consume different amounts of resources. You can set these quotas for service resources: 
@@ -667,7 +669,7 @@ For example:
         memory: 5 # the key is string-matched against keys in the global and plan-level resource quotas
     ```
 
-## <a id="broker-metrics"></a>Broker Metrics
+## <a id="broker-metrics"></a>(Optional) Configure Service Metrics
 
 The ODB BOSH release contains a metrics job, which can be used to emit metrics 
 when colocated with [Pivotal Cloud Foundry Service Metrics SDK](https://network.pivotal.io/products/service-metrics-sdk/). 
@@ -698,7 +700,7 @@ Pivotal has tested this example configuration with Loggregator v58 and service-m
 
 For more information about service metrics, see [Service Metrics for Pivotal Cloud Foundry](http://docs.pivotal.io/service-metrics).
 
-## <a id="startup-checks"></a>Broker Startup Checks
+## <a id="startup-checks"></a>About Broker Startup Checks
 
 The ODB does the following startup checks:
 
@@ -718,9 +720,9 @@ If there are instances, you see the following error:
 You cannot change the plan_id of a plan that has existing service instances.
 </pre>
 
-## <a id="broker-stop"></a>Broker Shutdown
+## <a id="broker-stop"></a>About Broker Shutdown
 
-The broker tries to wait for any incomplete https requests to complete before shutting down. 
+The broker tries to wait for any incomplete HTTPS requests to complete before shutting down. 
 This reduces the risk of leaving orphan deployments in the event that 
 the BOSH Director does not respond to the initial `bosh deploy` request. 
 
@@ -750,7 +752,7 @@ ODB supports the following lifecycle errands:
 
 ### <a id="enable-errands"></a> Enable Service Instance Lifecycle Errands
 
-Service Instance lifecycle errands are configured on a per-plan basis. 
+Service instance lifecycle errands are configured on a per-plan basis. 
 Lifecycle errands do not run if you change a plan's lifecycle errand configuration while an existing deployment is in progress.
 
 To enable lifecycle errands, do the following.
@@ -806,7 +808,7 @@ To enable lifecycle errands, do the following.
 
 
 
-### <a id="colocated-errands"></a> Colocated Errands
+### <a id="colocated-errands"></a> (Optional) Enable Colocated Errands
 
 <p class="note"><strong>Note</strong>: This feature requires BOSH Director v263 or later.</p>
 
