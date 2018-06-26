@@ -475,10 +475,10 @@ service_catalog:
         pre_delete: ERRAND-NAME #optional
 ```
 
-## <a id="secure-binding"></a>Enable Secure Binding
+## <a id="secure-binding"></a>(Optional) Enable Secure Binding
 
-Optionally, ODB allows the secure storage of service credentials in runtime CredHub.
-To use this feature, you must connect to CredHub v1.6.x or later.
+ODB allows the secure storage of service credentials in runtime CredHub.
+To store service credentials is runtime CredHub, you must connect to CredHub v1.6.x or later.
 This may be provided as part of your Cloud Foundry deployment.
 
 Because the address for CredHub is a local domain name, your instance group
@@ -555,8 +555,7 @@ available under the `VCAP_SERVICES` environment variable for the app.
 As of [OSBAPI Spec v2.13](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#changes-since-v212),
 ODB supports plan schemas in the service catalog.
 
-To use
-this feature, do the following:
+To enable plan schemas, do the following:
 
 1. Set the `enable_plan_schemas` flag to `true`.
    The default is `false`.
