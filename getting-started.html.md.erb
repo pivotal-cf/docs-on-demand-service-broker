@@ -54,7 +54,14 @@ This topic provides examples of using each version of the BOSH CLI. Your PCF ins
     </tr>
 </table>
 
-## <a id="set_up_bosh"></a>Step 1: Prepare BOSH Lite
+## <a id="setup"></a>Part 1: Setup
+
+This section details how to prepare BOSH Lite as well as set up the Kafka example service, 
+the Kakfa example service adapter, and ODB.
+
+### <a id="set_up_bosh"></a>Step 1: Prepare BOSH Lite
+
+To prepare BOSH Lite, do the following:
 
 1. Target your BOSH Lite installation:
    <pre>
@@ -67,7 +74,9 @@ This topic provides examples of using each version of the BOSH CLI. Your PCF ins
     https<span>:</span>//bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent?v=<%= vars.odb_warden_stemcell_version %>
    </pre>
 
-## <a id="set_up_kafka_sr"></a> Step 2: Set Up the Kafka Example Service
+### <a id="set_up_kafka_sr"></a> Step 2: Set Up the Kafka Example Service
+
+To set up the Kafka example service, do the following:
 
 1. Clone the Kafka example service into your workspace.
    <pre>
@@ -87,7 +96,9 @@ This topic provides examples of using each version of the BOSH CLI. Your PCF ins
     bosh2 -e lite upload-release
   </pre>
 
-## <a id="set_up_kafka_sa"></a> Step 3: Set Up the Kafka Example Service Adapter
+### <a id="set_up_kafka_sa"></a> Step 3: Set Up the Kafka Example Service Adapter
+
+To set up the Kafka example service adapter, do the following:
 
 1. Clone the Kafka example service adapter.
    <pre>
@@ -111,7 +122,9 @@ This topic provides examples of using each version of the BOSH CLI. Your PCF ins
     bosh2 -e lite upload-release
   </pre>
 
-## <a id="set_up_odb"></a> Step 4: Set Up the On-Demand Service Broker
+### <a id="set_up_odb"></a> Step 4: Set Up ODB
+
+To set up ODB, do the following:
 
 1. Download the on-demand service broker from Pivotal Network. To download,
 see [Pivotal Cloud Foundry On Demand Services SDK](https://network.pivotal.io/products/on-demand-services-sdk/).
@@ -127,7 +140,12 @@ see [Pivotal Cloud Foundry On Demand Services SDK](https://network.pivotal.io/pr
   $ bosh2 -e lite upload-release on-demand-service-broker-0.21.1.tgz
   </pre>
 
-## <a id="create_bosh"></a> Step 5: Create a BOSH Deployment
+## <a id="create"></a>Part 2: Create
+
+This section describes how to create a BOSH deployment and a service broker 
+on PCF Dev.
+
+### <a id="create_bosh"></a> Step 1: Create a BOSH Deployment
 
 To create a BOSH Lite deployment, do the following:
 
@@ -327,7 +345,7 @@ for the BOSH Lite Director. For example:
     Succeeded
     </pre>
 
-## <a id="create_service"></a> Step 6: Create a Service Broker on PCF Dev
+### <a id="create_service"></a> Step 2: Create a Service Broker on PCF Dev
 
 To create a service broker on PCF Dev, do the following:
 
@@ -373,7 +391,11 @@ To create a service broker on PCF Dev, do the following:
     cf create-service kafka-service-with-odb small k1
     </pre>
 
-## <a id="status"></a> Step 7: Verify Your BOSH Deployment and On-Demand Service
+## <a id="verify-use"></a> Part 3: Verify and Use
+
+To verify and use your on-demand service, do the following:
+
+### <a id="status"></a> Step 1: Verify Your BOSH Deployment and On-Demand Service
 
 1. Check the status of your service.
     <pre>
@@ -398,7 +420,7 @@ To create a service broker on PCF Dev, do the following:
     This example shows that the service instance is provisioned and the service releases are specified in the ODB deployment manifest.
 
 
-## <a id="use"></a> Step 8: Use Your On-Demand Service
+### <a id="use"></a> Step 2: Use Your On-Demand Service
 
 To use the service instance that you created, do the following:
 
@@ -423,16 +445,20 @@ To use the service instance that you created, do the following:
     cf start kafka-example-app
     </pre>
 
-Now the app runs at `https:/kafka-example-app.PCF-DEV-DOMAIN`.
-You can use it to read and write to your on-demand Kafka service instance. For example:
+### <a id="complete"></a> Step 3: Read and Write to Your Service Instance
 
-* To write data, run:
+Now the app runs at `https:/kafka-example-app.PCF-DEV-DOMAIN`.
+You can use it to read and write to your on-demand Kafka service instance. 
+
+For example:
+
+* To write data, run the following.
 
     ```
     curl -XPOST http://kafka-example-app.PCF-DEV-DOMAIN/queues/my-queue -d SOME-DATA
     ```
 
-* To read data, run: 
+* To read data, run the following.
 
     ```
     curl http://kafka-example-app.PCF-DEV-DOMAIN/queues/my-queue
