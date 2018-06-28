@@ -3,8 +3,8 @@ title: Getting Started&#58; ODB on a Local Development Environment
 owner: London Services Enablement
 ---
 
-This topic describes how to create and manage an on-demand service broker (ODB) on a local development
-machine using Pivotal Cloud Foundry (PCF) Dev and BOSH Lite. 
+This topic describes how to create and manage an on-demand service broker (ODB)
+ on a local development machine using Pivotal Cloud Foundry (PCF) Dev and BOSH Lite. 
 
 For more information about the components in this topic, see [PCF Dev and 
 BOSH-Lite](https://docs.pivotal.io/tiledev/environments.html#pcfdev). 
@@ -174,7 +174,7 @@ for the BOSH Lite Director. For example:
   <pre>
     bosh2 environment
   </pre>
-  This command produces output similar to the following.
+  See the following example output:
   <pre class="terminal">
     $ bosh2 environment
     Config
@@ -193,8 +193,7 @@ for the BOSH Lite Director. For example:
   </pre>
 
 1. Create a BOSH Lite deployment manifest in a file called 
-`deployment_manifest.yml` using the following as a base.
-    <p class="note">Replace `BOSH-LITE-UUID`, `BOSH-LITE-URL` and `PCF-DEV-DOMAIN` with the values obtained in the previous steps.</p>
+`deployment_manifest.yml` using the following as a base:
 
     ```yaml
     name: kafka-on-demand-broker
@@ -292,21 +291,29 @@ for the BOSH Lite Director. For example:
       update_watch_time: 30000-180000
       max_in_flight: 4
     ```
+    Where:
+    - `BOSH-LITE-UUID` is the `UUID` value you recorded in the BOSH environment
+       step above.
+    - `BOSH-LITE-URL` is the `URL` value you recorded in the BOSH environment 
+       step above.
+    - `PCF-DEV-DOMAIN` is the PCF Dev domain you recorded in the 
+      [Prerequisites](#prerequisites) above.
 
-1. Deploy the broker:
+
+1. Deploy the broker.
     <pre>
     bosh2 -e lite -d kafka-on-demand-broker deployment\_manifest.yml
     </pre>
 
-1. Obtain the IP address of the deployed broker:
+1. Record the IP address of the deployed broker.
     <pre>
     bosh2 -e lite -d kafka-on-demand-broker instances
     </pre>
 
-    This command produces output similar to the following:
+    See the following example output:
 
     <pre class="terminal">
-    Using environment 'lite' as user 'admin' (openid, bosh.admin)
+    $ Using environment 'lite' as user 'admin' (openid, bosh.admin)
 
     Task 54727. Done
 
@@ -320,33 +327,34 @@ for the BOSH Lite Director. For example:
     Succeeded
     </pre>
 
-    Record the IP address of the broker. You will use this in the next step to create a service broker.
-
 ## <a id="create_service"></a> Step 6: Create a Service Broker on PCF Dev
 
-1. Create a service broker on PCF Dev and enable access to its service offering. You will need the broker's credentials set in the deployment manifest and the IP of the broker VM.
+To create a service broker on PCF Dev, do the following:
+
+1. Create a service broker on PCF Dev and enable access to its service offering. 
     <pre>
     cf create-service-broker kafka-broker broker password http<span>:</span>//BROKER-IP:8080
     </pre>
     Where:<br>
-    `BROKER-IP` is the value obtained in the previous step.<br><br>
+    - `BROKER-IP` is the value obtained in the step above. See the last step in 
+     [Create a BOSH Deployment](create_bosh).
+    
     For example:
     <pre class="terminal">
     $ cf create-service-broker kafka-broker broker password http<span>:</span>//10.244.1.2:8080 
     </pre>
-    For more details on service brokers, see the [Open Service Broker API](http://docs.cloudfoundry.org/services/api.html) specification.
 
-1. Enable access to the broker's service plans:
+1. Enable access to the broker's service plans.
     <pre>
     cf enable-service-access kafka-service-with-odb
     </pre>
 
-1. View the services offered by the broker in the Marketplace:
+1. View the broker-offered services in the Marketplace.
     <pre>
     cf marketplace
     </pre>
 
-    This command produces output similar to the following:
+    See the following example output:
 
     <pre class="terminal">
     Getting services from Marketplace in org pcfdev-org / space pcfdev-space as admin...
@@ -367,18 +375,18 @@ for the BOSH Lite Director. For example:
 
 ## <a id="status"></a> Step 7: Verify Your BOSH Deployment and On-Demand Service
 
-1. Check the status of your service:
+1. Check the status of your service.
     <pre>
     cf service k1
     </pre>
-    Initially, the service status state is: `create in progress`. After the service is created, the status changes to: `create succeeded`.
+    See the state change from `create in progress` to `create succeeded`.
 
 1. Verify that the on-demand service is provisioned in the BOSH deployment
     <pre>
     bosh2 -e lite deployments
     </pre>
 
-    The output of this command appears as follows:
+    See the following example output:    
 
     <pre class="terminal">
     Name                                                    Release(s)                              Stemcell(s)                                        Cloud Config
@@ -392,9 +400,9 @@ for the BOSH Lite Director. For example:
 
 ## <a id="use"></a> Step 8: Use Your On-Demand Service
 
-The [Kafka example app](https://github.com/pivotal-cf-experimental/kafka-example-app) shows how you can use the service instance that you created with `cf create-service`.
+To use the service instance that you created, do the following:
 
-1. Clone the [Kafka example app](https://github.com/pivotal-cf-experimental/kafka-example-app) in your workspace:
+1. Clone the Kafka example app.
     <pre>
     git clone https<span>:</span>//github.com/pivotal-cf-experimental/kafka-example-app.git
     </pre>
@@ -405,18 +413,18 @@ The [Kafka example app](https://github.com/pivotal-cf-experimental/kafka-example
     cf push --no-start
     </pre>
 
-1. Bind the app to your service instance:
+1. Bind the app to your service instance.
     <pre>
     cf bind-service kafka-example-app k1
     </pre>
-    <p class="note"><strong>Note</strong>: You can use <code>cf bs</code> as an alias for <code>cf bind-service</code></p>
 
-1. Start the app:
+1. Start the app.
     <pre>
     cf start kafka-example-app
     </pre>
 
-Now the app runs at `https:/kafka-example-app.PCF-DEV-DOMAIN`, and you can use it to read and write to your on-demand Kafka service instance. For example:
+Now the app runs at `https:/kafka-example-app.PCF-DEV-DOMAIN`.
+You can use it to read and write to your on-demand Kafka service instance. For example:
 
 * To write data, run:
 
