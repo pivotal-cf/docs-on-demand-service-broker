@@ -63,12 +63,12 @@ the Kakfa example service adapter, and ODB.
 
 To prepare BOSH Lite, do the following:
 
-1. Target your BOSH Lite installation:
+1. Target your BOSH Lite installation.
    <pre>
     bosh2 alias-env lite -e 192.168.50.4
    </pre>
 
-1. Upload the [BOSH Lite stemcell](http://bosh.cloudfoundry.org/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent):
+1. Upload the BOSH Lite stemcell.
    <pre>
     bosh2 -e lite upload-stemcell \
     https<span>:</span>//bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent?v=<%= vars.odb_warden_stemcell_version %>
