@@ -10,11 +10,19 @@ Pivotal Cloud Foundry (PCF) Ops Manager operators and BOSH operators.
 
 The operator is responsible for the following:
 
-* Requesting appropriate networking rules for on-demand service tiles.
-* Configuring the BOSH Director.
-* Uploading the required releases for the broker deployment and service instance deployments.
-* Writing a broker manifest. See [Write a Broker Manifest](#broker-manifest).
-* Managing brokers and service plans.
+* Requesting appropriate networking rules for on-demand service tiles. 
+  See [Set Up Networking](#networking) below.
+
+* Configuring the BOSH Director. 
+  See [Set Up Your BOSH Director](#configure-bosh) below.
+
+* Uploading the required releases for the broker deployment and service instance deployments. 
+  See [Upload Required Releases](#upload-releases) below.
+
+* Writing a broker manifest.
+  See [Write a Broker Manifest](#broker-manifest) below.
+
+* Managing brokers and service plans. 
   See [Broker and Service Management](./management.html).
 
 <p class="note"><strong>Note</strong>: Pivotal recommends that you provide documentation
@@ -585,7 +593,7 @@ To register the route, do the following:
    For more information, see [route_registrar job](http://bosh.io/jobs/route_registrar?source=github.com/cloudfoundry-incubator/cf-routing-release).
 1. If you configure a route, set the `broker_uri` property in the [register-broker errand](#register-broker).
 
-## <a id="service-instance-quotas"></a>Set Service Instance Quotas
+## <a id="service-instance-quotas"></a>(Optional) Set Service Instance Quotas
 
 You can set global and plan level service quotas to set service instance limits in the manifest.
 
@@ -612,7 +620,7 @@ If this limit has not been reached, ODB checks the plan service instance limit.
 <p class="note"><strong>Note</strong>: These limits do not include orphans. See <a href="./troubleshooting-bosh.html#listing-orphans">List Orphan Deployments</a>
    and <a href="./management.html#orphan-deployments">Delete Orphaned Deployments</a>.</p>
 
-## <a id="service-resource-quotas"></a>Set Service Resource Quotas
+## <a id="service-resource-quotas"></a>(Optional) Set Service Resource Quotas
 
 ODB offers resource quotas to allow you to limit resources more effectively when combining 
 plans that consume different amounts of resources. You can set these quotas for service resources: 
