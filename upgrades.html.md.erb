@@ -1,9 +1,9 @@
 ---
-title: Update Service Instances
+title: Upgrade Service Instances
 owner: London Services Enablement
 ---
 
-This topic provides information about updating the on-demand broker, service offering and service instance
+This topic provides information about upgrading the on-demand broker, service offering and service instance
 to Pivotal Cloud Foundry (PCF) Ops Manager operators and BOSH operators.
 
 ## <a id="upgrade-broker"></a>Upgrade the Broker
@@ -16,7 +16,7 @@ To upgrade the broker, do the following:
 
 ## <a id="upgrade-service-offering"></a>Upgrade Service Offering
 
-The service offering consists of the following:
+The service offering is made of the following:
 
 * Service catalog
 * Service adapter BOSH release
@@ -34,9 +34,9 @@ To upgrade a service offering, do the following:
 
 Any new service instances will be created using the latest service offering.
 
-To upgrade all existing instances you can run the [upgrade-all-service-instances errand](#upgrade-instances).
+To upgrade all existing instances you can run the [upgrade-all-service-instances errand](#upgrade-all-instances).
 
-<p class="note warning"><strong>WARNING</strong>: Until a service instance has been upgraded, <code>cf update-service</code> operations will be blocked and an error will be shown, see <a href="#updating-service-offering">updating service offering</a>.</p>
+<p class="note warning"><strong>WARNING</strong>: Until a service instance has been upgraded, <code>cf update-service</code> operations will be blocked and an error will be shown, see <a href="./management.html#updating-service-offering">Update Service Offering</a>.</p>
 
 ## <a id="upgrade-individual-instances"></a>Upgrade an Individual Service Instance
 
@@ -53,7 +53,7 @@ Service broker error: Service cannot be updated at this time,
 please try again later or contact your operator for more information.
 </pre>
 
-Operators should run the [upgrade-all-service-instances errand](#upgrade-instances) to upgrade all service instances to the latest service offering.
+Operators should run the [upgrade-all-service-instances errand](#upgrade-all-instances) to upgrade all service instances to the latest service offering.
 
 ## <a id="upgrade-all-instances"></a>Upgrade All Service Instances
 
@@ -85,7 +85,7 @@ To upgrade all existing service instances after the service offering has been up
         <th>Errand</th>
         <th>Property</th>
         <tr>
-            <td><code>max\_in&#95;flight</code></td>
+            <td><code>max\_in\_flight</code></td>
             <td>sets the limit for the number of upgrades
           occurring concurrently.  The number of simultaneous upgrades is limited by
           the number of available BOSH workers. See the <a
@@ -121,7 +121,7 @@ To upgrade all existing service instances after the service offering has been up
             </td>
         </tr>
         <tr>
-            <td><code>polling_interval_seconds</code></td>
+            <td><code>polling\_interval\_seconds</code></td>
             <td>This controls the wait between checking the status of the successfully submitted BOSH upgrade job.
             If service instances have in-progress BOSH operations,
             upgrade requests are rejected and the errand queues those instances for a retry:
@@ -137,11 +137,11 @@ To upgrade all existing service instances after the service offering has been up
 1. Run the errand with the following command:<pre>bosh2 run-errand upgrade-all-service-instances</pre>
 
 <p class="note"><strong>Note:</strong> The <code>upgrade-all-service-instances</code> errand triggers service instance lifecycle errands configured for the broker.
-   For more information, see <a href="#lifecycle-errands">Service Instance Lifecycle Errands</a> below.</p>
+   For more information, see <a href="./operating.html#lifecycle-errands">Service Instance Lifecycle Errands</a> below.</p>
 
 ### <a id="service-instances-api"></a> Service Instances API
 
-The service instances API consists of a single HTTP endpoint that the errand will utilise to collect the required state to drive the upgrade process against your On Demand Service Broker. The API endpoint called is configurable in the upgrade-all-service-instances errand.
+The service instances API is made of a single HTTP endpoint that the errand will utilise to collect the required state to drive the upgrade process against your On Demand Service Broker. The API endpoint called is configurable in the `upgrade-all-service-instances` errand.
 
 <p class="warning note"><strong>WARNING:</strong> The Service Instances API is an advanced feature.
 Configuring a Service Instances API is not required, unless you are operating in very specific circumstances, such as running an On Demand Service Broker with no connection to Cloud Foundry.
@@ -149,7 +149,7 @@ You will be required to provide an endpoint which satisfied the API requirements
 If you configure an endpoint which does not satisfy these criteria, some service instances may become unusable.</p>
 
 The Service Instances API definition is at version 0.1.0 and should be considered subject to change. 
-The API consists of a single endpoint which should handle the following request with the appropriate response:
+The API is made of a single endpoint which should handle the following request with the appropriate response:
 
 <strong>Example Request:</strong>
 
