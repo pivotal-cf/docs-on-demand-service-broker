@@ -595,35 +595,57 @@ To register the route, do the following:
 
 ## <a id="service-instance-quotas"></a>(Optional) Set Service Instance Quotas
 
-You can set global and plan level service quotas to set service instance limits in the manifest.
+Set service instance quotas to limit the number of service instances ODB can create.
+You can set these quotas for service instances:
 
 - **Global quotas**---restrict the number of service instances across all plans.
 
-    ```
-     global_quotas: # optional
-        service_instance_limit: INSTANCE-LIMIT
-    ```
 - **Plan quotas**---restrict the number of service instances for a given plan.
-
-    ```
-    plans:
-     - name: CF-MARKETPLACE-PLAN-NAME
-        plan_id: CF-MARKETPLACE-PLAN-ID
-        description: CF-MARKETPLACE-DESCRIPTION
-        quotas: # optional
-          service_instance_limit: INSTANCE-LIMIT
-    ```
 
 When creating a service instance, ODB checks the global service instance limit.
 If this limit has not been reached, ODB checks the plan service instance limit.
 
-<p class="note"><strong>Note</strong>: These limits do not include orphans. See <a href="./troubleshooting-bosh.html#listing-orphans">List Orphan Deployments</a>
+<p class="note"><strong>Note</strong>: These limits do not include orphans. 
+  See <a href="./troubleshooting-bosh.html#listing-orphans">List Orphan Deployments</a>
    and <a href="./management.html#orphan-deployments">Delete Orphaned Deployments</a>.</p>
+
+To set service instance quotas, do the following in the manifest: 
+
+1. Add quota properties for the type of quota you want to use:
+  - **For a global quota:** add `global_quotas` in the `service_deployment`.
+  - **For plan quotas:** add `quotas` in each plan you want to limit.
+
+1. Add the `service_instance_limit` property under the quota properties you added
+in step 1, and set a value for the maximum number of service instances allowed.
+<br><br>
+For example:
+<br><br>
+  - **Global quota** defined in the `service_deployment`:
+
+        ```yaml
+        service_deployment:
+          ...
+          global_quotas: 
+            service_instance_limit: INSTANCE-LIMIT
+            ...
+        ```
+<br>
+  - **Plan quota** defined in each plan:
+
+        ```yaml
+        plans:
+        - name: CF-MARKETPLACE-PLAN-NAME
+          quotas: 
+            service_instance_limit: INSTANCE-LIMIT
+        ```
+
+For a more detailed code snippet, see the [Starter Snippet](#starter-snippet) above.
 
 ## <a id="service-resource-quotas"></a>(Optional) Set Service Resource Quotas
 
-ODB offers resource quotas to allow you to limit resources more effectively when combining 
-plans that consume different amounts of resources. You can set these quotas for service resources: 
+Set resource quotas to limit resources more effectively when combining plans that 
+consume different amounts of resources. 
+You can set these quotas for service resources: 
 
 - **Global resource quotas**---limit how much of a certain resource is consumed across all plans.
 ODB allows new instances to be created until their total resources reach the global quota.
@@ -632,18 +654,25 @@ ODB allows new instances to be created until their total resources reach the glo
 When creating a service instance, ODB checks the global resource limit.
 If this limit has not been reached, ODB checks the plan resource limit.
 
-<p class="note"><strong>Note</strong>: These limits do not include orphans. See <a href="./troubleshooting-bosh.html#listing-orphans">List Orphan Deployments</a>
+<p class="note"><strong>Note</strong>: These limits do not include orphans. 
+  See <a href="./troubleshooting-bosh.html#listing-orphans">List Orphan Deployments</a>
    and <a href="./management.html#orphan-deployments">Delete Orphaned Deployments</a>.</p>
 
-To set resource quotas, do the following:
+To set resource quotas, do the following in the manifest:
 
-1. In the manifest, define the resources you want to limit. 
-Use strings to define the resource, for example `ips`, `memory`, or `disk`.
-Then decide the total amount allowed for each resource. <br><br>
+1. Add quota properties for the type of quota you want to use:
+  - **For a global quota:** add `global_quotas` in the `service_deployment`.
+  - **For a plan quota:** add `quotas` in each plan.
+
+1. Add the `resource_limits` property under the quota properties you added in step 1. 
+
+1. Under `resource_limits`, use strings to define the resources you want to limit, for example `ips`, `memory`, or `disk`.
+Then set a value for the maximum allowed for each resource. 
+<br><br>
 For example: <br><br>
-    - **Global resource quota**
+    - **Global resource quota** defined in the `service_deployment`:
 
-        ```
+        ```yaml
         service_deployment:
           ...
           global_quotas:
@@ -652,9 +681,10 @@ For example: <br><br>
               memory: 150
               ...
         ```
-    - **Resource quota for each plan**
+<br>
+    - **Plan resource quota** defined in each plan:
 
-        ```
+        ```yaml
         plans:
         - name: my-plan
           quotas:
@@ -662,19 +692,22 @@ For example: <br><br>
               memory: 25
         ```
 
-1. In order to use resource quotas, for each plan, you must define the `resource_costs` 
-used by one service instance. <br><br>
+1. Add the `resource_costs` property. 
+Under that, define the amount of each resource your plan allows per service instance.
+<br><br>
 For example:
 
-    ```
+    ```yaml
     plans:
     - name: my-plan
       quotas:
         resource_limits:
-            memory: 25
+          memory: 25
       resource_costs:
         memory: 5 # the key is string-matched against keys in the global and plan-level resource quotas
     ```
+
+For a more detailed code snippet, see the [Starter Snippet](#starter-snippet) above.
 
 ## <a id="broker-metrics"></a>(Optional) Configure Service Metrics
 
