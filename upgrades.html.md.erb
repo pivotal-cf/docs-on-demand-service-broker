@@ -3,16 +3,16 @@ title: Upgrade Service Instances
 owner: London Services Enablement
 ---
 
-This topic provides information about upgrading the on-demand broker, service offering and service instance
+This topic provides information about upgrading the on-demand broker, service offering, and service instance
 to Pivotal Cloud Foundry (PCF) Ops Manager operators and BOSH operators.
 
 ## <a id="upgrade-broker"></a>Upgrade the Broker
 
 To upgrade the broker, do the following:
 
-* Upload a new version of the `on-demand-service-broker-release` BOSH release to the BOSH Director.
-* Make any necessary changes to the core broker configuration in the broker manifest.
-* Deploy the broker.
+1. Upload a new version of the `on-demand-service-broker-release` BOSH release to the BOSH Director.
+1. Make any necessary changes to the core broker configuration in the broker manifest.
+1. Deploy the broker.
 
 ## <a id="upgrade-service-offering"></a>Upgrade Service Offering
 
@@ -20,31 +20,35 @@ The service offering is made of the following:
 
 * Service catalog
 * Service adapter BOSH release
-* Service BOSH release(s)
+* Service BOSH releases
 * Service stemcell
 
 To upgrade a service offering, do the following:
 
   1. Make any changes to the service catalog in the broker manifest.
-  1. Upload any new service BOSH release(s) to the BOSH Director.
-  1. Make any changes to service release(s) in the broker manifest.
+  1. Upload any new service BOSH releases to the BOSH Director.
+  1. Make any changes to service releases in the broker manifest.
   1. Upload any new service stemcell to the BOSH Director.
   1. Make any changes to the service stemcell in the `service_deployment` broker manifest.
   1. Deploy the broker.
 
-Any new service instances will be created using the latest service offering.
+Any new service instances are created using the latest service offering.
 
-To upgrade all existing instances you can run the [upgrade-all-service-instances errand](#upgrade-all-instances).
+To upgrade all existing instances you can run the upgrade-all-service-instances errand.
+See [Upgrade All Service Instances](#upgrade-all-instances) below.
 
-<p class="note warning"><strong>WARNING</strong>: Until a service instance has been upgraded, <code>cf update-service</code> operations will be blocked and an error will be shown, see <a href="./management.html#updating-service-offering">Update Service Offering</a>.</p>
+<p class="note warning"><strong>WARNING</strong>: Until a service instance has been upgraded,
+<code>cf update-service</code> operations are blocked and an error is shown,
+see <a href="./management.html#updating-service-offering">Update Service Offering</a>.</p>
 
 ## <a id="upgrade-individual-instances"></a>Upgrade an Individual Service Instance
 
 Cloud Foundry users cannot upgrade their service instances to the latest service offering.
 
-Until a service instance has been upgraded, Cloud Foundry users cannot set parameters, or change plan until the service instance has been upgraded by an operator.
+Until a service instance has been upgraded, Cloud Foundry users cannot set parameters
+ or change plan until the service instance has been upgraded by an operator.
 
-For example, a developer who tries to update a Redis service instance with the `cf update-service` command will see the following error message:
+For example, a developer who tries to update a Redis service instance with the `cf update-service` command sees the following error message:
 
 <pre class="terminal">
 FAILED
@@ -53,7 +57,9 @@ Service broker error: Service cannot be updated at this time,
 please try again later or contact your operator for more information.
 </pre>
 
-Operators should run the [upgrade-all-service-instances errand](#upgrade-all-instances) to upgrade all service instances to the latest service offering.
+Operators should run the upgrade-all-service-instances errand
+to upgrade all service instances to the latest service offering.
+See [Upgrade All Service Instances](#upgrade-all-instances) below.
 
 ## <a id="upgrade-all-instances"></a>Upgrade All Service Instances
 
@@ -116,8 +122,8 @@ To upgrade all existing service instances after the service offering has been up
               If fewer instances are present than specified, the broker upgrades as many instances as possible
               in that org and space.
               <br><br><strong>Note:</strong> If <code>canary\_selection\_params</code>
-              are specified and no instances exist in that org or space, no canaries will be chosen.
-              If other instances exist, the broker will fail alerting you to chose different selection criteria.
+              are specified and no instances exist in that org or space, no canaries are chosen.
+              If other instances exist, the broker fails, alerting you to chose different selection criteria.
             </td>
         </tr>
         <tr>
@@ -136,16 +142,21 @@ To upgrade all existing service instances after the service offering has been up
 1. Deploy the broker manifest.
 1. Run the errand with the following command:<pre>bosh2 run-errand upgrade-all-service-instances</pre>
 
-<p class="note"><strong>Note:</strong> The <code>upgrade-all-service-instances</code> errand triggers service instance lifecycle errands configured for the broker.
+<p class="note"><strong>Note:</strong> The <code>upgrade-all-service-instances</code> errand
+triggers service instance lifecycle errands configured for the broker.
    For more information, see <a href="./operating.html#lifecycle-errands">Service Instance Lifecycle Errands</a> below.</p>
 
 ### <a id="service-instances-api"></a> Service Instances API
 
-The service instances API is made of a single HTTP endpoint that the errand will utilise to collect the required state to drive the upgrade process against your On Demand Service Broker. The API endpoint called is configurable in the `upgrade-all-service-instances` errand.
+The service instances API is made of a single HTTP endpoint that the errand uses to collect the required state
+to drive the upgrade process against your On Demand Service Broker.
+The API endpoint called is configurable in the `upgrade-all-service-instances` errand.
 
 <p class="warning note"><strong>WARNING:</strong> The Service Instances API is an advanced feature.
-Configuring a Service Instances API is not required, unless you are operating in very specific circumstances, such as running an On Demand Service Broker with no connection to Cloud Foundry.
-You will be required to provide an endpoint which satisfied the API requirements detailed below, and also guarantees that all service instances which need to be upgraded are part of that response.
+Configuring a Service Instances API is not required, unless you are operating in very specific circumstances,
+such as running an On Demand Service Broker with no connection to Cloud Foundry.
+You are required to provide an endpoint which satisfies the API requirements detailed below
+and also guarantees that all service instances which need to be upgraded are part of that response.
 If you configure an endpoint which does not satisfy these criteria, some service instances may become unusable.</p>
 
 The Service Instances API definition is at version 0.1.0 and should be considered subject to change. 
@@ -176,7 +187,9 @@ Content-Type: application/json
 The Services Instances API returns other status codes such as 3xx, 4xx, or 5xx for non-successful scenarios.
 
 
-The plan\_ids listed in the response need to correspond to the plan\_ids that appear in each plan's definition in the On Demand Broker deployment manifest, not any other id that may be assigned by the service controller.
+The plan\_ids listed in the response need to correspond to the plan\_ids
+that appear in each plan's definition in the On Demand Broker deployment manifest,
+not any other id that may be assigned by the service controller.
 
 When the on-demand service broker is configured to use `canary_selection_params`,
 you need to change the Service Instances API accordingly.
@@ -192,7 +205,8 @@ canary_selection_params:
   cf_space: staging-space
 ```
 
-Then, the Service Instances API returns a filtered list of instances when `cf_org` and `cf_space` are passed as query parameters in the request.
+Then, the Service Instances API returns a filtered list of instances when `cf_org` and
+`cf_space` are passed as query parameters in the request.
 
 <strong>Example Request:</strong>
 
@@ -217,7 +231,8 @@ The instances in the filtered list are used as canary instances and upgraded bef
 The number of canaries taken from this list can be configured
 by specifying the `canaries` property in the on-demand service broker manifest.
 
-To configure the `upgrade-all-service-instances` errand to connect to a Service Instances API provider, update the errand's configuration in the deployment manifest to include the following additional properties:
+To configure the `upgrade-all-service-instances` errand to connect to a Service Instances API provider,
+update the errand's configuration in the deployment manifest to include the following additional properties:
 
 ```
 - name: upgrade-all-service-instances
