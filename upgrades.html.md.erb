@@ -34,7 +34,7 @@ To upgrade a service offering, do the following:
 
 Any new service instances are created using the latest service offering.
 
-To upgrade all existing instances you can run the upgrade-all-service-instances errand.
+To upgrade all existing instances, you can run the upgrade-all-service-instances errand.
 See [Upgrade All Service Instances](#upgrade-all-instances) below.
 
 <p class="note warning"><strong>WARNING</strong>: Until a service instance has been upgraded,
@@ -94,16 +94,17 @@ To upgrade all existing service instances after the service offering has been up
         <th>Property</th>
         <tr>
             <td><code>max\_in\_flight</code></td>
-            <td>sets the limit for the number of upgrades
+            <td>Sets the limit for the number of upgrades
           occurring concurrently.  The number of simultaneous upgrades is limited by
-          the number of available BOSH workers. See the <a
-          href="https://bosh.io/jobs/director?source=github.com/cloudfoundry/bosh#p=director.workers">BOSH
-          docs</a>.  Set the <code>max\_in\_flight</code> value to lower than this
+          the number of available BOSH workers. See <a
+          href="https://bosh.io/jobs/director?source=github.com/cloudfoundry/bosh#p=director.workers">workers</a>
+          in the Cloud Foundry BOSH documentation.
+          Set the <code>max\_in\_flight</code> value to lower than this
           limit to avoid over-saturating BOSH.</td>
         </tr>
         <tr>
             <td><code>canaries</code></td>
-            <td>sets the number of canary instances to upgrade first.
+            <td>Sets the number of canary instances to upgrade first.
             If all canary instances upgrade, the remaining instances are upgraded.
             If a canary instance fails to upgrade or the <code>attempt\_limit</code>
             is reached, the upgrade fails.
@@ -161,7 +162,7 @@ You are required to provide an endpoint which satisfies the API requirements det
 and also guarantees that all service instances which need to be upgraded are part of that response.
 If you configure an endpoint which does not satisfy these criteria, some service instances may become unusable.</p>
 
-The Service Instances API definition is at version 0.1.0 and should be considered subject to change. 
+The Service Instances API definition is at v0.1.0 and should be considered subject to change. 
 The API is made of a single endpoint which should handle the following request with the appropriate response:
 
 <strong>Example Request:</strong>
@@ -265,5 +266,5 @@ Where:
 * `POLLING-INTERVAL-IN-SECONDS`: The number of seconds to wait between checking the
 status of a submitted upgrade job. 
 * `ATTEMPT-INTERVAL-IN-SECONDS`: The number of seconds to wait between retrying upgrades. 
-* `NUMBER-OF-ATTEMPTS`: The maximum number of times the errand will try a set of upgrades. 
+* `NUMBER-OF-ATTEMPTS`: The maximum number of times the errand tries a set of upgrades. 
 
