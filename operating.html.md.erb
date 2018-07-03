@@ -486,66 +486,92 @@ service_catalog:
 ## <a id="secure-binding"></a>(Optional) Enable Secure Binding
 
 ODB allows the secure storage of service credentials in runtime CredHub.
-To store service credentials is runtime CredHub, you must connect to CredHub v1.6.x or later.
+If secure binding is enabled, a secure reference to your service credentials is 
+passed through the network to the application container when you create a binding 
+or service key.
+
+### Requirements
+
+To store service credentials is runtime CredHub, your deployment must meet the 
+following requirements: 
+
+- Be able to connect to CredHub v1.6.x or later.
 This may be provided as part of your Cloud Foundry deployment.
 
-Because the address for CredHub is a local domain name, your instance group
-requires access to the local DNS provider.
+- Your instance group requires access to the local DNS provider because the address 
+for CredHub is a local domain name.
 Currently, most Cloud Foundry deployments use Consul as a DNS provider.
 
-You must set up a new CredHub client in Cloud Foundry UAA with `credhub.write` 
-and `credhub.read` in its list of authorities.
+### Enable Secure Binding in the ODB Manifest
 
-To enable secure bindings, you must do the following in the ODB manifest:
+To enable secure binding, do the following:
 
-* Consume the CredHub link.
-* Include the secure binding credentials section with `secure_binding_credentials.enabled`
-set to `true`.
-* If you use Consul as a DNS provider, you might want to consume Consul links to enable DNS.
+1. Set up a new CredHub client in Cloud Foundry UAA with `credhub.write` and 
+`credhub.read` in its list of scopes.
+For how to do this, see [Creating and Managing Users with the UAA CLI 
+(UAAC)](docs.cloudfoundry.org/uaa/uaa-user-management.html).
 
-If the Secure Binding Credentials section is omitted or if
-`secure_binding_credentials.enabled` is `false`, service credentials,
-as opposed to a secure reference, are passed through the network to the
-application container.
+1. Update the broker job in the ODB manifest to consume the CredHub link.  
+For example:
 
-An example manifest snippet, assuming you are connecting to a Cloud
-Foundry deployment, is shown below:
-
-```
-instance_groups:
-- name: broker
-  ...
-  jobs:
-  - name: broker
-    consumes:
-      credhub:
-        from: credhub
-        deployment: cf
-    properties:
+    ```
+    instance_groups:
+    - name: broker
       ...
-      secure_binding_credentials:
-        enabled: true
-        authentication:
-          uaa:
-            client_id: CREDHUB-CLIENT-ID
-            client_secret: CREDHUB-CLIENT-SECRET
-            ca_cert: ((cf.uaa.ca_cert))
-  - name: consul_agent
-    release: consul
-    consumes:
-      consul: nil
-      consul_client:
-        from: consul_client_link
-        deployment: cf
-      consul_common:
-        from: consul_common_link
-        deployment: cf
-      consul_server: nil
-```
+      jobs:
+      - name: broker
+        consumes:
+          credhub:
+            from: credhub
+            deployment: cf
+    ```        
 
+1. Update the broker job in the ODB manifest to include the `secure_binding_credentials` 
+section. For example:
+    
+    ```
+    instance_groups:
+    - name: broker
+      ...
+      jobs:
+      - name: broker
+        ...
+        properties:
+          ...
+          secure_binding_credentials:
+            enabled: true
+            authentication:
+              uaa:
+                client_id: NEW-CREDHUB-CLIENT-ID
+                client_secret: NEW-CREDHUB-CLIENT-SECRET
+                ca_cert: ((cf.uaa.ca_cert))
+      ```
+  Where:<br>
+  - `NEW-CREDHUB-CLIENT-ID` and `NEW-CREDHUB-CLIENT-SECRET` are the CredHub client 
+  credentials you created in step one. 
+  - The CA certificate can be reused from the cf deployment.    
 
+1. If you use Consul as a DNS provider, you might want to consume Consul links to 
+enable DNS. To do this, add the `consul_agent` job to the manifest as follows:
 
-
+    ```
+    instance_groups:
+    - name: broker
+      ...
+      jobs:
+      ...
+      - name: consul_agent
+        release: consul
+        consumes:
+          consul: nil
+          consul_client:
+            from: consul_client_link
+            deployment: cf
+          consul_common:
+            from: consul_common_link
+            deployment: cf
+          consul_server: nil
+    ```
 
 ### <a id="credhub-key-format"></a> How Credentials Are Stored on CredHub
 
@@ -612,7 +638,7 @@ If this limit has not been reached, ODB checks the plan service instance limit.
 To set service instance quotas, do the following in the manifest: 
 
 1. Add quota properties for the type of quota you want to use:
-  - **For a global quota:** add `global_quotas` in the `service_deployment`.
+  - **For a global quota:** add `global_quotas` in the `service_catalog`.
   - **For plan quotas:** add `quotas` in each plan you want to limit.
 
 1. Add the `service_instance_limit` property under the quota properties you added
@@ -620,10 +646,10 @@ in step 1, and set a value for the maximum number of service instances allowed.
 <br><br>
 For example:
 <br><br>
-  - **Global quota** defined in the `service_deployment`:
+  - **Global quota** defined in the `service_catalog`:
 
         ```yaml
-        service_deployment:
+        service_catalog:
           ...
           global_quotas: 
             service_instance_limit: INSTANCE-LIMIT
@@ -661,7 +687,7 @@ If this limit has not been reached, ODB checks the plan resource limit.
 To set resource quotas, do the following in the manifest:
 
 1. Add quota properties for the type of quota you want to use:
-  - **For a global quota:** add `global_quotas` in the `service_deployment`.
+  - **For a global quota:** add `global_quotas` in the `service_catalog`.
   - **For a plan quota:** add `quotas` in each plan.
 
 1. Add the `resource_limits` property under the quota properties you added in step 1. 
@@ -670,10 +696,10 @@ To set resource quotas, do the following in the manifest:
 Then set a value for the maximum allowed for each resource. 
 <br><br>
 For example: <br><br>
-    - **Global resource quota** defined in the `service_deployment`:
+    - **Global resource quota** defined in the `service_catalog`:
 
         ```yaml
-        service_deployment:
+        service_catalog:
           ...
           global_quotas:
             resource_limits:
