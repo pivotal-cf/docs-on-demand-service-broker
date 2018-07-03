@@ -20,22 +20,28 @@ Kafka open source messaging. See the following sample code directories:</p>
 </div>
 ## <a id="prereq"></a>Prerequisites
 
-Before you can set up and use ODB on your local machine, 
+Before you set up and use ODB on your local machine, 
 install and configure the following components:
 
-- **BOSH Lite <%= vars.odb_bosh_lite_version %> or later.** To install BOSH Lite, see [Install](http://bosh.io/docs/bosh-lite/#install) 
+- **BOSH Lite <%= vars.odb_bosh_lite_version %> or later.**
+  To install BOSH Lite, see [Install](http://bosh.io/docs/bosh-lite/#install) 
 in the BOSH Lite documentation.
 
-- **PCF Dev file <%= vars.odb_pcfdev_version %>.** To install PCF Dev, see [Installing PCF Dev](https://docs.pivotal.io/pcf-dev/#installing). 
-  Record the PCF Dev domain for later. The default is `local.pcfdev.io`.
+- **PCF Dev file <%= vars.odb_pcfdev_version %>.**
+  To install PCF Dev, see [Installing PCF Dev](https://docs.pivotal.io/pcf-dev/#installing). 
+  Record the PCF Dev domain for later.
+  The default is `local.pcfdev.io`.
 
 - **BOSH CLI v2 or later.** Pivotal recommends BOSH CLI v2 or later. For more information,
 see [About the BOSH CLI](#about-cli) below.
 
 ## <a id="about-cli"></a>About the BOSH CLI
-The BOSH CLI is available in two major versions, v1 and v2. Pivotal recommends that you use the BOSH CLI v2 when possible.
+The BOSH CLI is available in two major versions, v1 and v2.
+Pivotal recommends that you use the BOSH CLI v2 when possible.
 
-This topic provides examples of using each version of the BOSH CLI. Your PCF installation may affect which version of the BOSH CLI you can use. Consult the table below to determine which version of the CLI is supported for your installation.
+This topic provides examples of using each version of the BOSH CLI.
+Your PCF installation may determine which version of the BOSH CLI you can use.
+Consult the table below to determine which version of the CLI is supported for your installation.
 
 <table class="nice">
     <th>PCF Version</th>
@@ -56,7 +62,7 @@ This topic provides examples of using each version of the BOSH CLI. Your PCF ins
 
 ## <a id="setup"></a>Part 1: Set Up
 
-This section details how to prepare BOSH Lite as well as set up the Kafka example service, 
+This section details how to prepare BOSH Lite and set up the Kafka example service, 
 the Kakfa example service adapter, and ODB.
 
 ### <a id="set_up_bosh"></a>Step 1: Prepare BOSH Lite
@@ -85,7 +91,7 @@ To set up the Kafka example service, do the following:
    </pre>
 
 1. In the `kafka-example-service-release` directory, create and upload the 
-   kafka example service.
+   Kafka example service.
    <pre>
     cd kafka-example-service-release
     bosh2 create-release --name kafka-example-service
