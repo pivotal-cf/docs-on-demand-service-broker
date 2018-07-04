@@ -650,7 +650,7 @@ To set service instance quotas, do the following in the manifest:
             ...
         ```
         <br>
-  - **For plan quotas** add `quotas` in each plan you want to limit:
+  - **For plan quotas** add `quotas` the plans you want to limit:
 
         ```yaml
         plans:
@@ -708,7 +708,7 @@ For example:
               memory: 150
         ```
         <br>
-    - **For plan quotas** add `quotas` in each plan:
+    - **For plan quotas** add `quotas` the plans you want to limit:
 
         ```yaml
         plans:
@@ -718,9 +718,8 @@ For example:
               memory: 25
         ```
 
-1. Add `resource_costs` to define the amount of each resource your plan allocates 
-to each service instance.
-Include the following in each plan:
+1. Add `resource_costs` in each plan to define the amount of resources your plan allocates 
+to each service instance. 
 
     ```yaml   
     resource_costs:
@@ -729,7 +728,7 @@ Include the following in each plan:
     Where:<br>
     - `RESOURCE-NAME` is a string defining the resource you want to limit.
     - `AMOUNT-OF-RESOURCE` is the amount of the resource allocated to each 
-    service instance in this plan.
+    service instance of this plan.
 
     For example: 
 
