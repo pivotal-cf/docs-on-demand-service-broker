@@ -3,12 +3,14 @@ title: Creating an On-Demand Service Tile
 owner: London Services Enablement
 ---
 
-This documents the process for deploying an on-demand broker (ODB) with a service in a single tile, on a AWS installation of Ops Manager v1.8. 
-Pivotal has built a reference [Kafka tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile).
+This documents the process for deploying an on-demand broker (ODB) with a service 
+in a single tile, on a AWS installation of Ops Manager v1.8. 
+Pivotal has built a reference [Kafka 
+tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile).
 
 ## <a id="requirements"></a>Requirements
 
-Before ODB, Ops Manager controlled the IP allocation of the private networks.
+Before the ODB, Ops Manager controlled the IP allocation of the private networks.
 So when using the ODB in a tile, you need at least two private networks:
 
 - A network where Ops Manager will deploy the on-demand broker VM
@@ -19,18 +21,31 @@ The network for service instances should be flagged as a Service Network in Ops 
 ## <a id="deploying"></a>Deploying Ops Manager to AWS
 
 1. Follow the default Ops Manager deployment [documentation](https://docs.pivotal.io/pivotalcf/customizing/cloudform-template.html), but with these modifications:
+  
   1. Create a self-signed wildcard SSL certificate for a domain you control.
      This is usually `*.SOME-SUBDOMAIN.cf-app.com`.
      Upload the certificate (along with the associated private key) to AWS. 
-  For details, see [SSL/TLS Certificates for Classic Load Balancers](https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/ssl-server-cert.html#create-cert).
+     For details, see [SSL/TLS Certificates for Classic Load B
+     alancers](https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/ssl-server-cert.html#create-cert).
+  
   1. Download the CloudFormation JSON and save it in the Ops Manager directory.
-  1. Run the CloudFormation stack. Save any pertinent inputs (e.g BOSH DB credentials) you type into the web console 
+  
+  1. Run the CloudFormation stack. Save any pertinent inputs (e.g BOSH DB credentials) 
+  you type into the web console 
   in the Ops Manager directory for safe keeping (for example, in `info.txt`).
-  1. Launch an instance of the AMI. If possible, use an elastic IP so that you can always keep the same DNS record
-   even if you recreate the VM. Failing that, auto-assign a public IP.
-  1. Create a DNS record for `pcf.WILDCARD-CERTIFICATE-DOMAIN`. To use the earlier example, the record will be for `pcf.some-subdomain.cf-app.com`. It should point to the public IP of the Ops Manager VM.
+  
+  1. Launch an instance of the AMI. 
+  If possible, use an elastic IP so that you can always keep the same DNS record
+  even if you recreate the VM. Failing that, auto-assign a public IP.
+  
+  1. Create a DNS record for `pcf.WILDCARD-CERTIFICATE-DOMAIN`. 
+  To use the earlier example, the record will be for `pcf.some-subdomain.cf-app.com`. 
+  It should point to the public IP of the Ops Manager VM.
+
 1. Continue following the docs to log in to Ops Manager. Save the login credentials.
+
 1. Configure the BOSH Director tile.
+
 1. Click **Apply Changes**, and record the BOSH init manifest for future reference. 
    For example, copy the manifest to your local machine, with the following command:
 
@@ -38,15 +53,19 @@ The network for service instances should be flagged as a Service Network in Ops 
     scp -i PRIVATE-KEY.pem ubuntu@OPSMAN-IP:/var/tempest/workspaces/default/deployments/bosh.yml bosh.yml
     ```
 
-<p class="note"><strong>Note</strong>: The ELBs created by CloudFormation are both for CF, not Ops Manager. 
-  One of them will be configured with your wildcard certificate. This takes the place of HAProxy in AWS PCF deployments, 
+<p class="note"><strong>Note</strong>: 
+  The ELBs created by CloudFormation are both for CF, not Ops Manager. 
+  One of them will be configured with your wildcard certificate. 
+  This takes the place of HAProxy in AWS PCF deployments, 
   and is therefore not used until you deploy the ERT tile.</p>
 
 ###<a id="target_bosh"></a>Target the BOSH Director
 
 To target the BOSH Director from the Ops Manager VM, use a command like the following:
 
-<pre class=terminal>$ bosh2 --ca-cert /var/tempest/workspaces/default/root_ca_certificate -e 10.0.16.10 alias-env om-director</pre>
+<pre class="terminal">
+  $ bosh2 --ca-cert /var/tempest/workspaces/default/root_ca_certificate -e 10.0.16.10 alias-env om-director
+</pre>
 
 Thereafter, use `bosh2 -e om-director` to make requests to the BOSH Director.
 
@@ -55,7 +74,8 @@ Thereafter, use `bosh2 -e om-director` to make requests to the BOSH Director.
 1. Follow the instructions in the topic
 [Tile Generator](http://docs.pivotal.io/tiledev/tile-generator.html)
 to build your service tile.
-1. Add the accessors listed in [Mandatory Accessors for On-Demand Tiles](#accessors) to the tile metadata file. 
+1. Add the accessors listed in [Mandatory Accessors for On-Demand Tiles](#accessors) 
+to the tile metadata file. 
 This file is named `tile.yml` if you used the Tile Generator.
 To use the `$self` accessors, set the `service-broker` flag to `true` in the tile metadata file.
 
@@ -69,7 +89,8 @@ You must add the following accessors to your on-demand tile:
 
 <p class="note"><strong>Note</strong>: The accessors in this section are mandatory.
   For other accessors, see 
-  <a href="https://docs.pivotal.io/tiledev/2-2/product-template-reference.html#ops-man-snippets">Ops Manager Provided Snippets</a>.</p>
+  <a href="https://docs.pivotal.io/tiledev/2-2/product-template-reference.html#ops-man-snippets">
+    Ops Manager Provided Snippets</a>.</p>
 
 #### director
 
@@ -82,7 +103,7 @@ The following table lists the accessors you must add:
 | Accessor                  | Description                                                                                                                    |
 |:--------------------------|:-------------------------------------------------------------------------------------------------------------------------------|
 | $director.hostname        | The director's hostname or IP address                                                                                                      |
-| $director.ca\_public\_key | The director's root ca certificate. Related: [how to configure SSL certificates for the ODB](operating.html#ssl-certificates). |
+| $director.ca\_public\_key | The director's root ca certificate. Related: [Configure SSL Certificates](operating.html#ssl-certs). |
 
 For example
 
@@ -254,7 +275,7 @@ Pre-delete:
 
 - `delete-all-service-instances-and-deregister-broker`
 
-These errands are documented in the [operating section](operating.html#management).
+For more information about these errands, see [Broker and Service Management](./management.html).
 
 ### Upgrade All Service Instances Errand
 
@@ -266,7 +287,7 @@ parameters:
 - The number of canary instances
 
 For more information about these parameters, see
-[Upgrade All Service Instances](operating.html#upgrade-all-instances).
+[Upgrade All Service Instances](upgrades.html#upgrade-all-instances).
 
 The example [Kafka
 tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile)
