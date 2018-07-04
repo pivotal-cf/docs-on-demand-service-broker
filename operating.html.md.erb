@@ -211,8 +211,8 @@ created, do the following:
       --authorized\_grant\_types "refresh\_token password client\_credentials" \
       --authorities "bosh.teams.my-team.admin"
     </pre>
-    For more information about using the UAAC, see [Creating and Managing Users with the UAA CLI (UAAC)
-    ](https://docs.cloudfoundry.org/uaa/uaa-user-management.html).
+    For more information about using the UAAC, see [Creating and Managing Users 
+    with the UAA CLI (UAAC)](https://docs.cloudfoundry.org/uaa/uaa-user-management.html).
 
 1. Configure the broker's BOSH authentication. Use the `CLIENT-ID` and 
 `CLIENT-SECRET` you provided above. 
@@ -492,7 +492,7 @@ or service key.
 
 ### Requirements
 
-To store service credentials is runtime CredHub, your deployment must meet the 
+To store service credentials in runtime CredHub, your deployment must meet the 
 following requirements: 
 
 - Be able to connect to CredHub v1.6.x or later.
@@ -509,7 +509,7 @@ To enable secure binding, do the following:
 1. Set up a new CredHub client in Cloud Foundry UAA with `credhub.write` and 
 `credhub.read` in its list of scopes.
 For how to do this, see [Creating and Managing Users with the UAA CLI 
-(UAAC)](docs.cloudfoundry.org/uaa/uaa-user-management.html).
+(UAAC)](https://docs.cloudfoundry.org/uaa/uaa-user-management.html).
 
 1. Update the broker job in the ODB manifest to consume the CredHub link.  
 For example:
@@ -640,7 +640,7 @@ If this limit has not been reached, ODB checks the plan service instance limit.
 To set service instance quotas, do the following in the manifest: 
 
 1. Add a quotas section for the type of quota you want to use.<br><br>
-  - **For global quotas** add `global_quotas` in the `service_catalog`:
+  - **For global quotas** add `global_quotas` in the service catalog:
 
         ```yaml
         service_catalog:
@@ -684,51 +684,48 @@ If this limit has not been reached, ODB checks the plan resource limit.
 
 To set resource quotas, do the following in the manifest:
 
-1. Add a quotas section for the type of quota you want to use:<br><br>
-  - **For global quotas** add `global_quotas` in the `service_catalog`:
+1. Add a quotas section for the type of quota you want to use.
+
+    ```
+    quotas:   
+      resource_limits:
+        RESOURCE-NAME: RESOURCE-LIMIT
+    ```
+  Where:<br>
+  <ul>
+    <li><code>RESOURCE-NAME</code> is a string defining the resource you want to limit.</li>
+    <li><code>RESOURCE-LIMIT</code> is a value for the maximum allowed for each resource.</li>
+  </ul>
+For example:  
+    - **For global quotas** add `global_quotas` in the service catalog:
 
         ```yaml
         service_catalog:
           ...
           global_quotas:
             resource_limits:
-              RESOURCE-NAME: RESOURCE-LIMIT
+              ips: 50
+              memory: 150
         ```
         <br>
-  - **For plan quotas** add `quotas` in each plan:
+    - **For plan quotas** add `quotas` in each plan:
 
         ```yaml
         plans:
         - name: my-plan
           quotas:
             resource_limits:
-              RESOURCE-NAME: RESOURCE-LIMIT
-        ```
-        Where:<br>
-        - `RESOURCE-NAME` is a string defining the resource you want to limit.
-        - `RESOURCE-LIMIT` is a value for the maximum allowed for each resource. 
-
-        For example: 
-
-        ```
-        quotas:   
-          resource_limits:
-            ips: 50
-            memory: 150
+              memory: 25
         ```
 
 1. Add `resource_costs` to define the amount of each resource your plan allocates 
 to each service instance.
 Include the following in each plan:
 
-    ```yaml
-    plans:
-    - name: my-plan
-      quotas:
-        ...
-      resource_costs:
-        RESOURCE-NAME: AMOUNT-OF-RESOURCE # the key is string-matched against keys in the global and plan-level resource quotas
-    ```
+    ```yaml   
+    resource_costs:
+      RESOURCE-NAME: AMOUNT-OF-RESOURCE # the key is string-matched against keys in the global and plan-level resource quotas
+    ```    
     Where:<br>
     - `RESOURCE-NAME` is a string defining the resource you want to limit.
     - `AMOUNT-OF-RESOURCE` is the amount of the resource allocated to each 
@@ -736,11 +733,15 @@ Include the following in each plan:
 
     For example: 
 
-    ```   
-    resource_costs:
-      ips: 50
-      memory: 150
+    ```yaml
+    plans:
+    - name: my-plan
+      quotas:
+        ...
+      resource_costs:
+        memory: 5
     ```
+
 
 For a more detailed manifest snippet, see the [Starter Snippet](#starter-snippet) above.
 
