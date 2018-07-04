@@ -511,7 +511,7 @@ To enable secure binding, do the following:
 For how to do this, see [Creating and Managing Users with the UAA CLI 
 (UAAC)](https://docs.cloudfoundry.org/uaa/uaa-user-management.html).
 
-1. Update the broker job in the ODB manifest to consume the CredHub link.  
+1. Update the broker job in the ODB manifest to consume the CredHub link.
 For example:
 
     ```
@@ -526,8 +526,9 @@ For example:
             deployment: cf
     ```        
 
-1. Update the broker job in the ODB manifest to include the `secure_binding_credentials` 
-section. For example:
+1. Update the broker job in the ODB manifest to include the `secure_binding_credentials` section. 
+The CA certificate can be or a reference to the certificate in the cf deployment 
+or inserted manually. For example:
     
     ```
     instance_groups:
@@ -546,10 +547,8 @@ section. For example:
                 client_secret: NEW-CREDHUB-CLIENT-SECRET
                 ca_cert: ((cf.uaa.ca_cert))
       ```
-  Where:<br>
-  - `NEW-CREDHUB-CLIENT-ID` and `NEW-CREDHUB-CLIENT-SECRET` are the CredHub client 
-  credentials you created in step one. 
-  - The CA certificate can be reused from the cf deployment.    
+  Where `NEW-CREDHUB-CLIENT-ID` and `NEW-CREDHUB-CLIENT-SECRET` are the CredHub client 
+  credentials you created in step one.   
 
 1. If you use Consul as a DNS provider, you might want to consume Consul links to 
 enable DNS. To do this, add the `consul_agent` job to the manifest as follows:
@@ -572,6 +571,8 @@ enable DNS. To do this, add the `consul_agent` job to the manifest as follows:
             deployment: cf
           consul_server: nil
     ```
+
+For a more detailed manifest snippet, see [Configure Your Manifest](#core-broker-config) above.
 
 ### <a id="credhub-key-format"></a> How Credentials Are Stored on CredHub
 
