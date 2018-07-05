@@ -457,17 +457,64 @@ The following table describes the supported exit codes and output for the `gener
 
 | exit code     | Description     | Output                                                                                                                           |
 |:--------------|:----------------|:---------------------------------------------------------------------------------------------------------------------------------|
-| 0             | success         | <ul><li>Stdout: JSON document containing the BOSH manifest YAML</li></ul>                                                                          |
+| 0             | success         | <ul><li>Stdout: JSON document containing the BOSH manifest YAML and a map of adapter generated secrets</li></ul>                 |
 | 10            | not implemented |                                                                                                                                  |
-| anything else | failure         | Stdout: <ul><li>optional error message for CF CLI users</li> <li>Stderr: error message for operator</li> <li>ODB logs both stdout and stderr</li></ul> |
+| anything else | failure         | <ul><li>Stdout: optional error message for CF CLI users</li> <li>Stderr: error message for operator</li> <li>ODB logs both stdout and stderr</li></ul>     |
 
 **Output JSON format**
 
 ```json
 {
-  "manifest": "<generated BOSH manifest, as YAML>"
+  "manifest": "<generated BOSH manifest, as YAML>",
+  "secrets": { "secret1":"value1", "secret2":"value2" }
 }
 ```
+
+#### <a id="odb-managed-secrets"></a>Storing secrets on CredHub
+
+It is possible for the Service Adapter to generate secrets and, instead of
+writing these secrets in plain text in the manifest, to use ODB as a proxy to
+BOSH CredHub Config server. To do so, the adapter should generate the manifest
+with a special notation and output the secret as part of the `secrets` map. For
+example, consider the following `generate-manifest` output:
+
+```json
+{
+  "manifest": "password: ((odb_secret:the_password))",
+  "secrets": {
+    "the_password":"some-random-password"
+  }
+}
+```
+
+During provision, ODB will:
+
+1. Generate a CredHub name for each secret in the
+`secrets` map (for example: `/odb/service-offering-id/instance-id/secret-name`)
+1. Replace all occurrences of `((odb_secret:<secret-name>))` with the generated
+CredHub name
+1. Deploy the updated manifest.
+
+**Persisting credentials on updates**
+
+Similarly when dealing with properties that need to persist across updates,
+service adapter authors should extract the existing value for any ODB managed
+secrets from the previous manifest, when present.
+
+If the previous manifest looks like this:
+
+```
+name: the-deployment
+# ...
+properties:
+password: ((/odb/<service-guid>/<service-instance-guid/the_password))
+```
+
+then `generate-manifest` should not replace `properties.password` with
+`((odb_secret:password))`
+
+For details on how to use the value during bind, check the [create-binding subcommand documentation](#create-binding)
+
 ---
 
 ### <a id="dashboard-url"></a>dashboard-url
@@ -652,7 +699,8 @@ a JSON document using stdin.
     "binding_id": "BINDING-ID",
     "bosh_vms": "BOSH-VMS-JSON",
     "manifest": "MANIFEST-YAML",
-    "request_parameters": "REQUEST-PARAMETERS-JSON"
+    "request_parameters": "REQUEST-PARAMETERS-JSON",
+    "secrets": "MANIFEST-SECRETS-JSON"
   }
 }
 ```
@@ -740,6 +788,41 @@ See the following example:
   "service_id": "my-service"
   }
   ```
+
+**<a id="create-binding-secrets"></a>SECRETS**
+
+When the broker is configured with `resolve_manifest_secrets_at_bind` set to true,
+any secrets in the service instance manifest using references to BOSH generated
+variables or literal CredHub paths will be resolved and provided to the adapter in the secrets
+JSON parameter.
+
+For a service instance manifest like this:
+
+```yaml
+# ...
+password: ((redis_password))
+root_ca: ((/global/root_ca))
+
+variables:
+- name: redis_password
+  type: password
+```
+
+The secrets JSON parameter will look similar to the following. The keys are the
+reference names, and the values the resolved secrets.
+
+```json
+{
+  "((redis_password))": "some-bosh-generated-password",
+  "((/global/root_ca))": "some-global-value"
+}
+```
+
+If `resolve_manifest_secrets_at_bind` is set to false in the broker, secrets will be empty.
+
+<p class="note"><strong>Note</strong>: We recommend adapter authors to
+find the secrets key by accessing the manifest field that contains the reference
+to the variable.</p>
 
 #### <a id="create-binding-credentials"></a>Credentials for Bindings
 
