@@ -18,15 +18,17 @@ So when using the ODB in a tile, you need at least two private networks:
 
 The network for service instances should be flagged as a Service Network in Ops Manager.
 
-## <a id="deploying"></a>Deploying Ops Manager to AWS
+## <a id="deploying"></a>Deploy Ops Manager to AWS
 
-1. Follow the default Ops Manager deployment [documentation](https://docs.pivotal.io/pivotalcf/customizing/cloudform-template.html), but with these modifications:
+1. Follow the default Ops Manager deployment 
+[documentation](https://docs.pivotal.io/pivotalcf/customizing/cloudform-template.html), 
+but with these modifications:
   
   1. Create a self-signed wildcard SSL certificate for a domain you control.
      This is usually `*.SOME-SUBDOMAIN.cf-app.com`.
      Upload the certificate (along with the associated private key) to AWS. 
-     For details, see [SSL/TLS Certificates for Classic Load B
-     alancers](https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/ssl-server-cert.html#create-cert).
+     For details, see [SSL/TLS Certificates for Classic Load 
+     Balancers](https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/ssl-server-cert.html#create-cert).
   
   1. Download the CloudFormation JSON and save it in the Ops Manager directory.
   
@@ -69,30 +71,30 @@ To target the BOSH Director from the Ops Manager VM, use a command like the foll
 
 Thereafter, use `bosh2 -e om-director` to make requests to the BOSH Director.
 
-## <a id="building"></a>Build a Tile
+## <a id="building"></a>Build a Tile for an On-Demand Service
 
-1. Follow the instructions in the topic
-[Tile Generator](http://docs.pivotal.io/tiledev/tile-generator.html)
-to build your service tile.
-1. Add the accessors listed in [Mandatory Accessors for On-Demand Tiles](#accessors) 
-to the tile metadata file. 
-This file is named `tile.yml` if you used the Tile Generator.
-To use the `$self` accessors, set the `service-broker` flag to `true` in the tile metadata file.
+To build a tile for an on-demand service, do the following:
 
-## <a id="accessors"></a>Mandatory Accessors for On-Demand Tiles
+1. Use the Tile Generator to to build your tile.
+For instructions, see [How to Use](http://docs.pivotal.io/tiledev/tile-generator.html#how-to).
 
-The on-demand broker requires on-demand tiles to be configured with some information 
-that is not accessible to operators.
+1. Add accessors to the tile metadata file, named `tile.yml` if you used the Tile Generator.
+For a list of accessors you must add, see [Add Accessors to the Tile Metadata File](#accessors) below.
+
+## <a id="accessors"></a>Add Accessors to the Tile Metadata File
+
+The on-demand broker requires tiles to be configured with some information that 
+is not accessible to operators.
 This configuration information must be supplied using tile accessors.
 
 You must add the following accessors to your on-demand tile:
 
 <p class="note"><strong>Note</strong>: The accessors in this section are mandatory.
   For other accessors, see 
-  <a href="https://docs.pivotal.io/tiledev/2-2/product-template-reference.html#ops-man-snippets">
+  <a href="https://docs.pivotal.io/tiledev/product-template-reference.html#ops-man-snippets">
     Ops Manager Provided Snippets</a>.</p>
 
-#### director
+### director
 
 Ops Manager uses these accessors to get values relating to the BOSH Director installation.
 For the on-demand broker to interact with BOSH Director, on-demand service tiles 
@@ -116,7 +118,7 @@ bosh:
 To see this example in context, see the 
 [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L104-L106).
 
-#### self
+### self
 
 Ops Manager uses these accessors to get values that have been assigned to the tile after installation.
 To enable `$self` accessors, set `service_broker: true` at the top level of your
@@ -152,7 +154,7 @@ bosh:
 To see this example in context, see the 
 [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L107-L111).
 
-#### (Optional) cf
+### (Optional) cf
 
 Ops Manager uses these accessors to get values from the PAS (or Elastic Runtime) tile.
 If you want to use Pivotal Application Service (PAS) or Elastic Runtime, add 
@@ -184,82 +186,100 @@ cf:
 To see this example in context, see the
 [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L103-L119).
 
-## <a id="public-ip"></a>Public IP Address for On-Demand Service Instance Groups
+## <a id="public-ip"></a>Allow Public IP Addresses for On-Demand Service Instance Groups
 
 Ops Manager v1.9 and later provides a VM extension called `public_ip` in the BOSH Director's cloud config.
-This can be used in the on-demand service broker's manifest to give instance groups a public IP address. This IP is only used for outgoing traffic to the internet from VMs with the `public_ip` extension. All internal traffic / incoming connections need to go over the private IP.
+This can be used in the on-demand service broker's manifest to give instance groups a public IP address. 
+This IP is only used for outgoing traffic to the internet from VMs with the `public_ip` extension. 
+All internal traffic / incoming connections need to go over the private IP.
 
-Here is an example showing how to allow operators to assign a public IP address to an on-demand service instance group in the tile handcraft:
+To allow operators to a assign public IP address to an on-demand service instance group,
+do the following:
 
-```
-form_types:
-- name: example_form
-  property_inputs:
-  - reference: .broker.example_vm_extensions
-    label: VM options
-    description: List of VM options for Service Instances
+1. Update the tile handcraft file to include the following:
 
-job_types:
-- name: broker
-  templates:
-  - name: broker
-    release: on-demand-service-broker
-    manifest: |
-      service_catalog:
-        plans:
-        - name: example-plan
-          instance_groups:
-          - name: example-instance-group
-            vm_extensions: (( .broker.example_vm_extensions.value ))
-  property_blueprints:
-  - name: example_vm_extensions
-    type: multi_select_options
-    configurable: true
-    optional: true
-    options:
-    - name: "public_ip"
-      label: "Internet Connected VMs (on supported IaaS providers)"
-```
+    ```
+    form_types:
+    - name: example_form
+      property_inputs:
+      - reference: .broker.example_vm_extensions
+        label: VM options
+        description: List of VM options for Service Instances
 
-## <a id="floating-stemcell"></a>Floating Stemcells
+    job_types:
+    - name: broker
+      templates:
+      - name: broker
+        release: on-demand-service-broker
+        manifest: |
+          service_catalog:
+            plans:
+            - name: example-plan
+              instance_groups:
+              - name: example-instance-group
+                vm_extensions: (( .broker.example_vm_extensions.value ))
+      property_blueprints:
+      - name: example_vm_extensions
+        type: multi_select_options
+        configurable: true
+        optional: true
+        options:
+        - name: "public_ip"
+          label: "Internet Connected VMs (on supported IaaS providers)"
+    ```
 
-Ops Manager provides a feature called [Floating Stemcells](https://docs.pivotal.io/pivotalcf/1-9/customizing/understanding-stemcells.html) that allows PCF to quickly propagate a patched stemcell to all VMs in the deployment that have the same compatible stemcell. Both the broker deployment and the service instances deployed by the On-Demand Broker can make use of this feature. Enabling this feature can help ensure that all of your service instances are patched to the latest stemcell.
+## <a id="floating-stemcell"></a>Enable Floating Stemcells
 
-For the service instances to be installed automatically with the latest stemcell,
-you need to make sure the `upgrade-all-service-instances` errand is ticked.
+Ops Manager provides a feature called [Floating 
+Stemcells](https://docs.pivotal.io/pivotalcf/1-9/customizing/understanding-stemcells.html) 
+that allows PCF to quickly propagate a patched stemcell to all VMs in the deployment 
+that have the same compatible stemcell. 
+Both the broker deployment and the service instances deployed by the On-Demand 
+Broker can make use of this feature. 
+Enabling this feature can help ensure that all of your service instances are patched to the latest stemcell.
 
-Here is an example of how to implement floating stemcells in `handcraft.yml`:
+For the service instances to be installed with the latest stemcell automatically,
+ensure that the `upgrade-all-service-instances` errand is ticked.
 
-```
-job_types:
-  templates:
-  - name: broker
-    manifest: |
-      service_deployment:
-        releases:
-        - name: release-name
-          version: 1.0.0
-          jobs: [job_server]
-        stemcell:
-          os: ubuntu-trusty
-          version: (( $self.stemcell_version ))
-```
+To enable floating stemcells for your tile, do the following:
 
-Here is an example of how to configure the `stemcell_criteria` in `binaries.yml`:
+1. Implement floating stemcells in `handcraft.yml`.
+<br><br>
+For example:
 
-```
----
-name: example-on-demand-service
-product_version: 1.0.0
-stemcell_criteria:
-  os: ubuntu-trusty
-  version: '3312'
-  enable_patch_security_updates: true
-```
+    ```
+    job_types:
+      templates:
+      - name: broker
+        manifest: |
+          service_deployment:
+            releases:
+            - name: release-name
+              version: 1.0.0
+              jobs: [job_server]
+            stemcell:
+              os: ubuntu-trusty
+              version: (( $self.stemcell_version ))
+    ```
 
-<p class="note"><strong>Note</strong>: Configuring this value to <code>false</code> disables this feature.</p>
+1. Configure the `stemcell_criteria` in `binaries.yml`.
+<br><br>
+For example:
 
-## <a id="errands"></a>On-Demand Broker Errands
+    ```
+    ---
+    name: example-on-demand-service
+    product_version: 1.0.0
+    stemcell_criteria:
+      os: ubuntu-trusty
+      version: '3312'
+      enable_patch_security_updates: true
+    ```
+
+    <p class="note"><strong>Note</strong>: 
+      Configuring this value to <code>false</code> disables this feature.</p>
+
+## <a id="errands"></a>Add On-Demand Broker Lifecycle Errands
 
 In the reference [Kafka tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile)
 we have demonstrated how the errands in the on-demand broker release can be used.
@@ -295,12 +315,19 @@ shows how to create a tab with fields to configure the parameters for this erran
 The example tile has constraints to ensure the number of simultaneous
 upgrades is greater than one and the number of canaries is greater than zero.
 
-## <a id="secure-creds"></a>Secure Binding Credentials
+## <a id="secure-creds"></a>Allow Secure Binding
 
 Runtime CredHub can securely store service instance credentials.
-To include this feature in your tile, make some changes to the tile metadata, as described below:
+If secure binding is enabled, secure references to service credentials are passed 
+through the network to the application container when users create bindings or service keys.
 
-1. Add `secure_binding_credentials` to the top-level properties block in the on-demand broker manifest. For example:
+<p class="note"><strong>Note:</strong>
+  To use the secure binding credentials feature you must use PCF 2.0 or later.</p>
+
+To include the option to enable secure binding, update the tile metadata file as follows:
+
+1. Add `secure_binding_credentials` to the top-level properties block in the on-demand broker manifest. 
+For example:
 
     ```yaml
     secure_binding_credentials:
@@ -312,17 +339,25 @@ To include this feature in your tile, make some changes to the tile metadata, as
           ca_cert: UAA_CA_CERT
     ```
 
-2. To let users enable and disable this feature in the Ops Manager UI, you need to make some changes to your tile's metadata file:
-  1. Add a form field to allow the user to enable/disable secure bindings
-  ([example](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L39-L46)).
-  1. Add an element in `property_blueprints` that reads the setting in the form
-  field and exposes the appropriate manifest snippet for CredHub and secure binding
-  ([example](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L606-L632)).
-  1. Change the `broker` job so that it consumes the CredHub BOSH link from the
-  above manifest snippet
-  ([example](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L96)).
-  1. Change the `broker` job so that it consumes the generated secure bindings
-  manifest snippet
-  ([example](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L112)).
+1. To let users enable and disable this feature in the Ops Manager UI, you need 
+to make some changes to your tile's metadata file:
 
-<p class="note">To use the secure binding credentials feature you must use Pivotal Cloud Foundry (PCF) 2.0 or later.</p>
+  1. Add a form field to allow the user to enable/disable secure bindings.  
+  For an example form field, see the
+  [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L39-L46).
+  <br><br>
+  1. Add an element in `property_blueprints` that reads the setting in the form
+  field and exposes the appropriate manifest snippet for CredHub and secure binding.  
+  For an example `property_blueprints` section, see the
+  [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L606-L632).
+  <br><br>
+  1. Change the broker job so that it consumes the CredHub BOSH link from the
+  `property_blueprints` section.  
+  For an example broker job, see the
+  [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L96).
+  <br><br>
+  1. Change the broker job so that it consumes the generated secure bindings
+  manifest snippet.  
+  For an example broker job, see the
+  [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L112).
+
