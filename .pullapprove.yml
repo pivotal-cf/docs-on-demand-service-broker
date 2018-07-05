@@ -9,6 +9,5 @@ groups:
     reset_on_push:
       enabled: false
     users:
-    - avade
     - deniseyu
-    - mattmcneeney
+    - ruthmaclean
