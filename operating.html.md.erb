@@ -847,7 +847,7 @@ To enable lifecycle errands, do the following.
           version: SERVICE-RELEASE-VERSION
           jobs:
           - SERVICE-RELEASE-JOB
-          - POST-DEPLOY-ERRAND-JOB                   # (1)
+          - POST-DEPLOY-ERRAND-JOB                    # (1)
           - PRE-DELETE-ERRAND-JOB
           - ANOTHER-POST-DEPLOY-ERRAND-JOB
     service_catalog:
@@ -857,6 +857,7 @@ To enable lifecycle errands, do the following.
               post_deploy:
               - name: POST-DEPLOY-ERRAND-JOB          # (2)
               - name: ANOTHER-POST-DEPLOY-ERRAND-JOB
+                disabled: true                        # defaults to false
               pre_delete:
               - name: PRE-DELETE-ERRAND-JOB
             instance_groups:
@@ -881,8 +882,6 @@ To enable lifecycle errands, do the following.
                 networks: [NETWORK]
                 azs: [AZ]
     ```
-
-
 
 ### <a id="colocated-errands"></a> (Optional) Enable Colocated Errands
 
