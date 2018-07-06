@@ -482,6 +482,45 @@ service_catalog:
           instances: [INSTANCE-NAME] #optional, for co-locating errand
         pre_delete: ERRAND-NAME #optional
 ```
+## <a id="secure-bind-credentials"></a>Accessing Manifest Secrets at Bind Time
+
+A service adapter may need to access secrets embedded in a service instance
+manifest when processing a create binding request. For example, it might need
+credentials with sufficient privileges to add new user to a service and these
+credentials will have been set up in the service instance manifest. ODB will
+pass this manifest to the adapter in the `create-binding` call, but if best
+practice has been followed, the secrets will be represented by BOSH variables
+or literal CredHub references, and so the actual secrets themselves will not be
+present in the manifest.
+
+When the `resolve_manifest_secrets_at_bind` flag is set to true in the ODB
+manifest, ODB will generate a map of manifest variable names and CredHub
+references to secret values for all secrets in the manifest, by querying BOSH
+and its CredHub instance, and will pass this to the adapter `create-binding`
+call.
+
+When `resolve_manifest_secrets_at_bind` is enabled, details for accessing BOSH
+CredHub must also be supplied in then manifest, as shown below:
+
+```
+instance_groups:
+- name: broker
+  ...
+  jobs:
+  - name: broker
+    ...
+    properties:
+      ...
+      resolve_manifest_secrets_at_bind: true
+      bosh_credhub_api:
+        url: https://BOSH-CREDHUB-ADDRESS:8844/
+        root_ca_cert: BOSH-CREDHUB-CA-CERT
+        authentication:
+          uaa:
+            client_credentials:
+              client_id: BOSH-CREDHUB-CLIENT-ID
+              client_secret: BOSH-CREDHUB-CLIENT-SECRET
+```
 
 ## <a id="secure-binding"></a>(Optional) Enable Secure Binding
 
