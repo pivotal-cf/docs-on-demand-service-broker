@@ -566,7 +566,7 @@ For example:
     ```        
 
 1. Update the broker job in the ODB manifest to include the `secure_binding_credentials` section. 
-The CA certificate can be or a reference to the certificate in the cf deployment 
+The CA certificate can be a reference to the certificate in the cf deployment 
 or inserted manually. For example:
     
     ```
@@ -587,7 +587,7 @@ or inserted manually. For example:
                 ca_cert: ((cf.uaa.ca_cert))
       ```
   Where `NEW-CREDHUB-CLIENT-ID` and `NEW-CREDHUB-CLIENT-SECRET` are the CredHub client 
-  credentials you created in step one.   
+  credentials you created in step 1.   
 
 1. If you use Consul as a DNS provider, you might want to consume Consul links to 
 enable DNS. To do this, add the `consul_agent` job to the manifest as follows:
