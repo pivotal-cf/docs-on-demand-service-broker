@@ -228,10 +228,10 @@ For more details on securing how ODB uses BOSH, see [Security](./security.html).
 ODB uses the Cloud Controller as a source of truth about service offerings, plans, and instances. 
 
 To reach the Cloud Controller, configure ODB with either client or user credentials 
-in the broker manifest. 
+in the broker manifest. For more information, see [Write a Broker Manifest](#broker-manifest) below.
 
 
-See the following for the client credentials broker manifest snippet:
+The following is an example broker manifest snippet for the client credentials:
 
 ```
 authentication:
@@ -241,7 +241,7 @@ authentication:
     secret: UAA-CLIENT-SECRET
 ```
 
-See the following for the user credentials broker manifest snippet:
+The following is an example broker manifest snippet for the user credentials:
 
 ```
 authentication:
@@ -251,7 +251,6 @@ authentication:
     password: CF-ADMIN-PASSWORD
 ```
 
-For information, see [Write a Broker Manifest](#broker-manifest) below.
 
 <div class="note">
   <p style="margin-top: 0"><strong>Note: </strong> The client or user must have the following permissions.</p>
@@ -266,11 +265,28 @@ For information, see [Write a Broker Manifest](#broker-manifest) below.
 
 ## <a id="upload-releases"></a>Upload Required Releases
 
-Upload the following releases to the BOSH Director:
+Upload the following releases to your BOSH Director:
 
-* On-demand-service-broker
-* Your service adapter
-* Your service releases
+* **On Demand Service Broker (ODB)**---Download ODB from [Pivotal Network](https://network.pivotal.io/products/on-demand-services-sdk/). 
+* **Your service adapter**---Get the service adapter from the release author.
+* **Your service release**---Get the service release from the release author.
+
+To upload a release to your BOSH Director, do the following:
+
+1. Run the following command.
+
+    `bosh2 -e BOSH-DIRECTOR-NAME upload-release RELEASE-FILE-NAME.tgz`<br><br>
+
+    **Example command for ODB:**
+
+    <pre class="terminal">
+    $ bosh2 -e lite upload-release on-demand-service-broker-VERSION-NUMBER.tgz
+    </pre>
+
+    <br>**Example command for service adapter or service release:**
+    <pre class="terminal">
+    $ bosh2 -e lite upload-release ADAPTER-OR-RELEASE-FILENAME.tgz
+    </pre>
 
 ## <a id="broker-manifest"></a>Write a Broker Manifest
 
