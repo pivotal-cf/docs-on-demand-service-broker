@@ -283,9 +283,13 @@ To upload a release to your BOSH Director, do the following:
     $ bosh2 -e lite upload-release on-demand-service-broker-0.22.0.tgz
     </pre>
 
-    <br>**Example command for service adapter or service release:**
+    <br>**Example commands for service adapter or service release:**
     <pre class="terminal">
-    $ bosh2 -e lite upload-release ADAPTER-OR-RELEASE-FILENAME.tgz
+    $ bosh2 -e lite upload-release my-service-release.tgz
+    </pre>
+
+    <pre class="terminal">
+    $ bosh2 -e lite upload-release my-service-adapter.tgz
     </pre>
 
 ## <a id="broker-manifest"></a>Write a Broker Manifest
