@@ -18,59 +18,6 @@ So when using the ODB in a tile, you need at least two private networks:
 
 The network for service instances should be flagged as a Service Network in Ops Manager.
 
-## <a id="deploying"></a>Deploy Ops Manager to AWS
-
-1. Follow the default Ops Manager deployment 
-[documentation](https://docs.pivotal.io/pivotalcf/customizing/cloudform-template.html), 
-but with these modifications:
-  
-  1. Create a self-signed wildcard SSL certificate for a domain you control.
-     This is usually `*.SOME-SUBDOMAIN.cf-app.com`.
-     Upload the certificate (along with the associated private key) to AWS. 
-     For details, see [SSL/TLS Certificates for Classic Load 
-     Balancers](https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/ssl-server-cert.html#create-cert).
-  
-  1. Download the CloudFormation JSON and save it in the Ops Manager directory.
-  
-  1. Run the CloudFormation stack. Save any pertinent inputs (e.g BOSH DB credentials) 
-  you type into the web console 
-  in the Ops Manager directory for safe keeping (for example, in `info.txt`).
-  
-  1. Launch an instance of the AMI. 
-  If possible, use an elastic IP so that you can always keep the same DNS record
-  even if you recreate the VM. Failing that, auto-assign a public IP.
-  
-  1. Create a DNS record for `pcf.WILDCARD-CERTIFICATE-DOMAIN`. 
-  To use the earlier example, the record will be for `pcf.some-subdomain.cf-app.com`. 
-  It should point to the public IP of the Ops Manager VM.
-
-1. Continue following the docs to log in to Ops Manager. Save the login credentials.
-
-1. Configure the BOSH Director tile.
-
-1. Click **Apply Changes**, and record the BOSH init manifest for future reference. 
-   For example, copy the manifest to your local machine, with the following command:
-
-    ```
-    scp -i PRIVATE-KEY.pem ubuntu@OPSMAN-IP:/var/tempest/workspaces/default/deployments/bosh.yml bosh.yml
-    ```
-
-<p class="note"><strong>Note</strong>: 
-  The ELBs created by CloudFormation are both for CF, not Ops Manager. 
-  One of them will be configured with your wildcard certificate. 
-  This takes the place of HAProxy in AWS PCF deployments, 
-  and is therefore not used until you deploy the ERT tile.</p>
-
-###<a id="target_bosh"></a>Target the BOSH Director
-
-To target the BOSH Director from the Ops Manager VM, use a command like the following:
-
-<pre class="terminal">
-  $ bosh2 --ca-cert /var/tempest/workspaces/default/root_ca_certificate -e 10.0.16.10 alias-env om-director
-</pre>
-
-Thereafter, use `bosh2 -e om-director` to make requests to the BOSH Director.
-
 ## <a id="building"></a>Build a Tile for an On-Demand Service
 
 To build a tile for an on-demand service, do the following:
