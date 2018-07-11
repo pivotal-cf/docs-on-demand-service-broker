@@ -4,8 +4,8 @@ owner: London Services Enablement
 ---
 
 This topic describes how to build an on-demand service tile using the Tile Generator.
-For a reference tile, see [Kafka 
-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/tree/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f).
+For an example tile, see the [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/tree/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f)
+in GitHub.
 
 ## <a id="requirements"></a>Requirements
 
@@ -18,7 +18,7 @@ Network](https://network.pivotal.io/products/on-demand-services-sdk/).
 
 ## <a id="requirements"></a> About Networks
 
-When using the ODB in a tile for Ops Manager v2.0 and earlier, you need at least 
+When using the ODB in a tile with Ops Manager v2.0 and earlier, you need at least 
 two private networks:
 
 - A network where Ops Manager deploys the on-demand broker VM
@@ -31,8 +31,8 @@ However, Pivotal recommends that you have at least two networks as described abo
 
 ## <a id="building"></a>Build a Tile for an On-Demand Service
 
-There are several methods you can use to build a tile. 
-One of these methods is to use the Tile Generator. 
+There are several methods you can use to build a tile.
+This topic describes how to build a tile using the Tile Generator.
 
 To use the Tile Generator to build a tile for an on-demand service, do the following:
 
@@ -59,11 +59,11 @@ For more information about what to add to the `tile.yml`, see the following sect
 
 ### <a id="accessors"></a>Add Accessors
 
-The on-demand broker requires tiles to be configured with certain information. 
-Some of this information is not accessible to operators, therefore it must be 
-supplied using tile accessors.
+The ODB requires tiles to be configured with certain information. 
+You must add accessors to the `tile.yml` file to provide values that operators 
+cannot configure in Ops Manager.
 
-You must add the following accessors to your `tile.yml` file:
+Add the following accessors to your `tile.yml` file:
 
 <p class="note"><strong>Note</strong>: The accessors in this section are mandatory.
   For other accessors, see 
@@ -164,7 +164,7 @@ To see this example in context, see the
 
 ### <a id="errands"></a>Add On-Demand Broker Lifecycle Errands
 
-In the reference [Kafka tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile)
+In the reference [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/tree/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f)
 we have demonstrated how the errands in the on-demand broker release can be used.
 
 Pivotal recommends you add the errands below to your tile.
@@ -193,18 +193,19 @@ parameters:
 For more information about these parameters, see
 [Upgrade All Service Instances](upgrades.html#upgrade-all-instances).
 
-The example [Kafka
-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile)
+The example [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/tree/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f)
 shows how to create a tab with fields to configure the parameters for this errand.
 The example tile has constraints to ensure the number of simultaneous
 upgrades is greater than one and the number of canaries is greater than zero.
 
 ### <a id="public-ip"></a>(Optional) Allow Public IP Addresses for On-Demand Service Instance Groups
 
-If you want service instances to communicate with addresses outside the network, you can use
-a VM extension called `public_ip` in the BOSH Director's cloud config.
-This gives instance groups a public IP address. 
-This IP is only used for outgoing traffic to the internet from VMs with the `public_ip` extension. 
+Ops Manager provides a VM extension called `public_ip` in the BOSH Director’s 
+cloud config.
+Use this feature to give Ops Manager operators the option to assign a public IP 
+address to instance groups.
+This IP is only used for outgoing traffic to the internet from VMs with the 
+`public_ip` extension.
 All internal traffic / incoming connections need to go over the private IP.
 
 To allow operators to a assign public IP addresses to on-demand service instance groups,
@@ -249,12 +250,13 @@ update your `tile.yml` file as follows:
 ### <a id="floating-stemcell"></a>(Optional) Enable Floating Stemcells
 
 Ops Manager provides a feature called [Floating 
-Stemcells](https://docs.pivotal.io/pivotalcf/1-9/customizing/understanding-stemcells.html) 
+Stemcells](https://docs.pivotal.io/pivotalcf/customizing/understanding-stemcells.html) 
 that allows PCF to quickly propagate a patched stemcell to all VMs in the deployment 
 that have the same compatible stemcell. 
 Both the broker deployment and the service instances deployed by the On-Demand 
 Broker can make use of this feature. 
-Enabling this feature can help ensure that all of your service instances are patched to the latest stemcell.
+Enabling this feature can help ensure that all of your service instances are patched
+to the latest stemcell.
 
 For the service instances to be installed with the latest stemcell automatically,
 ensure that the `upgrade-all-service-instances` errand is ticked.
@@ -298,9 +300,11 @@ For example:
 
 ### <a id="secure-creds"></a>(Optional) Allow Secure Binding
 
-Runtime CredHub can securely store service instance credentials.
-If secure binding is enabled, secure references to service credentials are passed 
-through the network to the application container when users create bindings or service keys.
+You can give Ops Manager operators the option to enable secure binding.
+If secure binding is enabled, service instance credentials are stored securely in 
+runtime CredHub.
+When users create bindings or service keys, ODB passes a secure reference to the 
+service credentials through the network instead of plain text.
 
 <p class="note"><strong>Note:</strong>
   To use the secure binding credentials feature you must use PCF 2.0 or later.</p>
