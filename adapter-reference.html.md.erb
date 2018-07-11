@@ -594,7 +594,8 @@ a JSON document using stdin.
     "bosh_vms": "BOSH-VMS-JSON",
     "manifest": "MANIFEST-YAML",
     "request_parameters": "REQUEST-PARAMETERS-JSON",
-    "secrets": "MANIFEST-SECRETS-JSON"
+    "secrets": "MANIFEST-SECRETS-JSON",
+    "dns_addresses": "DNS-ADDRESSES-JSON"
   }
 }
 ```
@@ -717,6 +718,38 @@ If `resolve_manifest_secrets_at_bind` is set to false in the broker, secrets wil
 <p class="note"><strong>Note</strong>: We recommend adapter authors to
 find the secrets key by accessing the manifest field that contains the reference
 to the variable.</p>
+
+**<a id="create-binding-dns-addresses"></a>DNS-ADDRESSES-JSON**
+
+When a broker is deployed with `binding_with_dns` set for a plan, the
+On-Demand-Broker will retrieve DNS addresses from BOSH prior to calling the
+adapter.  This argument is a map of the names given in the `binding_with_dns`
+properties to their BOSH DNS addresses.
+
+For example, a plan with the following `binding_with_dns` configuration in the
+broker manifest:
+
+```yaml
+plans:
+  ...
+  - name: example-plan
+    binding_with_dns:
+    - name: leader-address
+      link_provider: example-link-1
+      instance_group: leader-node
+    - name: follower-address
+      link_provider: example-link-2
+      instance_group: follower-node
+```
+
+will produce the following in DNS-ADDRESSES-JSON:
+
+```json
+{
+  "leader-address": "q-s0.leader-node.default.service-instance_c1371314-643f-48b7-b80a-6741e7377022.bosh",
+  "follower-address": "q-s0.follower-node.default.service-instance_c1371314-643f-48b7-b80a-6741e7377022.bosh"
+}
+```
 
 #### <a id="create-binding-credentials"></a>Credentials for Bindings
 
