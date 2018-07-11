@@ -25,7 +25,7 @@ two private networks:
 - A different network where the on-demand broker deploys service instance VMs
 
 The network for service instances should be flagged as a Service Network in Ops Manager.
- <p class="note"><strong>Note: </strong>For Ops Manager 2.1 and later, you do not need separate networks for the on-demand broker 
+ <p class="note"><strong>Note: </strong>For Ops Manager v2.1 and later, you do not need separate networks for the on-demand broker 
 and service instances. 
 However, Pivotal recommends that you have at least two networks as described above.
 
@@ -36,11 +36,11 @@ This topic describes how to build a tile using the Tile Generator.
 
 To use the Tile Generator to build a tile for an on-demand service, do the following:
 
-1. Generate a `tile.yml` file by doing steps one to four of [How to 
+1. Generate a `tile.yml` file by doing steps 1–4 of [How to 
 Use](http://docs.pivotal.io/tiledev/tile-generator.html#how-to).
 
 1. Add accessors, on-demand broker lifecycle errands, and optional features to the
-`tile.yml` file generated in step one.
+`tile.yml` file generated in step 1.
 This provides configuration for the ODB and additional configuration options for operators 
 to select in Ops Manager.
 <br><br>
@@ -83,7 +83,7 @@ The following table lists the accessors you must add:
 | $director.hostname        | The director's hostname or IP address                                                                                                      |
 | $director.ca\_public\_key | The director's root ca certificate. Related: [Configure SSL Certificates](operating.html#ssl-certs). |
 
-For example
+For example:
 
 ```yaml
 bosh:
@@ -101,14 +101,14 @@ To enable `$self` accessors, set `service_broker: true` at the top level of your
 `tile.yml` file.
 
 <p class="note"><strong>Note</strong>: Setting <code>service_broker: true</code>
-  will cause the BOSH Director to redeploy when installing or uninstalling the tile.</p>
+  causes the BOSH Director to redeploy when installing or uninstalling the tile.</p>
 
 The following table lists the accessors you must add:
 
 | Accessor                  | Description                                                     |
 |:--------------------------|:----------------------------------------------------------------|
-| $self.uaa\_client_name    | UAA client name, that can authenticate with the BOSH Director   |
-| $self.uaa\_client\_secret | UAA client secret, that can authenticate with the BOSH Director |
+| $self.uaa\_client_name    | UAA client name that can authenticate with the BOSH Director   |
+| $self.uaa\_client\_secret | UAA client secret that can authenticate with the BOSH Director |
 | $self.stemcell\_version   | The stemcell that the service deployment uses                   |
 | $self.service\_network    | Service network configured for the on-demand instances          |
 
@@ -116,7 +116,7 @@ The service network has to be created manually.
 Create a subnet on AWS and then add it to the director. 
 In the BOSH Director tile, under Create Networks > ADD network > fill in the subnet/vpc details.
 
-For example
+For example:
 
 ```yaml
 bosh:
@@ -132,9 +132,9 @@ To see this example in context, see the
 
 #### (Optional) cf
 
-Ops Manager uses these accessors to get values from the PAS (or Elastic Runtime) tile.
-If you want to use Pivotal Application Service (PAS) or Elastic Runtime, add 
-these accessors to your `tile.yml` file.
+Ops Manager uses these accessors to get values from the Pivotal Application Service (PAS)
+or Elastic Runtime tile.
+If you want to use PAS or Elastic Runtime, add these accessors to your `tile.yml` file.
 
 The following table lists the accessors you must add to use PAS (or Elastic Runtime):
 
@@ -146,7 +146,7 @@ The following table lists the accessors you must add to use PAS (or Elastic Runt
 | ..cf.uaa.system\_services\_credentials.identity | Username of a CF user in the cloud\_controller.admin group, to be used by services |
 | ..cf.uaa.system\_services\_credentials.password | Password of a CF user in the cloud\_controller.admin group, to be used by services |
 
-For example
+For example:
 
 ```yaml
 disable_ssl_cert_verification: (( ..cf.ha_proxy.skip_cert_verify.value ))
@@ -164,10 +164,10 @@ To see this example in context, see the
 
 ### <a id="errands"></a>Add On-Demand Broker Lifecycle Errands
 
-In the reference [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/tree/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f)
-we have demonstrated how the errands in the on-demand broker release can be used.
+The [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/tree/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f)
+example shows how the errands in the on-demand broker release can be used.
 
-Pivotal recommends you add the errands below to your tile.
+Pivotal recommends that you add the errands below to your tile.
 The errands should be specified in the following order:
 
 Post-deploy:
@@ -259,7 +259,7 @@ Enabling this feature can help ensure that all of your service instances are pat
 to the latest stemcell.
 
 For the service instances to be installed with the latest stemcell automatically,
-ensure that the `upgrade-all-service-instances` errand is ticked.
+ensure that the `upgrade-all-service-instances` errand is selected.
 
 To enable floating stemcells for your tile, update your `tile.yml` file as follows:
 
@@ -307,7 +307,7 @@ When users create bindings or service keys, ODB passes a secure reference to the
 service credentials through the network instead of plain text.
 
 <p class="note"><strong>Note:</strong>
-  To use the secure binding credentials feature you must use PCF 2.0 or later.</p>
+  To use the secure binding credentials feature you must use PCF v2.0 or later.</p>
 
 To include the option to enable secure binding, update your `tile.yml` file as follows:
 
