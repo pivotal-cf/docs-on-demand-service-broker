@@ -3,45 +3,74 @@ title: Creating an On-Demand Service Tile
 owner: London Services Enablement
 ---
 
-This documents the process for deploying an on-demand broker (ODB) with a service 
-in a single tile, on a AWS installation of Ops Manager v1.8. 
-Pivotal has built a reference [Kafka 
-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile).
+This topic describes how to build an on-demand service tile using the Tile Generator.
+For a reference tile, see [Kafka 
+tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/tree/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f).
 
 ## <a id="requirements"></a>Requirements
 
-Before the ODB, Ops Manager controlled the IP allocation of the private networks.
-So when using the ODB in a tile, you need at least two private networks:
+To build an on-demand tile you need the following releases:
 
-- A network where Ops Manager will deploy the on-demand broker VM
-- A different network where the on-demand broker will deploy service instance VMs
+- On Demand Service Broker (ODB)---Download ODB from [Pivotal 
+Network](https://network.pivotal.io/products/on-demand-services-sdk/).
+- Your service adapter---Get the service adapter from the release author.
+- Your service release--Get the service release from the release author.
+
+## <a id="requirements"></a> About Networks
+
+When using the ODB in a tile for Ops Manager v2.0 and earlier, you need at least 
+two private networks:
+
+- A network where Ops Manager deploys the on-demand broker VM
+- A different network where the on-demand broker deploys service instance VMs
 
 The network for service instances should be flagged as a Service Network in Ops Manager.
+ <p class="note"><strong>Note: </strong>For Ops Manager 2.1 and later, you do not need separate networks for the on-demand broker 
+and service instances. 
+However, Pivotal recommends that you have at least two networks as described above.
 
 ## <a id="building"></a>Build a Tile for an On-Demand Service
 
-To build a tile for an on-demand service, do the following:
+There are several methods you can use to build a tile. 
+One of these methods is to use the Tile Generator. 
 
-1. Use the Tile Generator to to build your tile.
-For instructions, see [How to Use](http://docs.pivotal.io/tiledev/tile-generator.html#how-to).
+To use the Tile Generator to build a tile for an on-demand service, do the following:
 
-1. Add accessors to the tile metadata file, named `tile.yml` if you used the Tile Generator.
-For a list of accessors you must add, see [Add Accessors to the Tile Metadata File](#accessors) below.
+1. Generate a `tile.yml` file by doing steps one to four of [How to 
+Use](http://docs.pivotal.io/tiledev/tile-generator.html#how-to).
 
-## <a id="accessors"></a>Add Accessors to the Tile Metadata File
+1. Add accessors, on-demand broker lifecycle errands, and optional features to the
+`tile.yml` file generated in step one.
+This provides configuration for the ODB and additional configuration options for operators 
+to select in Ops Manager.
+<br><br>
+For more information about what to add to the `tile.yml`, see the following sections below:
+  - [Add Accessors](#accessors)
+  - [Add On-Demand Broker Lifecycle Errands](#errands)
+  - [(Optional) Allow Public IP Addresses for On-Demand Service Instance Groups](#public-ip)
+  - [(Optional) Enable Floating Stemcells](#floating-stemcell)
+  - [(Optional) Allow Secure Binding](#secure-creds)
 
-The on-demand broker requires tiles to be configured with some information that 
-is not accessible to operators.
-This configuration information must be supplied using tile accessors.
+1. Build your tile by running the following command:
 
-You must add the following accessors to your on-demand tile:
+    ```
+    tile build
+    ```
+
+### <a id="accessors"></a>Add Accessors
+
+The on-demand broker requires tiles to be configured with certain information. 
+Some of this information is not accessible to operators, therefore it must be 
+supplied using tile accessors.
+
+You must add the following accessors to your `tile.yml` file:
 
 <p class="note"><strong>Note</strong>: The accessors in this section are mandatory.
   For other accessors, see 
   <a href="https://docs.pivotal.io/tiledev/product-template-reference.html#ops-man-snippets">
     Ops Manager Provided Snippets</a>.</p>
 
-### director
+#### director
 
 Ops Manager uses these accessors to get values relating to the BOSH Director installation.
 For the on-demand broker to interact with BOSH Director, on-demand service tiles 
@@ -65,11 +94,11 @@ bosh:
 To see this example in context, see the 
 [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L104-L106).
 
-### self
+#### self
 
 Ops Manager uses these accessors to get values that have been assigned to the tile after installation.
 To enable `$self` accessors, set `service_broker: true` at the top level of your
-tile metadata file.
+`tile.yml` file.
 
 <p class="note"><strong>Note</strong>: Setting <code>service_broker: true</code>
   will cause the BOSH Director to redeploy when installing or uninstalling the tile.</p>
@@ -101,11 +130,11 @@ bosh:
 To see this example in context, see the 
 [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L107-L111).
 
-### (Optional) cf
+#### (Optional) cf
 
 Ops Manager uses these accessors to get values from the PAS (or Elastic Runtime) tile.
 If you want to use Pivotal Application Service (PAS) or Elastic Runtime, add 
-these accessors to your tile metadata file.
+these accessors to your `tile.yml` file.
 
 The following table lists the accessors you must add to use PAS (or Elastic Runtime):
 
@@ -133,105 +162,13 @@ cf:
 To see this example in context, see the
 [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L103-L119).
 
-## <a id="public-ip"></a>Allow Public IP Addresses for On-Demand Service Instance Groups
-
-Ops Manager v1.9 and later provides a VM extension called `public_ip` in the BOSH Director's cloud config.
-This can be used in the on-demand service broker's manifest to give instance groups a public IP address. 
-This IP is only used for outgoing traffic to the internet from VMs with the `public_ip` extension. 
-All internal traffic / incoming connections need to go over the private IP.
-
-To allow operators to a assign public IP address to an on-demand service instance group,
-do the following:
-
-1. Update the tile handcraft file to include the following:
-
-    ```
-    form_types:
-    - name: example_form
-      property_inputs:
-      - reference: .broker.example_vm_extensions
-        label: VM options
-        description: List of VM options for Service Instances
-
-    job_types:
-    - name: broker
-      templates:
-      - name: broker
-        release: on-demand-service-broker
-        manifest: |
-          service_catalog:
-            plans:
-            - name: example-plan
-              instance_groups:
-              - name: example-instance-group
-                vm_extensions: (( .broker.example_vm_extensions.value ))
-      property_blueprints:
-      - name: example_vm_extensions
-        type: multi_select_options
-        configurable: true
-        optional: true
-        options:
-        - name: "public_ip"
-          label: "Internet Connected VMs (on supported IaaS providers)"
-    ```
-
-## <a id="floating-stemcell"></a>Enable Floating Stemcells
-
-Ops Manager provides a feature called [Floating 
-Stemcells](https://docs.pivotal.io/pivotalcf/1-9/customizing/understanding-stemcells.html) 
-that allows PCF to quickly propagate a patched stemcell to all VMs in the deployment 
-that have the same compatible stemcell. 
-Both the broker deployment and the service instances deployed by the On-Demand 
-Broker can make use of this feature. 
-Enabling this feature can help ensure that all of your service instances are patched to the latest stemcell.
-
-For the service instances to be installed with the latest stemcell automatically,
-ensure that the `upgrade-all-service-instances` errand is ticked.
-
-To enable floating stemcells for your tile, do the following:
-
-1. Implement floating stemcells in `handcraft.yml`.
-<br><br>
-For example:
-
-    ```
-    job_types:
-      templates:
-      - name: broker
-        manifest: |
-          service_deployment:
-            releases:
-            - name: release-name
-              version: 1.0.0
-              jobs: [job_server]
-            stemcell:
-              os: ubuntu-trusty
-              version: (( $self.stemcell_version ))
-    ```
-
-1. Configure the `stemcell_criteria` in `binaries.yml`.
-<br><br>
-For example:
-
-    ```
-    ---
-    name: example-on-demand-service
-    product_version: 1.0.0
-    stemcell_criteria:
-      os: ubuntu-trusty
-      version: '3312'
-      enable_patch_security_updates: true
-    ```
-
-    <p class="note"><strong>Note</strong>: 
-      Configuring this value to <code>false</code> disables this feature.</p>
-
-## <a id="errands"></a>Add On-Demand Broker Lifecycle Errands
+### <a id="errands"></a>Add On-Demand Broker Lifecycle Errands
 
 In the reference [Kafka tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile)
 we have demonstrated how the errands in the on-demand broker release can be used.
 
-The errands should be specified in the following order, as shown in the example Kafka tile:
+Pivotal recommends you add the errands below to your tile.
+The errands should be specified in the following order:
 
 Post-deploy:
 
@@ -244,7 +181,7 @@ Pre-delete:
 
 For more information about these errands, see [Broker and Service Management](./management.html).
 
-### Upgrade All Service Instances Errand
+#### Upgrade All Service Instances Errand
 
 The `upgrade-all-service-instances` errand can be configured with two
 parameters:
@@ -262,7 +199,104 @@ shows how to create a tab with fields to configure the parameters for this erran
 The example tile has constraints to ensure the number of simultaneous
 upgrades is greater than one and the number of canaries is greater than zero.
 
-## <a id="secure-creds"></a>Allow Secure Binding
+### <a id="public-ip"></a>(Optional) Allow Public IP Addresses for On-Demand Service Instance Groups
+
+If you want service instances to communicate with addresses outside the network, you can use
+a VM extension called `public_ip` in the BOSH Director's cloud config.
+This gives instance groups a public IP address. 
+This IP is only used for outgoing traffic to the internet from VMs with the `public_ip` extension. 
+All internal traffic / incoming connections need to go over the private IP.
+
+To allow operators to a assign public IP addresses to on-demand service instance groups,
+update your `tile.yml` file as follows:
+
+1. Add the following to the `form_types` section:
+
+      ```yaml
+      form_types:
+      - name: example_form
+        property_inputs:
+        - reference: .broker.example_vm_extensions
+          label: VM options
+          description: List of VM options for Service Instances
+      ```
+
+1.  Add the following to the `job_types` section:
+
+      ```yaml
+      job_types:
+      - name: broker
+        templates:
+        - name: broker
+          release: on-demand-service-broker
+          manifest: |
+            service_catalog:
+              plans:
+              - name: example-plan
+                instance_groups:
+                - name: example-instance-group
+                  vm_extensions: (( .broker.example_vm_extensions.value )) # add this line
+        property_blueprints:           # add this section
+        - name: example_vm_extensions
+          type: multi_select_options
+          configurable: true
+          optional: true
+          options:
+          - name: "public_ip"
+            label: "Internet Connected VMs (on supported IaaS providers)"
+      ```
+
+### <a id="floating-stemcell"></a>(Optional) Enable Floating Stemcells
+
+Ops Manager provides a feature called [Floating 
+Stemcells](https://docs.pivotal.io/pivotalcf/1-9/customizing/understanding-stemcells.html) 
+that allows PCF to quickly propagate a patched stemcell to all VMs in the deployment 
+that have the same compatible stemcell. 
+Both the broker deployment and the service instances deployed by the On-Demand 
+Broker can make use of this feature. 
+Enabling this feature can help ensure that all of your service instances are patched to the latest stemcell.
+
+For the service instances to be installed with the latest stemcell automatically,
+ensure that the `upgrade-all-service-instances` errand is ticked.
+
+To enable floating stemcells for your tile, update your `tile.yml` file as follows:
+
+1. Implement floating stemcells.
+<br><br>
+For example:
+
+    ```
+    job_types:
+      templates:
+      - name: broker
+        manifest: |
+          service_deployment:
+            releases:
+            - name: release-name
+              version: 1.0.0
+              jobs: [job_server]
+            stemcell:
+              os: ubuntu-trusty
+              version: (( $self.stemcell_version )) # Add this line
+    ```
+
+1. Configure the `stemcell_criteria`.
+<br><br>
+For example:
+
+    ```
+    ---
+    name: example-on-demand-service
+    product_version: 1.0.0
+    stemcell_criteria:
+      os: ubuntu-trusty
+      version: '3312'
+      enable_patch_security_updates: true  # Add this line
+    ```
+
+
+
+### <a id="secure-creds"></a>(Optional) Allow Secure Binding
 
 Runtime CredHub can securely store service instance credentials.
 If secure binding is enabled, secure references to service credentials are passed 
@@ -271,7 +305,7 @@ through the network to the application container when users create bindings or s
 <p class="note"><strong>Note:</strong>
   To use the secure binding credentials feature you must use PCF 2.0 or later.</p>
 
-To include the option to enable secure binding, update the tile metadata file as follows:
+To include the option to enable secure binding, update your `tile.yml` file as follows:
 
 1. Add `secure_binding_credentials` to the top-level properties block in the on-demand broker manifest. 
 For example:
