@@ -2,16 +2,13 @@
 title: On-Demand Services SDK Release Notes
 owner: London Services Enablement
 ---
+<strong><%= modified_date %></strong>
 
-## <a id="release-notes"></a>v0.21.2 Release Notes
+## <a id="release-notes"></a>v0.21.2
+
 **Release Date: May 14, 2018**
 
-### <a id="minimum-version-requirements"></a>Minimum Version Requirements
-
-- BOSH 257+ (261+ for lifecycle errands) / BOSH lite v9000.131.0
-- CF 238+
-
-### <a id="breaking-changes"></a>Breaking Changes
+### Breaking Changes
 
 - Plan-level `pre-delete` and `post-deploy` lifecycle errands value
   must be an array.
@@ -24,7 +21,7 @@ owner: London Services Enablement
     `Global instance limit exceeded for service ID: p.redis. Total instances: 100`
 
 
-### <a id="new-features"></a>New Features
+### New Features
 
 - Golang downgraded to 1.9.5
 - Adds support for defining multiple pre-delete and post-deploy lifecycle
@@ -54,7 +51,11 @@ owner: London Services Enablement
 <p class="note"><strong>Note</strong>: PCF 1.10 integration is no longer supported. </p>
 
 
-### <a id="known-issues"></a>Known Issues
+### Known Issues
 
 - None
 
+### Minimum Version Requirements
+
+- BOSH 257+ (261+ for lifecycle errands) / BOSH lite v9000.131.0
+- CF 238+
