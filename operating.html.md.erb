@@ -544,10 +544,10 @@ instance_groups:
 
 ## <a id="secure-binding"></a>(Optional) Enable Secure Binding
 
-ODB allows the secure storage of service credentials in runtime CredHub.
-If secure binding is enabled, a secure reference to your service credentials is 
-passed through the network to the application container when you create a binding 
-or service key.
+If you enable secure binding, service instance credentials are stored securely in 
+runtime CredHub.
+When users create bindings or service keys, ODB passes a secure reference to the 
+service credentials through the network instead of plain text.
 
 ### <a id="secure-binding-requirements"></a> Requirements
 

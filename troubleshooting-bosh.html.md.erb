@@ -27,7 +27,8 @@ The ODB generates a UUID for each request and prefixes all the logs for that req
 [on-demand-service-broker] [4d63080d-e038-45a3-85f9-93910f6b40b1] 2016/09/05 16:43:26.123456 a valid UAA token was found in cache, will not obtain a new one
 </pre>
 
-<p class="note"><strong>Note</strong>: The ODB's negroni server and start up logs are not prefixed with a request ID.</p>
+<p class="note"><strong>Note</strong>: The ODB's HTTP server and start up logs 
+  are not prefixed with a request ID.</p>
 
 All ODB's logs have a UTC timestamp.
 
@@ -253,7 +254,7 @@ The On-Demand Broker provides an endpoint that compares the list of service inst
 deployments against the service instances registered in Cloud Foundry. When called,
 the endpoint will return a list of orphaned deployments, if any are present.
 
-This endpoint is exercised in the [`orphan-deployments`](#orphan-deployments) errand. To call this endpoint
+This endpoint is exercised in the [`orphan-deployments`](./management.html#orphan-deployments) errand. To call this endpoint
 without running the errand, use `curl`.
 
 **Request**

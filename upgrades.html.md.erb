@@ -46,9 +46,10 @@ see <a href="./management.html#updating-service-offering">Update Service Offerin
 Cloud Foundry users cannot upgrade their service instances to the latest service offering.
 
 Until a service instance has been upgraded, Cloud Foundry users cannot set parameters
- or change plan until the service instance has been upgraded by an operator.
+or change plan.
 
-For example, a developer who tries to update a Redis service instance with the `cf update-service` command sees the following error message:
+For example, a developer who tries to update a Redis service instance with the 
+`cf update-service` command sees the following error message:
 
 <pre class="terminal">
 FAILED
@@ -56,7 +57,6 @@ Server error, status code: 502, error code: 10001, message:
 Service broker error: Service cannot be updated at this time, 
 please try again later or contact your operator for more information.
 </pre>
-
 Operators should run the upgrade-all-service-instances errand
 to upgrade all service instances to the latest service offering.
 See [Upgrade All Service Instances](#upgrade-all-instances) below.
