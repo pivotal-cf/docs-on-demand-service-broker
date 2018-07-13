@@ -3,13 +3,11 @@ title: Service Adapter Interface Reference
 owner: London Services Enablement
 ---
 
+This topic describes the subcommands used with the Service Adapter Interface.
 
 ## <a id="interface"></a>Service Adapter Interface
 
 Implement your service adapter as a binary. The service adapter receives its parameters as a JSON document using stdin.
-
-For a list of possible subcommands and the structure of the JSON document
-passed via STDIN, see the section for each subcommand below.
 
 For example service adapters, see the following examples written in golang:
 
@@ -19,11 +17,17 @@ For example service adapters, see the following examples written in golang:
 <p class="note"><strong>Note: </strong> The Redis and Kafka examples above use SDK to help with 
   cross-cutting concerns. For example, reading the JSON document from stdin.</p>
   
-A service adapter is expected to respond to the subcommands below.
-For each of these subcommands, exit status 0 indicates that the command succeeded 
-exit status 10 indicates not implemented, and any non-zero status indicates failure.
+A service adapter is expected to respond to the subcommands.
+For each of these subcommands:
 
-### <a id="generate-manifest"></a>generate-manifest
+* An exit status of `0` indicates that the command succeeded
+* An exit status `10` indicates not implemented
+* Any non-zero exit status indicates failure.
+
+For a list of possible subcommands and the structure of the JSON document
+passed via stdin, see the subcommands below.
+
+## <a id="generate-manifest"></a>generate-manifest
 
 For more information about the `generate-manifest` subcommand, 
 see the following sections:
@@ -52,7 +56,7 @@ see the following sections:
   </ul>
 </div>
 
-#### <a id="generate-manifest-parameters"></a>Input Parameters
+###<a id="generate-manifest-parameters"></a>Input Parameters
 
 The following section details the parameters provided to the `generate-manifest` 
 subcommand using stdin.
@@ -97,7 +101,7 @@ For an example, see <code>auto_create_topics</code> in the
 
 
 
-**<a id="service-deployment"></a>SERVICE-DEPLOYMENT-JSON**
+####<a id="service-deployment"></a>SERVICE-DEPLOYMENT-JSON
 
 The following table describes the JSON structure required for `SERVICE-DEPLOYMENT-JSON`:
 
@@ -148,7 +152,7 @@ Keep in mind the following:
   to map the service releases parameter to the BOSH manifest `releases` and `instance_groups` sections.
 * You should provide documentation about which jobs are required by your Service Adapter, and which BOSH releases operators should get these jobs from.
 
-**<a id="plan-json"></a>PLAN-JSON**
+####<a id="plan-json"></a>PLAN-JSON
 
 `PLAN-JSON` specifies the plan for which the manifest is supposed to be generated. The following table describes the schema of the JSON structure required for `PLAN-JSON`:
 
@@ -269,7 +273,7 @@ Plans are composed by the operator and consist of resource mappings, properties 
   1. Hard code an update block for all plans in the service adapter
   1. Make the update block mandatory, so that operators must provide an update block for every plan in the service catalogue section of the ODB manifest
 
-**<a id="generate-request-params-JSON"></a>REQUEST-PARAMS-JSON**
+####<a id="generate-request-params-JSON"></a>REQUEST-PARAMS-JSON
 
 This is a JSON object that holds the entire body of the [service
 provision](http://docs.cloudfoundry.org/services/api.html#provisioning) or
@@ -314,7 +318,7 @@ See the following example:
 }
 ```
 
-**<a id="previous-manifest"></a>PREVIOUS-MANIFEST-YAML**
+####<a id="previous-manifest"></a>PREVIOUS-MANIFEST-YAML
 
 `PREVIOUS-MANIFEST-YAML` represents the previous BOSH deployment manifest for 
 the service instance. If you have a new deployment, the YAML file is empty. 
@@ -339,7 +343,7 @@ For example see the [example Redis service adapter](https://github.com/pivotal-c
   If the service adapter does not migrate properties from the old manifest to
   the new one, the update fails.</p>
 
-**<a id="previous-plan"></a>PREVIOUS-PLAN-JSON**
+####<a id="previous-plan"></a>PREVIOUS-PLAN-JSON
 
 This argument takes the previous plan as a JSON string.
 
@@ -350,7 +354,7 @@ can be used for complex plan migration logic. For an example, the [Kafka service
  rejects a plan migration if the new plan reduces the number of instances, to prevent data loss.
 
 
-#### <a id="generate-manifest-output"></a>Output
+###<a id="generate-manifest-output"></a>Output
 
 The following table describes the supported exit codes and output for the `generate-manifest` subcommand:
 
@@ -360,7 +364,7 @@ The following table describes the supported exit codes and output for the `gener
 | 10            | not implemented |                                                                                                                                  |
 | anything else | failure         | <ul><li>Stdout: optional error message for CF CLI users</li> <li>Stderr: error message for operator</li> <li>ODB logs both stdout and stderr</li></ul>     |
 
-**Output JSON format**
+Output JSON format:
 
 ```json
 {
@@ -369,7 +373,7 @@ The following table describes the supported exit codes and output for the `gener
 }
 ```
 
-#### <a id="odb-managed-secrets"></a>Storing secrets on CredHub
+###<a id="odb-managed-secrets"></a>Storing Secrets on CredHub
 
 It is possible for the Service Adapter to generate secrets and, instead of
 writing these secrets in plain text in the manifest, to use ODB as a proxy to
@@ -394,7 +398,7 @@ During provision, ODB will:
 CredHub name
 1. Deploy the updated manifest.
 
-**Persisting credentials on updates**
+###<a id="odb-persisting-creds"></a>Persisting Credentials on Updates
 
 Similarly when dealing with properties that need to persist across updates,
 service adapter authors should extract the existing value for any ODB managed
@@ -406,24 +410,22 @@ If the previous manifest looks like this:
 name: the-deployment
 # ...
 properties:
-password: ((/odb/<service-guid>/<service-instance-guid/the_password))
+password: ((/odb/<service-guid>/<service-instance-guid>/<the_password>))
 ```
 
 then `generate-manifest` should not replace `properties.password` with
 `((odb_secret:password))`
 
-For details on how to use the value during bind, check the [create-binding subcommand documentation](#create-binding)
+For how to use the value during a bind, see [create-binding](#create-binding) below.
 
----
-
-### <a id="dashboard-url"></a>dashboard-url
+##<a id="dashboard-url"></a>dashboard-url
 
 For more information about the `dashboard-url` subcommand, see the following sections:
 
 - [Input Parameters](#dashboard-url-parameters)
 - [Output](#dashboard-url-output)
 
-####<a id="dashboard-url-parameters"></a>Input Parameters
+###<a id="dashboard-url-parameters"></a>Input Parameters
 
 The following section details the parameters provided to the `dashboard-url` subcommand using stdin.
 
@@ -452,12 +454,12 @@ not-json
 }
 ```
 
-**<a id="dashboard-url-instance-id"></a>INSTANCE-ID**
+####<a id="dashboard-url-instance-id"></a>INSTANCE-ID
 
 This parameter is the unique identifier of the service instance 
 provided by the Cloud Controller. For example, `42a09f38-c15b-47fe-a24e-ebf5f83ebd0`.
 
-**<a id="dashboard-url-plan"></a>PLAN-JSON**
+####<a id="dashboard-url-plan"></a>PLAN-JSON
 
 This parameter is the current plan for the service instance as JSON. 
 The structure should be the same as the [plan given in the generate manifest](#plan).
@@ -491,9 +493,7 @@ json
 }
 ```
 
-<br>
-
-**<a id="dashboard-url-manifest"></a>MANIFEST-YAML**
+####<a id="dashboard-url-manifest"></a>MANIFEST-YAML
 
 This parameter is the current manifest as YAML.
 
@@ -543,7 +543,7 @@ addons:
     release: my-service
 ```
 
-#### <a id="dashboard-url-output"></a>Output
+###<a id="dashboard-url-output"></a>Output
 
 If the `dashboard-url` command generates a url successfully, the shell 
 exits with 0 and outputs JSON with the following structure:
@@ -571,9 +571,8 @@ See the following table for supported exit codes for the `dashboard-url` subcomm
 | 10            | not implemented |                                                                                                                                  |
 | anything else | failure         | Stdout: optional error message for CF CLI users<br> Stderr: error message for operator<br> ODB logs both stdout and stderr |
 
----
 
-### <a id="create-binding"></a>create-binding
+##<a id="create-binding"></a>create-binding
 
 Binding credentials for a service instance should share a namespace and should
 be unique if possible.
@@ -587,7 +586,7 @@ the simplest way to do this is to name the user after the binding ID.
 - [Input Parameters](#create-binding-parameters)
 - [Output](#create-binding-output)
 
-#### <a id="create-binding-parameters"></a>Input Parameters
+###<a id="create-binding-parameters"></a>Input Parameters
 
 The following section details the parameters required by the `create-binding` subcommand as 
 a JSON document using stdin.
@@ -617,11 +616,11 @@ See the following example:
 
 ```
 
-**<a id="create-binding-id"></a>BINDING-ID**
+####<a id="create-binding-id"></a>BINDING-ID
 
 This parameter is the binding ID generated by the Cloud Controller.
 
-**<a id="create-bosh-vms-json"></a>BOSH-VMS-JSON**
+####<a id="create-bosh-vms-json"></a>BOSH-VMS-JSON
 
 This parameter is a JSON map of instance group name to an array of IPs 
 provisioned for that instance group.
@@ -639,7 +638,7 @@ This can be used to connect to the instance deployment, if required, or to creat
 In the example above, the Service Adapter may connect to MySQL as the admin and create a user. 
 As part of the binding, the `mysql_node` IPs would be returned, but  not the `management_box`.
 
-**<a id="create-binding-manifest"></a>MANIFEST-YAML**
+####<a id="create-binding-manifest"></a>MANIFEST-YAML
 
 This parameter is the current manifest as YAML. 
 This is used to extract information about the deployment that is necessary for the binding, such as admin credentials with which to create users. 
@@ -648,7 +647,7 @@ The manifest format matches the BOSH v2 manifest. For more information about the
 BOSH v2 manifest, see [Deployment Config](https://bosh.io/docs/manifest-v2/) in 
 the BOSH documentation.
 
-**<a id="create-request-params-JSON"></a>REQUEST-PARAMS-JSON**
+####<a id="create-request-params-JSON"></a>REQUEST-PARAMS-JSON
 
 This parameter is a JSON object that holds the entire body of the [service
 binding](http://docs.cloudfoundry.org/services/api.html#binding) request sent
@@ -688,7 +687,7 @@ See the following example:
   }
   ```
 
-**<a id="create-binding-secrets"></a>SECRETS**
+####<a id="create-binding-secrets"></a>SECRETS
 
 When the broker is configured with `resolve_manifest_secrets_at_bind` set to true,
 any secrets in the service instance manifest using references to BOSH generated
@@ -723,11 +722,11 @@ If `resolve_manifest_secrets_at_bind` is set to false in the broker, secrets wil
 find the secrets key by accessing the manifest field that contains the reference
 to the variable.</p>
 
-#### <a id="create-binding-credentials"></a>Credentials for Bindings
+###<a id="create-binding-credentials"></a>Credentials for Bindings
 
 You can take one of three approaches to credentials for a service binding:
 
-**Static Credentials**
+####Static Credentials
 
 In this case, the same credentials are used for all bindings. One option is to define these credentials in the service instance manifest.
 
@@ -739,7 +738,7 @@ properties:
     password: PASSWORD
 ```
 
-**Credentials Unique to Each Binding**
+####Credentials Unique to Each Binding
 
 In this case, when the adapter `generate-manifest` subcommand is invoked, 
 it generates random admin credentials and returns them as part of the service 
@@ -756,7 +755,7 @@ properties:
   admin_password: ADMIN-PASSWORD
 ```
 
-**Using an Agent**
+####Using an Agent
 
 In this case, the author defines an agent responsible for handling creation of 
 credentials unique to each binding. The agent must be added as a BOSH release 
@@ -785,7 +784,7 @@ instance_groups:
         release: credentials-agent-release
 ```
 
-#### <a id="create-binding-output"></a>Output
+###<a id="create-binding-output"></a>Output
 
 If the `create-binding` command is successful, the shell outputs an exit code of 0 
 and prints a service broker API binding JSON response on stdout. 
@@ -810,7 +809,7 @@ json
 }
 ```
 
-**<a id="create-binding-exit-codes"></a>Supported Exit Codes for Binding**
+###<a id="create-binding-exit-codes"></a>Supported Exit Codes for Binding
 
 | exit code     | Description                                       | Output                                                                                                                           |
 |:--------------|:--------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------|
@@ -820,9 +819,8 @@ json
 | 49            | binding already exists                            | Stderr: error message for operator<br/> ODB logs both stdout and stderr                                                      |
 | anything else | failure                                           | Stdout: optional error message for CF CLI users<br/> Stderr: error message for operator<br/> ODB logs both stdout and stderr |
 
----
 
-### <a id="delete-binding"></a>delete-binding
+##<a id="delete-binding"></a>delete-binding
 
 - [Input Parameters](#delete-binding-parameters)
 - [Output](#delete-binding-output)
@@ -831,7 +829,7 @@ This subcommand should invalidate the credentials that were generated by
 `create-binding` if possible.  For example, the subcommand would
 delete the binding user in MySQL.
 
-#### <a id="delete-binding-parameters"></a>Input Parameters
+###<a id="delete-binding-parameters"></a>Input Parameters
 
 This section describes the parameters required by the `delete-binding` subcommand.
 
@@ -861,11 +859,11 @@ See the following example:
 
 ```
 
-**<a id="delete-binding-id"></a>BINDING-ID**
+####<a id="delete-binding-id"></a>BINDING-ID
 
 This parameter is the binding to be deleted.
 
-**<a id="delete-binding-vm-json"></a>BOSH-VMS-JSON**
+####<a id="delete-binding-vm-json"></a>BOSH-VMS-JSON
 
 This parameter is a map of instance group name to an array of IPs provisioned for that instance group.
 
@@ -877,7 +875,7 @@ See the following example:
 }
 ```
 
-**<a id="delete-binding-manifest"></a>MANIFEST-YAML**
+####<a id="delete-binding-manifest"></a>MANIFEST-YAML
 
 `MANIFEST-YAML` represents the parameter for the current manifest.
 BOSH uses the manifest to extract information about the deployment 
@@ -889,7 +887,7 @@ the BOSH documentation.
 
 For an example, see the [Kafka delete binding](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/delete_binding.go).
 
-**<a id="delete-params-JSON"></a>DELETE-PARAMS-JSON**
+####<a id="delete-params-JSON"></a>DELETE-PARAMS-JSON
 
 This parameter is a JSON object that holds query string parameters as useful hints for service brokers. For more information, see the Open Service Broker API [documentation](http://docs.cloudfoundry.org/services/api.html#unbinding).
 
@@ -906,7 +904,7 @@ See the following example:
   create-binding <code>request_parameters</code> parameter and, in particular,
   does not include <code>parameters</code> or <code>bind_resource</code>.</p>
 
-#### <a id="delete-binding-output"></a>Output
+###<a id="delete-binding-output"></a>Output
 
 The following table describes the supported exit codes and output for the `delete-binding` subcommand:
 
@@ -921,9 +919,8 @@ The following table describes the supported exit codes and output for the `delet
 This can be used to connect to the actual VMs if required, to delete a service specific binding.
 For example, this can be used to delete a user in MySQL.
 
----
 
-###<a id="generate-plan-schemas"></a>generate-plan-schemas
+##<a id="generate-plan-schemas"></a>generate-plan-schemas
 
 - [Input Parameters](#generate-plan-schemas-parameters)
 - [Output](#generate-plan-schemas-output)
@@ -943,7 +940,7 @@ For example, you might use this if you want to accept an
 undocumented optional parameter, for administration purposes, that should not be
 exposed through the Apps Manager UI.
 
-#### <a id="generate-plan-schemas-parameters"></a>Input Parameters
+###<a id="generate-plan-schemas-parameters"></a>Input Parameters
 
 This section describes the parameters required by the `generate-plan-schemas` 
 subcommand, passed using stdin.
@@ -968,7 +965,7 @@ See the following example:
 
 ```
 
-**<a id="plan-json"></a>PLAN-JSON**
+####<a id="plan-json"></a>PLAN-JSON
 
 This parameter is the service plan as JSON required to generate the JSON schema.
 
@@ -1000,7 +997,7 @@ See the following example:
 }
 ```
 
-#### <a id="generate-plan-schemas-output"></a>Output
+###<a id="generate-plan-schemas-output"></a>Output
 
 The following table describes the supported exit codes and output for the 
 `generate-plan-schemas` subcommand:
@@ -1011,7 +1008,7 @@ The following table describes the supported exit codes and output for the
 | 10            | not implemented        |                                                  |
 | anything else | failure                | <ul><li>Stdout: optional error message for cf CLI users</li> <li>Stderr: error message for operator</li>  <li>ODB logs both stdout and stderr</li></ul> |
 
-**Output Example**
+Output example:
 
 ```json
 {
