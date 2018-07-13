@@ -230,8 +230,8 @@ for the BOSH Lite Director. For example:
         release: *broker-release
         properties:
           port: 8080
-          username: broker #or replace with your own
-          password: password #or replace with your own
+          username: broker    # or replace with your own
+          password: password  # or replace with your own
           disable_ssl_cert_verification: true
           bosh:
             url: BOSH-LITE-URL
@@ -332,9 +332,10 @@ To create a service broker on PCF Dev, do the following:
 
 1. Create a service broker on PCF Dev and enable access to its service offering. 
     <pre>
-    cf create-service-broker kafka-broker broker password http<span>:</span>//BROKER-IP:8080
+    cf create-service-broker kafka-broker USERNAME PASSWORD http<span>:</span>//BROKER-IP:8080
     </pre>
     Where:<br>
+    - `USERNAME` and `PASSWORD` are the broker's credentials set under `properties` in the broker job.
     - `BROKER-IP` is the value obtained in the step above. See the last step in 
      [Create a BOSH Deployment](#create_bosh).
     
