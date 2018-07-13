@@ -13,15 +13,16 @@ Pivotal does **not** recommend using the BOSH CLI to update or delete ODB servic
 
 ### <a id="logs"></a>Logs
 
-The on-demand broker writes logs to a log file, and to syslog.
+The on-demand broker writes logs to a log file and to syslog.
 
 The broker log contains error messages and non-zero exit codes returned by the service adapter, as well as the stdout and stderr streams of the adapter.
 
 The log file is located at `/var/vcap/sys/log/broker/broker.log`. In syslog, logging is written with the tag `on-demand-service-broker`, under the facility `user`, with priority `info`.
 
-If you want to forward syslog to a syslog aggregator, we recommend co-locating [syslog release](https://github.com/cloudfoundry/syslog-release) with the broker.
+If you want to forward syslog to a syslog aggregator,
+Pivotal recommends co-locating [syslog release](https://github.com/cloudfoundry/syslog-release) with the broker.
 
-The ODB generates a UUID for each request and prefixes all the logs for that request, e.g.
+The ODB generates a UUID for each request and prefixes all the logs for that request, for example:
 
 <pre class="terminal">
 [on-demand-service-broker] [4d63080d-e038-45a3-85f9-93910f6b40b1] 2016/09/05 16:43:26.123456 a valid UAA token was found in cache, will not obtain a new one
@@ -34,7 +35,7 @@ All ODB's logs have a UTC timestamp.
 
 #### <a id="errands-syslog"></a> Syslog forwarding for errands logs
 
-If you want to forward your errand logs to a syslog aggregator, we recommend
+If you want to forward your errand logs to a syslog aggregator, Pivotal recommends
 co-locating [syslog release](https://github.com/cloudfoundry/syslog-release)
 with the errand job. The manifest will look similar to the following:
 
