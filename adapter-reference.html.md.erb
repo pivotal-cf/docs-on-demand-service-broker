@@ -3,6 +3,7 @@ title: Service Adapter Interface Reference
 owner: London Services Enablement
 ---
 
+
 ## <a id="interface"></a>Service Adapter Interface
 
 Implement your service adapter as a binary. The service adapter receives its parameters as a JSON document using stdin.
@@ -17,6 +18,10 @@ For example service adapters, see the following examples written in golang:
 
 <p class="note"><strong>Note: </strong> The Redis and Kafka examples above use SDK to help with 
   cross-cutting concerns. For example, reading the JSON document from stdin.</p>
+  
+A service adapter is expected to respond to the subcommands below.
+For each of these subcommands, exit status 0 indicates that the command succeeded 
+exit status 10 indicates not implemented, and any non-zero status indicates failure.
 
 ### <a id="generate-manifest"></a>generate-manifest
 
