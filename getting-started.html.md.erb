@@ -33,32 +33,7 @@ in the BOSH Lite documentation.
   The default is `local.pcfdev.io`.
 
 - **BOSH CLI v2 or later.** Pivotal recommends BOSH CLI v2 or later. For more information,
-see [About the BOSH CLI](#about-cli) below.
-
-## <a id="about-cli"></a>About the BOSH CLI
-The BOSH CLI is available in two major versions, v1 and v2.
-Pivotal recommends that you use the BOSH CLI v2 when possible.
-
-This topic provides examples of using each version of the BOSH CLI.
-Your PCF installation may determine which version of the BOSH CLI you can use.
-Consult the table below to determine which version of the CLI is supported for your installation.
-
-<table class="nice">
-    <th>PCF Version</th>
-    <th>BOSH CLI Version</th>
-    <tr>
-        <td>1.10</td>
-        <td>CLI v1</td>
-    </tr>
-    <tr>
-        <td>1.11</td>
-        <td>CLI v1 or CLI v2 (Pivotal recommends CLI v2)</td>
-    </tr>
-    <tr>
-        <td>1.12 and later</td>
-        <td>CLI v2</td>
-    </tr>
-</table>
+see [About the BOSH CLI](./management.html#about-cli).
 
 ## <a id="setup"></a>Part 1: Set Up
 
@@ -255,8 +230,8 @@ for the BOSH Lite Director. For example:
         release: *broker-release
         properties:
           port: 8080
-          username: broker #or replace with your own
-          password: password #or replace with your own
+          username: broker    # or replace with your own
+          password: password  # or replace with your own
           disable_ssl_cert_verification: true
           bosh:
             url: BOSH-LITE-URL
@@ -357,9 +332,10 @@ To create a service broker on PCF Dev, do the following:
 
 1. Create a service broker on PCF Dev and enable access to its service offering. 
     <pre>
-    cf create-service-broker kafka-broker broker password http<span>:</span>//BROKER-IP:8080
+    cf create-service-broker kafka-broker USERNAME PASSWORD http<span>:</span>//BROKER-IP:8080
     </pre>
     Where:<br>
+    - `USERNAME` and `PASSWORD` are the broker's credentials set under `properties` in the broker job.
     - `BROKER-IP` is the value obtained in the step above. See the last step in 
      [Create a BOSH Deployment](#create_bosh).
     

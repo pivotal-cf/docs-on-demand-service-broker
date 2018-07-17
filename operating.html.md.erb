@@ -6,7 +6,7 @@ owner: London Services Enablement
 This topic provides information about operating the on-demand broker for 
 Pivotal Cloud Foundry (PCF) Ops Manager operators and BOSH operators.
 
-## <a id="operator-checklist"></a> Operator Checklist
+## <a id="operator-checklist"></a> Operator Responsibilities
 
 The operator is responsible for the following:
 
@@ -275,7 +275,9 @@ To upload a release to your BOSH Director, do the following:
 
 1. Run the following command.
 
-    `bosh2 -e BOSH-DIRECTOR-NAME upload-release RELEASE-FILE-NAME.tgz`<br><br>
+    ```
+    bosh2 -e BOSH-DIRECTOR-NAME upload-release RELEASE-FILE-NAME.tgz
+    ```
 
     **Example command for ODB:**
 
@@ -502,25 +504,25 @@ service_catalog:
           instances: [INSTANCE-NAME] #optional, for co-locating errand
         pre_delete: ERRAND-NAME #optional
 ```
-## <a id="secure-bind-credentials"></a>Accessing Manifest Secrets at Bind Time
+## <a id="secure-bind-credentials"></a>Access Manifest Secrets at Bind Time
 
 A service adapter may need to access secrets embedded in a service instance
 manifest when processing a create binding request. For example, it might need
 credentials with sufficient privileges to add new user to a service and these
-credentials will have been set up in the service instance manifest. ODB will
-pass this manifest to the adapter in the `create-binding` call, but if best
-practice has been followed, the secrets will be represented by BOSH variables
-or literal CredHub references, and so the actual secrets themselves will not be
+credentials are in the service instance manifest. ODB passes
+this manifest to the adapter in the `create-binding` call. However, if best
+practice has been followed, the secrets are represented by BOSH variables
+or literal CredHub references, and so the actual secrets themselves are not
 present in the manifest.
 
 When the `resolve_manifest_secrets_at_bind` flag is set to true in the ODB
-manifest, ODB will generate a map of manifest variable names and CredHub
+manifest, ODB generates a map of manifest variable names and CredHub
 references to secret values for all secrets in the manifest, by querying BOSH
-and its CredHub instance, and will pass this to the adapter `create-binding`
+and its CredHub instance. ODB passes this to the adapter `create-binding`
 call.
 
 When `resolve_manifest_secrets_at_bind` is enabled, details for accessing BOSH
-CredHub must also be supplied in then manifest, as shown below:
+CredHub must also be supplied in the manifest, as shown below:
 
 ```
 instance_groups:
@@ -544,10 +546,10 @@ instance_groups:
 
 ## <a id="secure-binding"></a>(Optional) Enable Secure Binding
 
-ODB allows the secure storage of service credentials in runtime CredHub.
-If secure binding is enabled, a secure reference to your service credentials is 
-passed through the network to the application container when you create a binding 
-or service key.
+If you enable secure binding, service instance credentials are stored securely in 
+runtime CredHub.
+When users create bindings or service keys, ODB passes a secure reference to the 
+service credentials through the network instead of plain text.
 
 ### <a id="secure-binding-requirements"></a> Requirements
 

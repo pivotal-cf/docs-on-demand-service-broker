@@ -7,13 +7,24 @@ This guide is intended for people who want to author service tiles for Pivotal C
 
 ## <a id='overview'></a>Overview
 
-PCF operators make software services such as databases available to developers by using the Ops Manager **Installation Dashboard** to install service tiles. Before BOSH 2.0, operators configured a service tile by pre-assigning a block of VMs with fixed CPU, hard disk, and RAM levels to allocate as instances for each service. This limited the possible number of instances and demanded wasteful one-size-fits-all resource provisioning.
+PCF operators make software services such as databases available to developers 
+by using the Ops Manager **Installation Dashboard** to install service tiles. 
+Before BOSH 2.0, operators configured a service tile by pre-assigning a block of 
+VMs with fixed CPU, hard disk, and RAM levels to allocate as instances for each service. 
+This limited the possible number of instances and demanded wasteful one-size-fits-all 
+resource provisioning.
 
-On-demand services let you provision instances with more flexibility. The operator does not pre-allocate a block of VMs for the instance pool, and they can specify an allowable range rather than fixed settings for instance resource levels. When a developer creates an on-demand service instance, they then provision it at creation time.
+On-demand services let you provision instances with more flexibility. 
+The operator does not pre-allocate a block of VMs for the instance pool, 
+and they can specify an allowable range rather than fixed settings for instance resource levels. 
+When a developer creates an on-demand service instance, they then provision it at creation time.
 
-The on-demand services SDK simplifies broker and tile authoring, and is the standard approach for both Pivotal internal services teams and Pivotal partner independent software vendors (ISVs) to develop on-demand services for PCF.
-
-The [About the On-Demand Services SDK](./about.html) topic describes in greater detail how the on-demand broker works within PCF.
+The on-demand services SDK provides a generic on-demand broker (ODB). 
+This simplifies broker and tile authoring, 
+and is the standard approach for both Pivotal internal services teams and Pivotal 
+partner independent software vendors (ISVs) to develop on-demand services for PCF.
+For more information about service brokers and how the on-demand broker works within PCF, see
+[About On-Demand Brokers](./about.html).
 
 ## <a id='product-snapshot'></a>Product Snapshot
 
@@ -55,10 +66,10 @@ For more information, see
 
 ## <a id='new-features'></a>Key Features
 
-The benefits of provisioning IaaS resources on-demand are:
+The benefits of provisioning service instances with resources on-demand are:
 
-* Scale resource consumption linearly with need, without having to plan for pre-provisioning.
-* App developers get more control over resources, and do not have to do acquire them through the operator.
+* Scale resource consumption in line with need, without having to plan for pre-provisioning.
+* App developers get more control over resources and do not have acquire them through the operator.
 
 The benefits of using ODB to develop on-demand services are:
 
@@ -69,7 +80,8 @@ ODB uses the following BOSH features:
 
 * Dynamic IP management
 * Availability zones
-* Globally-defined resources (**Cloud Config**). This results in manifests that are portable across BOSH CPIs, and are substantially smaller than old-style manifests.
+* Globally-defined resources (**Cloud Config**). 
+This results in manifests that are portable across BOSH Cloud Provider Interfaces (CPIs) and are substantially smaller than old-style manifests.
 * Links between deployed BOSH instances consuming information, e.g. IP addresses, of other instances.
 
 ## <a id='prerequisites'></a>Prerequisites for Deploying Brokers That Use ODB
