@@ -837,6 +837,75 @@ Pivotal has tested this example configuration with Loggregator v58 and service-m
 
 For more information about service metrics, see [Service Metrics for Pivotal Cloud Foundry](http://docs.pivotal.io/service-metrics).
 
+## <a id="binding-with-dns"></a>(Optional) Make DNS addresses available for binding creation
+
+<p class="note"><strong>Note</strong>: This feature requires BOSH Director v266.2 or later, this is available from Ops Manager 2.2+</p>
+
+The On Demand Broker can be configured to provide service instance DNS
+addresses to the service adapter CreateBinding call. This is useful when the
+binding for a service instance needs to contain or rely on BOSH DNS addresses
+for that deployment.  To enable this feature, the following changes are
+required:
+
+1. Service instances must _provide_ a link in their BOSH release spec file
+
+        ...
+        provides:
+          - name: example-link-1
+            type: example-type
+
+1. The generated service instance deployment manifest must share the link
+
+        instance_groups:
+        - name: leader-node
+          jobs:
+          - name: redis-server
+            release: redis-cluster-release
+            provides:
+              example-link-1: {shared: true}
+            ...
+
+1. The On Demand Broker must be deployed with the `binding_with_dns` property
+configured on plans requiring this feature
+
+        plans:
+          ...
+          - name: example-plan
+            binding_with_dns:
+            - name: leader-address
+              link_provider: example-link-1
+              instance_group: leader-node
+            - name: follower-address
+              link_provider: example-link-2
+              instance_group: follower-node
+              properties:
+                azs: [z1, z2]
+                status: healthy
+
+**Options available for _binding\_with\_dns_**
+
+| Property          | Description                                                                                                                                                             | Mandatory/Optional |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
+| name              | An arbitrary identifier. Used to identify the address when creating a binding                                                                                           | Mandatory          |
+| link_provider     | The exposed name of the link. Normally `provides.name` from the release spec, but can be overridden in the deployment manifest by setting the `as` property of the link | Mandatory          |
+| instance_group    | The name of the instance group sharing the link. The resultant DNS address will resolve to IP addresses of this instance group                                          | Mandatory          |
+| properties.azs    | A list of availability zone names. When this is provided, the resultant DNS address will resolve to IP addresses in only these zones                                    | Optional           |
+| properties.status | Filter for link address status (healthy, unhealthy, all, default). When this is provided, the resultant DNS address will resolve to IP addresses with this status       | Optional           |
+
+The On Demand Services SDK now includes a DNSAddresses parameter for the
+CreateBinding method. When invoked by the On Demand Broker, this will be a map
+of name to DNS address. Each entry in `binding_with_dns` will be converted to a
+single BOSH DNS address via the BOSH links API.
+
+**Example DNS Addresses passed to service adapter _CreateBinding_ method**
+
+```json
+{
+  "leader-address": "q-s0.leader-node.default.service-instance_c1371314-643f-48b7-b80a-6741e7377022.bosh",
+  "follower-address": "q-a1a2s0.follower-node.default.service-instance_c1371314-643f-48b7-b80a-6741e7377022.bosh"
+}
+```
+
 ## <a id="startup-checks"></a>About Broker Startup Checks
 
 The ODB does the following startup checks:
