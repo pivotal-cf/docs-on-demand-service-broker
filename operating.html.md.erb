@@ -880,15 +880,17 @@ configured on plans requiring this feature
               instance_group: follower-node
               properties:
                 azs: [z1, z2]
+                status: healthy
 
 **Options available for _binding\_with\_dns_**
 
-| Property       | Description                                                                                                                                                             | Mandatory/Optional |
-| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
-| name           | An arbitrary identifier. Used to identify the address when creating a binding                                                                                           | Mandatory          |
-| link_provider  | The exposed name of the link. Normally `provides.name` from the release spec, but can be overridden in the deployment manifest by setting the `as` property of the link | Mandatory          |
-| instance_group | The name of the instance group sharing the link. The resultant DNS address will resolve to IP addresses of this instance group                                          | Mandatory          |
-| properties.azs | A list of availability zone names. When this is provided, the resultant DNS address will resolve to IP addresses in only these zones                                    | Optional           |
+| Property          | Description                                                                                                                                                             | Mandatory/Optional |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
+| name              | An arbitrary identifier. Used to identify the address when creating a binding                                                                                           | Mandatory          |
+| link_provider     | The exposed name of the link. Normally `provides.name` from the release spec, but can be overridden in the deployment manifest by setting the `as` property of the link | Mandatory          |
+| instance_group    | The name of the instance group sharing the link. The resultant DNS address will resolve to IP addresses of this instance group                                          | Mandatory          |
+| properties.azs    | A list of availability zone names. When this is provided, the resultant DNS address will resolve to IP addresses in only these zones                                    | Optional           |
+| properties.status | Filter for link address status (healthy, unhealthy, all, default). When this is provided, the resultant DNS address will resolve to IP addresses with this status       | Optional           |
 
 The On Demand Services SDK now includes a DNSAddresses parameter for the
 CreateBinding method. When invoked by the On Demand Broker, this will be a map
