@@ -4,17 +4,17 @@ owner: London Services Enablement
 ---
 
 This topic describes how to build an on-demand service tile using the Tile Generator.
-For an example tile, see the [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/tree/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f)
+For an example tile, see the [Example Kafka On-Demand Tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/tree/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f)
 in GitHub.
 
 ## <a id="requirements"></a>Requirements
 
 To build an on-demand tile you need the following releases:
 
-- On Demand Service Broker (ODB)---Download ODB from [Pivotal 
+- **On Demand Service Broker (ODB)**---Download ODB from [Pivotal 
 Network](https://network.pivotal.io/products/on-demand-services-sdk/).
-- Your service adapter---Get the service adapter from the release author.
-- Your service release--Get the service release from the release author.
+- **Your service adapter**---Get the service adapter from the release author.
+- **Your service release**--Get the service release from the release author.
 
 ## <a id="requirements"></a> About Networks
 
@@ -82,7 +82,7 @@ The following table lists the accessors you must add:
 |:--------------------------|:-------------------------------------------------------------------------------------------------------------------------------|
 | $director.hostname        | The director's hostname or IP address                                                                                                      |
 | $director.ca\_public\_key | The director's root ca certificate. Related: [Configure SSL Certificates](operating.html#ssl-certs). |
-
+<br>
 For example:
 
 ```yaml
@@ -92,7 +92,7 @@ bosh:
 ```
 
 To see this example in context, see the 
-[example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L104-L106).
+[Example Kafka On-Demand Tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L104-L106).
 
 #### self
 
@@ -128,7 +128,7 @@ bosh:
 ```
 
 To see this example in context, see the 
-[example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L107-L111).
+[Example Kafka On-Demand Tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L107-L111).
 
 #### (Optional) cf
 
@@ -145,7 +145,7 @@ The following table lists the accessors you must add to use PAS (or Elastic Runt
 | ..cf.cloud\_controller.system\_domain.value     | The system domain configured in the CF installation                                |
 | ..cf.uaa.system\_services\_credentials.identity | Username of a CF user in the cloud\_controller.admin group, to be used by services |
 | ..cf.uaa.system\_services\_credentials.password | Password of a CF user in the cloud\_controller.admin group, to be used by services |
-
+<br>
 For example:
 
 ```yaml
@@ -160,11 +160,11 @@ cf:
 ```
 
 To see this example in context, see the
-[example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L103-L119).
+[Example Kafka On-Demand Tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L103-L119).
 
 ### <a id="errands"></a>Add On-Demand Broker Lifecycle Errands
 
-The [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/tree/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f)
+The [Example Kafka On-Demand Tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/tree/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f)
 example shows how the errands in the on-demand broker release can be used.
 
 Pivotal recommends that you add the errands below to your tile.
@@ -193,7 +193,7 @@ parameters:
 For more information about these parameters, see
 [Upgrade All Service Instances](upgrades.html#upgrade-all-instances).
 
-The example [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/tree/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f)
+The example [Example Kafka On-Demand Tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/tree/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f)
 shows how to create a tab with fields to configure the parameters for this errand.
 The example tile has constraints to ensure the number of simultaneous
 upgrades is greater than one and the number of canaries is greater than zero.
@@ -212,8 +212,10 @@ To allow operators to a assign public IP addresses to on-demand service instance
 update your `tile.yml` file as follows:
 
 1. Add the following to the `form_types` section:
+<br><br>
+For example:
 
-      ```yaml
+      ```
       form_types:
       - name: example_form
         property_inputs:
@@ -221,10 +223,11 @@ update your `tile.yml` file as follows:
           label: VM options
           description: List of VM options for Service Instances
       ```
-
 1.  Add the following to the `job_types` section:
+<br><br>
+For example:
 
-      ```yaml
+      ```
       job_types:
       - name: broker
         templates:
@@ -237,6 +240,12 @@ update your `tile.yml` file as follows:
                 instance_groups:
                 - name: example-instance-group
                   vm_extensions: (( .broker.example_vm_extensions.value )) # add this line
+      ```
+1. Add the following to the `property_blueprints` section under the broker job:
+<br><br>
+For example:
+
+      ```
         property_blueprints:           # add this section
         - name: example_vm_extensions
           type: multi_select_options
@@ -311,7 +320,7 @@ service credentials through the network instead of plain text.
 
 To include the option to enable secure binding, update your `tile.yml` file as follows:
 
-1. Add `secure_binding_credentials` to the top-level properties block in the on-demand broker manifest. 
+1. Add `secure_binding_credentials` to the top-level properties block in the on-demand broker manifest. <br><br>
 For example:
 
     ```yaml
@@ -329,20 +338,20 @@ to make some changes to your tile's metadata file:
 
   1. Add a form field to allow the user to enable/disable secure bindings.  
   For an example form field, see the
-  [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L39-L46).
+  [Example Kafka On-Demand Tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L39-L46).
   <br><br>
   1. Add an element in `property_blueprints` that reads the setting in the form
   field and exposes the appropriate manifest snippet for CredHub and secure binding.  
   For an example `property_blueprints` section, see the
-  [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L606-L632).
+  [Example Kafka On-Demand Tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L606-L632).
   <br><br>
   1. Change the broker job so that it consumes the CredHub BOSH link from the
   `property_blueprints` section.  
   For an example broker job, see the
-  [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L96).
+  [Example Kafka On-Demand Tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L96).
   <br><br>
   1. Change the broker job so that it consumes the generated secure bindings
   manifest snippet.  
   For an example broker job, see the
-  [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L112).
+  [Example Kafka On-Demand Tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L112).
 
