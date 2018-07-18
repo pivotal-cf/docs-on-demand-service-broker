@@ -11,10 +11,10 @@ in GitHub.
 
 To build an on-demand tile you need the following releases:
 
-- **On Demand Service Broker (ODB)**---Download ODB from [Pivotal 
+- On Demand Service Broker (ODB)---Download ODB from [Pivotal 
 Network](https://network.pivotal.io/products/on-demand-services-sdk/).
-- **Your service adapter**---Get the service adapter from the release author.
-- **Your service release**--Get the service release from the release author.
+- Your service adapter---Get the service adapter from the release author.
+- Your service release--Get the service release from the release author.
 
 ## <a id="requirements"></a> About Networks
 
@@ -193,7 +193,7 @@ parameters:
 For more information about these parameters, see
 [Upgrade All Service Instances](upgrades.html#upgrade-all-instances).
 
-The [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/tree/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f)
+The example [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/tree/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f)
 shows how to create a tab with fields to configure the parameters for this errand.
 The example tile has constraints to ensure the number of simultaneous
 upgrades is greater than one and the number of canaries is greater than zero.
@@ -211,9 +211,7 @@ All internal traffic / incoming connections need to go over the private IP.
 To allow operators to a assign public IP addresses to on-demand service instance groups,
 update your `tile.yml` file as follows:
 
-1. Add a checkbox to allow the user to assign a public IP `form_types` section:
-<br><br>
-For example:
+1. Add the following to the `form_types` section:
 
       ```yaml
       form_types:
@@ -223,11 +221,8 @@ For example:
           label: VM options
           description: List of VM options for Service Instances
       ```
-      To see this example in context, see the [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L54-L56).
 
-1.  Update the broker job to read the value of the :
-<br><br>
-For example:
+1.  Add the following to the `job_types` section:
 
       ```yaml
       job_types:
@@ -242,14 +237,6 @@ For example:
                 instance_groups:
                 - name: example-instance-group
                   vm_extensions: (( .broker.example_vm_extensions.value )) # add this line
-        ```
-        To see this example in context, see the [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L146).
-
-1. Add the following in the 
-<br><br>
-For example:
-
-      ```yaml
         property_blueprints:           # add this section
         - name: example_vm_extensions
           type: multi_select_options
@@ -259,7 +246,6 @@ For example:
           - name: "public_ip"
             label: "Internet Connected VMs (on supported IaaS providers)"
       ```
-      To see this example in context, see the [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L192-L199).
 
 ### <a id="floating-stemcell"></a>(Optional) Enable Floating Stemcells
 
@@ -277,7 +263,7 @@ ensure that the `upgrade-all-service-instances` errand is selected.
 
 To enable floating stemcells for your tile, update your `tile.yml` file as follows:
 
-1. Implement floating stemcells by adding the following in the `job_types` section:
+1. Implement floating stemcells.
 <br><br>
 For example:
 
@@ -309,6 +295,8 @@ For example:
       version: '3312'
       enable_patch_security_updates: true  # Add this line
     ```
+
+
 
 ### <a id="secure-creds"></a>(Optional) Allow Secure Binding
 
