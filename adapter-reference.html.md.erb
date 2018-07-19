@@ -688,17 +688,19 @@ See the following example:
   }
   ```
 
-####<a id="create-binding-secrets"></a>SECRETS
+####<a id="create-binding-secrets"></a>MANIFEST-SECRETS-JSON
 
-When the broker is configured with `resolve_manifest_secrets_at_bind` set to true,
+If `resolve_manifest_secrets_at_bind` is set to true in the broker,
 any secrets in the service instance manifest using references to BOSH generated
-variables or literal CredHub paths will be resolved and provided to the adapter in the secrets
+variables or literal CredHub paths are resolved and provided to the adapter in the secrets
 JSON parameter.
 
-For a service instance manifest like this:
+If `resolve_manifest_secrets_at_bind` is set to false in the broker, secrets JSON will be empty.
 
-```yaml
-# ...
+The following is an example service instance manifest:
+
+```
+...
 password: ((redis_password))
 root_ca: ((/global/root_ca))
 
@@ -706,32 +708,30 @@ variables:
 - name: redis_password
   type: password
 ```
+<br>
+The service instance manifest snippet above produces a secrets JSON parameter
+similar to the following. 
+The keys are the reference names, and the values are the resolved secrets:
 
-The secrets JSON parameter will look similar to the following. The keys are the
-reference names, and the values the resolved secrets.
-
-```json
+```
 {
   "((redis_password))": "some-bosh-generated-password",
   "((/global/root_ca))": "some-global-value"
 }
 ```
 
-If `resolve_manifest_secrets_at_bind` is set to false in the broker, secrets will be empty.
-
-<p class="note"><strong>Note</strong>: We recommend adapter authors to
+<p class="note"><strong>Note</strong>: Pivotal recommends service adapter authors to
 find the secrets key by accessing the manifest field that contains the reference
 to the variable.</p>
 
-**<a id="create-binding-dns-addresses"></a>DNS-ADDRESSES-JSON**
+####<a id="create-binding-dns-addresses"></a>DNS-ADDRESSES-JSON
 
-When a broker is deployed with `binding_with_dns` set for a plan, the
-On-Demand-Broker will retrieve DNS addresses from BOSH prior to calling the
-adapter.  On-Demand-Broker will pass these to the service adapter along with the names given in the `binding_with_dns`
-properties.
+When a broker is deployed with `binding_with_dns` set for a plan, the ODB retrieves 
+DNS addresses from BOSH prior to calling the adapter.
+ODB passes these addresses to the service adapter along with the names given in the 
+`binding_with_dns` properties.
 
-For example, a plan with the following `binding_with_dns` configuration in the
-broker manifest:
+The following is an example `binding_with_dns` configuration in the broker manifest:
 
 ```yaml
 plans:
@@ -745,8 +745,9 @@ plans:
       link_provider: example-link-2
       instance_group: follower-node
 ```
-
-will produce the following in DNS-ADDRESSES-JSON:
+<br>
+The `binding_with_dns` section in the snippet above produces the following in 
+`DNS-ADDRESSES-JSON`:
 
 ```json
 {
