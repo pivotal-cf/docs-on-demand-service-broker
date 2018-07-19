@@ -563,7 +563,7 @@ Replace the placeholder text below with your values for accessing CredHub:
                     client_id: BOSH-CREDHUB-CLIENT-ID
                     client_secret: BOSH-CREDHUB-CLIENT-SECRET
       ```
-      
+   
 <br>
 When the `resolve_manifest_secrets_at_bind` flag is set to true,
 ODB generates a map of manifest variable names, and CredHub
@@ -578,7 +578,7 @@ runtime CredHub.
 When users create bindings or service keys, ODB passes a secure reference to the 
 service credentials through the network instead of plain text.
 
-### <a id="secure-binding-requirements"></a> Requirements
+### Requirements
 
 To store service credentials in runtime CredHub, your deployment must meet the 
 following requirements:
@@ -590,7 +590,7 @@ This may be provided as part of your Cloud Foundry deployment.
 for CredHub is a local domain name.
 Currently, most Cloud Foundry deployments use Consul as a DNS provider.
 
-### <a id="secure-binding-procedure"></a> Procedure for Enabling Secure Binding
+### Procedure for Enabling Secure Binding
 
 To enable secure binding, do the following:
 
@@ -664,7 +664,7 @@ enable DNS. To do this, add the `consul_agent` job to the manifest as follows:
 
 For a more detailed manifest snippet, see [Configure Your Manifest](#core-broker-config) above.
 
-### <a id="credhub-key-format"></a> How Credentials Are Stored on CredHub
+### How Credentials Are Stored on CredHub
 
 The credentials for a given service binding are stored with the following format:
 
@@ -866,67 +866,73 @@ Pivotal has tested this example configuration with Loggregator v58 and service-m
 
 For more information about service metrics, see [Service Metrics for Pivotal Cloud Foundry](http://docs.pivotal.io/service-metrics).
 
-## <a id="binding-with-dns"></a>(Optional) Make DNS addresses available for binding creation
+## <a id="binding-with-dns"></a>(Optional) Make DNS Addresses Available for Binding Creation
 
-<p class="note"><strong>Note</strong>: This feature requires BOSH Director v266.2 or later, this is available from Ops Manager 2.2+</p>
+<p class="note"><strong>Note</strong>: 
+  This feature requires BOSH Director v266.2 or later, this is available from Ops Manager 2.2+</p>
 
-The On Demand Broker can be configured to provide service instance DNS
-addresses to the service adapter CreateBinding call. This is useful when the
-binding for a service instance needs to contain or rely on BOSH DNS addresses
-for that deployment.  To enable this feature, the following changes are
-required:
+You can configure ODB to provide service instance DNS addresses to the service 
+adapter `CreateBinding` call. 
+This is useful when the binding for a service instance contains, or relies on, BOSH 
+DNS addresses for that deployment. 
 
-1. Service instances must _provide_ a link in their BOSH release spec file
+To enable ODB to provide service instance DNS addresses to the `CreateBinding` call, 
+do the following:
 
-        ...
+1. Provide a link in the service instance's BOSH release specification file.
+<br><br>
+For example:
+
+    ```
+    ...
+    provides:
+      - name: example-link-1
+        type: example-type
+    ```
+
+1. Share the link that you provided above in the service instance deployment manifest.
+<br><br>
+For example:
+        
+    ```
+    instance_groups:
+    - name: leader-node
+      jobs:
+      - name: redis-server
+        release: redis-cluster-release
         provides:
-          - name: example-link-1
-            type: example-type
+          example-link-1: {shared: true}
+        ...
+    ```
+1. Deploy the ODB with the `binding_with_dns` property configured on plans 
+requiring this feature.
+For more information about the properties to add, see [Options for the _binding\_with\_dns_ property](#binding-property)
+below.
+<br><br>
+For example:
 
-1. The generated service instance deployment manifest must share the link
+    ```
+    plans:
+      ...
+      - name: example-plan
+        binding_with_dns:
+        - name: leader-address
+          link_provider: example-link-1
+          instance_group: leader-node
+        - name: follower-address
+          link_provider: example-link-2
+          instance_group: follower-node
+          properties:
+            azs: [z1, z2]
+            status: healthy
+    ``` 
 
-        instance_groups:
-        - name: leader-node
-          jobs:
-          - name: redis-server
-            release: redis-cluster-release
-            provides:
-              example-link-1: {shared: true}
-            ...
+<br>
+The On Demand Services SDK includes a `DNSAddresses` parameter for the `CreateBinding` method. 
+When invoked by the On Demand Broker, this will be a map of name to DNS address.
+Each entry in `binding_with_dns` is converted to a single BOSH DNS address using the BOSH links API.
 
-1. The On Demand Broker must be deployed with the `binding_with_dns` property
-configured on plans requiring this feature
-
-        plans:
-          ...
-          - name: example-plan
-            binding_with_dns:
-            - name: leader-address
-              link_provider: example-link-1
-              instance_group: leader-node
-            - name: follower-address
-              link_provider: example-link-2
-              instance_group: follower-node
-              properties:
-                azs: [z1, z2]
-                status: healthy
-
-**Options available for _binding\_with\_dns_**
-
-| Property          | Description                                                                                                                                                             | Mandatory/Optional |
-| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
-| name              | An arbitrary identifier. Used to identify the address when creating a binding                                                                                           | Mandatory          |
-| link_provider     | The exposed name of the link. Normally `provides.name` from the release spec, but can be overridden in the deployment manifest by setting the `as` property of the link | Mandatory          |
-| instance_group    | The name of the instance group sharing the link. The resultant DNS address will resolve to IP addresses of this instance group                                          | Mandatory          |
-| properties.azs    | A list of availability zone names. When this is provided, the resultant DNS address will resolve to IP addresses in only these zones                                    | Optional           |
-| properties.status | Filter for link address status (healthy, unhealthy, all, default). When this is provided, the resultant DNS address will resolve to IP addresses with this status       | Optional           |
-
-The On Demand Services SDK now includes a DNSAddresses parameter for the
-CreateBinding method. When invoked by the On Demand Broker, this will be a map
-of name to DNS address. Each entry in `binding_with_dns` will be converted to a
-single BOSH DNS address via the BOSH links API.
-
-**Example DNS Addresses passed to service adapter _CreateBinding_ method**
+For example:
 
 ```json
 {
@@ -934,6 +940,18 @@ single BOSH DNS address via the BOSH links API.
   "follower-address": "q-a1a2s0.follower-node.default.service-instance_c1371314-643f-48b7-b80a-6741e7377022.bosh"
 }
 ```
+
+### <a id="binding-property"></a>Options for the _binding\_with\_dns_ property
+
+The following table provides descriptions of the properties to add to the `binding_with_dns` section:
+
+| Property          | Description                                                                                                                                                             | Mandatory/Optional |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
+| name              | An arbitrary identifier. Used to identify the address when creating a binding.                                                                                                     | Mandatory          |
+| link_provider     | The exposed name of the link. Normally `provides.name` from the release specification, but can be overridden in the deployment manifest by setting the `azs` property of the link. | Mandatory          |
+| instance_group    | The name of the instance group sharing the link. The resultant DNS address resolves to IP addresses of this instance group.                                                        | Mandatory          |
+| properties.azs    | A list of availability zone names. When this is provided, the resultant DNS address resolves to IP addresses in these zones.                                                       | Optional           |
+| properties.status | A filter for link address status (healthy, unhealthy, all, default). When this is provided, the resultant DNS address resolves to IP addresses with this status.                   | Optional           |
 
 ## <a id="startup-checks"></a>About Broker Startup Checks
 
