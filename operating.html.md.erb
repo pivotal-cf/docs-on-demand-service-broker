@@ -380,9 +380,10 @@ instance_groups:
 
 ### <a id="catalog"></a>Configure the Service Catalog and Plan Composition
 
-The operator configures the Service Catalog and composes plans in the manifest.  
+Configure the service catalog and compose plans in the properties section of broker job.
+As a guide, see the [Starter Snippet](#starter-snippet) below. 
 
-To do so, use the starter [Starter Snippet](#starter-snippet) below in the broker job properties section of the manifest, and provide the following:
+Provide the following when configuring the service catalog and plans:
 
 1. Supply each release job specified by the Service Author exactly once. You can include releases that provide many jobs, as long as each required job is provided by exactly one release.
 
@@ -506,7 +507,7 @@ service_catalog:
           instances: [INSTANCE-NAME] #optional, for co-locating errand
         pre_delete: ERRAND-NAME #optional
 ```
-## <a id="secure-bind-credentials"></a>Access Manifest Secrets at Bind Time
+## <a id="secure-bind-credentials"></a>(Optional) Access Manifest Secrets at Bind Time
 
 A service adapter might need to access secrets embedded in a service instance
 manifest when processing a create binding request. 
@@ -799,7 +800,7 @@ For example:
               memory: 150
         ```
         <br>
-    - **For plan quotas** add `quotas` the plans you want to limit:
+    - **For plan quotas** add `quotas` in the plans you want to limit:
 
         ```yaml
         plans:
@@ -869,28 +870,35 @@ For more information about service metrics, see [Service Metrics for Pivotal Clo
 ## <a id="binding-with-dns"></a>(Optional) Make DNS Addresses Available for Binding Creation
 
 <p class="note"><strong>Note</strong>: 
-  This feature requires BOSH Director v266.2 or later, this is available from Ops Manager 2.2+</p>
+  This feature requires BOSH Director v266.2 or later.
+  This is available in Ops Manager v2.2 and later.</p>
 
 You can configure ODB to provide service instance DNS addresses to the service 
-adapter `CreateBinding` call. 
+adapter `create-binding` call. 
 This is useful when the binding for a service instance contains, or relies on, BOSH 
 DNS addresses for that deployment. 
 
-To enable ODB to provide service instance DNS addresses to the `CreateBinding` call, 
+To enable ODB to provide service instance DNS addresses to the `create-binding` call, 
 do the following:
 
-1. Provide a link in the service instance's BOSH release specification file.
+1. Provide a link from the service instance's BOSH release.
+Choose any job in the service release and add the link to its `spec` file.
 <br><br>
 For example:
 
     ```
+    name: redis-server-job
     ...
     provides:
       - name: example-link-1
         type: example-type
     ```
+    <br>
+For context, see the [Redis Example Service Release](https://github.com/pivotal-cf-experimental/redis-example-service-release/blob/master/jobs/redis-server/spec).
 
-1. Share the link that you provided above in the service instance deployment manifest.
+1. In the generated service instance manifest, share the link you provided above 
+in the same job that you added the link to in step 1. <br><br>
+Include the link in all instance groups that you require a DNS address for at binding time.
 <br><br>
 For example:
         
@@ -898,15 +906,16 @@ For example:
     instance_groups:
     - name: leader-node
       jobs:
-      - name: redis-server
+      - name: redis-server-job
         release: redis-cluster-release
-        provides:
-          example-link-1: {shared: true}
+        provides:                          # add this section
+          example-link-1: {shared: true} 
         ...
     ```
-1. Deploy the ODB with the `binding_with_dns` property configured on plans 
-requiring this feature.
-For more information about the properties to add, see [Options for the _binding\_with\_dns_ property](#binding-property)
+1. In the manifest, configure the `binding_with_dns` property on plans that require 
+DNS addresses to create a binding.<br><br>
+For more information about the properties to add, see [Options for the 
+_binding\_with\_dns_ property](#binding-property)
 below.
 <br><br>
 For example:
@@ -914,8 +923,9 @@ For example:
     ```
     plans:
       ...
-      - name: example-plan
-        binding_with_dns:
+      - name: plan-requiring-dns-addresses
+        ...
+        binding_with_dns:                 # add this section 
         - name: leader-address
           link_provider: example-link-1
           instance_group: leader-node
@@ -928,9 +938,11 @@ For example:
     ``` 
 
 <br>
-The On Demand Services SDK includes a `DNSAddresses` parameter for the `CreateBinding` method. 
-When invoked by the On Demand Broker, this will be a map of name to DNS address.
 Each entry in `binding_with_dns` is converted to a single BOSH DNS address using the BOSH links API.
+
+The On Demand Services SDK includes the `DNSAddresses` parameter for the `CreateBinding` method. 
+The ODB invokes the `CreateBinding` method with this parameter, which is a map of name to DNS address.
+
 
 For example:
 
@@ -941,14 +953,14 @@ For example:
 }
 ```
 
-### <a id="binding-property"></a>Options for the _binding\_with\_dns_ property
+<a id="binding-property"></a><h3>Options for the _binding\_with\_dns_ property</h3>
 
 The following table provides descriptions of the properties to add to the `binding_with_dns` section:
 
 | Property          | Description                                                                                                                                                             | Mandatory/Optional |
 | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
 | name              | An arbitrary identifier. Used to identify the address when creating a binding.                                                                                                     | Mandatory          |
-| link_provider     | The exposed name of the link. Normally `provides.name` from the release specification, but can be overridden in the deployment manifest by setting the `azs` property of the link. | Mandatory          |
+| link_provider     | The exposed name of the link. Normally `provides.name` from the release spec, but can be overridden in the deployment manifest by setting the `as` property of the link. | Mandatory          |
 | instance_group    | The name of the instance group sharing the link. The resultant DNS address resolves to IP addresses of this instance group.                                                        | Mandatory          |
 | properties.azs    | A list of availability zone names. When this is provided, the resultant DNS address resolves to IP addresses in these zones.                                                       | Optional           |
 | properties.status | A filter for link address status (healthy, unhealthy, all, default). When this is provided, the resultant DNS address resolves to IP addresses with this status.                   | Optional           |
