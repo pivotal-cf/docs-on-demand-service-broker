@@ -177,14 +177,14 @@ These metrics are listed below:
 
 ## <a id="calculate"></a> Calculate Resource Costs for On-Demand Plans
 
-RabbitMQ on-demand plans use dedicated VM, disks, and various other resources from an IaaS, such as AWS.
+On-demand plans use dedicated VMs, disks, and various other resources from an IaaS, such as AWS.
 To calculate maximum resource cost for plans individually or combined,
 you multiply the quota by the cost of VM and Persistent Disk types selected in the plan configuration(s).
 The specific costs depend on your IaaS. 
 
 The image below shows an example of the VM type and persistent disk selected, as well as the quota for this plan.
 
-![plan resources](./images/plan-resources.png) 
+![plan resources](http://docs.pivotal.io/svc-sdk/odb/img/plan-resources.png) 
 
 <p class="note"><strong>Important</strong>:
 	Although operators can limit on-demand instances with plan quotas and a global quota, as described in the above topics,
