@@ -566,11 +566,17 @@ Replace the placeholder text below with your values for accessing CredHub:
       ```
    
 <br>
-When the `resolve_manifest_secrets_at_bind` flag is set to true,
-ODB generates a map of manifest variable names, and CredHub
-references to secret values for all secrets in the manifest, by querying BOSH
-and its CredHub instance. 
-ODB passes this map to the service adapter's `create-binding` call.
+When the `resolve_manifest_secrets_at_bind` flag is set to true, ODB queries
+BOSH and its CredHub instance and then generates a map of manifest variable
+names and CredHub references to secret values for all secrets in the manifest.
+ODB passes this map to the service adapter's `create-binding` call. For an
+example of the JSON passed in the `create-binding` call, see the [Service
+Adapter Interface Reference
+documentation](./adapter-reference.html#create-binding-secrets). If ODB is
+unable to resolve a particular secret, the broker will log the failure and omit
+it from the passed secrets map. It is the responsibility of the adapter to
+decide what to do about missing secrets based on whether they are required for
+binding creation. ODB will not fail if it cannot resolve a secret.
 
 ## <a id="secure-binding"></a>(Optional) Enable Secure Binding
 
