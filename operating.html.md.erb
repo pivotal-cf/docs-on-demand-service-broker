@@ -526,7 +526,7 @@ Secrets in the manifest can be:
 If you use BOSH variables or literal CredHub references in your manifest, 
 do the following in the ODB manifest so that the service adapter can access the secrets:
 
-1. Set the `resolve_manifest_secrets_at_bind` flag to true.<br><br>
+1. Set the `enable_secure_manifests` flag to true.<br><br>
 For example:
 
       ```
@@ -538,7 +538,7 @@ For example:
           ...
           properties:
             ...
-            resolve_manifest_secrets_at_bind: true
+            enable_secure_manifests: true
             ...
       ```
 
@@ -554,7 +554,7 @@ Replace the placeholder text below with your values for accessing CredHub:
           ...
           properties:
             ...
-            resolve_manifest_secrets_at_bind: true
+            enable_secure_manifests: true
             bosh_credhub_api:
               url: https://BOSH-CREDHUB-ADDRESS:8844/
               root_ca_cert: BOSH-CREDHUB-CA-CERT
@@ -566,7 +566,7 @@ Replace the placeholder text below with your values for accessing CredHub:
       ```
    
 <br>
-When the `resolve_manifest_secrets_at_bind` flag is set to true, ODB queries
+When the `enable_secure_manifests` flag is set to true, ODB queries
 BOSH and its CredHub instance and then generates a map of manifest variable
 names and CredHub references to secret values for all secrets in the manifest.
 ODB passes this map to the service adapter's `create-binding` call. For an
