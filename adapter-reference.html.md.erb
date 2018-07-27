@@ -14,7 +14,7 @@ For example service adapters, see the following examples written in golang:
 * [Redis](https://github.com/pivotal-cf-experimental/redis-example-service-adapter)
 * [Kafka](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter)
 
-<p class="note"><strong>Note: </strong> The Redis and Kafka examples above use SDK to help with 
+<p class="note"><strong>Note: </strong> The Redis and Kafka examples above use the SDK to help with 
   cross-cutting concerns. For example, reading the JSON document from stdin.</p>
   
 A service adapter is expected to respond to the subcommands.
@@ -34,6 +34,8 @@ see the following sections:
 
 - [Input Parameters](#generate-manifest-parameters)
 - [Output](#generate-manifest-output)
+- [Store Secrets on CredHub](#odb-managed-secrets)
+- [Persist Credentials Across Updates](#odb-persisting-creds)
 
 <div class="note">
   <strong>Notes</strong>:
@@ -58,8 +60,7 @@ see the following sections:
 
 ###<a id="generate-manifest-parameters"></a>Input Parameters
 
-The following section details the parameters provided to the `generate-manifest` 
-subcommand using stdin.
+This section details the parameters provided to the `generate-manifest` subcommand using stdin. 
 
 See the following example:
 
@@ -74,14 +75,15 @@ See the following example:
   }
 }
 ```
+<br>
+All arguments are passed as strings, not JSON objects.
 
-All the arguments are passed as strings and not JSON objects. 
-See the following example:
+For example:
 
 ```not-json
 {
   "generate_manifest": {
-    "service_deployment": "{\"deployment_name\":\"some-name\"...}"
+    "service_deployment": "{"deployment_name":"some-name"...}"
     // ...
   }
 }
@@ -90,35 +92,34 @@ See the following example:
 <div class="note">
   <strong>Note</strong>:
   Pivotal recommends that service authors use the following order of precedence in their 
-service adapters when generating manifests:</br>
-1. Arbitrary parameters</br>
-2. Previous manifest properties</br>
-3. Plan properties</br>
-
-For an example, see <code>auto_create_topics</code> in the 
-<a href="https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go#L68-L77"> example Kafka service adapter</a>.
+  service adapters when generating manifests:<br><br>
+  <ol>
+    <li>Arbitrary parameters</li>
+    <li>Previous manifest properties</li>
+    <li>Plan properties</li>
+  </ol>
+  For an example, see <code>auto_create_topics</code> in the 
+  <a href="https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go#L68-L77"> example Kafka service adapter</a>.
 </div>
-
-
 
 ####<a id="service-deployment"></a>SERVICE-DEPLOYMENT-JSON
 
-The following table describes the JSON structure required for `SERVICE-DEPLOYMENT-JSON`:
+`SERVICE-DEPLOYMENT-JSON` provides information regarding the BOSH Director.
 
-Provides information regarding the BOSH Director
+The following table describes the JSON structure required for `SERVICE-DEPLOYMENT-JSON`:
 
 | field                     | Type              | Description                                                            |
 |:--------------------------|:------------------|:-----------------------------------------------------------------------|
-| deployment_name           | string            | name of the deployment on the Director, in the format `service-instance_$guid`|
-| releases                  | array of releases | list of service releases configured for the deployment by the operator |
-| release.name              | string            | name of the release on the Director                                    |
-| release.version           | string            | version of the release                                                 |
-| release.jobs              | array of strings  | list of jobs required from the release                                 |
-| stemcell                  | map               | the stemcell available on the Director                                 |
-| stemcell.stemcell_os      | string            | stemcell OS available on the Director                                  |
-| stemcell.stemcell_version | string            | stemcell version available on the Director                             |
-
-See the following example:
+| deployment_name           | string            | Name of the deployment on the Director, in the format `service-instance_$GUID`|
+| releases                  | array of releases | List of service releases configured for the deployment by the operator |
+| release.name              | string            | Name of the release on the Director                                    |
+| release.version           | string            | Version of the release                                                 |
+| release.jobs              | array of strings  | List of jobs required from the release                                 |
+| stemcell                  | map               | The stemcell available on the Director                                 |
+| stemcell.stemcell_os      | string            | Stemcell OS available on the Director                                  |
+| stemcell.stemcell_version | string            | Stemcell version available on the Director                             |
+<br>
+For example:
 
 ```json
 {
@@ -137,7 +138,7 @@ See the following example:
     }
 }
 ```
-
+<br>
 Keep in mind the following:
 
 * ODB only supports injecting one stemcell into each service deployment. Different instance groups cannot have different stemcells.
@@ -153,36 +154,38 @@ Keep in mind the following:
 * You should provide documentation about which jobs are required by your Service Adapter, and which BOSH releases operators should get these jobs from.
 
 ####<a id="plan-json"></a>PLAN-JSON
+ 
+`PLAN-JSON` specifies the plan that the manifest is generated for.
 
-`PLAN-JSON` specifies the plan for which the manifest is supposed to be generated. The following table describes the schema of the JSON structure required for `PLAN-JSON`:
+The following table describes the schema of the JSON structure required for `PLAN-JSON`:
 
 | field                                     | Type                     | Description                                                                                                                            |
 |:------------------------------------------|:-------------------------|:---------------------------------------------------------------------------------------------------------------------------------------|
-| instance_groups                           | array of instance groups | instance groups configured for the plan                                                                                                |
-| instance_group.name                       | string                   | name of the instance group                                                                                                             |
-| instance_group.vm\_type                   | string                   | the vm_type configured for the instance group, matches one in the cloud config on the director                                         |
+| instance_groups                           | array of instance groups | Instance groups configured for the plan                                                                                                |
+| instance_group.name                       | string                   | Name of the instance group                                                                                                             |
+| instance_group.vm\_type                   | string                   | The vm_type configured for the instance group, matches one in the cloud config on the director                                         |
 | instance_group.vm\_extensions             | array of strings         | Optional, the vm_extensions configured for the instance group, must be present in the cloud config on the director                     |
 | instance_group.persistent\_disk\_type     | string                   | Optional, the persistent\_disk\_type configured for the instance group, matches one in the cloud config on the director                |
-| instance_group.networks                   | array of strings         | the networks the instance group is supposed to be in                                                                                   |
-| instance_group.instances                  | int                      | number of instances for the instance group                                                                                             |
+| instance_group.networks                   | array of strings         | The networks the instance group is supposed to be in                                                                                   |
+| instance_group.instances                  | int                      | Number of instances for the instance group                                                                                             |
 | instance_group.lifecycle                  | string                   | Optional, specifies the kind of workload the instance group represents. Valid values are `service` and `errand`; defaults to `service` |
-| instance_group.azs                        | array of strings         | a list of availability zones that the instance groups should be striped across                                                         |
+| instance_group.azs                        | array of strings         | A list of availability zones that the instance groups should be striped across                                                         |
 | instance_group.migrated\_from             | array of migrations      | Optional, list of [bosh migrations](https://bosh.io/docs/migrated-from.html)                                                           |
 | migration.name                            | string                   | Optional, name of the instance group to be migrated from                                                                               |
-| properties                                | map                      | properties which the operator has configured for deployments of the current plan                                                       |
+| properties                                | map                      | Properties which the operator has configured for deployments of the current plan                                                       |
 | lifecycle\_errands                        | map                      | Optional, details of post-deploy and pre-delete errands                                                                                |
 | lifecycle\_errands.post\_deploy           | array of errands         | Optional, post-deploy errands configured for the plan                                                                                  |
 | lifecycle\_errands.pre\_delete            | array of errands         | Optional, pre-delete errands configured for the plan                                                                                   |
 | errand.name                               | string                   | Errand name                                                                                                                            |
 | errand.instances                          | array of strings         | Optional, for a colocated errand, specify a list of INSTANCE-NAME/INSTANCE-IDX to run the errand                                       |
-| update                                    | map                      | update block which the operator has configured for deployments of the current plan                                                     |
-| update.canaries                           | int                      | plan-specific number of canary instances                                                                                               |
-| update.max\_in\_flight                    | int                      | plan-specific maximum number of non-canary instances to update in parallel                                                             |
-| update.canary\_watch\_time                | string                   | plan-specific time in milliseconds that the BOSH Director sleeps before checking whether the canary instances are healthy              |
-| update.update\_watch\_time                | string                   | plan-specific time in milliseconds that the BOSH Director sleeps before checking whether the non-canary instances are healthy          |
+| update                                    | map                      | Update block which the operator has configured for deployments of the current plan                                                     |
+| update.canaries                           | int                      | Plan-specific number of canary instances                                                                                               |
+| update.max\_in\_flight                    | int                      | Plan-specific maximum number of non-canary instances to update in parallel                                                             |
+| update.canary\_watch\_time                | string                   | Plan-specific time in milliseconds that the BOSH Director sleeps before checking whether the canary instances are healthy              |
+| update.update\_watch\_time                | string                   | Plan-specific time in milliseconds that the BOSH Director sleeps before checking whether the non-canary instances are healthy          |
 | update.serial                             | boolean                  | Optional, plan-specific flag to deploy instance groups sequentially (`true`), or in parallel (`false`); defaults to `true`             |
-
-See the following example:
+<br>
+For example:
 
 ```json
 {
@@ -296,8 +299,8 @@ auto-creation of topics on the cluster.
 <p class="note"><strong>Note</strong>: When updating an existing service instance,
    any arbitrary parameters passed on a previous create or update are not passed again.
    Therefore, for arbitrary parameters to stay the same across multiple deployments they must be retrieved from the previous manifest.</p>
-
-See the following example:
+<br>
+For example:
 
 ```
 {
@@ -368,53 +371,54 @@ Output JSON format:
 
 ```json
 {
-  "manifest": "<generated BOSH manifest, as YAML>",
+  "manifest": "GENERATED-BOSH-MANIFEST-YAML",
   "secrets": { "secret1":"value1", "secret2":"value2" }
 }
 ```
 
-###<a id="odb-managed-secrets"></a>Storing Secrets on CredHub
+###<a id="odb-managed-secrets"></a>Store Secrets on CredHub
 
 It is possible for the Service Adapter to generate secrets and, instead of
 writing these secrets in plain text in the manifest, to use ODB as a proxy to
 BOSH CredHub Config server. To do so, the adapter should generate the manifest
-with a special notation and output the secret as part of the `secrets` map. For
-example, consider the following `generate-manifest` output:
+with a special notation and output the secret as part of the `secrets` map. 
+
+For example, consider the following `generate-manifest` output:
 
 ```json
 {
-  "manifest": "password: ((odb_secret:the_password))",
+  "manifest": "password: ((odb_secret:SECRET-NAME))",
   "secrets": {
-    "the_password":"some-random-password"
+    "SECRET-NAME":"SOME-RANDOM-PASSWORD"
   }
 }
 ```
 
 During provision, ODB will:
 
-1. Generate a CredHub name for each secret in the
-`secrets` map (for example: `/odb/service-offering-id/instance-id/secret-name`)
-1. Replace all occurrences of `((odb_secret:<secret-name>))` with the generated
-CredHub name
+1. Generate a CredHub name for each secret in the `secrets` map in the format
+`/odb/SERVICE-OFFERING-ID/SERVICE-INSTANCE-ID/SECRET-NAME`.
+1. Replace all occurrences of `((odb_secret:SECRET-NAME))` with the generated
+CredHub name.
 1. Deploy the updated manifest.
 
-###<a id="odb-persisting-creds"></a>Persisting Credentials on Updates
+###<a id="odb-persisting-creds"></a>Persist Credentials Across Updates
 
-Similarly when dealing with properties that need to persist across updates,
-service adapter authors should extract the existing value for any ODB managed
-secrets from the previous manifest, when present.
+When dealing with properties that need to persist across updates,
+service adapter authors must extract the existing value for any ODB managed
+secrets from the previous manifest.
 
-If the previous manifest looks like this:
+The following manifest snippet shows an ODB managed secret with a CredHub name:
 
 ```
 name: the-deployment
-# ...
+...
 properties:
-password: ((/odb/<service-guid>/<service-instance-guid>/<the_password>))
+password: ((/odb/SERVICE-GUID/SERVICE-INSTANCE-GUID/SECRET-NAME))
 ```
 
-then `generate-manifest` should not replace `properties.password` with
-`((odb_secret:password))`
+If the previous manifest contains CredHub names for secrets, as in the manifest snippet above, 
+the `generate-manifest` command must not replace `properties.password` with `((odb_secret:SECRET-NAME))`.
 
 For how to use the value during a bind, see [create-binding](#create-binding) below.
 
@@ -444,12 +448,11 @@ See the following example:
 All the arguments are passed as strings and not JSON objects. 
 See the following example:
 
-```
-not-json
+```not-json
 {
   "dashboard_url": {
-    // ...
-    "manifest": "---\nname: some-name\n..."
+    ...
+    "manifest": "---\nname: my-service-instance\n..."
   }
 }
 ```
@@ -466,8 +469,7 @@ The structure should be the same as the [plan given in the generate manifest](#p
 
 See the following example:
 
-```
-json
+```json
 {
   "properties": {
     "persistence": true
@@ -551,7 +553,7 @@ exits with 0 and outputs JSON with the following structure:
 
 | field         | Type   | Description                           |
 |:--------------|:-------|:--------------------------------------|
-| dashboard_url | string | dashboard url returned to the cf user |
+| dashboard_url | string | Dashboard url returned to the cf user |
 
 See the following example:
 
@@ -585,6 +587,7 @@ the simplest way to do this is to name the user after the binding ID.
 
 - [Input Parameters](#create-binding-parameters)
 - [Output](#create-binding-output)
+- [Credentials for Bindings](#create-binding-credentials)
 
 ###<a id="create-binding-parameters"></a>Input Parameters
 
@@ -831,8 +834,7 @@ for Binding](#create-binding-exit-codes) below.
 
 The following is an example success response to `create-binding`:
 
-```
-json
+```json
 {
   "credentials": {
     "username": "user1",
@@ -843,7 +845,7 @@ json
 }
 ```
 
-###<a id="create-binding-exit-codes"></a>Supported Exit Codes for Binding
+####<a id="create-binding-exit-codes"></a>Supported Exit Codes for Binding
 
 | exit code     | Description                                       | Output                                                                                                                           |
 |:--------------|:--------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------|
