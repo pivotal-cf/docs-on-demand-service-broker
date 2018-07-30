@@ -359,7 +359,8 @@ can be used for complex plan migration logic. For an example, the [Kafka service
 
 ###<a id="generate-manifest-output"></a>Output
 
-The following table describes the supported exit codes and output for the `generate-manifest` subcommand:
+The following table describes the supported exit codes and output for the 
+`generate-manifest` subcommand:
 
 | exit code     | Description     | Output                                                                                                                           |
 |:--------------|:----------------|:---------------------------------------------------------------------------------------------------------------------------------|
@@ -367,7 +368,8 @@ The following table describes the supported exit codes and output for the `gener
 | 10            | not implemented |                                                                                                                                  |
 | anything else | failure         | <ul><li>Stdout: optional error message for CF CLI users</li> <li>Stderr: error message for operator</li> <li>ODB logs both stdout and stderr</li></ul>     |
 
-Output JSON format:
+<br>
+Example JSON output printed when the `generate-manifest` command is successful:
 
 ```json
 {
@@ -445,8 +447,10 @@ See the following example:
 }
 ```
 
+<br>
 All the arguments are passed as strings and not JSON objects. 
-See the following example:
+
+For example:
 
 ```not-json
 {
@@ -547,25 +551,8 @@ addons:
 
 ###<a id="dashboard-url-output"></a>Output
 
-If the `dashboard-url` command generates a url successfully, the shell 
-exits with 0 and outputs JSON with the following structure:
-
-
-| field         | Type   | Description                           |
-|:--------------|:-------|:--------------------------------------|
-| dashboard_url | string | Dashboard url returned to the cf user |
-
-See the following example:
-
-```
-{
-   "dashboard_url":"https://someurl.example.com"
-}
-```
-
-#### Supported Exit Codes for dashboard-url
-
-See the following table for supported exit codes for the `dashboard-url` subcommand:
+The following table describes the supported exit codes and output for the 
+`dashboard-url` subcommand:
 
 | exit code     | Description     | Output                                                                                                                           |
 |:--------------|:----------------|:---------------------------------------------------------------------------------------------------------------------------------|
@@ -573,6 +560,20 @@ See the following table for supported exit codes for the `dashboard-url` subcomm
 | 10            | not implemented |                                                                                                                                  |
 | anything else | failure         | Stdout: optional error message for CF CLI users<br> Stderr: error message for operator<br> ODB logs both stdout and stderr |
 
+<br>
+Example JSON output printed when the `dashboard-url` command is successful:
+
+```
+{
+   "dashboard_url":"https://someurl.example.com"
+}
+```
+
+The following table describes the output JSON above:
+
+| field         | Type   | Description                           |
+|:--------------|:-------|:--------------------------------------|
+| dashboard_url | string | Dashboard url returned to the cf user |
 
 ##<a id="create-binding"></a>create-binding
 
@@ -594,6 +595,8 @@ the simplest way to do this is to name the user after the binding ID.
 The following section details the parameters required by the `create-binding` subcommand as 
 a JSON document using stdin.
 
+See the following example:
+
 ```json
 {
   "create_binding": {
@@ -606,9 +609,10 @@ a JSON document using stdin.
   }
 }
 ```
-
+<br>
 All the arguments are passed as strings and not JSON objects. 
-See the following example:
+
+For example:
 
 ```not-json
 {
@@ -823,16 +827,19 @@ instance_groups:
 
 ###<a id="create-binding-output"></a>Output
 
-If the `create-binding` command is successful, the shell outputs an exit code of 0 
-and prints a service broker API binding JSON response on stdout. 
+The following table describes the supported exit codes and output for the 
+`create-binding` subcommand:
 
-If the command fails, the shell returns a non-zero exit code. Stdout and stderr 
-from the command are logged by the ODB.
+| exit code     | Description                                       | Output                                                                                                                           |
+|:--------------|:--------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------|
+| 0             | success                                           | Stdout: binding credentials JSON                                                                                                 |
+| 10            | subcommand not implemented                        |                                                                                                                                  |
+| 42            | app_guid not provided in the binding request body | Stderr: error message for operator<br/> ODB logs both stdout and stderr                                                      |
+| 49            | binding already exists                            | Stderr: error message for operator<br/> ODB logs both stdout and stderr                                                      |
+| anything else | failure                                           | Stdout: optional error message for CF CLI users<br/> Stderr: error message for operator<br/> ODB logs both stdout and stderr |
 
-For more information about supported failure cases, see [Supported Exit Codes 
-for Binding](#create-binding-exit-codes) below.
-
-The following is an example success response to `create-binding`:
+<br>
+Example JSON output printed when the `create-binding` command is successful:
 
 ```json
 {
@@ -844,17 +851,6 @@ The following is an example success response to `create-binding`:
   "route_service_url": "optional: for route services only"
 }
 ```
-
-####<a id="create-binding-exit-codes"></a>Supported Exit Codes for Binding
-
-| exit code     | Description                                       | Output                                                                                                                           |
-|:--------------|:--------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------|
-| 0             | success                                           | Stdout: binding credentials JSON                                                                                                 |
-| 10            | subcommand not implemented                        |                                                                                                                                  |
-| 42            | app_guid not provided in the binding request body | Stderr: error message for operator<br/> ODB logs both stdout and stderr                                                      |
-| 49            | binding already exists                            | Stderr: error message for operator<br/> ODB logs both stdout and stderr                                                      |
-| anything else | failure                                           | Stdout: optional error message for CF CLI users<br/> Stderr: error message for operator<br/> ODB logs both stdout and stderr |
-
 
 ##<a id="delete-binding"></a>delete-binding
 
@@ -882,8 +878,10 @@ See the following example:
 }
 ```
 
+<br>
 All the arguments are passed as strings and not JSON objects. 
-See the following example:
+
+For example:
 
 ```not-json
 {
@@ -942,7 +940,8 @@ See the following example:
 
 ###<a id="delete-binding-output"></a>Output
 
-The following table describes the supported exit codes and output for the `delete-binding` subcommand:
+The following table describes the supported exit codes and output for the 
+`delete-binding` subcommand:
 
 | exit code     | Description            | Output                                                                                                                           |
 |:--------------|:-----------------------|:---------------------------------------------------------------------------------------------------------------------------------|
@@ -951,7 +950,7 @@ The following table describes the supported exit codes and output for the `delet
 | 41            | binding does not exist | Stderr: error message for operator<br/> ODB logs both stdout and stderr                                                      |
 | anything else | failure                | Stdout: optional error message for CF CLI users<br/> Stderr: error message for operator<br/> ODB logs both stdout and stderr |
 
-
+<br>
 This can be used to connect to the actual VMs if required, to delete a service specific binding.
 For example, this can be used to delete a user in MySQL.
 
@@ -981,6 +980,8 @@ exposed through the Apps Manager UI.
 This section describes the parameters required by the `generate-plan-schemas` 
 subcommand, passed using stdin.
 
+See the following example:
+
 ```json
 {
   "generate_plan_schemas": {
@@ -989,8 +990,10 @@ subcommand, passed using stdin.
 }
 ```
 
+<br>
 All the arguments are passed as strings and not JSON objects. 
-See the following example:
+
+For example:
 
 ```not-json
 {
@@ -1044,7 +1047,8 @@ The following table describes the supported exit codes and output for the
 | 10            | not implemented        |                                                  |
 | anything else | failure                | <ul><li>Stdout: optional error message for cf CLI users</li> <li>Stderr: error message for operator</li>  <li>ODB logs both stdout and stderr</li></ul> |
 
-Output example:
+<br>
+Example JSON output printed when the `generate-plan-schemas` command is successful:
 
 ```json
 {
