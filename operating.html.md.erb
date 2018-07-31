@@ -867,56 +867,29 @@ Pivotal has tested this example configuration with Loggregator v58 and service-m
 
 For more information about service metrics, see [Service Metrics for Pivotal Cloud Foundry](http://docs.pivotal.io/service-metrics).
 
-## <a id="binding-with-dns"></a>(Optional) Make DNS Addresses Available for Binding Creation
+## <a id="binding-with-dns"></a>(Optional) Obtain BOSH DNS Addresses for Binding Creation
 
-<p class="note"><strong>Note</strong>: 
-  This feature requires BOSH Director v266.3 or later.
-  This is available in Ops Manager v2.2 and later.</p>
+You can configure ODB to retrieve BOSH DNS addresses for service instances. 
+These addresses are passed to the service adapter when you create a binding.
+This is useful when the binding for a service instance contains, or relies on, 
+BOSH DNS addresses for that deployment. 
 
-You can configure ODB to provide service instance DNS addresses to the service 
-adapter `create-binding` call. 
-This is useful when the binding for a service instance contains, or relies on, BOSH 
-DNS addresses for that deployment. 
+### Requirements
 
-To enable ODB to provide service instance DNS addresses to the `create-binding` call, 
-do the following:
+- A service that has this feature enabled in the service adapter.
+For information for service authors about how to enable this feature for their on-demand
+service, see [Enable ODB to Obtain BOSH DNS Addresses](./creating.html#dns-addresses).
+- BOSH Director v266.3 or later, available in Ops Manager v2.2 and later.
 
-1. Provide a link from the service instance's BOSH release.
-Choose any job in the service release and add the link to its `spec` file.
-<br><br>
-For example:
+### Procedure
 
-    ```
-    name: redis-server-job
-    ...
-    provides:
-      - name: example-link-1
-        type: example-type
-    ```
-    <br>
-For an example `spec` file, see the [Redis Example Service Release](https://github.com/pivotal-cf-experimental/redis-example-service-release/blob/master/jobs/redis-server/spec).
+To enable ODB to obtain BOSH DNS addresses for binding creation, do the following:
 
-1. In the generated service instance manifest, share the link you provided above 
-in the same job that you added the link to in step 1. <br><br>
-Include the link in all instance groups that you require a DNS address for at binding time.
-<br><br>
-For example:
-        
-    ```
-    instance_groups:
-    - name: leader-node
-      jobs:
-      - name: redis-server-job
-        release: redis-cluster-release
-        provides:                          # add this section
-          example-link-1: {shared: true} 
-        ...
-    ```
 1. In the manifest, configure the `binding_with_dns` property on plans that require 
-DNS addresses to create a binding.<br><br>
-For more information about the properties to add, see [Options for the 
-_binding\_with\_dns_ property](#binding-property)
-below.
+DNS addresses to create a binding.
+<br><br>
+For more information about the properties to add, see [Options for _binding\_with
+\_dns_](#binding-property) below.
 <br><br>
 For example:
 
@@ -937,33 +910,21 @@ For example:
             status: healthy
     ``` 
 
-<br>
-Each entry in `binding_with_dns` is converted to a single BOSH DNS address using the BOSH links API.
+    <br>
+    Each entry in `binding_with_dns` is converted to a BOSH DNS address that is
+    passed to the service adapter when you create a binding.
 
-The On Demand Services SDK includes the `DNSAddresses` parameter for the `CreateBinding` method. 
-The ODB invokes the `CreateBinding` method with this parameter, which is a map of name to DNS address.
-
-
-For example:
-
-```json
-{
-  "leader-address": "q-s0.leader-node.default.service-instance_c1371314-643f-48b7-b80a-6741e7377022.bosh",
-  "follower-address": "q-a1a2s0.follower-node.default.service-instance_c1371314-643f-48b7-b80a-6741e7377022.bosh"
-}
-```
-
-<a id="binding-property"></a><h3>Options for the _binding\_with\_dns_ property</h3>
+#### <a id="binding-property"></a>Options for _binding\_with\_dns_
 
 The following table provides descriptions of the properties to add to the `binding_with_dns` section:
 
 | Property          | Description                                                                                                                                                             | Mandatory/Optional |
 | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
-| name              | An arbitrary identifier. Used to identify the address when creating a binding.                                                                                                     | Mandatory          |
-| link_provider     | The exposed name of the link. Normally `provides.name` from the release spec, but can be overridden in the deployment manifest by setting the `as` property of the link. | Mandatory          |
-| instance_group    | The name of the instance group sharing the link. The resultant DNS address resolves to IP addresses of this instance group.                                                        | Mandatory          |
-| properties.azs    | A list of availability zone names. When this is provided, the resultant DNS address resolves to IP addresses in these zones.                                                       | Optional           |
-| properties.status | A filter for link address status (healthy, unhealthy, all, default). When this is provided, the resultant DNS address resolves to IP addresses with this status.                   | Optional           |
+| name              | An arbitrary identifier. Used to identify the address when creating a binding.                                                                                          | Mandatory          |
+| link_provider     | The exposed name of the link. Normally `provides.name` from the release spec, but can be overridden in the deployment manifest by setting the `as` property of the link.| Mandatory          |
+| instance_group    | The name of the instance group sharing the link. The resultant DNS address resolves to IP addresses of this instance group.                                             | Mandatory          |
+| properties.azs    | A list of availability zone names. When this is provided, the resultant DNS address resolves to IP addresses in these zones.                                            | Optional           |
+| properties.status | A filter for link address status (healthy, unhealthy, all, default). When this is provided, the resultant DNS address resolves to IP addresses with this status.        | Optional           |
 
 ## <a id="startup-checks"></a>About Broker Startup Checks
 

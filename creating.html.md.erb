@@ -57,9 +57,14 @@ For more information see the [BOSH documentation](https://bosh.io/docs/errands.h
 
 ### <a id="job-links"></a>Job Links
 
-When generating a manifest, Pivotal recommends not using static IPs, which make network IP management very complex. Instead, Pivotal recommends using [BOSH's job links feature](https://bosh.io/docs/links.html).
+When generating a manifest, Pivotal recommends not using static IPs, which make 
+network IP management very complex. 
+Instead, Pivotal recommends using BOSH's job links feature.
 
-There are two types of job links, implicit and explicit. The [example Kafka release](https://github.com/pivotal-cf-experimental/kafka-example-service-release/blob/master/jobs/kafka_server/spec#L15) uses implicit job links to get the IPs of the brokers and the zookeeper. For more information about the links feature, see the [BOSH documentation](https://bosh.io/docs/links.html).
+There are two types of job links, implicit and explicit. 
+The [example Kafka release](https://github.com/pivotal-cf-experimental/kafka-example-service-release/blob/master/jobs/kafka_server/spec#L15) 
+uses implicit job links to get the IPs of the brokers and the zookeeper. 
+For more information about the links feature, see the [BOSH documentation](https://bosh.io/docs/links.html).
 
 ### <a id="package-service"></a>Packaging a Service Release
 
@@ -81,12 +86,15 @@ A service adapter is an executable invoked by the ODB.
 Pivotal has published an SDK for teams writing their service adapters in golang.
 For more information, see [Golang SDK](#sdk) below.
 
+### <a id="subcommands"></a>Subcommands in the Adapter Interface
+
 A service adapter is expected to respond to the subcommands below.
 The parameters and expected output from these subcommands are explained in detail 
 in [Service Adapter Interface Reference](./adapter-reference.html).
 
 - `generate-manifest`:
-  Generate a BOSH manifest for your service instance deployment and output to stdout a JSON document containing the manifest as YAML, given information about the:
+  Generate a BOSH manifest for your service instance deployment and output to stdout 
+  a JSON document containing the manifest as YAML, given information about the:
   - BOSH Director (stemcells, release names)
   - service instance (ID, request parameters, plan properties, IAAS resources)
   - previous manifest, if this is an upgrade deployment
@@ -95,20 +103,74 @@ in [Service Adapter Interface Reference](./adapter-reference.html).
     Given the same arguments when a previous manifest is supplied&mdash;which
     happens during a deployment update&mdash;the command should always output
     the same BOSH manifest.</p>
-
+    For more information about this subcommand, see [generate-manifest](./adapter-reference.html#generate-manifest)
+<br><br>
 - `dashboard-url`:
   Generate an optional URL of a web-based management user interface for the service instance.
-
-- `generate-plan-schemas`:
-  Generate a JSON schema to validate service-specific configuration parameters.
-
+  For more information about this subcommand, see [dashboard-url](./adapter-reference.html#dashboard-url)
+<br><br>
 - `create-binding`:
   Create (unique, if possible) credentials for the service instance, printing them to stdout as JSON.
-
+  For more information about this subcommand, see [create-binding](./adapter-reference.html#create-binding)
+<br><br>
 - `delete-binding`:
   Invalidate the created credentials, if possible.
   Some services (e.g. Redis) are single-user, and this endpoint will do nothing.
+  For more information about this subcommand, see [delete-binding](./adapter-reference.html#delete-binding)
+<br><br>
+- `generate-plan-schemas`:
+  Generate a JSON schema to validate service-specific configuration parameters.
+  For more information about this subcommand, see [generate-plan-schemas](./adapter-reference.html#generate-plan-schemas)
 
+### <a id="dns-addresses"></a> Enable ODB to Obtain BOSH DNS Addresses
+
+<p class="note"><strong>Note:</strong>
+ This feature requires BOSH Director v266.3 or later. 
+ This is available in Ops Manager v2.2 and later.</p>
+
+You can configure ODB to provide BOSH DNS addresses for service instances to the 
+service adapter `create-binding` call.
+This is useful when the binding for a service instance contains, or relies on, 
+BOSH DNS addresses for that deployment.
+For more information about how DNS addresses are passed to the `create-binding` call, 
+see [DNS-ADDRESSES-JSON](./adapter-reference.html#create-binding-dns-addresses).
+
+To enable ODB to provide service instance DNS addresses to the `create-binding` call, 
+do the following:
+
+1. Provide a link from the service instance's BOSH release.
+Choose any job in the service release and add the link to its `spec` file.
+<br><br>
+For example:
+
+    ```
+    name: redis-server-job
+    ...
+    provides:
+      - name: example-link-1
+        type: example-type
+    ```
+    <br>
+For an example `spec` file, see the [Redis Example Service Release](https://github.com/pivotal-cf-experimental/redis-example-service-release/blob/master/jobs/redis-server/spec).
+
+2. Write code in the service adapter that shares the link you provided above in the BOSH
+manifest generated for your service instance deployment.
+<br><br>
+Ensure you share the link in the same job that you added the link to in step 1. 
+Include the link in all instance groups that require a DNS address at binding time.
+<br><br>
+For example:
+        
+    ```yaml
+    instance_groups:
+    - name: leader-node
+      jobs:
+      - name: redis-server-job
+        release: redis-cluster-release
+        provides:                          # add this section
+          example-link-1: {shared: true} 
+        ...
+    ```
 
 ### <a id="handling-errors"></a>Handle Errors
 
