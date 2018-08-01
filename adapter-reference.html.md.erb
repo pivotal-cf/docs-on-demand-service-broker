@@ -424,6 +424,46 @@ the `generate-manifest` command must not replace `properties.password` with `((o
 
 For how to use the value during a bind, see [create-binding](#create-binding) below.
 
+
+###<a id="migrating-to-stored-secrets"></a>Migrating from plaintext secrets to ODB Managed Secrets
+
+Currently, when `generate manifest` is provided with an old manifest, secrets from the previous deployment are carried forward by copying them into the new manifest.
+
+To enable ODB managed secrets, each plaintext secret from the old manifest should be converted to an ODB managed placeholder in the new manifest. The value of that secret should be returned in the secrets map. This will instruct ODB to store that secret in credhub.
+
+The secrets map should only contain secrets that need to be set for the first time. This may be for a new service creation, for shifting plaintext secrets into credhub, or for changing the value of a previously set secret.
+
+Each placeholder in the manifest must have a corresponding entry in the secrets map. Each key in the secrets map must have at least one corresponding placeholder in the manifest.
+
+The ODB managed secrets placeholder can also be used to update the value of existing secrets by simply updating the value in the secrets map.
+
+Secrets already stored in CredHub do not need to use this placeholder since any CredHub reference will be ignored by ODB during `generate manifest`.
+
+Example function for detecting whether a secret should be replaced:
+
+```go
+import(
+	"github.com/pivotal-cf/on-demand-services-sdk/serviceadapter"
+)
+
+func extractSecret(oldValue, secretName string, secretsMap map[string]string) newValue string) {
+  if !strings.HasPrefix(redisPassword, "((") && !strings.HasSuffix(redisPassword, "))") {
+    // This is a plaintext secret
+    // Add the value to the secrets map, and return its placeholder to use in the manifest
+    secretsMap[secretName] = oldValue
+    newValue = fmt.Sprintf( "((%s:%s))", serviceadapter.ODBSecretPrefix, secretName)
+    return newValue, secretsMap
+  } else {
+    // else: this secret could be one of the following:
+    // - a custom credhub path
+    // - a reference to the BOSH generated variables block
+    // - a credhub reference to a secret already managed by the ODB
+    // In all cases, the ODB does not need to send the secret to credhub, so it should not be included in the secrets map.
+    return oldValue
+  }
+}
+```
+
 ##<a id="dashboard-url"></a>dashboard-url
 
 For more information about the `dashboard-url` subcommand, see the following sections:
