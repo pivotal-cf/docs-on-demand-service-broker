@@ -7,7 +7,8 @@ This topic describes the subcommands used with the Service Adapter Interface.
 
 ## <a id="interface"></a>Service Adapter Interface
 
-Implement your service adapter as a binary. The service adapter receives its parameters as a JSON document using stdin.
+Implement your service adapter as a binary. 
+The service adapter receives its parameters as a JSON document using stdin.
 
 For example service adapters, see the following examples written in golang:
 
@@ -29,8 +30,7 @@ passed via stdin, see the subcommands below.
 
 ## <a id="generate-manifest"></a>generate-manifest
 
-For more information about the `generate-manifest` subcommand, 
-see the following sections:
+This section contains the following topics:
 
 - [Input Parameters](#generate-manifest-parameters)
 - [Output](#generate-manifest-output)
@@ -40,10 +40,11 @@ see the following sections:
 <div class="note">
   <strong>Notes</strong>:
   <ul>
-  <li>ODB requires <code>generate-manifest</code> to be <strong>idempotent</strong>.
+  <li>The on-demand broker (ODB) requires <code>generate-manifest</code> to be 
+    <strong>idempotent</strong>.
     Given the same arguments when a previous manifest is
     supplied&mdash;which happens during a deployment update&mdash;the command
-    should always output the same BOSH manifest.</li> <li>When determing
+    should always output the same BOSH manifest.</li> <li>When determining
     whether there are pending changes for an instance during an update, ODB
     <em>ignores</em> any configuration supplied in the <a
     href="https://bosh.io/docs/deployment-manifest.html#update"
@@ -108,7 +109,7 @@ For example:
 
 The following table describes the JSON structure required for `SERVICE-DEPLOYMENT-JSON`:
 
-| field                     | Type              | Description                                                            |
+| Field                     | Type              | Description                                                            |
 |:--------------------------|:------------------|:-----------------------------------------------------------------------|
 | deployment_name           | string            | Name of the deployment on the Director, in the format `service-instance_$GUID`|
 | releases                  | array of releases | List of service releases configured for the deployment by the operator |
@@ -159,7 +160,7 @@ Keep in mind the following:
 
 The following table describes the schema of the JSON structure required for `PLAN-JSON`:
 
-| field                                     | Type                     | Description                                                                                                                            |
+| Field                                     | Type                     | Description                                                                                                                            |
 |:------------------------------------------|:-------------------------|:---------------------------------------------------------------------------------------------------------------------------------------|
 | instance_groups                           | array of instance groups | Instance groups configured for the plan                                                                                                |
 | instance_group.name                       | string                   | Name of the instance group                                                                                                             |
@@ -252,36 +253,56 @@ For example:
 }
 ```
 
-Plans are composed by the operator and consist of resource mappings, properties and an optional update block:
+<br>
+Plans are composed by the operator and consist of resource mappings, properties 
+and an optional update block:
 
-* **Resource Mappings**
+<br>
+ **Resource Mappings**
 
   The `instance_groups` section of the plan JSON.
-  This maps service deployment instance groups (defined by the service author) to resources (defined by the operator).
-  The service developers should document the list of instance group names required for their deployment (e.g. "redis-server") 
-  and any constraints they recommend on resources (e.g. operator must add a persistent disk if persistence property is enabled).
-  These constraints can of course be enforced in code.
-  The `instance_groups` section also contains a field for `lifecycle`, which can be set by the operator.
-  The service adapter adds a lifecycle field to the instance group within the BOSH manifest when specified.
+  This maps service deployment instance groups (defined by the service author) to
+  resources (defined by the operator).
+  
+  You should document the list of instance group names required for a deployment,
+  for example, "redis-server".
+  You should also document any recommended resource constraints. For example, 
+  operators must add a persistent disk if the persistence property is enabled.
+  You can enforce these constraints in code.
 
-* **Properties**
+  The `instance_groups` section also contains a field for `lifecycle`, which can 
+  be set by the operator.
+  The service adapter adds a `lifecycle` field to the instance group within the BOSH 
+  manifest when specified.
 
-  Properties are service-specific parameters chosen by the service author. The Redis example exposes a property `persistence`, which takes a boolean value and toggles disk persistence for Redis. These should be documented by the service developers for the operator.
+<br>
+**Properties**
 
-* **Update Block (optional)**
+  Properties are service-specific parameters that you choose. 
+  The Redis example exposes a property `persistence`, which takes a boolean value 
+  and toggles disk persistence for Redis. 
+  You should document these properties for the operator.
 
-  This block defines a plan-specific configuration for BOSH's update instance operation. Although the ODB considers this block optional, the service adapter must output an update block in every manifest it generates. Some ways to achieve that are:
+<br>
+ **(Optional) Update Block**
 
-  1. *(Recommended)* Define a default update block for all plans, which is used when a plan-specific update block is not provided by the operator
-  1. Hard code an update block for all plans in the service adapter
-  1. Make the update block mandatory, so that operators must provide an update block for every plan in the service catalogue section of the ODB manifest
+  This block defines a plan-specific configuration for BOSH's update instance operation. 
+  Although the ODB considers this block optional, the service adapter must output 
+  an update block in every manifest it generates. 
+  Some ways to achieve that are:
+
+  1. *(Recommended)* Define a default update block for all plans, which is used 
+  when a plan-specific update block is not provided by the operator.
+  1. Hard code an update block for all plans in the service adapter.
+  1. Make the update block mandatory, so that operators must provide an update 
+  block for every plan in the service catalog section of the ODB manifest.
 
 ####<a id="generate-request-params-JSON"></a>REQUEST-PARAMS-JSON
 
 This is a JSON object that holds the entire body of the [service
 provision](http://docs.cloudfoundry.org/services/api.html#provisioning) or
 [service
-update](http://docs.cloudfoundry.org/services/api.html#updating_service_instance)
+update](http://docs.cloudfoundry.org/services/api.html#updating-a-service-instance)
 request sent by the Cloud Controller to the service broker. The request
 parameters JSON will be `null` for upgrades.
 
@@ -298,7 +319,8 @@ auto-creation of topics on the cluster.
 
 <p class="note"><strong>Note</strong>: When updating an existing service instance,
    any arbitrary parameters passed on a previous create or update are not passed again.
-   Therefore, for arbitrary parameters to stay the same across multiple deployments they must be retrieved from the previous manifest.</p>
+   Therefore, for arbitrary parameters to stay the same across multiple deployments 
+   they must be retrieved from the previous manifest.</p>
 <br>
 For example:
 
@@ -362,7 +384,7 @@ can be used for complex plan migration logic. For an example, the [Kafka service
 The following table describes the supported exit codes and output for the 
 `generate-manifest` subcommand:
 
-| exit code     | Description     | Output                                                                                                                           |
+| Exit code     | Description     | Output                                                                                                                           |
 |:--------------|:----------------|:---------------------------------------------------------------------------------------------------------------------------------|
 | 0             | success         | <ul><li>Stdout: JSON document containing the BOSH manifest YAML and a map of adapter generated secrets</li></ul>                 |
 | 10            | not implemented |                                                                                                                                  |
@@ -380,10 +402,10 @@ Example JSON output printed when the `generate-manifest` command is successful:
 
 ###<a id="odb-managed-secrets"></a>Store Secrets on CredHub
 
-It is possible for the Service Adapter to generate secrets and, instead of
-writing these secrets in plain text in the manifest, to use ODB as a proxy to
-BOSH CredHub Config server. To do so, the adapter should generate the manifest
-with a special notation and output the secret as part of the `secrets` map. 
+The Service Adapter can generate secrets and, instead of writing these secrets 
+in plain text in the manifest, to use ODB as a proxy to BOSH CredHub Config server. 
+To do so, the adapter should generate the manifest with a special notation and 
+output the secret as part of the `secrets` map. 
 
 For example, consider the following `generate-manifest` output:
 
@@ -426,7 +448,7 @@ For how to use the value during a bind, see [create-binding](#create-binding) be
 
 ##<a id="dashboard-url"></a>dashboard-url
 
-For more information about the `dashboard-url` subcommand, see the following sections:
+This section contains the following topics:
 
 - [Input Parameters](#dashboard-url-parameters)
 - [Output](#dashboard-url-output)
@@ -554,11 +576,11 @@ addons:
 The following table describes the supported exit codes and output for the 
 `dashboard-url` subcommand:
 
-| exit code     | Description     | Output                                                                                                                           |
-|:--------------|:----------------|:---------------------------------------------------------------------------------------------------------------------------------|
-| 0             | success         | Stdout: dashboard URL JSON                                                                                                       |
-| 10            | not implemented |                                                                                                                                  |
-| anything else | failure         | Stdout: optional error message for CF CLI users<br> Stderr: error message for operator<br> ODB logs both stdout and stderr |
+| Exit code     | Description     | Output                                                                                                                                           |
+|:--------------|:----------------|:-------------------------------------------------------------------------------------------------------------------------------------------------|
+| 0             | success         | <ul><li>Stdout: dashboard URL JSON</li></ul>                                                                                                     |
+| 10            | not implemented |                                                                                                                                                  |
+| anything else | failure         | <ul><li>Stdout: optional error message for CF CLI users</li><li>Stderr: error message for operator<br> ODB logs both stdout and stderr</li></ul> |
 
 <br>
 Example JSON output printed when the `dashboard-url` command is successful:
@@ -569,22 +591,16 @@ Example JSON output printed when the `dashboard-url` command is successful:
 }
 ```
 
+<br>
 The following table describes the output JSON above:
 
-| field         | Type   | Description                           |
+| Field         | Type   | Description                           |
 |:--------------|:-------|:--------------------------------------|
 | dashboard_url | string | Dashboard url returned to the cf user |
 
 ##<a id="create-binding"></a>create-binding
 
-Binding credentials for a service instance should share a namespace and should
-be unique if possible.
-
-For MySQL, two bindings could include a different username/password pairs, but
-share the same MySQL database tables and data.  The first step is to determine
-which credentials are best to supply in the context of your service.  Pivotal
-recommends that users can be identified statelessly from the binding ID, and
-the simplest way to do this is to name the user after the binding ID.
+This section contains the following topics:
 
 - [Input Parameters](#create-binding-parameters)
 - [Output](#create-binding-output)
@@ -642,6 +658,7 @@ See the following example:
 }
 ```
 
+<br>
 This can be used to connect to the instance deployment, if required, or to create a service specific binding. 
 In the example above, the Service Adapter may connect to MySQL as the admin and create a user. 
 As part of the binding, the `mysql_node` IPs would be returned, but  not the `management_box`.
@@ -661,16 +678,16 @@ This parameter is a JSON object that holds the entire body of the [service
 binding](http://docs.cloudfoundry.org/services/api.html#binding) request sent
 by the Cloud Controller to the service broker.
 
+The field `bind_resource` contains key-value pairs for `app_guid`,
+`credential_client_id` and `route`.  If using the <a href="#sdk">golang
+SDK</a>, the `brokerapi.BindResource` struct containing these fields can be
+accessed using the `BindResource()` helper method on requestParams.
+
 The field `parameters` contains arbitrary key-value pairs which were passed by
 the app developer as a `cf` CLI parameter when creating, or updating
 the service instance. 
 If using the <a href="#sdk">golang SDK</a>, it can be
 obtained using the `ArbitraryParams()` helper method on requestParams.
-
-The field `bind_resource` contains key-value pairs for `app_guid`,
-`credential_client_id` and `route`.  If using the <a href="#sdk">golang
-SDK</a>, the `brokerapi.BindResource` struct containing these fields can be
-accessed using the `BindResource()` helper method on requestParams.
 
 See the following example:
 
@@ -738,6 +755,8 @@ the ODB retrieves DNS addresses from BOSH before calling the adapter.
 ODB passes these addresses to the service adapter along with the names given in the 
 `binding_with_dns` properties.
 
+For how to enable this feature for your on-demand service, see [Enable ODB to Obtain 
+BOSH DNS Addresses](./creating.html#dns-addresses).
 
 The following is an example `binding_with_dns` configuration in the broker manifest:
 
@@ -764,16 +783,26 @@ The snippet above produces the following in `DNS-ADDRESSES-JSON`:
 }
 ```
 
+<br>
 Each entry in `binding_with_dns` is converted to a single BOSH DNS address using the BOSH links API.
 
 The On Demand Services SDK includes the `DNSAddresses` parameter for the `CreateBinding` method. 
 The ODB invokes the `CreateBinding` method with this parameter, which is a map of name to DNS address.
 
-###<a id="create-binding-credentials"></a>Credentials for Bindings
+### <a id="create-binding-credentials"></a>Credentials for Bindings
+
+Binding credentials for a service instance should share a namespace and should
+be unique if possible.
+
+For MySQL, two bindings could include different username/password pairs, but
+share the same MySQL database tables and data.  The first step is to determine
+which credentials are best to supply in the context of your service.  
+Pivotal recommends that users to be identified statelessly from the binding ID.
+The simplest way to do this is to name the user after the binding ID.
 
 You can take one of three approaches to credentials for a service binding:
 
-####Static Credentials
+#### Static Credentials
 
 In this case, the same credentials are used for all bindings. One option is to define these credentials in the service instance manifest.
 
@@ -785,7 +814,7 @@ properties:
     password: PASSWORD
 ```
 
-####Credentials Unique to Each Binding
+#### Credentials Unique to Each Binding
 
 In this case, when the adapter `generate-manifest` subcommand is invoked, 
 it generates random admin credentials and returns them as part of the service 
@@ -802,7 +831,7 @@ properties:
   admin_password: ADMIN-PASSWORD
 ```
 
-####Using an Agent
+#### Using an Agent
 
 In this case, the author defines an agent responsible for handling creation of 
 credentials unique to each binding. The agent must be added as a BOSH release 
@@ -836,13 +865,13 @@ instance_groups:
 The following table describes the supported exit codes and output for the 
 `create-binding` subcommand:
 
-| exit code     | Description                                       | Output                                                                                                                           |
-|:--------------|:--------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------|
-| 0             | success                                           | Stdout: binding credentials JSON                                                                                                 |
-| 10            | subcommand not implemented                        |                                                                                                                                  |
-| 42            | app_guid not provided in the binding request body | Stderr: error message for operator<br/> ODB logs both stdout and stderr                                                      |
-| 49            | binding already exists                            | Stderr: error message for operator<br/> ODB logs both stdout and stderr                                                      |
-| anything else | failure                                           | Stdout: optional error message for CF CLI users<br/> Stderr: error message for operator<br/> ODB logs both stdout and stderr |
+| Exit code     | Description                                       | Output                                                                                                                                               |
+|:--------------|:--------------------------------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| 0             | success                                           | <ul><li>Stdout: binding credentials JSON </li></ul>                                                                                                  |
+| 10            | subcommand not implemented                        |                                                                                                                                                      |
+| 42            | app_guid not provided in the binding request body | <ul><li>Stderr: error message for operator</li><li>ODB logs both stdout and stderr </li></ul>                                                        |
+| 49            | binding already exists                            | <ul><li>Stderr: error message for operator</li><li>ODB logs both stdout and stderr </li></ul>                                                        |
+| anything else | failure                                           | <ul><li>Stdout: optional error message for CF CLI users</li><li>Stderr: error message for operator</li><li>ODB logs both stdout and stderr</li></ul> |
 
 <br>
 Example JSON output printed when the `create-binding` command is successful:
@@ -860,12 +889,14 @@ Example JSON output printed when the `create-binding` command is successful:
 
 ##<a id="delete-binding"></a>delete-binding
 
-- [Input Parameters](#delete-binding-parameters)
-- [Output](#delete-binding-output)
-
 This subcommand should invalidate the credentials that were generated by
 `create-binding` if possible.  For example, the subcommand would
 delete the binding user in MySQL.
+
+This section contains the following topics:
+
+- [Input Parameters](#delete-binding-parameters)
+- [Output](#delete-binding-output)
 
 ###<a id="delete-binding-parameters"></a>Input Parameters
 
@@ -949,12 +980,12 @@ See the following example:
 The following table describes the supported exit codes and output for the 
 `delete-binding` subcommand:
 
-| exit code     | Description            | Output                                                                                                                           |
-|:--------------|:-----------------------|:---------------------------------------------------------------------------------------------------------------------------------|
-| 0             | success                | No output is required                                                                                                            |
-| 10            | not implemented        |                                                                                                                                  |
-| 41            | binding does not exist | Stderr: error message for operator<br/> ODB logs both stdout and stderr                                                      |
-| anything else | failure                | Stdout: optional error message for CF CLI users<br/> Stderr: error message for operator<br/> ODB logs both stdout and stderr |
+| exit code     | Description            | Output                                                                                                                                                |
+|:--------------|:-----------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 0             | success                | <ul><li>No output is required </li></ul>                                                                                                              |
+| 10            | not implemented        |                                                                                                                                                       |
+| 41            | binding does not exist | <ul><li>Stderr: error message for operator</li><li>ODB logs both stdout and stderr </li></ul>                                                         |
+| anything else | failure                | <ul><li>Stdout: optional error message for CF CLI users</li><li>Stderr: error message for operator</li><li>ODB logs both stdout and stderr </li></ul> |
 
 <br>
 This can be used to connect to the actual VMs if required, to delete a service specific binding.
@@ -963,13 +994,11 @@ For example, this can be used to delete a user in MySQL.
 
 ##<a id="generate-plan-schemas"></a>generate-plan-schemas
 
-- [Input Parameters](#generate-plan-schemas-parameters)
-- [Output](#generate-plan-schemas-output)
-
-The broker uses the schema returned by the subcommand to validate service-specific configuration parameters.
-Apps Manager uses the schema to generate a form that users can use to populate those parameters.
+The broker uses the schema returned by this subcommand to validate service-specific 
+configuration parameters.
+Apps Manager uses the schema to generate a form that users can use to populate 
+those parameters.
 The schema must be in the JSON Schema draft-04 format.
-
 For more information about the plan schema, see the [Open Service Broker API (OSBAPI) v2.13
 specification](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#schema-object).
 
@@ -980,6 +1009,11 @@ adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapte
 For example, you might use this if you want to accept an
 undocumented optional parameter, for administration purposes, that should not be
 exposed through the Apps Manager UI.
+
+This section contains the following topics:
+
+- [Input Parameters](#generate-plan-schemas-parameters)
+- [Output](#generate-plan-schemas-output)
 
 ###<a id="generate-plan-schemas-parameters"></a>Input Parameters
 
