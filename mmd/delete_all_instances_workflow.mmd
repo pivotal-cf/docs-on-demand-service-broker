@@ -8,27 +8,27 @@ sequenceDiagram
     CF->>Delete Errand:bindings
     loop for all bindings
     Delete Errand->>CF:cf unbind-service
-      CF->>ODB: DELETE binding
-      ODB->>Service Adapter:delete-binding
-      Service Adapter->>ODB:exit code 0
-      ODB->>CF:OK
+      CF->>On Demand Broker: DELETE binding
+      On Demand Broker->>Service Adapter:delete-binding
+      Service Adapter->>On Demand Broker:exit code 0
+      On Demand Broker->>CF:OK
       CF->>Delete Errand:OK
     end
     Delete Errand->>CF:GET service keys
     CF->>Delete Errand:service keys
     loop for all service keys
     Delete Errand->>CF:cf delete-service-key
-      CF->>ODB: DELETE binding
-      ODB->>Service Adapter:delete-binding
-      Service Adapter->>ODB:exit code 0
-      ODB->>CF:OK
+      CF->>On Demand Broker: DELETE binding
+      On Demand Broker->>Service Adapter:delete-binding
+      Service Adapter->>On Demand Broker:exit code 0
+      On Demand Broker->>CF:OK
       CF->>Delete Errand:OK
     end
     Delete Errand->>CF:cf delete-service
-    CF->>ODB:DELETE instance
-    ODB->>BOSH:delete deployment
-    BOSH->>ODB:accepted
-    ODB->>CF:accepted
+    CF->>On Demand Broker:DELETE instance
+    On Demand Broker->>BOSH:delete deployment
+    BOSH->>On Demand Broker:accepted
+    On Demand Broker->>CF:accepted
     CF->>Delete Errand:accepted
     loop until DELETE completes
       Delete Errand->>CF:GET instance

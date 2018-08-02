@@ -19,7 +19,7 @@ For example service adapters, see the following examples written in golang:
   cross-cutting concerns. For example, reading the JSON document from stdin.</p>
   
 A service adapter is expected to respond to the subcommands.
-For each of these subcommands:
+For each of these subcommands, the following applies:
 
 * An exit status of `0` indicates that the command succeeded
 * An exit status `10` indicates not implemented
@@ -362,7 +362,7 @@ But, when the previous deployment manifest is provided, we copy the password ove
 previous deployment](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_manifest_generator.go#L333-L338), because generating a new 
 password for existing deployments will break existing bindings.
 
-For example see the [example Redis service adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_manifest_generator.go#L333-L338).
+For an example, see the [example Redis service adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_manifest_generator.go#L333-L338).
 
 <p class="note warning"><strong>WARNING</strong>:
   If the service adapter does not migrate properties from the old manifest to
@@ -418,7 +418,7 @@ For example, consider the following `generate-manifest` output:
 }
 ```
 
-During provision, ODB will:
+During provision, ODB does the following:
 
 1. Generate a CredHub name for each secret in the `secrets` map in the format
 `/odb/SERVICE-OFFERING-ID/SERVICE-INSTANCE-ID/SECRET-NAME`.

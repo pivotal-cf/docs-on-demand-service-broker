@@ -5,15 +5,41 @@ owner: London Services Enablement
 
 The sequence diagrams in this topic show how an on-demand service sets up and 
 maintains service instances. 
-The diagrams indicate which tasks are undertaken by the on-demand broker (ODB) and 
-which require interaction with the Service Adapter.
+The diagrams indicate which tasks are undertaken by the on-demand broker (ODB) 
+and which require interaction with the Service Adapter.
 
-## <a id="catalog"></a>Register Service Broker with Cloud Foundry
+
+## <a id="catalog"></a>Register the Service Broker with Cloud Foundry
+
+The sequence diagram below shows the workflow for registering a service broker with 
+Cloud Foundry (CF).
 
 <%= partial 'mmd/service_catalog_workflow.mmd' %>
 
-## <a id="create-service-instance"></a>Create Service Instance
 
+
+## <a id="creating"></a>Creating and Updating Service Instances
+
+This section contains diagrams that present the workflow for the following actions:
+
+- [Create a Service Instance](#create-service-instance)
+
+- [Update a Service Instance](#update-service-instance)
+
+- [Create or Update a Service Instance with Post-Deploy Errands](#post-deploy)
+
+
+### <a id="create-service-instance"></a>Create a Service Instance
+
+To create a service instance, users run the `cf create-service` command.
+For more information about this command, see 
+[Creating Service Instances](https://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html#create).
+
+The sequence diagram below shows the workflow for creating a service instance.
+
+<%= partial 'mmd/create_service_workflow.mmd' %>
+
+<br>
 There are two ways this process can fail: 
 
 - **Synchronously:** The Cloud Controller deletes the service according 
@@ -23,77 +49,191 @@ For more information, see [Orphans](http://docs.cloudfoundry.org/services/api.ht
 -  **Asynchronously:** This happens while BOSH deploys the service instance. 
 The Cloud Controller does not issue a delete request.
 
-<%= partial 'mmd/create_service_workflow.mmd' %>
 
-## <a id="delete-service-instance"></a>Delete Service Instance
+### <a id="update-service-instance"></a>Update a Service Instance
 
-In the delete service workflow the service adapter is not invoked.
+To update a service instance, users run the `cf update-service` command.
+For more information about this command, see 
+[Update a Service Instance](https://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html#update_service).
 
-<%= partial 'mmd/delete_service_workflow.mmd' %>
+Updates can only proceed if the existing service instance is up-to-date. 
+ODB calls `generate-manifest` on the service adapter to determine whether there are 
+any pending changes for the instance.
 
-## <a id="post-deploy"></a>Create/Update Service Instance with Post-Deploy Errands
+<p class="note"><strong>Note</strong>: 
+	When determining whether there are pending changes for an instance during an update, 
+	ODB ignores any configuration supplied in the 
+	<a href="https://bosh.io/docs/deployment-manifest.html#update" target="_blank">update block of the manifest</a> 
+	returned by the service adapter's <code>generate-manifest</code> subcommand.</p>
 
-ODB does not report create/update success to Cloud Foundry until the deployment 
-and all the post-deploy errands complete successfully.
 
-<%= partial 'mmd/create_post_deploy_workflow.mmd' %>
+#### <a id="update-service-instance-no-changes"></a>Update When There Are No Pending Changes
 
-## <a id="pre-delete"></a>Delete Service Instance with Pre-Delete Errand
-
-ODB does not report delete success to Cloud Foundry until all the pre-delete 
-errands and delete deployment complete successfully.
-
-<%= partial 'mmd/pre_delete_workflow.mmd' %>
-
-## <a id="update-service-instance"></a>Update Service Instance
-
-Updates can only proceed if the existing service instance is up-to-date. ODB calls `generate-manifest` on service adapter to determine whether there are any pending changes for the instance.
-
-### <a id="update-service-instance-with-changes"></a>Update When There Are Pending Changes
-
-<p class="note"><strong>Note</strong>: When determining whether there are pending changes for an instance during an update, ODB <em>ignores</em> any configuration supplied in the <a href="https://bosh.io/docs/deployment-manifest.html#update" target="_blank">update block of the manifest</a> returned by the service adapter's <code>generate-manifest</code> subcommand.</p>
-
-<%= partial 'mmd/update_service_with_pending_changes_workflow.mmd' %>
-
-### <a id="update-service-instance-no-changes"></a>Update When There Are No Pending Changes
-
+If there are no pending changes, the update proceeds. 
 The manifest from the second call to `generate-manifest` is deployed.
+
+The sequence diagram below shows the workflow for updating a service instance if
+there are no pending changes.
 
 <%= partial 'mmd/update_service_no_pending_changes_workflow.mmd' %>
 
-## <a id="bind"></a>Bind
 
-<%= partial 'mmd/bind_service_workflow.mmd' %>
+#### <a id="update-service-instance-with-changes"></a>Update When There Are Pending Changes
 
-## <a id="unbind"></a>Unbind
+If there are pending changes, the update fails.
 
-<%= partial 'mmd/unbind_service_workflow.mmd' %>
+The sequence diagram below shows the workflow for updating a service instance if
+there are pending changes.
 
-## <a id="upgrade-all-instances"></a>Upgrade All Service Instances
+<%= partial 'mmd/update_service_with_pending_changes_workflow.mmd' %>
 
-ODB provides a BOSH errand to upgrade all the instances managed by the broker. 
+
+
+### <a id="post-deploy"></a>Create or Update a Service Instance with Post-Deploy Errands
+
+If a user runs the `cf create-service` command with post-deploy errands configured 
+for the deployment, ODB does not report success to Cloud Foundry until the deployment 
+is created, or updated, and all post-deploy errands complete.
+For more information, see 
+[Post-Deploy Errands](https://docs.pivotal.io/tiledev/tile-errands.html#post-deploy).
+
+The sequence diagram below shows the workflow for creating or updating a service 
+instance when post-deploy errands are configured.
+
+<%= partial 'mmd/create_post_deploy_workflow.mmd' %>
+
+
+
+## <a id="upgrading"></a>Upgrading Service Instances
+ 
+This section contains diagrams that present the workflow for the following actions:
+
+- [Upgrade All Service Instance](#upgrade-all-instances)
+
+- [Upgrade All Service Instances with External Service Instances API Configured](#upgrade-all-external-instances)
+
+
+### <a id="upgrade-all-instances"></a>Upgrade All Service Instances
+
+ODB provides the BOSH errand `upgrade-all-service-instances`.
+This errand upgrades all service instances managed by the broker. 
 This is also used when a plan changes.
 The errand updates all instances that implement a plan with the new plan definition.
+For more information, see [Upgrade All Service Instances](upgrades.html#upgrade-all-instances)
+in the Operator Guide.
+
+The sequence diagram below shows the workflow for upgrading all service instances.
 
 <%= partial 'mmd/upgrade_all_instances_workflow.mmd' %>
 
-## <a id="upgrade-all-instances"></a>Upgrade All Service Instances with External Service Instances API Configured
+
+### <a id="upgrade-all-external-instances"></a>Upgrade All Service Instances with External Service Instances API Configured
 
 If the service instances API is configured, the `upgrade-all-service-instances` 
 errand connects to a different endpoint to gather the list of instances to upgrade. 
 For more information, see [Service Instances API](upgrades.html#service-instances-api).
 
+The sequence diagram below shows the workflow for upgrading all service instances 
+with external service instances API configured.
+
 <%= partial 'mmd/upgrade_all_instances_with_si_api_workflow.mmd' %>
 
-## <a id="delete-all-instances"></a>Delete All Service Instances
 
-ODB provides a BOSH errand to delete all the instances managed by the broker.
+
+## <a id="binding"></a>Bindings
+ 
+This section contains diagrams that present the workflow for the following actions:
+
+- [Bind a Service Instance](#bind)
+
+- [Unbind a Service Instance](#unbind)
+
+
+### <a id="bind"></a>Bind a Service Instance
+
+To bind a service instance, users run the `cf bind-service` command.
+For more information about this command, see 
+[Bind a Service Instance](https://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html#bind).
+
+The sequence diagram below shows the workflow for creating a binding.
+
+<%= partial 'mmd/bind_service_workflow.mmd' %>
+
+
+### <a id="unbind"></a>Unbind a Service Instance
+
+To unbind a service instance, users run the `cf unbind-service` command.
+For more information about this command, see 
+[Unbind a Service Instance](https://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html#unbind).
+
+The sequence diagram below shows the workflow for unbinding a service instance.
+
+<%= partial 'mmd/unbind_service_workflow.mmd' %>
+
+
+
+## <a id="deleting"></a>Deleting Service Instances
+
+This section contains diagrams that present the workflow for the following actions:
+
+- [Delete a Service Instance](#delete-service-instance)
+
+- [Delete a Service Instance with Pre-Delete Errands](#pre-delete)
+
+- [Delete All Service Instances](#delete-all-instances)
+
+- [Delete All Service Instances and Deregister Broker](#delete-all-instances-deregister)
+
+
+### <a id="delete-service-instance"></a>Delete a Service Instance
+
+To delete a service instance, users run the `cf delete-service` command.
+For more information about this command, see 
+[Delete a Service Instance](https://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html#delete).
+
+The service adapter is not invoked in the delete service workflow.
+
+The sequence diagram below shows the workflow for deleting service instances.
+
+<%= partial 'mmd/delete_service_workflow.mmd' %>
+
+
+### <a id="pre-delete"></a>Delete a Service Instance with Pre-Delete Errands
+
+If a user runs the `cf delete-service` command with pre-delete errands configured 
+for the deployment, ODB does not report success to Cloud Foundry until all 
+pre-delete errands complete and the deployment is deleted.
+For more information, see 
+[Pre-Delete Errands](https://docs.pivotal.io/tiledev/tile-errands.html#pre-delete).
+
+The sequence diagram below shows the workflow for deleting service instances with
+pre-delete errands configured.
+
+<%= partial 'mmd/pre_delete_workflow.mmd' %>
+
+
+### <a id="delete-all-instances"></a>Delete All Service Instances
+
+ODB provides the BOSH errand `delete-all-service-instances`.
+This errand deletes all service instances managed by the broker.
+For how to use this errand, see 
+[Delete All Service Instances](management.html#delete-instances) in the Operator Guide.
+
+The sequence diagram below shows the workflow for deleting all service instances.
 
 <%= partial 'mmd/delete_all_instances_workflow.mmd' %>
 
-## <a id="delete-all-instances"></a>Delete All Service Instances and Deregister Broker
 
-ODB provides a BOSH errand to delete all the instances managed by the broker and 
-to deregister the broker from Cloud Foundry.
+### <a id="delete-all-instances-deregister"></a>Delete All Service Instances and Deregister Broker
+
+ODB provides the BOSH errand `delete-all-service-instances-and-deregister-broker`. 
+This errand deletes all service instances managed by the broker, and deregisters 
+the broker from Cloud Foundry.
+For how to use this errand, see 
+[Delete All Service Instances and Deregister Broker](management.html#delete-instances-and-deregister) 
+in the Operator Guide.
+
+The sequence diagram below shows the workflow for deleting all service instances
+and deregistering the broker.
 
 <%= partial 'mmd/delete_all_instances_and_deregister_broker_workflow.mmd' %>

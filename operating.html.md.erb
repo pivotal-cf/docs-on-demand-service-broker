@@ -605,14 +605,14 @@ For example:
 
     ```
     instance_groups:
-    - name: broker
-      ...
-      jobs:
       - name: broker
-        consumes:
-          credhub:
-            from: credhub
-            deployment: cf
+        ...
+        jobs:
+        - name: broker
+          consumes:
+            credhub:
+              from: credhub
+              deployment: cf
     ```        
 
 1. Update the broker job in the ODB manifest to include the `secure_binding_credentials` section. 
@@ -622,20 +622,20 @@ For example:
     
     ```
     instance_groups:
-    - name: broker
-      ...
-      jobs:
       - name: broker
         ...
-        properties:
+        jobs:
+        - name: broker
           ...
-          secure_binding_credentials:
-            enabled: true
-            authentication:
-              uaa:
-                client_id: NEW-CREDHUB-CLIENT-ID
-                client_secret: NEW-CREDHUB-CLIENT-SECRET
-                ca_cert: ((cf.uaa.ca_cert))
+          properties:
+            ...
+            secure_binding_credentials:
+              enabled: true
+              authentication:
+                uaa:
+                  client_id: NEW-CREDHUB-CLIENT-ID
+                  client_secret: NEW-CREDHUB-CLIENT-SECRET
+                  ca_cert: ((cf.uaa.ca_cert))
       ```
       <br>
   Where `NEW-CREDHUB-CLIENT-ID` and `NEW-CREDHUB-CLIENT-SECRET` are the CredHub client 
@@ -646,21 +646,21 @@ enable DNS. To do this, add the `consul_agent` job to the manifest as follows:
 
     ```
     instance_groups:
-    - name: broker
-      ...
-      jobs:
-      ...
-      - name: consul_agent
-        release: consul
-        consumes:
-          consul: nil
-          consul_client:
-            from: consul_client_link
-            deployment: cf
-          consul_common:
-            from: consul_common_link
-            deployment: cf
-          consul_server: nil
+      - name: broker
+        ...
+        jobs:
+        ...
+        - name: consul_agent
+          release: consul
+          consumes:
+            consul: nil
+            consul_client:
+              from: consul_client_link
+              deployment: cf
+            consul_common:
+              from: consul_common_link
+              deployment: cf
+            consul_server: nil
     ```
 
 For a more detailed manifest snippet, see [Configure Your Manifest](#core-broker-config) above.
@@ -683,11 +683,12 @@ ODB supports plan schemas in the service catalog.
 
 To enable plan schemas, do the following:
 
-1. Set the `enable_plan_schemas` flag to `true`.
-   The default is `false`.
+1. In the manifest, set the `enable_plan_schemas` flag to `true`.
+   The default is `false`. 
+
 2. Ensure that the service adapter implements the command `generate-plan-schemas`,
 otherwise the broker fails to deploy.
-For more information, see [generate-plan-schemas](creating.html#generate-plan-schemas).
+For more information, see [generate-plan-schemas](adapter-interface.html#generate-plan-schemas).
 
 During provision, bind, and update, the broker validates the incoming configuration
 parameters against the schema and produces an error if the parameters do not conform.
@@ -962,7 +963,7 @@ For more information, see <a href="#broker-manifest">Write a Broker Manifest</a>
  <p class="note"><strong>Note</strong>: This feature requires BOSH Director v261 or later.</p>
 
 Service Instance lifecycle errands allow additional short-lived jobs to run as part of service instance deployment. 
-A deployment is only considered successful if all lifecycle errands successfully exit.
+A deployment is only considered successful if all lifecycle errands exit successfully.
 
 The service adapter must offer the errands as part of the service instance deployment. 
 For more information, see [Create a Service Release](./creating.html#create-a-service-release).
@@ -970,11 +971,13 @@ For more information, see [Create a Service Release](./creating.html#create-a-se
 ODB supports the following lifecycle errands:
 
 - `post_deploy`---Runs after creating or updating a service instance. An example use case is 
-  running a health check to ensure the service instance is functioning. 
-  For more information, see [Create/Update Service Instance with Post-Deploy Errands](./concepts.html#post-deploy).
+  running a health check to ensure the service instance is functioning.<br>
+  For more information about these errands, see [Post-Deploy Errands](https://docs.pivotal.io/tiledev/tile-errands.html#post-deploy).
+  For the workflow, see [Create or Update Service Instance with Post-Deploy Errands](./concepts.html#post-deploy).<br><br>
 - `pre_delete`---Runs before the deletion of a service instance. 
-  An example use case is cleaning up data before a service shutdown. 
-  For more information, see [Delete Service Instance with Pre-Delete Errand](./concepts.html#pre-delete).
+  An example use case is cleaning up data before a service shutdown.<br>
+  For more information about these errands, see [Pre-Delete Errands](https://docs.pivotal.io/tiledev/tile-errands.html#pre-delete).
+  For the workflow, see [Delete a Service Instance with Pre-Delete Errands](./concepts.html#pre-delete).
 
 ### <a id="enable-errands"></a> Enable Service Instance Lifecycle Errands
 

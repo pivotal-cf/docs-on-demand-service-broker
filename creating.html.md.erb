@@ -29,14 +29,15 @@ once for each service instance, by the on-demand broker (ODB).
  <p class="note"><strong>Note</strong>: This feature requires BOSH director v261 or later.</p>
 
 A service release can provide job errands that are used by ODB during the management of an instance lifecycle. 
-Operators can configure service instance lifecycle errands. For more information, see [Service Instance Lifecycle Errands](./operating.html#lifecycle-errands).
+Operators can configure service instance lifecycle errands. 
+For more information, see [Service Instance Lifecycle Errands](./operating.html#lifecycle-errands).
 
 ODB supports the following service instance lifecycle errands:
 
 - `post-deploy`: These errands run after the creation or updating of a service instance. 
-For more information about the workflow, see [Create/Update Service Instance with Post-Deploy Errands](./concepts.html#post-deploy).
+For information about the workflow, see [Create or Update Service Instance with Post-Deploy Errands](./concepts.html#post-deploy).
 - `pre-delete`: These errands run before the deletion of a service instance. 
-For more information about the workflow, see [Delete Service Instance with Pre-Delete Errand](./concepts.html#pre-delete).
+For information about the workflow, see [Delete a Service Instance with Pre-Delete Errand](./concepts.html#pre-delete).
 
 A deployment is only considered successful if along with the deployment all lifecycle errands complete successfully.
 
