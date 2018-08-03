@@ -872,7 +872,7 @@ For more information about service metrics, see [Service Metrics for Pivotal Clo
 
 You can configure ODB to retrieve BOSH DNS addresses for service instances. 
 These addresses are passed to the service adapter when you create a binding.
-This is useful when the binding for a service instance contains, or relies on, 
+This may be necessary when the binding for a service instance contains, or relies on, 
 BOSH DNS addresses for that deployment. 
 
 ### Requirements
@@ -922,7 +922,7 @@ The following table provides descriptions of the properties to add to the `bindi
 | Property          | Description                                                                                                                                                             | Mandatory/Optional |
 | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
 | name              | An arbitrary identifier. Used to identify the address when creating a binding.                                                                                          | Mandatory          |
-| link_provider     | The exposed name of the link. Normally `provides.name` from the release spec, but can be overridden in the deployment manifest by setting the `as` property of the link.| Mandatory          |
+| link_provider     | The exposed name of the link. You can find this: <ul><li>In the documentation for the service.</li><li>Under `provides.name` in the release `spec` file.</li></ul>It can also be overridden in the deployment manifest by setting the `as` property of the link. | Mandatory          |
 | instance_group    | The name of the instance group sharing the link. The resultant DNS address resolves to IP addresses of this instance group.                                             | Mandatory          |
 | properties.azs    | A list of availability zone names. When this is provided, the resultant DNS address resolves to IP addresses in these zones.                                            | Optional           |
 | properties.status | A filter for link address status (healthy, unhealthy, all, default). When this is provided, the resultant DNS address resolves to IP addresses with this status.        | Optional           |
