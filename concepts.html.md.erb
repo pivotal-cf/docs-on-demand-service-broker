@@ -63,8 +63,9 @@ any pending changes for the instance.
 <p class="note"><strong>Note</strong>: 
 	When determining whether there are pending changes for an instance during an update, 
 	ODB ignores any configuration supplied in the 
-	<a href="https://bosh.io/docs/deployment-manifest.html#update" target="_blank">update block of the manifest</a> 
-	returned by the service adapter's <code>generate-manifest</code> subcommand.</p>
+	update block of the manifest returned by the service adapter's <code>generate-manifest</code> subcommand
+        For more information, see <a href="https://bosh.io/docs/deployment-manifest.html#update" target="_blank">Update Block</a>
+        in the Cloud Foundry BOSH documentation.</p>
 
 
 #### <a id="update-service-instance-no-changes"></a>Update When There Are No Pending Changes
@@ -227,7 +228,7 @@ The sequence diagram below shows the workflow for deleting all service instances
 ### <a id="delete-all-instances-deregister"></a>Delete All Service Instances and Deregister Broker
 
 ODB provides the BOSH errand `delete-all-service-instances-and-deregister-broker`. 
-This errand deletes all service instances managed by the broker, and deregisters 
+This errand deletes all service instances managed by the broker and deregisters 
 the broker from Cloud Foundry.
 For how to use this errand, see 
 [Delete All Service Instances and Deregister Broker](./management.html#delete-instances-and-deregister) 
