@@ -5,8 +5,8 @@ sequenceDiagram
   On Demand Broker->>Service Adapter:create-binding
   Service Adapter->>On Demand Broker:binding credentials
   alt Secure Binding enabled
-  On Demand Broker->>CredHub:Store credentials with ACLs for app
-  On Demand Broker->>Cloud Controller:CredHub reference
+  On Demand Broker->>CF CredHub:Store credentials with ACLs for app
+  On Demand Broker->>Cloud Controller:CF CredHub reference
   else Secure Binding disabled
   On Demand Broker->>Cloud Controller:binding credentials
   end

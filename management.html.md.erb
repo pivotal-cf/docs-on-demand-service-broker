@@ -7,14 +7,14 @@ This topic describes how to manage your broker and service plans.
 
 ## <a id="management"></a>Broker Management
 
-This section describes how to manage your broker with BOSH errands. 
+This section describes how to manage your broker with BOSH errands.
 You can run these errands using the BOSH CLI.
 
 ### <a id="about-cli"></a>About the BOSH CLI
 
 You use the BOSH CLI to perform many of the operator tasks.
-The BOSH CLI is available in two major versions, v1 and v2. 
-Pivotal recommends that you use the BOSH CLI v2 or later when possible. 
+The BOSH CLI is available in two major versions, v1 and v2.
+Pivotal recommends that you use the BOSH CLI v2 or later when possible.
 Instructions in this document are for v2 and later.
 
 The table below shows the version of the BOSH CLI supported for different versions of PCF.
@@ -113,10 +113,14 @@ Use the [orphan-deployments errand](#listing-orphans) to identify them.
 The errand does the following:
 
 1. Unbinds all apps from the service instances
-1. Deletes all service instances sequentially
-1. Checks if any instances have been created while the errand was running
-1. If instances are detected the errand fails
-1. Re-runs the errand
+1. Deletes all service instances sequentially. Each service instance deletion includes:
+  1. Running any pre-delete errands
+  1. Deleting the BOSH deployment of the service instance
+  1. Removing any ODB-managed secrets from Credhub
+  1. Checking for instance deletion failure, which results in the errand failing immediately
+1. Checks if any instances have been created while the errand was running.
+If new instances are detected, the errand returns an error.
+In this case, it is advisable to re-run the errand.
 
 #### Add the Errand to the Manifest
 
@@ -224,23 +228,30 @@ To run the `deregister-broker` errand, do the following.
 
 ### <a id="delete-instances-and-deregister"></a>Delete All Service Instances and Deregister Broker
 
-<p class="note warning"><strong>WARNING:</strong> Use this errand with extreme caution when you want 
+<p class="note warning"><strong>WARNING:</strong> Use this errand with extreme caution when you want
   to destroy all of the on-demand service instances and deregister the broker from Cloud Foundry.</p>
 
-The `delete-all-service-instances-and-deregister-broker` errand performs a similar operation to the 
+The `delete-all-service-instances-and-deregister-broker` errand performs a similar operation to the
 errands [delete-all-service-instances](#delete-instances) and [deregister-broker](#deregister-broker).
 
 This errand does the following:
 
-1. Disables service access to the service offering for all orgs and spaces. The errand disables service 
+1. Disables service access to the service offering for all orgs and spaces. The errand disables service
 access to ensure that new instances cannot be provisioned during the lifetime of the errand.
-1. Unbinds all apps from the service instances.
-1. Deletes all service instances sequentially.
+1. Unbinds all apps from the service instances
+1. Deletes all service instances sequentially. Each service instance deletion includes:
+  1. Running any pre-delete errands
+  1. Deleting the BOSH deployment of the service instance
+  1. Removing any ODB-managed secrets from Credhub
+  1. Checking for instance deletion failure, which results in the errand failing immediately
+1. Checks if any instances have been created while the errand was running.
+If new instances are detected, the errand returns an error.
+In this case, it is advisable to re-run the errand.
 1. Deregisters the broker from Cloud Foundry.
 
 #### Add the Errand to the Manifest
 
-To add the `delete-all-service-instances-and-deregister-broker` errand to the manifest, 
+To add the `delete-all-service-instances-and-deregister-broker` errand to the manifest,
 do the following.
 
 1. Add the following instance group to your manifest:
