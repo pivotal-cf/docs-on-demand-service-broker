@@ -5,8 +5,8 @@ sequenceDiagram
   On Demand Broker->>Service Adapter:delete-binding
   Service Adapter->>On Demand Broker:exit 0
   opt Secure Binding enabled
-  On Demand Broker->>CredHub:Delete credentials
-  CredHub->>On Demand Broker:OK
+  On Demand Broker->>CF CredHub:Delete credentials
+  CF CredHub->>On Demand Broker:OK
   end
   On Demand Broker->>Cloud Controller:OK
   Cloud Controller->>User:OK
