@@ -1,6 +1,9 @@
-PCF components, like the Cloud Controller and UAA, run on the PCF default network.
+When you deploy PCF, you must create a statically defined network to host the component virtual
+machines that constitute the PCF infrastructure.
+
+PCF components, like the Cloud Controller and UAA, run on this infrastructure network.
 In PCF v2.0 and earlier, on-demand PCF services require that you host them on a network that runs
-separately from the PCF default network.
+separately from this network.
 
 Cloud operators pre-provision service instances from Ops Manager. Then, for each service, Ops
 Manager allocates and recovers static IP addresses from a pre-defined block of addresses.
