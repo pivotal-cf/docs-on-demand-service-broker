@@ -13,7 +13,7 @@ You can run these errands using the BOSH CLI.
 ### <a id="about-cli"></a>About the BOSH CLI
 
 You use the BOSH CLI to perform many of the operator tasks.
-The BOSH CLI is available in two major versions, v1 and v2.
+The BOSH CLI is available in two major versions: v1 and v2.
 Pivotal recommends that you use the BOSH CLI v2 or later when possible.
 Instructions in this document are for v2 and later.
 
@@ -118,9 +118,9 @@ The errand does the following:
   1. Deleting the BOSH deployment of the service instance
   1. Removing any ODB-managed secrets from Credhub
   1. Checking for instance deletion failure, which results in the errand failing immediately
-1. Checks if any instances have been created while the errand was running.
+1. Determines whether any instances have been created while the errand was running.
 If new instances are detected, the errand returns an error.
-In this case, it is advisable to re-run the errand.
+In this case, Pivotal recommends running the errand again.
 
 #### Add the Errand to the Manifest
 
@@ -244,9 +244,9 @@ access to ensure that new instances cannot be provisioned during the lifetime of
   1. Deleting the BOSH deployment of the service instance
   1. Removing any ODB-managed secrets from Credhub
   1. Checking for instance deletion failure, which results in the errand failing immediately
-1. Checks if any instances have been created while the errand was running.
+1. Determines whether any instances have been created while the errand was running.
 If new instances are detected, the errand returns an error.
-In this case, it is advisable to re-run the errand.
+In this case, Pivotal recommends running the errand again.
 1. Deregisters the broker from Cloud Foundry.
 
 #### Add the Errand to the Manifest
