@@ -757,12 +757,12 @@ See the following example:
 
 ####<a id="create-binding-secrets"></a>MANIFEST-SECRETS-JSON
 
-If `enable_secure_manifests` is set to true in the broker,
+If `enable_secure_manifests` is set to `true` in the broker,
 any secrets in the service instance manifest using references to BOSH generated
 variables or literal CredHub paths are resolved and provided to the adapter in the secrets
 JSON parameter.
 
-If `enable_secure_manifests` is set to false in the broker, secrets JSON will be empty.
+If `enable_secure_manifests` is set to `false` in the broker, secrets JSON will be empty.
 
 The following is an example service instance manifest:
 
