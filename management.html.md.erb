@@ -112,7 +112,7 @@ Use the [orphan-deployments errand](#listing-orphans) to identify them.
 
 The errand does the following:
 
-1. Unbinds all apps from the service instances
+1. Unbinds all apps from the service instances.
 1. Deletes all service instances sequentially. Each service instance deletion includes:
   1. Running any pre-delete errands
   1. Deleting the BOSH deployment of the service instance
@@ -238,7 +238,7 @@ This errand does the following:
 
 1. Disables service access to the service offering for all orgs and spaces. The errand disables service
 access to ensure that new instances cannot be provisioned during the lifetime of the errand.
-1. Unbinds all apps from the service instances
+1. Unbinds all apps from the service instances.
 1. Deletes all service instances sequentially. Each service instance deletion includes:
   1. Running any pre-delete errands
   1. Deleting the BOSH deployment of the service instance
