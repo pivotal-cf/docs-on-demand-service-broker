@@ -37,10 +37,6 @@ sequenceDiagram
   Cloud Controller->>On Demand Broker: GET last operation
   On Demand Broker->>BOSH: GET delete deployment task
   BOSH->>On Demand Broker: task done
-  opt Secure Manifests enabled
-    On Demand Broker->>BOSH Credhub: DELETE ODB-managed secrets
-    BOSH Credhub->>On Demand Broker: delete secrets succeeded
-  end
   On Demand Broker->>Cloud Controller: delete succeeded
   User->>Cloud Controller:cf service
   Cloud Controller->>User: not found
