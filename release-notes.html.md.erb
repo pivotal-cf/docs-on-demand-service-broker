@@ -10,52 +10,58 @@ owner: London Services Enablement
 
 ### Breaking Changes
 
-- Input and output to the service adapter is now using JSON over stdin / stdout
-  rather than using positional arguments on the command line. This allows handling
-  of arbitrarily long manifests which previously would have triggered a 'command-line
-  too long' error. **Note:** users of the Go SDK are insulated from this change
-  since the SDK handles the invocation arguments.
-  (It is possible to use an adapter built with a pre-0.22 on-demand-services-sdk
-  by setting the broker manifest property `use_stdin: false`
+Breaking changes in this release:
 
-- The _CreateBinding_ method implemented by the service adapter has new
-  arguments ManifestSecrets and DNSAddresses. ManifestSecrets is reserved for
-  future use; DNSAddresses contains a map of requested BOSH DNS addresses
-  (see below for more information).
+- Input and output to the service adapter now use JSON over stdin / stdout
+  instead of positional arguments on the command line. This allows handling
+  of arbitrarily long manifests, which previously would have triggered a `command-line too long` error. 
 
-- The _GenerateManifest_ method implemented by the service adapter now returns
-  a _GenerateManifestOutput_ structure. The returned manifest must be set in
-  the _Manifest_ property of this structure.
+    <p class="note"><strong>Note</strong>: Users of the Go SDK are insulated from this change, because the SDK handles invocation arguments.</p>
+
+    You can use an adapter built with an on-demand services SDK released before v0.22.0 
+    by setting the broker manifest property `use_stdin: false`.
+
+- The `CreateBinding` method implemented by the service adapter has new
+  arguments: `ManifestSecrets` and `DNSAddresses`. `ManifestSecrets` is reserved for
+  future use; `DNSAddresses` contains a map of requested BOSH DNS addresses. For more information about the `DNSAddresses` argument, see [Enable ODB to Obtain
+  BOSH DNS Addresses](creating.html#dns-addresses).
+
+- The `GenerateManifest` method implemented by the service adapter now returns
+  a `GenerateManifestOutput` structure. The returned manifest must be set in
+  the `Manifest` property of this structure.
 
 
-### New Features
+### Features
 
-- Golang upgraded to 1.10.3
+New features and changes in this release:
 
-- The broker can be configured to pass DNS information of the service instance
-  to the adapter's CreateBinding method. See [Obtain BOSH DNS Addresses for
-  Binding Creation](./operating.html#binding-with-dns) and [Enable ODB to Obtain
-  BOSH DNS Addresses](creating.html#dns-addresses) for full details.
+- Updates golang to 1.10.3.
 
-- Fine level resource quota management at plan level. See [Set Service Resource
-  Quotas](./operating.html#service-resource-quotas) for full details. Currently
-  only available for Cloud Foundry.
+- The broker can be configured to pass the service instance's DNS information 
+  to the adapter's `CreateBinding` method. For information about doing this, 
+  see [Obtain BOSH DNS Addresses for Binding Creation](./operating.html#binding-with-dns) 
+  and [Enable ODB to Obtain BOSH DNS Addresses](creating.html#dns-addresses).
 
-- Enable operators to disable running lifecycle errands with the `disabled:
-  true` property.
+- Resource quotas can be managed at the plan level. For information about 
+  setting these quotas, see [Set Service Resource Quotas](./operating.html#service-resource-quotas). 
+  This feature is not available on Pivotal Container Service (PKS).
 
-- Add `spaceGUID` to binding request to enable adapters to differentiate
-  between requests issued by users in the service instance's original space,
-  versus [a space to which it was
-  shared](https://docs.cloudfoundry.org/devguide/services/sharing-instances.html).
+- Operators can now disable running lifecycle errands by setting the `disabled: true` property.
 
-- Bump CF CLI to 6.36.2
+- Updates the CF CLI to 6.36.2.
 
 ### Known Issues
 
-- None
+There are no known issues for this release.
 
 ### Minimum Version Requirements
 
-- BOSH 257+ (261+ for lifecycle errands, 266.3+ for BOSH DNS Info at Bind) / BOSH lite v9000.131.0
-- CF 238+
+Minimum version requirements for this release:
+
+- BOSH 257 (261 for lifecycle errands and 266.3 for BOSH DNS info at bind) or BOSH lite v9000.131.0
+- CF 238
+
+## <a id="view"></a> View Release Notes for Another Version
+
+To view the release notes for another product version, select the version from 
+dropdown at the top of this page.
