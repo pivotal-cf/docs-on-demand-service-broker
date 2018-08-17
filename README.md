@@ -5,22 +5,23 @@ Use **master** for next the unreleased version, and numbered branches for the co
 
 For example:
 
-| Branch name | Use for… |
-|-------------| ------|
-| master      | Next unreleased version (edge) https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-22|
+| Branch name     | Use for|
+|-----------------| ------|
+| master          | Unreleased version (edge) https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-23|
+| v0.22.x         | Unreleased version (edge) https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-22|
 | v0.21.x         | live |
 | v0.20.x         | live |
 | v0.19.x         | live | 
 | v0.18.x         | live | 
 | v0.17.x         | live | 
-| v0.16.x         | live |
-| v0.15.x        | live |
+| v0.16.x         | live |
+| v0.15.x         | live |
 | v0.14.x         | obsolete, but do not delete the branch | 
 | v0.13.x         | obsolete, but do not delete the branch | 
 | v0.12.x         | obsolete, but do not delete the branch | 
 | v0.11.x         | obsolete, but do not delete the branch | 
 | v0.10.x         | obsolete, but do not delete the branch | 
-| v0.9.x         | obsolete, but do not delete the branch | 
+| v0.9.x          | obsolete, but do not delete the branch | 
 
 
 # Book repo for publishing this content
@@ -37,21 +38,21 @@ Book repo: **docs-book-services-sdk**
 
 Instructions on doing a PR: https://docs.google.com/a/pivotal.io/document/d/14Go0uCj20BFMBzL2ddEKsZp-GONhVp0yr2cEFSskWnQ/edit?usp=sharing
 
-## New (unpublished) releases
+## New (unpublished) releases
 
-1. Commit new feature docs to **master** only.
+1. Commit new feature docs to **master** only.
 
-2. When the release is ready to publish, the docs team will create a new live/production branch from master, for example, 0.19.x.
+2. When the release is ready to publish, the docs team will create a new live/production branch from master, for example, 0.19.x.
 
-## Fixes and enhancements on master
+## Fixes and enhancements on master
 
-1. For fixes and enhancement, do PRs to **master**.
+1. For fixes and enhancement, make PRs to **master**.
 
-2. Tell the docs team in the PR, if it should be applied to other specific branches (or do additional PRs to those branches).
+2. Tell the docs team in the PR, if it should be applied to other specific branches (or make additional PRs to those branches).
 
-## Fixes on branch only
+## Fixes on branch only
 
-If the fix or enhancement is only relevant to a particular branch, then apply the change to that branch only.
+If the fix or enhancement is only relevant to a particular branch, then apply the change to that branch only.
 
 # Displaying locally
 
