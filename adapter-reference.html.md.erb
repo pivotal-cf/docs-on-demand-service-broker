@@ -22,7 +22,7 @@ A service adapter is expected to respond to the subcommands.
 For each of these subcommands, the following applies:
 
 * An exit status of `0` indicates that the command succeeded
-* An exit status `10` indicates not implemented
+* An exit status of `10` indicates not implemented
 * Any non-zero exit status indicates failure.
 
 For a list of possible subcommands and the structure of the JSON document
@@ -758,11 +758,10 @@ See the following example:
 ####<a id="create-binding-secrets"></a>MANIFEST-SECRETS-JSON
 
 If `enable_secure_manifests` is set to `true` in the broker,
-any secrets in the service instance manifest using references to BOSH generated
-variables or literal CredHub paths are resolved and provided to the adapter in the secrets
-JSON parameter.
+any secrets in the service instance manifest using references to BOSH-generated
+variables or literal CredHub paths are resolved and provided to the adapter in the `MANIFEST-SECRETS-JSON` parameter.
 
-If `enable_secure_manifests` is set to `false` in the broker, secrets JSON will be empty.
+If `enable_secure_manifests` is set to `false` in the broker, the the `MANIFEST-SECRETS-JSON` parameter is empty.
 
 The following is an example service instance manifest:
 
@@ -787,9 +786,8 @@ The keys are the reference names, and the values are the resolved secrets:
 }
 ```
 
-<p class="note"><strong>Note</strong>: Pivotal recommends service adapter authors to
-find the secrets key by accessing the manifest field that contains the reference
-to the variable.</p>
+<p class="note"><strong>Note</strong>: You can find the secrets key by accessing 
+the manifest field that contains the reference to the variable.</p>
 
 ####<a id="create-binding-dns-addresses"></a>DNS-ADDRESSES-JSON
 
