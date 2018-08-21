@@ -3,8 +3,11 @@ title: Techniques for Troubleshooting
 owner: London Services Enablement
 ---
 
-Instructions on interacting with the on-demand service broker and on-demand service 
-instance BOSH deployments, and on performing general maintenance and housekeeping tasks
+This topic provides general techniques for troubleshooting, which might include the following:
+
+- Interacting with the on-demand service broker
+- Interacting with on-demand service instance BOSH deployments
+- Performing general maintenance and housekeeping tasks
 
 ## <a id="parse-error"></a>Parse a Cloud Foundry (CF) Error Message
 
@@ -46,29 +49,33 @@ instance BOSH deployments, and on performing general maintenance and housekeepin
 
 <%= partial 'tshoot-tech-detect-orphans' %>
 
-## <a id="instance-deployment"></a>Select the BOSH Deployment for a Service Instance
+## <a id="operations"></a>Service Instance Operations
+
+### <a id="instance-deployment"></a>Select the BOSH Deployment for a Service Instance
 
 <%= partial 'tshoot-tech-instance-deployment' %>
 
-## <a id="instance-creds"></a>Get Admin Credentials for a Service Instance
+### <a id="instance-creds"></a>Get Admin Credentials for a Service Instance
 
 <%= partial 'tshoot-tech-instance-creds' %>
+
+### <a id="id-instance-owner"></a>Identify Apps using a Service Instance
+
+<%= partial 'tshoot-tech-id-instance-owner' %>
+
+## <a id="monitor"></a>Monitor Usage and Metrics
+
+### <a id="view-resources"></a>View BOSH Resource Saturation and Scaling
+
+<%= partial 'tshoot-tech-view-resources' %>
+
+### <a id="monitor-quota"></a>Monitor Quota Saturation and Service Instance Count
+
+<%= partial 'tshoot-tech-monitor-quota' %>
 
 ## <a id="reinstall"></a>Reinstall a Tile
 
 <%= partial 'tshoot-tech-reinstall' %>
-
-## <a id="view-resources"></a>View Resource Saturation and Scaling
-
-<%= partial 'tshoot-tech-view-resources' %>
-
-## <a id="id-instance-owner"></a>Identify Apps using a Service Instance
-
-<%= partial 'tshoot-tech-id-instance-owner' %>
-
-## <a id="monitor-quota"></a>Monitor Quota Saturation and Service Instance Count
-
-<%= partial 'tshoot-tech-monitor-quota' %>
 
 ## <a id="kb"></a>Knowledge Base (Community)
 
