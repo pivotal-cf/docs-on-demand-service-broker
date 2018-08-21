@@ -34,8 +34,6 @@ This section contains the following topics:
 
 - [Input Parameters](#generate-manifest-parameters)
 - [Output](#generate-manifest-output)
-- [Store Secrets on CredHub](#odb-managed-secrets)
-- [Persist Credentials Across Updates](#odb-persisting-creds)
 
 <div class="note">
   <strong>Notes</strong>:
@@ -386,7 +384,7 @@ The following table describes the supported exit codes and output for the
 
 | Exit code     | Description     | Output                                                                                                                           |
 |:--------------|:----------------|:---------------------------------------------------------------------------------------------------------------------------------|
-| 0             | success         | <ul><li>Stdout: JSON document containing the BOSH manifest YAML and a map of adapter generated secrets</li></ul>                 |
+| 0             | success         | <ul><li>Stdout: JSON document containing the BOSH manifest YAML</li></ul>                 |
 | 10            | not implemented |                                                                                                                                  |
 | anything else | failure         | <ul><li>Stdout: optional error message for CF CLI users</li> <li>Stderr: error message for operator</li> <li>ODB logs both stdout and stderr</li></ul>     |
 
@@ -395,97 +393,7 @@ Example JSON output printed when the `generate-manifest` command is successful:
 
 ```json
 {
-  "manifest": "GENERATED-BOSH-MANIFEST-YAML",
-  "secrets": { "secret1":"value1", "secret2":"value2" }
-}
-```
-
-###<a id="odb-managed-secrets"></a>Store Secrets on CredHub
-
-The Service Adapter can generate secrets and, instead of writing these secrets 
-in plain text in the manifest, to use ODB as a proxy to BOSH CredHub Config server. 
-To do so, the adapter should generate the manifest with a special notation and 
-output the secret as part of the `secrets` map. 
-
-For example, consider the following `generate-manifest` output:
-
-```json
-{
-  "manifest": "password: ((odb_secret:SECRET-NAME))",
-  "secrets": {
-    "SECRET-NAME":"SOME-RANDOM-PASSWORD"
-  }
-}
-```
-
-During provision, ODB does the following:
-
-1. Generate a CredHub name for each secret in the `secrets` map in the format
-`/odb/SERVICE-OFFERING-ID/SERVICE-INSTANCE-ID/SECRET-NAME`.
-1. Replace all occurrences of `((odb_secret:SECRET-NAME))` with the generated
-CredHub name.
-1. Deploy the updated manifest.
-
-###<a id="odb-persisting-creds"></a>Persist Credentials across Updates
-
-When dealing with properties that need to persist across updates,
-service adapter authors must extract the existing value for any ODB managed
-secrets from the previous manifest.
-
-The following manifest snippet shows an ODB managed secret with a CredHub name:
-
-```
-name: the-deployment
-...
-properties:
-password: ((/odb/SERVICE-GUID/SERVICE-INSTANCE-GUID/SECRET-NAME))
-```
-
-If the previous manifest contains CredHub names for secrets, as in the manifest snippet above, 
-the `generate-manifest` command must not replace `properties.password` with `((odb_secret:SECRET-NAME))`.
-
-For more information about using the value during a bind, see [create-binding](#create-binding).
-
-###<a id="migrating-to-stored-secrets"></a>Migrating from Plaintext Secrets to ODB-Managed Secrets
-
-Currently, when `generate manifest` is provided with an old manifest, secrets from the previous deployment are copied into the new manifest.
-
-To enable ODB-managed secrets, convert each plaintext secret from the old manifest to an ODB-managed placeholder in the new manifest. The value of that secret is returned in the secrets map. This instructs ODB to store the secret in CredHub.
-
-The secrets map should only contain secrets that need to be set for the first time. These may be:
-
- * new service creations
- * plaintext secrets being shifted into CredHub
- * previously set secrets for which you want to change the value
-
-Each placeholder in the manifest must have a corresponding entry in the secrets map. Each key in the secrets map must have at least one corresponding placeholder in the manifest.
-
-Using the ODB-managed secrets placeholder, you can update the value of existing secrets by simply updating their values in the secrets map.
-
-Secrets already stored in CredHub do not need this placeholder because any CredHub reference will be ignored by ODB during `generate manifest`.
-
-The following sample function indicates whether a secret should be replaced:
-
-```go
-import(
-	"github.com/pivotal-cf/on-demand-services-sdk/serviceadapter"
-)
-
-func extractSecret(oldValue, secretName string, secretsMap map[string]string) newValue string) {
-  if !strings.HasPrefix(redisPassword, "((") && !strings.HasSuffix(redisPassword, "))") {
-    // This is a plaintext secret
-    // Add the value to the secrets map, and return its placeholder to use in the manifest
-    secretsMap[secretName] = oldValue
-    newValue = fmt.Sprintf( "((%s:%s))", serviceadapter.ODBSecretPrefix, secretName)
-    return newValue, secretsMap
-  } else {
-    // else: this secret could be one of the following:
-    // - a custom credhub path
-    // - a reference to the BOSH generated variables block
-    // - a credhub reference to a secret already managed by the ODB
-    // In all cases, the ODB does not need to send the secret to credhub, so it should not be included in the secrets map.
-    return oldValue
-  }
+  "manifest": "GENERATED-BOSH-MANIFEST-YAML"
 }
 ```
 
@@ -757,39 +665,7 @@ See the following example:
 
 ####<a id="create-binding-secrets"></a>MANIFEST-SECRETS-JSON
 
-If `enable_secure_manifests` is set to `true` in the broker,
-any secrets in the service instance manifest using references to BOSH generated
-variables or literal CredHub paths are resolved and provided to the adapter in the secrets
-JSON parameter.
-
-If `enable_secure_manifests` is set to `false` in the broker, secrets JSON will be empty.
-
-The following is an example service instance manifest:
-
-```
-...
-password: ((redis_password))
-root_ca: ((/global/root_ca))
-
-variables:
-- name: redis_password
-  type: password
-```
-<br>
-The service instance manifest snippet above produces a secrets JSON parameter
-similar to the following. 
-The keys are the reference names, and the values are the resolved secrets:
-
-```
-{
-  "((redis_password))": "some-bosh-generated-password",
-  "((/global/root_ca))": "some-global-value"
-}
-```
-
-<p class="note"><strong>Note</strong>: Pivotal recommends service adapter authors to
-find the secrets key by accessing the manifest field that contains the reference
-to the variable.</p>
+This parameter is reserved for future use.
 
 ####<a id="create-binding-dns-addresses"></a>DNS-ADDRESSES-JSON
 
