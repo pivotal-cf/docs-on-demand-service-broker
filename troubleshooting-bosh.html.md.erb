@@ -3,15 +3,15 @@ title: Troubleshooting for BOSH Operators
 owner: London Services Enablement
 ---
 
-## <a id="troubleshooting"></a>Troubleshooting for BOSH Operators
+This topic provides troubleshooting information for BOSH operators.
 
-### <a id="admin-instances"></a>Administer Service Instances
+## <a id="admin-instances"></a>Administer Service Instances
 
 We recommend using the [BOSH CLI gem](https://bosh.io/docs/bosh-cli.html) for administering the deployments created by ODB; for example for checking VMs, ssh, viewing logs.
 
 Pivotal does **not** recommend using the BOSH CLI to update or delete ODB service deployments as it might accidentally trigger a race condition with Cloud Controller-induced updates/deletes or result in ODB overriding your [snowflake](http://martinfowler.com/bliki/SnowflakeServer.html) changes at the next deploy. All updates to the service instances must be done using the [errand to upgrade all service instances](#upgrade-instances).
 
-### <a id="logs"></a>Logs
+## <a id="logs"></a>Logs
 
 The on-demand broker writes logs to a log file and to syslog.
 
@@ -33,7 +33,7 @@ The ODB generates a UUID for each request and prefixes all the logs for that req
 
 All ODB's logs have a UTC timestamp.
 
-#### <a id="errands-syslog"></a> Syslog forwarding for errands logs
+## <a id="errands-syslog"></a> Syslog forwarding for errands logs
 
 If you want to forward your errand logs to a syslog aggregator, Pivotal recommends
 co-locating [syslog release](https://github.com/cloudfoundry/syslog-release)
@@ -70,7 +70,7 @@ with the errand job. The manifest will look similar to the following:
 <code>/var/vcap/sys/log/ERRAND_NAME/errand.stderr.log</code>. When configuring your errand,
 be careful to match the actual log file paths in the <code>custom_rule</code> section.</p>
 
-### <a id="secure-binding-troubleshooting"></a> Secure Binding Credentials
+## <a id="secure-binding-troubleshooting"></a> Secure Binding Credentials
 
 If you have [configured secure binding credentials](#secure-binding), the broker
 stores credentials on CredHub. You can see and consume these credentials by
@@ -94,7 +94,7 @@ given. See [Troubleshooting > Logs](#logs) for details.
 string map credentials)
 
 
-### <a id="metrics"></a>Metrics
+## <a id="metrics"></a>Metrics
 
 If you have [configured broker metrics](#broker-metrics), the broker emits metrics to the Loggregator Firehose.
 You can, for example, consume these metrics by using the [CF CLI Firehose plugin](https://github.com/cloudfoundry/firehose-plugin).
@@ -121,7 +121,7 @@ origin:"BROKER-DEPLOYMENT-NAME" eventType:ValueMetric timestamp:TIMESTAMP deploy
 
 If `quota_remaining` is `0` then you need to increase your plan quota in the BOSH manifest.
 
-### <a id="identifying-deployments"></a>Identify Deployments in BOSH
+## <a id="identifying-deployments"></a>Identify Deployments in BOSH
 
 There is a one to one mapping between the service instance id from CF and the deployment name in BOSH. The convention is the BOSH deployment name would be the service instance id prepended by `service-instance_`. To identify the BOSH deployment for a service instance you can.
 
@@ -156,7 +156,7 @@ There is a one to one mapping between the service instance id from CF and the de
     service-instance_30d4a67f-d220-4d06-9989-58a976b86b35
     </pre>
 
-### <a id="id-tasks"></a>Identify Tasks in BOSH
+## <a id="id-tasks"></a>Identify Tasks in BOSH
 
 Most operations on the on demand service broker API are implemented by launching BOSH tasks. If an operation fails, it may be useful to investigate the corresponding BOSH task. To do this:
 
@@ -206,7 +206,7 @@ Most operations on the on demand service broker API are implemented by launching
     $ bosh2 task 11470
    </pre>
 
-### <a id="id-uaa-issues"></a>Identify Issues When Connecting to BOSH or UAA
+## <a id="id-uaa-issues"></a>Identify Issues When Connecting to BOSH or UAA
 
 The ODB interacts with the BOSH Director to provision and deprovision instances, and is authenticated via the Director's UAA. See [Core Broker Configuration](#core-broker-configuration) for an example configuration.
 
@@ -221,7 +221,7 @@ Error authenticating (401): {"error":"unauthorized","error_description":
 "Bad credentials"}, ensure that properties.BROKER-JOB.bosh.authentication.uaa is correct and try again.
 ```
 
-### <a id="listing-instances"></a>List Service Instances
+## <a id="listing-instances"></a>List Service Instances
 
 The ODB persists the list of ODB-deployed service instances and provides an endpoint to retrieve them. This endpoint requires basic authentication.
 
@@ -252,7 +252,7 @@ Example JSON body:
   ]
   ```
 
-### <a id="listing-orphans"></a>List Orphan Deployments
+## <a id="listing-orphans"></a>List Orphan Deployments
 
 The On-Demand Broker provides an endpoint that compares the list of service instance
 deployments against the service instances registered in Cloud Foundry. When called,
