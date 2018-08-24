@@ -7,22 +7,36 @@ This topic provides troubleshooting information for BOSH operators.
 
 ## <a id="admin-instances"></a>Administer Service Instances
 
-We recommend using the [BOSH CLI gem](https://bosh.io/docs/bosh-cli.html) for administering the deployments created by ODB; for example for checking VMs, ssh, viewing logs.
+Pivotal recommends that you use the [BOSH CLI gem](https://bosh.io/docs/bosh-cli.html)
+for administering the deployments created by the on-demand broker (ODB);
+for example for checking VMs, ssh, viewing logs.
 
-Pivotal does **not** recommend using the BOSH CLI to update or delete ODB service deployments as it might accidentally trigger a race condition with Cloud Controller-induced updates/deletes or result in ODB overriding your [snowflake](http://martinfowler.com/bliki/SnowflakeServer.html) changes at the next deploy. All updates to the service instances must be done using the [errand to upgrade all service instances](#upgrade-instances).
+Pivotal discourages using the BOSH CLI to update or delete ODB service
+deployments as it might accidentally trigger a race condition with Cloud
+Controller-induced updates/deletes or result in ODB overriding your
+[snowflake](http://martinfowler.com/bliki/SnowflakeServer.html) changes at the next deploy.
+All updates to the service instances must be done using the
+[errand to upgrade all service instances](#upgrade-instances).
 
-## <a id="logs"></a>Logs
+## <a id="logs-and-metrics"></a>Logs and Metrics
 
-The on-demand broker writes logs to a log file and to syslog.
+### <a id="logs"></a>Logs
 
-The broker log contains error messages and non-zero exit codes returned by the service adapter, as well as the stdout and stderr streams of the adapter.
+The ODB writes logs to a log file and to syslog.
 
-The log file is located at `/var/vcap/sys/log/broker/broker.log`. In syslog, logging is written with the tag `on-demand-service-broker`, under the facility `user`, with priority `info`.
+The broker log contains error messages and non-zero exit codes returned by the
+service adapter, as well as the stdout and stderr streams of the adapter.
+
+The log file is located at `/var/vcap/sys/log/broker/broker.log`.
+In syslog, logging is written with the tag `on-demand-service-broker`, under the
+facility `user`, with priority `info`.
 
 If you want to forward syslog to a syslog aggregator,
-Pivotal recommends co-locating [syslog release](https://github.com/cloudfoundry/syslog-release) with the broker.
+Pivotal recommends co-locating [syslog release](https://github.com/cloudfoundry/syslog-release)
+with the broker.
 
-The ODB generates a UUID for each request and prefixes all the logs for that request, for example:
+The ODB generates a UUID for each request and prefixes all the logs for that request,
+for example:
 
 <pre class="terminal">
 [on-demand-service-broker] [4d63080d-e038-45a3-85f9-93910f6b40b1] 2016/09/05 16:43:26.123456 a valid UAA token was found in cache, will not obtain a new one
@@ -33,7 +47,7 @@ The ODB generates a UUID for each request and prefixes all the logs for that req
 
 All ODB's logs have a UTC timestamp.
 
-## <a id="errands-syslog"></a> Syslog forwarding for errands logs
+### <a id="errands-syslog"></a> Syslog Forwarding for Errand Logs
 
 If you want to forward your errand logs to a syslog aggregator, Pivotal recommends
 co-locating [syslog release](https://github.com/cloudfoundry/syslog-release)
@@ -65,10 +79,47 @@ with the errand job. The manifest will look similar to the following:
                 Tag="delete-all-service-instances-and-deregister-broker")
 ```
 
-<p class="note"><strong>Note</strong>: The errand is configured to redirect stdout and stderr to
-<code>/var/vcap/sys/log/ERRAND_NAME/errand.stdout.log</code> and
-<code>/var/vcap/sys/log/ERRAND_NAME/errand.stderr.log</code>. When configuring your errand,
-be careful to match the actual log file paths in the <code>custom_rule</code> section.</p>
+<p class="note"><strong>Note</strong>:
+  The errand is configured to redirect stdout and stderr to
+  <code>/var/vcap/sys/log/ERRAND_NAME/errand.stdout.log</code> and
+  <code>/var/vcap/sys/log/ERRAND_NAME/errand.stderr.log</code>.
+  When configuring your errand, be careful to match the actual log file paths in
+  the <code>custom_rule</code> section.</p>
+
+
+### <a id="metrics"></a>Metrics
+
+If you have [configured broker metrics](#broker-metrics), the broker emits
+metrics to the Loggregator Firehose.
+You can, for example, consume these metrics by using the
+[CF CLI Firehose plugin](https://github.com/cloudfoundry/firehose-plugin).
+
+<p class="note"><strong>Note</strong>:
+  The broker must be <a href="#register">registered with a Cloud Foundry</a> in
+  order for metrics to be successfully emitted</p>
+
+#### <a id="service-metrics"></a> Service-level Metrics
+The broker emits a metric indicating the total number of instances across all plans.
+In addition, if there is a global quota set for the service, a metric showing how much
+of that quota is remaining is emitted. Service-level metrics use the format shown below.
+
+```
+origin:"BROKER-DEPLOYMENT-NAME" eventType:ValueMetric timestamp:TIMESTAMP deployment:"BROKER-DEPLOYMENT-NAME" job:"broker" index:"BOSH-JOB-INDEX" ip:"IP" valueMetric:<name:"/on-demand-broker/SERVICE-OFFERING-NAME/total_instances" value:INSTANCE-COUNT unit:"count" >
+origin:"BROKER-DEPLOYMENT-NAME" eventType:ValueMetric timestamp:TIMESTAMP deployment:"BROKER-DEPLOYMENT-NAME" job:"broker" index:"BOSH-JOB-INDEX>" ip:"IP" valueMetric:<name:"/on-demand-broker/SERVICE-OFFERING-NAME/quota_remaining" value:QUOTA-REMAINING unit:"count" >
+```
+
+#### <a id="plan-metrics"></a> Plan-level Metrics
+For each service plan, the metrics report the total number of instances for that plan.
+If there is a quota set for the plan, the metrics also report how much of that quota is remaining.
+Plan-level metrics are emitted in the following format.
+
+```
+origin:"BROKER-DEPLOYMENT-NAME" eventType:ValueMetric timestamp:TIMESTAMP deployment:"BROKER-DEPLOYMENT-NAME" job:"broker" index:"BOSH-JOB-INDEX" ip:"IP" valueMetric:<name:"/on-demand-broker/SERVICE-OFFERING-NAME/PLAN-NAME/total_instances" value:INSTANCE-COUNT unit:"count" >
+origin:"BROKER-DEPLOYMENT-NAME" eventType:ValueMetric timestamp:TIMESTAMP deployment:"BROKER-DEPLOYMENT-NAME" job:"broker" index:"BOSH-JOB-INDEX" ip:"IP" valueMetric:<name:"/on-demand-broker/SERVICE-OFFERING-NAME/PLAN-NAME/quota_remaining" value:QUOTA-REMAINING unit:"count" >
+```
+
+If `quota_remaining` is `0` then you need to increase your plan quota in the BOSH manifest.
+
 
 ## <a id="secure-binding-troubleshooting"></a> Secure Binding Credentials
 
@@ -94,36 +145,12 @@ given. See [Troubleshooting > Logs](#logs) for details.
 string map credentials)
 
 
-## <a id="metrics"></a>Metrics
-
-If you have [configured broker metrics](#broker-metrics), the broker emits metrics to the Loggregator Firehose.
-You can, for example, consume these metrics by using the [CF CLI Firehose plugin](https://github.com/cloudfoundry/firehose-plugin).
-
-<p class="note"><strong>Note</strong>: The broker must be <a href="#register">registered with a Cloud Foundry</a> in order for metrics to be successfully emitted</p>
-
-#### Service-level Metrics
-The broker emits a metric indicating the total number of instances across all plans. In addition, if there is a global quota set for the service, a metric showing how much of that quota is remaining is emitted. Service-level metrics use the format shown below.
-
-```
-origin:"BROKER-DEPLOYMENT-NAME" eventType:ValueMetric timestamp:TIMESTAMP deployment:"BROKER-DEPLOYMENT-NAME" job:"broker" index:"BOSH-JOB-INDEX" ip:"IP" valueMetric:<name:"/on-demand-broker/SERVICE-OFFERING-NAME/total_instances" value:INSTANCE-COUNT unit:"count" >
-origin:"BROKER-DEPLOYMENT-NAME" eventType:ValueMetric timestamp:TIMESTAMP deployment:"BROKER-DEPLOYMENT-NAME" job:"broker" index:"BOSH-JOB-INDEX>" ip:"IP" valueMetric:<name:"/on-demand-broker/SERVICE-OFFERING-NAME/quota_remaining" value:QUOTA-REMAINING unit:"count" >
-```
-
-#### Plan-level Metrics
-For each service plan, the metrics report the total number of instances for that plan.
-If there is a quota set for the plan, the metrics also report how much of that quota is remaining.
-Plan-level metrics are emitted in the following format.
-
-```
-origin:"BROKER-DEPLOYMENT-NAME" eventType:ValueMetric timestamp:TIMESTAMP deployment:"BROKER-DEPLOYMENT-NAME" job:"broker" index:"BOSH-JOB-INDEX" ip:"IP" valueMetric:<name:"/on-demand-broker/SERVICE-OFFERING-NAME/PLAN-NAME/total_instances" value:INSTANCE-COUNT unit:"count" >
-origin:"BROKER-DEPLOYMENT-NAME" eventType:ValueMetric timestamp:TIMESTAMP deployment:"BROKER-DEPLOYMENT-NAME" job:"broker" index:"BOSH-JOB-INDEX" ip:"IP" valueMetric:<name:"/on-demand-broker/SERVICE-OFFERING-NAME/PLAN-NAME/quota_remaining" value:QUOTA-REMAINING unit:"count" >
-```
-
-If `quota_remaining` is `0` then you need to increase your plan quota in the BOSH manifest.
-
 ## <a id="identifying-deployments"></a>Identify Deployments in BOSH
 
-There is a one to one mapping between the service instance id from CF and the deployment name in BOSH. The convention is the BOSH deployment name would be the service instance id prepended by `service-instance_`. To identify the BOSH deployment for a service instance you can.
+There is a one to one mapping between the service instance id from CF and the
+deployment name in BOSH. The convention is the BOSH deployment name would be the
+service instance id prepended by `service-instance_`.
+To identify the BOSH deployment for a service instance you can.
 
 1. Determine the GUID of the service.
   Run the following command:
@@ -158,7 +185,9 @@ There is a one to one mapping between the service instance id from CF and the de
 
 ## <a id="id-tasks"></a>Identify Tasks in BOSH
 
-Most operations on the on demand service broker API are implemented by launching BOSH tasks. If an operation fails, it may be useful to investigate the corresponding BOSH task. To do this:
+Most operations on the on demand service broker API are implemented by launching BOSH tasks.
+If an operation fails, it may be useful to investigate the corresponding BOSH task. 
+To do this:
 
 1. Determine the ID of the service for which an operation failed. 
   Run the following command:
@@ -187,7 +216,8 @@ Most operations on the on demand service broker API are implemented by launching
     $ bosh2 -d my-broker ssh
     </pre>
 
-1. In the broker log, look for lines relating to the service, identified by the service ID. Lines recording the starting and finishing of BOSH tasks also have the BOSH task ID:
+1. In the broker log, look for lines relating to the service, identified by the service ID.
+Lines recording the starting and finishing of BOSH tasks also have the BOSH task ID:
 
     ```
     on-demand-service-broker: [on-demand-service-broker] [4d63080d-e038-45a3-85f9-93910f6b40b1] 2016/04/13 09:01:50.793965 Bosh task id for Create instance 30d4a67f-d220-4d06-9989-58a976b86b35 was 11470
@@ -200,7 +230,8 @@ Most operations on the on demand service broker API are implemented by launching
     on-demand-service-broker: [on-demand-service-broker] [af6fab15-c95e-438b-aa6b-bc4329d4154f] 2016/04/13 09:19:56.803938 task 11474 success deleting deployment for instance 30d4a67f-d220-4d06-9989-58a976b86b35: delete deployment service-instance_30d4a67f-d220-4d06-9989-58a976b86b35
     ```
 
-1. Use the task ID to obtain the task log from BOSH, adding flags such as `--debug` or `--cpi` as necessary.
+1. Use the task ID to obtain the task log from BOSH, adding flags such as `--debug`
+or `--cpi` as necessary.
   For example:
    <pre class="terminal">
     $ bosh2 task 11470
@@ -208,9 +239,13 @@ Most operations on the on demand service broker API are implemented by launching
 
 ## <a id="id-uaa-issues"></a>Identify Issues When Connecting to BOSH or UAA
 
-The ODB interacts with the BOSH Director to provision and deprovision instances, and is authenticated via the Director's UAA. See [Core Broker Configuration](#core-broker-configuration) for an example configuration.
+The ODB interacts with the BOSH Director to provision and deprovision instances,
+and is authenticated via the Director's UAA.
+See [Core Broker Configuration](#core-broker-configuration) for an example configuration.
 
-If BOSH and/or UAA are wrongly configured in the broker's manifest, then meaningful error messages are displayed in the broker's log, indicating whether the issue is caused by an unreachable destination or bad credentials.
+If BOSH and/or UAA are wrongly configured in the broker's manifest, then meaningful
+error messages are displayed in the broker's log, indicating whether the issue is
+caused by an unreachable destination or bad credentials.
 
 For example:
 
@@ -218,12 +253,14 @@ For example:
 on-demand-service-broker: [on-demand-service-broker] 
 [575afbc1-b541-481d-9cde-b3d3e67e87bf] 2016/05/18 15:56:40.100579 
 Error authenticating (401): {"error":"unauthorized","error_description":
-"Bad credentials"}, ensure that properties.BROKER-JOB.bosh.authentication.uaa is correct and try again.
+"Bad credentials"}, ensure that properties.BROKER-JOB.bosh.authentication.uaa is
+correct and try again.
 ```
 
 ## <a id="listing-instances"></a>List Service Instances
 
-The ODB persists the list of ODB-deployed service instances and provides an endpoint to retrieve them. This endpoint requires basic authentication.
+The ODB persists the list of ODB-deployed service instances and provides an endpoint
+to retrieve them. This endpoint requires basic authentication.
 
 During disaster recovery this endpoint could be used to assess the situation.
 
@@ -258,8 +295,9 @@ The On-Demand Broker provides an endpoint that compares the list of service inst
 deployments against the service instances registered in Cloud Foundry. When called,
 the endpoint returns a list of orphaned deployments, if any are present.
 
-This endpoint is exercised in the [`orphan-deployments`](./management.html#orphan-deployments) errand. To call this endpoint
-without running the errand, use `curl`.
+This endpoint is exercised in the [`orphan-deployments`](./management.html#orphan-deployments)
+errand.
+To call this endpoint without running the errand, use `curl`.
 
 **Request**
 	
@@ -280,3 +318,11 @@ Example JSON body:
   }
 ]
 ```
+
+## <a id="kb"></a>Knowledge Base (Community)
+
+<%= partial 'tshoot-kb' %>
+
+## <a id="support"></a>File a Support Ticket
+
+<%= partial 'tshoot-support' %>
