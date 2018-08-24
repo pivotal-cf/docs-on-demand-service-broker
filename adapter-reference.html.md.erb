@@ -386,7 +386,7 @@ The following table describes the supported exit codes and output for the
 
 | Exit code     | Description     | Output                                                                                                                           |
 |:--------------|:----------------|:---------------------------------------------------------------------------------------------------------------------------------|
-| 0             | success         | <ul><li>Stdout: JSON document containing the BOSH manifest YAML and a map of adapter generated secrets</li></ul>                 |
+| 0             | success         | <ul><li>Stdout: JSON document containing the BOSH manifest YAML and a map of adapter generated secrets to be managed by ODB</li></ul>                 |
 | 10            | not implemented |                                                                                                                                  |
 | anything else | failure         | <ul><li>Stdout: optional error message for CF CLI users</li> <li>Stderr: error message for operator</li> <li>ODB logs both stdout and stderr</li></ul>     |
 
@@ -426,13 +426,13 @@ During provision, ODB does the following:
 CredHub name.
 1. Deploy the updated manifest.
 
-###<a id="odb-persisting-creds"></a>Persist Credentials across Updates
+### <a id="odb-persisting-creds"></a>Persist Credentials across Updates
 
 When dealing with properties that need to persist across updates,
-service adapter authors must extract the existing value for any ODB managed
+the service adapter must extract the existing value for any ODB-managed
 secrets from the previous manifest.
 
-The following manifest snippet shows an ODB managed secret with a CredHub name:
+The following manifest snippet shows an ODB-managed secret with a CredHub name:
 
 ```
 name: the-deployment
@@ -446,35 +446,53 @@ the `generate-manifest` command must not replace `properties.password` with `((o
 
 For more information about using the value during a bind, see [create-binding](#create-binding).
 
-###<a id="migrating-to-stored-secrets"></a>Migrating from Plaintext Secrets to ODB-Managed Secrets
+### <a id="migrating-to-stored-secrets"></a>Migrate from Plaintext Secrets to ODB-Managed Secrets
 
-Currently, when `generate manifest` is provided with an old manifest, secrets from the previous deployment are copied into the new manifest.
+When `generate-manifest` is provided with an old manifest, ODB copies secrets from
+the previous deployment to the new manifest.
 
-To enable ODB-managed secrets, convert each plaintext secret from the old manifest to an ODB-managed placeholder in the new manifest. The value of that secret is returned in the secrets map. This instructs ODB to store the secret in CredHub.
+To enable ODB-managed secrets, write code in your service adapter that does the following:
 
-The secrets map should only contain secrets that need to be set for the first time. These may be:
+1. Converts each plaintext secret from the old manifest to an ODB-managed placeholder in the new manifest
+1. Returns the value of each secret in the secrets map
 
- * new service creations
- * plaintext secrets being shifted into CredHub
- * previously set secrets for which you want to change the value
+This instructs ODB to store the secrets in CredHub.
 
-Each placeholder in the manifest must have a corresponding entry in the secrets map. Each key in the secrets map must have at least one corresponding placeholder in the manifest.
+<br>
+Keep in mind the following:
 
-Using the ODB-managed secrets placeholder, you can update the value of existing secrets by simply updating their values in the secrets map.
+* Unchanged secrets should not be included in the secrets map.
+Your service adapter should only return secrets in the secrets map if the value
+of the secret is being set for the first time, or if the value is changed.
+For example, this might be when:
 
-Secrets already stored in CredHub do not need this placeholder because any CredHub reference will be ignored by ODB during `generate manifest`.
+ * A new service is created
+ * Plaintext secrets are migrated into CredHub
+ * You want to change the value for previously set secrets
 
-The following sample function indicates whether a secret should be replaced:
+* Each placeholder in the manifest must have a corresponding entry in the secrets map.
+
+* Each key in the secrets map must have at least one corresponding placeholder in the manifest.
+
+* Using the ODB-managed secrets placeholder, you can update the value of existing
+secrets by updating their values in the secrets map.
+
+* Secrets already stored in CredHub do not need this placeholder because CredHub
+references are ignored by ODB during `generate-manifest`.
+
+<br>
+The following example function indicates whether a secret should be replaced:
 
 ```go
 import(
 	"github.com/pivotal-cf/on-demand-services-sdk/serviceadapter"
 )
 
-func extractSecret(oldValue, secretName string, secretsMap map[string]string) newValue string) {
+func extractSecret(oldValue, secretName string, secretsMap map[string]string, newValue string) {
   if !strings.HasPrefix(redisPassword, "((") && !strings.HasSuffix(redisPassword, "))") {
     // This is a plaintext secret
-    // Add the value to the secrets map, and return its placeholder to use in the manifest
+    // Add the value to the secrets map, and return its placeholder to use in 
+    // the manifest.
     secretsMap[secretName] = oldValue
     newValue = fmt.Sprintf( "((%s:%s))", serviceadapter.ODBSecretPrefix, secretName)
     return newValue, secretsMap
@@ -483,7 +501,8 @@ func extractSecret(oldValue, secretName string, secretsMap map[string]string) ne
     // - a custom credhub path
     // - a reference to the BOSH generated variables block
     // - a credhub reference to a secret already managed by the ODB
-    // In all cases, the ODB does not need to send the secret to credhub, so it should not be included in the secrets map.
+    // In all cases, the ODB does not need to send the secret to credhub, so it 
+    // should not be included in the secrets map.
     return oldValue
   }
 }
@@ -526,7 +545,7 @@ For example:
 }
 ```
 
-####<a id="dashboard-url-instance-id"></a>INSTANCE-ID
+####<a id="dashboard-url-instance-id"></a>SERVICE-INSTANCE-ID
 
 This parameter is the unique identifier of the service instance 
 provided by the Cloud Controller. For example, `42a09f38-c15b-47fe-a24e-ebf5f83ebd0`.
