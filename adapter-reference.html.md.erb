@@ -533,12 +533,11 @@ secrets to be left in an inconsistent state, due to the ODB updating the
 secrets in Credhub prior to the deployment.
 
 The failed deployment may contain a mixture of old and new secrets depending on
-the stage that the deployment failed. An operator may troubleshoot this scenario
-by manually re-deploying the previous manifest. This manifest contains Credhub 
-names that now refer to the new secret values.
+the stage that the deployment failed. If an operator attempts to troubleshoot this scenario
+by manually re-deploying the previous manifest, this manifest will now contain Credhub 
+names that refer to the new secret values. This is likely to cause errors with bindings. 
 
-This is likely to cause errors with bindings. For this reason, we recommend avoiding
-modifying secrets. If it's necessary, consider using unique names for new
+For this reason, we recommend avoiding modifying secrets. If it's necessary, consider using unique names for new
 versions of the secrets.
 
 ##<a id="dashboard-url"></a>dashboard-url
