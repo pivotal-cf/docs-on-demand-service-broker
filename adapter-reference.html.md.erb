@@ -508,6 +508,39 @@ func extractSecret(oldValue, secretName string, secretsMap map[string]string, ne
 }
 ```
 
+##<a id="modifying-secrets"></a>Modifying ODB Managed Secrets
+
+<p class="note warning"><strong>WARNING</strong>:
+If the BOSH deploy task fails during update or upgrade, ODB managed secrets can
+be left in an inconsistent state. We recommend you create a new key instead.</p>
+
+It may be necessary to modify the value of an ODB managed secret during either
+an Update or Upgrade of the service instance.
+
+To modify the value of the secret, the service adapter `GenerateManifest` method
+can return the new value in the secrets map, and include the appropriate
+placeholder in the manifest.
+
+The ODB will overwrite the value of the secret in BOSH Credhub, and insert the
+correct Credhub path into the manifest before deploying. Note that Credhub
+maintains versions of each secret. When the ODB sets a new value in Credhub this
+does not erase the previous value.
+
+**Inconsistent Secrets when deployment fails**
+
+If an update or upgrade BOSH deployment fails, it is possible for ODB managed
+secrets to be left in an inconsistent state, due to the ODB updating the
+secrets in Credhub prior to the deployment.
+
+The failed deployment may contain a mixture of old and new secrets depending on
+the stage that the deployment failed. An operator may troubleshoot this scenario
+by manually re-deploying the previous manifest. This manifest contains to
+Credhub names that now refer to the new secret values.
+
+This is likely to cause errors with bindings. For this reason, we recommend avoiding
+modifying secrets. If it's necessary, consider using unique names for new
+versions of the secrets.
+
 ##<a id="dashboard-url"></a>dashboard-url
 
 This section contains the following topics:
