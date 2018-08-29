@@ -7,16 +7,16 @@ This topic provides troubleshooting information for BOSH operators.
 
 ## <a id="admin-instances"></a>Administer Service Instances
 
-Pivotal recommends that you use the [BOSH CLI gem](https://bosh.io/docs/bosh-cli.html)
-for administering the deployments created by the on-demand broker (ODB);
-for example for checking VMs, ssh, viewing logs.
+Pivotal recommends that you use the BOSH CLI for administering the deployments created by the on-demand broker (ODB); for example for checking VMs, ssh, viewing logs.
+For more information on installing the BOSH CLI, see [Install](https://bosh.io/docs/cli-v2/#install).
 
 Pivotal discourages using the BOSH CLI to update or delete ODB service
-deployments as it might accidentally trigger a race condition with Cloud
-Controller-induced updates/deletes or result in ODB overriding your
-[snowflake](http://martinfowler.com/bliki/SnowflakeServer.html) changes at the next deploy.
-All updates to the service instances must be done using the
-[errand to upgrade all service instances](#upgrade-instances).
+deployments.
+This is because it might accidentally trigger a race condition with Cloud
+Controller-induced `update` or `delete` commands,
+or result in ODB overriding your server configuration changes at the next deploy.
+
+All updates to the service instances must be done using the `upgrade-all-service-instances` errand. For more information, see [Upgrade All Service Instances](/upgrades.html#upgrade-all-instances).
 
 ## <a id="logs-and-metrics"></a>Logs and Metrics
 
@@ -25,15 +25,13 @@ All updates to the service instances must be done using the
 The ODB writes logs to a log file and to syslog.
 
 The broker log contains error messages and non-zero exit codes returned by the
-service adapter, as well as the stdout and stderr streams of the adapter.
+service adapter, as well as the `stdout` and `stderr` streams of the adapter.
 
 The log file is located at `/var/vcap/sys/log/broker/broker.log`.
 In syslog, logging is written with the tag `on-demand-service-broker`, under the
 facility `user`, with priority `info`.
 
-If you want to forward syslog to a syslog aggregator,
-Pivotal recommends co-locating [syslog release](https://github.com/cloudfoundry/syslog-release)
-with the broker.
+If you want to forward syslog to a syslog aggregator, see [Syslog Forwarding for Errand Logs](#errands-syslog) below.
 
 The ODB generates a UUID for each request and prefixes all the logs for that request,
 for example:
@@ -51,7 +49,9 @@ All ODB's logs have a UTC timestamp.
 
 If you want to forward your errand logs to a syslog aggregator, Pivotal recommends
 co-locating [syslog release](https://github.com/cloudfoundry/syslog-release)
-with the errand job. The manifest will look similar to the following:
+with the errand job. For information, see [syslog release](https://github.com/cloudfoundry/syslog-release)
+
+The manifest will look similar to the following:
 
 ```
 - name: delete-all-service-instances-and-deregister-broker
@@ -80,7 +80,7 @@ with the errand job. The manifest will look similar to the following:
 ```
 
 <p class="note"><strong>Note</strong>:
-  The errand is configured to redirect stdout and stderr to
+  The errand is configured to redirect <code>stdout</code> and <code>stderr</code> to
   <code>/var/vcap/sys/log/ERRAND_NAME/errand.stdout.log</code> and
   <code>/var/vcap/sys/log/ERRAND_NAME/errand.stderr.log</code>.
   When configuring your errand, be careful to match the actual log file paths in
