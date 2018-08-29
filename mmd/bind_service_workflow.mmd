@@ -2,13 +2,19 @@
 sequenceDiagram
   User->>Cloud Controller:cf bind-service
   Cloud Controller->>On Demand Broker:PUT binding
-  On Demand Broker->>Service Adapter:create-binding
+  alt Secure Manifests enabled
+    On Demand Broker->>BOSH CredHub:request secrets
+    BOSH CredHub->>On Demand Broker:secrets
+    On Demand Broker->>Service Adapter:create-binding with secrets
+  else Secure Manifests disabled
+    On Demand Broker->>Service Adapter:create-binding
+  end
   Service Adapter->>On Demand Broker:binding credentials
   alt Secure Binding enabled
-  On Demand Broker->>CF CredHub:Store credentials with ACLs for app
-  On Demand Broker->>Cloud Controller:CF CredHub reference
+    On Demand Broker->>CF CredHub:Store credentials with ACLs for app
+    On Demand Broker->>Cloud Controller:CF CredHub reference
   else Secure Binding disabled
-  On Demand Broker->>Cloud Controller:binding credentials
+    On Demand Broker->>Cloud Controller:binding credentials
   end
   Cloud Controller->>User:OK
 </div>
