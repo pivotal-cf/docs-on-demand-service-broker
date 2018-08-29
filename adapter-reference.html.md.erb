@@ -5,6 +5,7 @@ owner: London Services Enablement
 
 This topic describes the subcommands used with the Service Adapter Interface.
 
+
 ## <a id="interface"></a>Service Adapter Interface
 
 Implement your service adapter as a binary. 
@@ -400,12 +401,14 @@ Example JSON output printed when the `generate-manifest` command is successful:
 }
 ```
 
-###<a id="odb-managed-secrets"></a>Store Secrets on CredHub
+##<a id="odb-managed-secrets"></a>Store Secrets on CredHub
 
-The Service Adapter can generate secrets and, instead of writing these secrets 
-in plain text in the manifest, to use ODB as a proxy to BOSH CredHub Config server. 
-To do so, the adapter should generate the manifest with a special notation and 
-output the secret as part of the `secrets` map. 
+The service adapter can generate secrets and use ODB as a proxy to the BOSH CredHub
+Config server, instead of writing these secrets in plaintext in the manifest.
+**To do so, use ODB managed secrets.
+
+Write your adapter to generate a manifest that uses placeholders for secrets that
+you want to store in CredHub, and output these secrets to the secrets map.**
 
 For example, consider the following `generate-manifest` output:
 
@@ -426,14 +429,13 @@ During provision, ODB does the following:
 CredHub name.
 1. Deploys the updated manifest.
 
-**This instructs ODB to store the secrets in CredHub.**
-
 ### <a id="migrating-to-stored-secrets"></a>Migrate from Plaintext Secrets to ODB Managed Secrets
 
-The service adapter can convert plaintext secrets to ODB managed secrets that
+You can use the service adapter to convert plaintext secrets to ODB managed secrets that
 are stored in CredHub.
 When `generate-manifest` is provided with a previous manifest, the service adapter
 copies secrets from the previous deployment to the new manifest.
+
 To migrate from plaintext secrets to ODB managed secrets in a new manifest, write
 code in your service adapter that does the following:
 
@@ -524,6 +526,30 @@ names that refer to the new secret values. This is likely to cause errors with b
 For this reason, we recommend avoiding modifying secrets. If it's necessary, consider using unique names for new
 versions of the secrets.
 
+<<<<<<< Updated upstream
+=======
+### <a id="odb-persisting-creds"></a>Persist Credentials across Updates
+
+When dealing with properties that need to persist across updates,
+the service adapter must extract the existing value for any ODB managed
+secrets from the previous manifest.
+
+The following manifest snippet shows an ODB managed secret with a CredHub name:
+
+```
+name: the-deployment
+...
+properties:
+password: ((/odb/SERVICE-GUID/SERVICE-INSTANCE-GUID/SECRET-NAME))
+```
+
+If the previous manifest contains CredHub names for secrets, as in the manifest snippet above, 
+the `generate-manifest` command must not replace `properties.password` with `((odb_secret:SECRET-NAME))`.
+
+For more information about using the value during a bind, see [create-binding](#create-binding).
+
+
+>>>>>>> Stashed changes
 ##<a id="dashboard-url"></a>dashboard-url
 
 This section contains the following topics:
