@@ -9,7 +9,7 @@ For example:
 | Branch name     | Use for|
 |-----------------| ------|
 | master          | Unreleased version (edge - 0.23) https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-2n|
-| v0.22.x         | Unreleased version (edge) https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-22|
+| v0.22.x         | live on Aug 29, 2018 https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-22|
 | v0.21.x         | live |
 | v0.20.x         | live |
 | v0.19.x         | live | 
