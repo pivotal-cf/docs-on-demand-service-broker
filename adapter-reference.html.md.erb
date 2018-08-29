@@ -71,7 +71,7 @@ See the following example:
     "service_deployment": "SERVICE-DEPLOYMENT-JSON",
     "plan": "PLAN-JSON",
     "previous_plan": "PREVIOUS-PLAN-JSON",
-    "previous_manifest": "PREVIOUS-MANIFEST",
+    "previous_manifest": "PREVIOUS-MANIFEST-YAML",
     "request_parameters": "REQUEST-PARAMETERS-JSON"
   }
 }
@@ -420,50 +420,34 @@ For example, consider the following `generate-manifest` output:
 
 During provision, ODB does the following:
 
-1. Generate a CredHub name for each secret in the `secrets` map in the format
+1. Generates a CredHub name for each secret in the `secrets` map in the format
 `/odb/SERVICE-OFFERING-ID/SERVICE-INSTANCE-ID/SECRET-NAME`.
-1. Replace all occurrences of `((odb_secret:SECRET-NAME))` with the generated
+1. Replaces all occurrences of `((odb_secret:SECRET-NAME))` with the generated
 CredHub name.
-1. Deploy the updated manifest.
+1. Deploys the updated manifest.
 
-### <a id="odb-persisting-creds"></a>Persist Credentials across Updates
+**This instructs ODB to store the secrets in CredHub.**
 
-When dealing with properties that need to persist across updates,
-the service adapter must extract the existing value for any ODB-managed
-secrets from the previous manifest.
+### <a id="migrating-to-stored-secrets"></a>Migrate from Plaintext Secrets to ODB Managed Secrets
 
-The following manifest snippet shows an ODB-managed secret with a CredHub name:
+The service adapter can convert plaintext secrets to ODB managed secrets that
+are stored in CredHub.
+When `generate-manifest` is provided with a previous manifest, the service adapter
+copies secrets from the previous deployment to the new manifest.
+To migrate from plaintext secrets to ODB managed secrets in a new manifest, write
+code in your service adapter that does the following:
 
-```
-name: the-deployment
-...
-properties:
-password: ((/odb/SERVICE-GUID/SERVICE-INSTANCE-GUID/SECRET-NAME))
-```
+1. Converts each plaintext secret from the previous manifest to an ODB managed
+secrets placeholder in the new manifest.
 
-If the previous manifest contains CredHub names for secrets, as in the manifest snippet above, 
-the `generate-manifest` command must not replace `properties.password` with `((odb_secret:SECRET-NAME))`.
-
-For more information about using the value during a bind, see [create-binding](#create-binding).
-
-### <a id="migrating-to-stored-secrets"></a>Migrate from Plaintext Secrets to ODB-Managed Secrets
-
-When `generate-manifest` is provided with an old manifest, ODB copies secrets from
-the previous deployment to the new manifest.
-
-To enable ODB-managed secrets, write code in your service adapter that does the following:
-
-1. Converts each plaintext secret from the old manifest to an ODB-managed placeholder in the new manifest
-1. Returns the value of each secret in the secrets map
-
-This instructs ODB to store the secrets in CredHub.
+1. Returns the value of each secret in the secrets map.
 
 <br>
 Keep in mind the following:
 
-* Unchanged secrets should not be included in the secrets map.
-Your service adapter should only return secrets in the secrets map if the value
-of the secret is being set for the first time, or if the value is changed.
+* Do not include unchanged secrets in the secrets map.
+Your service adapter should only return secrets in the secrets map when the value
+of the secret is set for the first time, or if the value is changed.
 For example, this might be when:
 
  * A new service is created
@@ -474,10 +458,10 @@ For example, this might be when:
 
 * Each key in the secrets map must have at least one corresponding placeholder in the manifest.
 
-* Using the ODB-managed secrets placeholder, you can update the value of existing
+* Using the ODB managed secrets placeholder, you can update the value of existing
 secrets by updating their values in the secrets map.
 
-* Secrets already stored in CredHub do not need this placeholder because CredHub
+* Secrets already stored in CredHub do not need the placeholder because CredHub
 references are ignored by ODB during `generate-manifest`.
 
 <br>
@@ -485,7 +469,7 @@ The following example function indicates whether a secret should be replaced:
 
 ```go
 import(
-	"github.com/pivotal-cf/on-demand-services-sdk/serviceadapter"
+  "github.com/pivotal-cf/on-demand-services-sdk/serviceadapter"
 )
 
 func extractSecret(oldValue, secretName string, secretsMap map[string]string, newValue string) {
@@ -888,8 +872,8 @@ be unique if possible.
 
 For MySQL, two bindings could include different username/password pairs, but
 share the same MySQL database tables and data.  The first step is to determine
-which credentials are best to supply in the context of your service.  
-Pivotal recommends that users to be identified statelessly from the binding ID.
+which credentials are best to supply in the context of your service.
+Pivotal recommends that users are identified statelessly from the binding ID.
 The simplest way to do this is to name the user after the binding ID.
 
 You can take one of three approaches to credentials for a service binding:
