@@ -482,10 +482,10 @@ func extractSecret(oldValue, secretName string, secretsMap map[string]string, ne
     return newValue, secretsMap
   } else {
     // else: this secret could be one of the following:
-    // - a custom credhub path
+    // - a custom CredHub path
     // - a reference to the BOSH generated variables block
-    // - a credhub reference to a secret already managed by the ODB
-    // In all cases, the ODB does not need to send the secret to credhub, so it 
+    // - a CredHub reference to a secret already managed by the ODB
+    // In all cases, the ODB does not need to send the secret to CredHub, so it 
     // should not be included in the secrets map.
     return oldValue
   }
