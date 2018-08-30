@@ -511,6 +511,8 @@ service_catalog:
 ```
 ## <a id="secure-bind-credentials"></a>(Optional) Access Manifest Secrets at Bind Time
 
+<p class="note alert"><strong>Notice</strong>: This feature does not work if you have configured <code>use_stdin</code> to be false.</p>
+
 A service adapter might need to access secrets embedded in a service instance
 manifest when processing a create binding request. 
 For example, it might need credentials with sufficient privileges to add a new 
@@ -582,6 +584,7 @@ handle missing secrets based on whether they are required for binding creation.
 <p class="note"><strong>Note:</strong> ODB will not fail if it cannot resolve a secret.</p>
 
 ## <a id="secure-binding"></a>(Optional) Enable Secure Binding
+<p class="note alert"><strong>Notice</strong>: This feature does not work if you have configured <code>use_stdin</code> to be false.</p>
 
 If you enable secure binding, service instance credentials are stored securely in 
 runtime CredHub.
@@ -1089,4 +1092,3 @@ To enable colocated errands for a plan, do the following.
               - name: SERVICE-RELEASE-JOB
                 ...
     ```
-
