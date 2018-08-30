@@ -401,12 +401,12 @@ Example JSON output printed when the `generate-manifest` command is successful:
 }
 ```
 
-##<a id="odb-managed-secrets"></a>Store Secrets on CredHub
+###<a id="odb-managed-secrets"></a>Store Secrets on CredHub
 
-The Service Adapter can generate secrets and, instead of writing these secrets 
-in plain text in the manifest, to use ODB as a proxy to BOSH CredHub Config server. 
-To do so, the adapter should generate the manifest with a special notation and 
-output the secret as part of the `secrets` map. 
+The service adapter can generate secrets and, instead of writing these secrets
+in plain text in the manifest, to use ODB as a proxy to BOSH CredHub Config server.
+To do so, the adapter should generate the manifest with a special notation and
+output the secret as part of the `secrets` map.
 
 For example, consider the following `generate-manifest` output:
 
@@ -429,13 +429,13 @@ CredHub name.
 
 ### <a id="migrating-to-stored-secrets"></a>Migrate from Plaintext Secrets to ODB Managed Secrets
 
-You can use the service adapter to convert plaintext secrets to ODB managed secrets that
-are stored in CredHub.
-When the `generate-manifest` subcommand is provided with a previous manifest, the 
+You can use the service adapter to migrate from plaintext secrets in the manifest
+to ODB managed secrets that are stored in CredHub.
+When the `generate-manifest` subcommand is provided with a previous manifest, the
 service adapter copies secrets from the previous deployment to the new manifest.
 
-To migrate from plaintext secrets to ODB managed secrets in a new manifest, write
-code in your service adapter that does the following:
+To migrate from plaintext secrets to ODB managed secrets, write code in your
+service adapter that does the following:
 
 1. Converts each plaintext secret from the previous manifest to an ODB managed
 secrets placeholder in the new manifest.
@@ -451,7 +451,7 @@ of the secret is set for the first time, or if the value is changed.
 For example, this might be when:
 
  * A new service is created
- * Plaintext secrets are migrated into CredHub
+ * You migrate plaintext secrets into CredHub
  * You want to change the value for previously set secrets
 
 * Each placeholder in the manifest must have a corresponding entry in the secrets map.
@@ -461,8 +461,8 @@ For example, this might be when:
 * Using the ODB managed secrets placeholder, you can update the value of existing
 secrets by updating their values in the secrets map.
 
-* Secrets already stored in CredHub do not need the placeholder because CredHub
-references are ignored by ODB during `generate-manifest`.
+* Secrets already stored in CredHub do not need the placeholder.
+This is because CredHub references are ignored by ODB during `generate-manifest`.
 
 <br>
 The following example function indicates whether a secret should be replaced:
