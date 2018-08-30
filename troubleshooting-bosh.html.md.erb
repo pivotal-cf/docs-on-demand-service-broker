@@ -15,13 +15,11 @@ For troubleshooting information for Ops Manager operators, see
 Pivotal recommends that you use the BOSH CLI for administering the deployments created by the on-demand broker (ODB); for example for checking VMs, ssh, viewing logs.
 For more information on installing the BOSH CLI, see [Install](https://bosh.io/docs/cli-v2/#install).
 
-Pivotal discourages using the BOSH CLI to update or delete ODB service
-deployments.
-This is because it might accidentally trigger a race condition with Cloud
-Controller-induced `update` or `delete` commands,
-or result in ODB overriding your server configuration changes at the next deploy.
+Pivotal discourages using the BOSH CLI to update or delete ODB service deployments as it causes `cf update-service` and `cf delete-service` operations to fail while the BOSH operation is in progress.
 
-All updates to the service instances must be done using the `upgrade-all-service-instances` errand. For more information, see [Upgrade All Service Instances](/upgrades.html#upgrade-all-instances).
+In addition, any changes you make to the deployment are reverted by `cf update-service` or by running the `upgrade-all-service-instances` errand. All updates to the service instances must be done using the `upgrade-all-service-instances` errand.
+
+For more information, see [Upgrade All Service Instances](/upgrades.html#upgrade-all-instances).
 
 ## <a id="logs-and-metrics"></a>Logs and Metrics
 
