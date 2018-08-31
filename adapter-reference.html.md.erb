@@ -22,8 +22,8 @@ For example service adapters, see the following examples written in golang:
 A service adapter is expected to respond to the subcommands.
 For each of these subcommands, the following applies:
 
-* An exit status of `0` indicates that the command succeeded
-* An exit status of `10` indicates not implemented
+* An exit status of `0` indicates that the command succeeded.
+* An exit status of `10` indicates not implemented.
 * Any non-zero exit status indicates failure.
 
 For a list of possible subcommands and the structure of the JSON document
@@ -479,9 +479,9 @@ Your service adapter should only return secrets in the secrets map when the valu
 of the secret is set for the first time, or if the value is changed.
 For example, this might be when:
 
- * A new service is created
- * You migrate plaintext secrets into CredHub
- * You want to change the value for previously set secrets
+ * A new service is created.
+ * You migrate plaintext secrets into CredHub.
+ * You want to change the value for previously set secrets.
 
 * Each placeholder in the manifest must have a corresponding entry in the secrets map.
 
