@@ -437,35 +437,14 @@ service adapter copies secrets from the previous deployment to the new manifest.
 To migrate from plaintext secrets to ODB managed secrets, write code in your
 service adapter that does the following:
 
+1. Detects whether a secret is a plaintext secret.
+
 1. Converts each plaintext secret from the previous manifest to an ODB managed
 secrets placeholder in the new manifest.
 
 1. Returns the value of each secret in the secrets map.
 
-<br>
-Keep in mind the following:
-
-* Do not include unchanged secrets in the secrets map.
-Your service adapter should only return secrets in the secrets map when the value
-of the secret is set for the first time, or if the value is changed.
-For example, this might be when:
-
- * A new service is created
- * You migrate plaintext secrets into CredHub
- * You want to change the value for previously set secrets
-
-* Each placeholder in the manifest must have a corresponding entry in the secrets map.
-
-* Each key in the secrets map must have at least one corresponding placeholder in the manifest.
-
-* Using the ODB managed secrets placeholder, you can update the value of existing
-secrets by updating their values in the secrets map.
-
-* Secrets already stored in CredHub do not need the placeholder.
-This is because CredHub references are ignored by ODB during `generate-manifest`.
-
-<br>
-The following example function indicates whether a secret should be replaced:
+For example:
 
 ```go
 import(
@@ -491,6 +470,28 @@ func extractSecret(oldValue, secretName string, secretsMap map[string]string, ne
   }
 }
 ```
+
+<br>
+Keep in mind the following:
+
+* Do not include unchanged secrets in the secrets map.
+Your service adapter should only return secrets in the secrets map when the value
+of the secret is set for the first time, or if the value is changed.
+For example, this might be when:
+
+ * A new service is created
+ * You migrate plaintext secrets into CredHub
+ * You want to change the value for previously set secrets
+
+* Each placeholder in the manifest must have a corresponding entry in the secrets map.
+
+* Each key in the secrets map must have at least one corresponding placeholder in the manifest.
+
+* Secrets already stored in CredHub do not need the placeholder.
+This is because CredHub references are ignored by ODB during `generate-manifest`.
+
+* Using the ODB managed secrets placeholder, you can update the value of existing
+secrets by updating their values in the secrets map.
 
 ### <a id="odb-persisting-creds"></a>Persist Credentials across Updates
 
@@ -548,7 +549,6 @@ This can cause errors with bindings.
 
 Pivotal recommends that you avoid modifying secrets.
 If it is necessary, consider using unique names for new versions of the secrets.
-
 
 ##<a id="dashboard-url"></a>dashboard-url
 
