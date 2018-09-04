@@ -24,7 +24,7 @@ Breaking changes in this release:
 - The `CreateBinding` method implemented by the service adapter has new
   arguments: `ManifestSecrets` and `DNSAddresses`. `ManifestSecrets` is reserved for
   future use; `DNSAddresses` contains a map of requested BOSH DNS addresses. For more information about the `DNSAddresses` argument, see [Enable ODB to Obtain
-  BOSH DNS Addresses](creating.html#dns-addresses).
+  BOSH DNS Addresses](./service-adapter.html#dns-addresses).
 
 - The `GenerateManifest` method implemented by the service adapter now returns
   a `GenerateManifestOutput` structure. The returned manifest must be set in
@@ -40,7 +40,7 @@ New features and changes in this release:
 - The broker can be configured to pass the service instance's DNS information 
   to the adapter's `CreateBinding` method. For information about doing this, 
   see [Obtain BOSH DNS Addresses for Binding Creation](./operating.html#binding-with-dns) 
-  and [Enable ODB to Obtain BOSH DNS Addresses](creating.html#dns-addresses).
+  and [Enable ODB to Obtain BOSH DNS Addresses](./service-adapter.html#dns-addresses).
 
 - Resource quotas can be managed at the plan level. For information about 
   setting these quotas, see [Set Service Resource Quotas](./operating.html#service-resource-quotas). 
