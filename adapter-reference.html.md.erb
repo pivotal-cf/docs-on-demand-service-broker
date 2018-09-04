@@ -1012,13 +1012,14 @@ See the following example:
     "binding_id": "BINDING-ID",
     "bosh_vms": "BOSH-VMS-JSON",
     "manifest": "MANIFEST-YAML",
-    "delete_parameters": "DELETE-PARAMETERS-JSON"
+    "delete_parameters": "DELETE-PARAMETERS-JSON",
+    "secrets": "MANIFEST-SECRETS-JSON"
   }
 }
 ```
 
 <br>
-All the arguments are passed as strings and not JSON objects. 
+All the arguments are passed as strings and not JSON objects.
 
 For example:
 
@@ -1077,9 +1078,20 @@ See the following example:
   create-binding <code>request_parameters</code> parameter and, in particular,
   does not include <code>parameters</code> or <code>bind_resource</code>.</p>
 
+####<a id="delete-binding-secrets"></a>MANIFEST-SECRETS-JSON
+
+This parameter is identicle to the secrets map passed to the `create-binding` subcommand. See [Create Binding Secrets](#create-binding-secrets).
+
+If `enable_secure_manifests` is set to `true` in the broker,
+any secrets in the service instance manifest that use references to BOSH-generated
+variables or literal CredHub paths are resolved and sent to the adapter in the `MANIFEST-SECRETS-JSON` parameter.
+
+If `enable_secure_manifests` is set to `false` in the broker, the the `MANIFEST-SECRETS-JSON` parameter is empty.
+
+
 ###<a id="delete-binding-output"></a>Output
 
-The following table describes the supported exit codes and output for the 
+The following table describes the supported exit codes and output for the
 `delete-binding` subcommand:
 
 | exit code     | Description            | Output                                                                                                                                                |
