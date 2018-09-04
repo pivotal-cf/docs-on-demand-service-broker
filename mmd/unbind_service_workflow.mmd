@@ -2,11 +2,17 @@
 sequenceDiagram
   User->>Cloud Controller:cf unbind-service
   Cloud Controller->>On Demand Broker:DELETE binding
-  On Demand Broker->>Service Adapter:delete-binding
+  alt Secure Manifests enabled
+    On Demand Broker->>BOSH CredHub:request secrets
+    BOSH CredHub->>On Demand Broker:secrets
+    On Demand Broker->>Service Adapter:delete-binding with secrets
+  else Secure Manifests disabled
+    On Demand Broker->>Service Adapter:delete-binding
+  end
   Service Adapter->>On Demand Broker:exit 0
   opt Secure Binding enabled
-  On Demand Broker->>CF CredHub:Delete credentials
-  CF CredHub->>On Demand Broker:OK
+    On Demand Broker->>CF CredHub:Delete credentials
+    CF CredHub->>On Demand Broker:OK
   end
   On Demand Broker->>Cloud Controller:OK
   Cloud Controller->>User:OK

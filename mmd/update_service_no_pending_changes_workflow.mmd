@@ -7,7 +7,11 @@
   On Demand Broker->>Service Adapter: generate-manifest (without request parameters)
   Service Adapter->>On Demand Broker: manifest
   On Demand Broker->>Service Adapter: generate-manifest (with request parameters)
-  Service Adapter->>On Demand Broker: manifest
+  Service Adapter->>On Demand Broker: manifest + secrets
+  opt Secure Manifests enabled
+    On Demand Broker->>BOSH CredHub: store secrets
+    On Demand Broker->>On Demand Broker: update manifest with CredHub names
+  end
   On Demand Broker->>BOSH: deploy
   BOSH->>On Demand Broker: accepted
   On Demand Broker->>Cloud Controller: accepted
