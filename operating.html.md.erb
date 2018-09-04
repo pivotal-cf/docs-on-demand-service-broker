@@ -503,11 +503,14 @@ service_catalog:
         canary_watch_time: 1000-30000 # required
         update_watch_time: 1000-30000 # required
         serial: true # optional
-      lifecycle_errands: #optional
-        post_deploy:
-          name: ERRAND-NAME #optional
-          instances: [INSTANCE-NAME] #optional, for co-locating errand
-        pre_delete: ERRAND-NAME #optional
+      lifecycle_errands: # optional
+        post_deploy: # optional
+          - name: ERRAND-NAME
+            instances: [INSTANCE-NAME, ...] # optional, for co-locating errand
+          - name: ANOTHER_ERRAND_NAME
+        pre_delete: # optional
+          - name: ERRAND-NAME
+            instances: [INSTANCE-NAME, ...] # optional, for co-locating errand
 ```
 
 ## <a id="secure-binding"></a>(Optional) Enable Secure Binding
