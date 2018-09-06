@@ -16,6 +16,7 @@ owner: London Services Enablement
 	- SDK now supports the new bosh manifest properties pertaining to custom certificate generation.
 	- ODB now parses `custom_provider_definitions` inside `jobs` and `consumes` inside `variables`.
 	- For detailed instructions, see [BOSH DNS Addresses in Generated Certs](https://bosh.io/docs/dns/#dns-variables-integration).
+- ODB will fail to start if a plan has `binding_with_dns` enabled but the BOSH version is less than v266.12.0 or less than v267.6.0.
 - Golang upgraded to 1.11.0
 
 ### Known Issues
