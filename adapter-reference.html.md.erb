@@ -857,13 +857,7 @@ See the following example:
 
 ####<a id="delete-binding-secrets"></a>MANIFEST-SECRETS-JSON
 
-This parameter is identical to the secrets map passed to the `create-binding` subcommand. See [Create Binding Secrets](#create-binding-secrets).
-
-If `enable_secure_manifests` is set to `true` in the broker,
-any secrets in the service instance manifest that use references to BOSH-generated
-variables or literal CredHub paths are resolved and sent to the adapter in the `MANIFEST-SECRETS-JSON` parameter.
-
-If `enable_secure_manifests` is set to `false` in the broker, the the `MANIFEST-SECRETS-JSON` parameter is empty.
+See [MANIFEST-SECRETS-JSON](#create-binding-secrets) above.
 
 
 ###<a id="delete-binding-output"></a>Output
