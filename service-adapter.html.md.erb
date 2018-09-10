@@ -5,23 +5,23 @@ owner: London Services Enablement
 
 This topic provides information for service authors about how to create a service
 adapter for an on-demand service tile.
-For more information about service author responsibilities, see 
+For more information about service author responsibilities, see
 [Service Author Deliverables](./creating.html#what-is-required-of-the-service-authors).
 
 ## <a id="create-a-service-adapter"></a>Create a Service Adapter
 
-A service adapter is an executable invoked by the ODB. 
+A service adapter is an executable invoked by the ODB.
 Pivotal has published an SDK for teams writing their service adapters in golang.
 For more information, see [Golang SDK](#sdk) below.
 
 ### <a id="subcommands"></a>Subcommands in the Adapter Interface
 
 A service adapter is expected to respond to the subcommands below.
-The parameters and expected output from these subcommands are explained in detail 
+The parameters and expected output from these subcommands are explained in detail
 in [Service Adapter Interface Reference](./adapter-reference.html).
 
 - `generate-manifest`:
-  Generate a BOSH manifest for your service instance deployment and output to stdout 
+  Generate a BOSH manifest for your service instance deployment and output to stdout
   a JSON document containing the manifest as YAML, given information about the:
   - BOSH Director (stemcells, release names)
   - service instance (ID, request parameters, plan properties, IAAS resources)
@@ -80,7 +80,7 @@ CredHub name.
 ### <a id="migrating-to-stored-secrets"></a>Migrate from Plaintext Secrets to ODB Managed Secrets
 
 You can use the service adapter to migrate from plaintext secrets in the manifest
-to ODB managed secrets that are stored in CredHub.
+to ODB managed secrets that are stored in BOSH CredHub.
 When the `generate-manifest` subcommand is provided with a previous manifest, the
 service adapter copies secrets from the previous deployment to the new manifest.
 
@@ -89,7 +89,7 @@ service adapter that does the following:
 
 1. Detects whether a secret is a plaintext secret.
 
-1. Converts each plaintext secret from the previous manifest to an ODB managed
+1. Replaces each plaintext secret from the previous manifest with an ODB managed
 secrets placeholder in the new manifest.
 
 1. Returns the value of each secret in the secrets map.
@@ -104,7 +104,7 @@ import(
 func extractSecret(oldValue, secretName string, secretsMap map[string]string, newValue string) {
   if !strings.HasPrefix(redisPassword, "((") && !strings.HasSuffix(redisPassword, "))") {
     // This is a plaintext secret
-    // Add the value to the secrets map, and return its placeholder to use in 
+    // Add the value to the secrets map, and return its placeholder to use in
     // the manifest.
     secretsMap[secretName] = oldValue
     newValue = fmt.Sprintf( "((%s:%s))", serviceadapter.ODBSecretPrefix, secretName)
@@ -114,7 +114,7 @@ func extractSecret(oldValue, secretName string, secretsMap map[string]string, ne
     // - a custom CredHub path
     // - a reference to the BOSH generated variables block
     // - a CredHub reference to a secret already managed by the ODB
-    // In all cases, the ODB does not need to send the secret to CredHub, so it 
+    // In all cases, the ODB does not need to send the secret to CredHub, so it
     // should not be included in the secrets map.
     return oldValue
   }
@@ -141,7 +141,15 @@ For example, this might be when:
 This is because CredHub references are ignored by ODB during `generate-manifest`.
 
 * Using the ODB managed secrets placeholder, you can update the value of existing
-secrets by updating their values in the secrets map.
+secrets.
+Pivotal recommends that you update both the name and value of the secret when updating
+secrets.
+  <p class="note warning"><strong>WARNING</strong>:
+    Pivotal discourages modifying the value of secrets without changing the secret name.
+    If the BOSH deploy task fails during update or upgrade, ODB managed secrets might
+    be left in an inconsistent state.
+    For more information, see <a href="#inconsistent-secrets">Inconsistent Secrets When the Deployment Fails</a>.
+  </p>
 
 ### <a id="odb-persisting-creds"></a>Persist Credentials across Updates
 
@@ -158,7 +166,7 @@ properties:
 password: ((/odb/SERVICE-GUID/SERVICE-INSTANCE-GUID/SECRET-NAME))
 ```
 
-If the previous manifest contains CredHub names for secrets, as in the manifest snippet above, 
+If the previous manifest contains CredHub names for secrets, as in the manifest snippet above,
 the `generate-manifest` command must not replace `properties.password` with `((odb_secret:SECRET-NAME))`.
 
 For more information about using the value during a bind, see [create-binding](#create-binding).
@@ -166,31 +174,37 @@ For more information about using the value during a bind, see [create-binding](#
 ### <a id="modifying-secrets"></a>Modifying ODB Managed Secrets
 
 <p class="note warning"><strong>WARNING</strong>:
-  Pivotal discourages modifying secrets.
+  Pivotal discourages modifying the value of secrets without changing the secret name.
   If the BOSH deploy task fails during update or upgrade, ODB managed secrets might
   be left in an inconsistent state.
-  For more information, see <a href="#inconsistent-secrets">Inconsistent Secrets When Deployment Fails</a>.
-  Consider creating a new key instead.</p>
+  For more information, see <a href="#inconsistent-secrets">Inconsistent Secrets When the Deployment Fails</a>.
+</p>
 
 When updating or upgrading a service instance, you may need to modify the value
 of an ODB managed secret.
 
-To modify the value of the secret, the service adapter `GenerateManifest` method
-can return the new value in the secrets map, and include the appropriate
-placeholder in the manifest.
+To modify a secret, write code in your service adapter that does the following:
+
+1. Replaces the property in the manifest with an ODB managed secrets placeholder
+that uses a new secret name.
+
+1. The `GenerateManifest` method returns the new secret in the secrets map.
 
 The ODB overwrites the value of the secret in BOSH CredHub, and inserts the
-correct CredHub path into the manifest before deploying. 
-CredHub maintains versions of each secret. 
-When the ODB sets a new value in CredHub this does not erase the previous value.
+correct CredHub path into the manifest before deploying.
 
-#### <a id="inconsistent-secrets"></a>Inconsistent Secrets When The Deployment Fails
+<p class="note"><strong>Note:</strong>
+  CredHub maintains versions of each secret.
+  When the ODB sets a new value in CredHub this does not erase the previous value.
+</p>
 
-If an update or upgrade BOSH deployment fails, ODB managed secrets can be left
-in an inconsistent state, due to the ODB updating the secrets in CredHub prior to
-the deployment.
+#### <a id="inconsistent-secrets"></a>Inconsistent Secrets When the Deployment Fails
 
-The failed deployment may contain a mixture of old and new secrets depending on
+If an update or upgrade of a BOSH deployment fails, ODB managed secrets can be left
+in an inconsistent state.
+This is because the ODB updates the secrets in CredHub before updating the deployment.
+
+The failed deployment might contain a mixture of old and new secrets depending on
 the stage that the deployment failed.
 If an operator attempts to troubleshoot this scenario by manually re-deploying
 the previous manifest, this manifest will now contain CredHub names that refer
@@ -198,7 +212,7 @@ to the new secret values.
 This can cause errors with bindings.
 
 Pivotal recommends that you avoid modifying secrets.
-If it is necessary, consider using unique names for new versions of the secrets.
+If it is necessary, consider using unique names for new versions of secrets.
 
 ### <a id="create-binding-credentials"></a>Credentials for Bindings
 
@@ -227,14 +241,14 @@ properties:
 
 #### <a id="unique-credentials"></a>Credentials Unique to Each Binding
 
-In this case, when the adapter `generate-manifest` subcommand is invoked, 
-it generates random admin credentials and returns them as part of the service 
-instance manifest. When the `create-binding` subcommand is invoked, the adapter 
-can use the admin credentials from the manifest to create unique credentials 
+In this case, when the adapter `generate-manifest` subcommand is invoked,
+it generates random admin credentials and returns them as part of the service
+instance manifest. When the `create-binding` subcommand is invoked, the adapter
+can use the admin credentials from the manifest to create unique credentials
 for the binding. Subsequent `create-binding` calls create new credentials.
 
-This option makes sense for services whose binding creation resembles user creation, 
-such as MySQL or RabbitMQ. For example, in MySQL the admin user can be used to create 
+This option makes sense for services whose binding creation resembles user creation,
+such as MySQL or RabbitMQ. For example, in MySQL the admin user can be used to create
 a new user and database for the binding:
 
 ```yaml
@@ -244,13 +258,13 @@ properties:
 
 #### <a id="agent"></a>Using an Agent
 
-In this case, the author defines an agent responsible for handling creation of 
-credentials unique to each binding. The agent must be added as a BOSH release 
-in the service manifest. Moreover, the service and agent jobs should be co-located 
+In this case, the author defines an agent responsible for handling creation of
+credentials unique to each binding. The agent must be added as a BOSH release
+in the service manifest. Moreover, the service and agent jobs should be co-located
 in the same instance group.
 
-This option is useful for services where the adapter cannot or prefers not to 
-directly call out to the service instance and instead delegates responsibility 
+This option is useful for services where the adapter cannot or prefers not to
+directly call out to the service instance and instead delegates responsibility
 for setting up new credentials to an agent.
 
 See the following example:
@@ -274,17 +288,17 @@ instance_groups:
 ### <a id="dns-addresses"></a> Enable ODB to Obtain BOSH DNS Addresses
 
 <p class="note"><strong>Note:</strong>
- This feature requires BOSH Director v266.3 or later. 
+ This feature requires BOSH Director v266.3 or later.
  This is available in Ops Manager v2.2 and later.</p>
 
-You can configure ODB to provide BOSH DNS addresses for service instances to the 
+You can configure ODB to provide BOSH DNS addresses for service instances to the
 service adapter `create-binding` call.
-This is useful when the binding for a service instance contains, or relies on, 
+This is useful when the binding for a service instance contains, or relies on,
 BOSH DNS addresses for that deployment.
-For more information about how DNS addresses are passed to the `create-binding` call, 
+For more information about how DNS addresses are passed to the `create-binding` call,
 see [DNS-ADDRESSES-JSON](./adapter-reference.html#create-binding-dns-addresses).
 
-To enable ODB to provide service instance DNS addresses to the `create-binding` call, 
+To enable ODB to provide service instance DNS addresses to the `create-binding` call,
 do the following:
 
 1. Provide a link from the service instance's BOSH release.
@@ -305,11 +319,11 @@ For an example `spec` file, see the [Redis Example Service Release](https://gith
 2. Write code in the service adapter that shares the link you provided above in the BOSH
 manifest generated for your service instance deployment.
 <br><br>
-Ensure you share the link in the same job that you added the link to in step 1. 
+Ensure you share the link in the same job that you added the link to in step 1.
 Include the link in all instance groups that require a DNS address at binding time.
 <br><br>
 For example:
-        
+
     ```yaml
     instance_groups:
     - name: leader-node
@@ -317,7 +331,7 @@ For example:
       - name: redis-server-job
         release: redis-cluster-release
         provides:                          # add this section
-          example-link-1: {shared: true} 
+          example-link-1: {shared: true}
         ...
     ```
 
@@ -335,9 +349,9 @@ See an example implementation [here](https://github.com/pivotal-cf-experimental/
 
 ### <a id="packaging"></a>Packaging a Service Adapter
 
-The adapter should be packaged as a BOSH release, which should be co-located with the 
-ODB release in a BOSH manifest by the operator. 
-This is only done in order to place the adapter executable on the same VM as the ODB 
+The adapter should be packaged as a BOSH release, which should be co-located with the
+ODB release in a BOSH manifest by the operator.
+This is only done in order to place the adapter executable on the same VM as the ODB
 server. As a result, the adapter BOSH job's `monit` file should  have no processes defined.
 
 See the following example service adapter releases:
@@ -347,17 +361,17 @@ See the following example service adapter releases:
 
 ## <a id="sdk"></a> Golang SDK
 
-Pivotal has published a [SDK](https://github.com/pivotal-cf/on-demand-services-sdk) for 
-teams writing their service adapters in golang. It encapsulates the command line invocation 
-handling, parameter parsing, response serialization and error handling so the adapter authors 
+Pivotal has published a [SDK](https://github.com/pivotal-cf/on-demand-services-sdk) for
+teams writing their service adapters in golang. It encapsulates the command line invocation
+handling, parameter parsing, response serialization and error handling so the adapter authors
 can focus on the service-specific logic in the adapter.
 
-Use the same version of the SDK as your ODB release. For example, if you are using v0.8.0 of 
+Use the same version of the SDK as your ODB release. For example, if you are using v0.8.0 of
 the ODB BOSH release, you should check out the v0.8.0 tag of the SDK.
 
-For the generated BOSH manifest, the SDK supports properties in two levels: manifest global and job level. 
-Global properties are [deprecated in BOSH](http://bosh.io/docs/manifest-v2.html#properties), in favor 
-of job level properties and job links. 
+For the generated BOSH manifest, the SDK supports properties in two levels: manifest global and job level.
+Global properties are [deprecated in BOSH](http://bosh.io/docs/manifest-v2.html#properties), in favor
+of job level properties and job links.
 
 As an example, refer to the [Kafka example service adapter property generation](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/ffe85fecc2d9cf1b663fab418875e67ddcf3327f/adapter/generate_manifest.go#L79-L123).
 
@@ -370,7 +384,7 @@ Perform the following steps to use the SDK:
     ```
     go get github.com/pivotal-cf/on-demand-services-sdk
     ```
-1. In the main function for the service adapter, call the `HandleCLI` function: 
+1. In the main function for the service adapter, call the `HandleCLI` function:
 
     ```go
     package main
@@ -448,7 +462,7 @@ The SDK provides the methods `ArbitraryContext` and `Platform`. These are
 used to extract the `context` property from the request parameters and the `platform` property from within the
 `context`.
 
-The context in the response is a feature of [Open Service Broker API (OSBAPI) v2.13 
+The context in the response is a feature of [Open Service Broker API (OSBAPI) v2.13
 specification](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md)
 and is used to pass through information about the environment in which the
 platform or app is executing. If the platform does not provide a `context`, the SDK returns empty values.
@@ -473,7 +487,7 @@ For more complete code examples please take a look at the [Kafka adapter](https:
 
 Service authors can enable configuration of BOSH Features in their service adapters.
 
-The SDK provides the following [BoshFeatures struct](https://github.com/pivotal-cf/on-demand-services-sdk/blob/49cf3649cd34db8715b673d42e36710517e0f30e/bosh/bosh_manifest.go#L36-L45) 
+The SDK provides the following [BoshFeatures struct](https://github.com/pivotal-cf/on-demand-services-sdk/blob/49cf3649cd34db8715b673d42e36710517e0f30e/bosh/bosh_manifest.go#L36-L45)
 with the possibility of adding extra features via the `ExtraFeatures` map:
 
 ```
