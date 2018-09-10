@@ -16,61 +16,63 @@ Service authors provide the following:
 - Documentation for the operator to configure plan definitions for the Service Adapter.
 - Documentation for the operator to backup and restore service instances.
 
-For information about the responsibilities of operators, see 
+For information about the responsibilities of operators, see
 [Operator Responsibilities](operating.html#operator-checklist).
 
 
 ## <a id="create-a-service-release"></a>Create a Service Release
 
-A service release is a BOSH release that is deployed at instance creation time, 
-once for each service instance, by the on-demand broker (ODB). 
+A service release is a BOSH release that is deployed at instance creation time,
+once for each service instance, by the on-demand broker (ODB).
 
 ### <a id="service-instance-lifecycle-errands"></a>Service Instance Lifecycle Errands
 
  <p class="note"><strong>Note</strong>: This feature requires BOSH director v261 or later.</p>
 
-A service release can provide job errands that are used by ODB during the management of an instance lifecycle. 
-Operators can configure service instance lifecycle errands. 
+A service release can provide job errands that are used by ODB during the management of an instance lifecycle.
+Operators can configure service instance lifecycle errands.
 For more information, see [Service Instance Lifecycle Errands](./operating.html#lifecycle-errands).
 
 ODB supports the following service instance lifecycle errands:
 
-- `post-deploy`: These errands run after the creation or updating of a service instance. 
+- `post-deploy`: These errands run after the creation or updating of a service instance.
 For information about the workflow, see [Create or Update Service Instance with Post-Deploy Errands](./concepts.html#post-deploy).
-- `pre-delete`: These errands run before the deletion of a service instance. 
+- `pre-delete`: These errands run before the deletion of a service instance.
 For information about the workflow, see [Delete a Service Instance with Pre-Delete Errand](./concepts.html#pre-delete).
 
 A deployment is only considered successful if along with the deployment all lifecycle errands complete successfully.
 
 See an example implementation of a health check `post-deploy` job in the [example Redis release](https://github.com/pivotal-cf-experimental/redis-example-service-release/tree/master/jobs/health-check).
 
-If you are using the [generate-manifest](#generate-manifest) command, you must validate and include any supported errands that are specified in the instance groups array.
+If you are using the `generate-manifest` command, you must validate and include
+any supported errands that are specified in the instance groups array.
+For more information about this command, see [generate-manifest](./adapter-reference.html#generate-manifest).
 
 #### <a id="colocated-errands"></a>Colocated Errands
 
 <p class="note"><strong>Note</strong>: This feature requires BOSH director v263 or later.</p>
 
-Both `post-deploy` and `pre-delete` errands can be run as colocated errands. 
+Both `post-deploy` and `pre-delete` errands can be run as colocated errands.
 Colocated errands run on an existing service instance group, avoiding additional resource allocation.
 
 In order to enable a new colocated errand, they must be added to the list of jobs of an instance group.
 
-For more information see the [BOSH documentation](https://bosh.io/docs/errands.html).
+For more information, see the [BOSH documentation](https://bosh.io/docs/errands.html).
 
 ### <a id="job-links"></a>Job Links
 
-When generating a manifest, Pivotal recommends not using static IPs, which make 
-network IP management very complex. 
+When generating a manifest, Pivotal recommends not using static IPs, which make
+network IP management very complex.
 Instead, Pivotal recommends using BOSH's job links feature.
 
-There are two types of job links, implicit and explicit. 
-The [example Kafka release](https://github.com/pivotal-cf-experimental/kafka-example-service-release/blob/master/jobs/kafka_server/spec#L15) 
-uses implicit job links to get the IPs of the brokers and the zookeeper. 
+There are two types of job links, implicit and explicit.
+The [example Kafka release](https://github.com/pivotal-cf-experimental/kafka-example-service-release/blob/master/jobs/kafka_server/spec#L15)
+uses implicit job links to get the IPs of the brokers and the zookeeper.
 For more information about the links feature, see the [BOSH documentation](https://bosh.io/docs/links.html).
 
 ### <a id="package-service"></a>Packaging a Service Release
 
-The service release should be packaged as a BOSH release, which should be co-located with the 
+The service release should be packaged as a BOSH release, which should be colocated with the
 ODB release in a BOSH manifest by the operator.
 
 For examples of a service release, see the following:
@@ -78,6 +80,6 @@ For examples of a service release, see the following:
 * [Redis example service release](https://github.com/pivotal-cf-experimental/redis-example-service-release)
 * [Kafka example service release](https://github.com/pivotal-cf-experimental/kafka-example-service-release)
 
-For more information about how to create a BOSH release, see the [BOSH documentation](https://bosh.io/docs/create-release/). 
+For more information about how to create a BOSH release, see the [BOSH documentation](https://bosh.io/docs/create-release/).
 Pivotal recommends creating sample manifests that deploy the service release(s),
 because later this helps you write the `generate-manifest` component of the Service Adapter.
