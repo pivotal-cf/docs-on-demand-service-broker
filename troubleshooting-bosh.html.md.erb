@@ -12,14 +12,11 @@ For troubleshooting information for Ops Manager operators, see
 
 ## <a id="admin-instances"></a>Administer Service Instances
 
-Pivotal recommends that you use the BOSH CLI for administering the deployments created by the on-demand broker (ODB); for example for checking VMs, ssh, viewing logs.
-For more information on installing the BOSH CLI, see [Install](https://bosh.io/docs/cli-v2/#install).
+Pivotal recommends that you use the BOSH CLI for administering the deployments created by the on-demand broker (ODB); for example for checking VMs, ssh, viewing logs. For more information on installing the BOSH CLI, see [Install](https://bosh.io/docs/cli-v2/#install).
 
 Pivotal discourages using the BOSH CLI to update or delete ODB service deployments as it causes `cf update-service` and `cf delete-service` operations to fail while the BOSH operation is in progress.
 
-In addition, any changes you make to the deployment are reverted by `cf update-service` or by running the `upgrade-all-service-instances` errand. All updates to the service instances must be done using the `upgrade-all-service-instances` errand.
-
-For more information, see [Upgrade All Service Instances](/upgrades.html#upgrade-all-instances).
+In addition, any changes you make to the deployment are reverted by `cf update-service` or by running the `upgrade-all-service-instances` errand. All updates to the service instances must be done using the `upgrade-all-service-instances` errand. For more information, see [Upgrade All Service Instances](./upgrades.html#upgrade-all-instances).
 
 ## <a id="logs-and-metrics"></a>Logs and Metrics
 
@@ -43,16 +40,16 @@ for example:
 [on-demand-service-broker] [4d63080d-e038-45a3-85f9-93910f6b40b1] 2016/09/05 16:43:26.123456 a valid UAA token was found in cache, will not obtain a new one
 </pre>
 
-<p class="note"><strong>Note</strong>: The ODB's HTTP server and start up logs 
+<p class="note"><strong>Note</strong>: The ODB's HTTP server and start up logs
   are not prefixed with a request ID.</p>
 
-All ODB's logs have a UTC timestamp.
+All ODB logs have a UTC timestamp.
 
 ### <a id="errands-syslog"></a> Syslog Forwarding for Errand Logs
 
 If you want to forward your errand logs to a syslog aggregator, Pivotal recommends
 co-locating [syslog release](https://github.com/cloudfoundry/syslog-release)
-with the errand job. For information, see [syslog release](https://github.com/cloudfoundry/syslog-release)
+with the errand job. For information, see [syslog release](https://github.com/cloudfoundry/syslog-release).
 
 The manifest will look similar to the following:
 
@@ -169,10 +166,10 @@ To identify the BOSH deployment for a service instance you can.
     </pre>
     Record the GUID in the output of the command.
 
-1. Identify your deployment. 
+1. Identify your deployment.
   Run `bosh deployments` and look for `service-instance_GUID`.
 
-1. Get current tasks for your deployment. 
+1. Get current tasks for your deployment.
   Run the following command:
 
     ```
@@ -189,10 +186,10 @@ To identify the BOSH deployment for a service instance you can.
 ## <a id="id-tasks"></a>Identify Tasks in BOSH
 
 Most operations on the on demand service broker API are implemented by launching BOSH tasks.
-If an operation fails, it may be useful to investigate the corresponding BOSH task. 
+If an operation fails, it may be useful to investigate the corresponding BOSH task.
 To do this:
 
-1. Determine the ID of the service for which an operation failed. 
+1. Determine the ID of the service for which an operation failed.
   Run the following command:
 
     ```
@@ -253,8 +250,8 @@ caused by an unreachable destination or bad credentials.
 For example:
 
 ```
-on-demand-service-broker: [on-demand-service-broker] 
-[575afbc1-b541-481d-9cde-b3d3e67e87bf] 2016/05/18 15:56:40.100579 
+on-demand-service-broker: [on-demand-service-broker]
+[575afbc1-b541-481d-9cde-b3d3e67e87bf] 2016/05/18 15:56:40.100579
 Error authenticating (401): {"error":"unauthorized","error_description":
 "Bad credentials"}, ensure that properties.BROKER-JOB.bosh.authentication.uaa is
 correct and try again.
@@ -303,11 +300,11 @@ errand.
 To call this endpoint without running the errand, use `curl`.
 
 **Request**
-	
+
 ```
 GET http://USERNAME:PASSWORD@ON-DEMAND-BROKER-IP:8080/mgmt/orphan_deployments`
 ```
-	
+
 **Response**
 
 200 OK
