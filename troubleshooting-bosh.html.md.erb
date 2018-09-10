@@ -12,14 +12,11 @@ For troubleshooting information for Ops Manager operators, see
 
 ## <a id="admin-instances"></a>Administer Service Instances
 
-Pivotal recommends that you use the BOSH CLI for administering the deployments created by the on-demand broker (ODB); for example for checking VMs, ssh, viewing logs.
-For more information on installing the BOSH CLI, see [Install](https://bosh.io/docs/cli-v2/#install).
+Pivotal recommends that you use the BOSH CLI for administering the deployments created by the on-demand broker (ODB); for example for checking VMs, ssh, viewing logs. For more information on installing the BOSH CLI, see [Install](https://bosh.io/docs/cli-v2/#install).
 
 Pivotal discourages using the BOSH CLI to update or delete ODB service deployments as it causes `cf update-service` and `cf delete-service` operations to fail while the BOSH operation is in progress.
 
-In addition, any changes you make to the deployment are reverted by `cf update-service` or by running the `upgrade-all-service-instances` errand. All updates to the service instances must be done using the `upgrade-all-service-instances` errand.
-
-For more information, see [Upgrade All Service Instances](./upgrades.html#upgrade-all-instances).
+In addition, any changes you make to the deployment are reverted by `cf update-service` or by running the `upgrade-all-service-instances` errand. All updates to the service instances must be done using the `upgrade-all-service-instances` errand. For more information, see [Upgrade All Service Instances](./upgrades.html#upgrade-all-instances).
 
 ## <a id="logs-and-metrics"></a>Logs and Metrics
 
@@ -46,13 +43,13 @@ for example:
 <p class="note"><strong>Note</strong>: The ODB's HTTP server and start up logs 
   are not prefixed with a request ID.</p>
 
-All ODB's logs have a UTC timestamp.
+All ODB logs have a UTC timestamp.
 
 ### <a id="errands-syslog"></a> Syslog Forwarding for Errand Logs
 
 If you want to forward your errand logs to a syslog aggregator, Pivotal recommends
 co-locating [syslog release](https://github.com/cloudfoundry/syslog-release)
-with the errand job. For information, see [syslog release](https://github.com/cloudfoundry/syslog-release)
+with the errand job. For information, see [syslog release](https://github.com/cloudfoundry/syslog-release).
 
 The manifest will look similar to the following:
 
