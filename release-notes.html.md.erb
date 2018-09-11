@@ -4,52 +4,20 @@ owner: London Services Enablement
 ---
 <strong><%= modified_date %></strong>
 
-## <a id="release-notes"></a>v0.21.2
+## <a id="release-notes"></a>v0.23.0
 
-**Release Date: May 14, 2018**
+**Release Date: Sept 2018**
 
 ### Breaking Changes
 
-- Plan-level `pre-delete` and `post-deploy` lifecycle errands value
-  must be an array.
-- Service instance provision requests now require `X-Broker-API-Version: 2.13`
-  in the header for OSBAPI compliance. The version must be 2.x and later.
-- When service instance quotas are reached, error messages are updated to the following format:
-    `Global instance limit exceeded for service ID: SERVICE-ID. Total instances: NUMBER` 
-
-    <br>For example:<br>
-    `Global instance limit exceeded for service ID: p.redis. Total instances: 100`
-
-
 ### New Features
 
-- Golang downgraded to 1.9.5
-- Adds support for defining multiple pre-delete and post-deploy lifecycle
-  errands. Errands can be configured with different colocation preferences.
-  For more information, see [Service Instance Lifecycle Errands](./operating.html#lifecycle-errands).
-- Improved flexibility to select canary service instances to upgrade
-  during `upgrade-all-service-instances` errand. Operators can specify a number
-  of instances to upgrade first, and/or they may specify a Cloud Foundry
-  organization and space from which canary instances will be selected.
-  Alternatively, arbitrary parameters can be supported if using
-  the Service Instances API.
-  For more information, see [Upgrade All Service Instances](./operating.html#upgrade-all-instances).
-- Enabled broker validation for plan-level [configuration parameter schemas](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#catalog-management).
-  Service adapters may opt into having ODB validate request configuration
-  parameters by turning on the `enable_plan_schemas` feature flag and
-  implementing [`generate-plan-schemas`](./adapter-reference.html#generate-plan-schemas).
-- Improved status messages for `upgrade-all-service-instances`.
-- Improved error messages for CredHub misconfiguration in service broker
-  manifest. If the setting `secure_binding_credentials.enabled: true` is specified, then ODB
-  validates that CredHub links are provided and resolvable from Runtime deployment.
-- `PATCH /v2/service_instance/:instance_guid` and
-  `PUT /v2/service_instance/:instance_guid` are fully compliant with
-  [OSBAPI v2.13 specification](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md).
-- Supports arbitrary additional properties in
-  [service plan definition metadata](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/profile.md#service-metadata).
-- CF CLI bumped to v6.36.1
-<p class="note"><strong>Note</strong>: PCF 1.10 integration is no longer supported. </p>
-
+- Service authors can now use BOSH DNS names to generate certificates at deploy time.
+	- SDK now supports the new bosh manifest properties pertaining to custom certificate generation.
+	- ODB now parses `custom_provider_definitions` inside `jobs` and `consumes` inside `variables`.
+	- For detailed instructions, see [BOSH DNS Addresses in Generated Certs](https://bosh.io/docs/dns/#dns-variables-integration).
+- ODB will fail to start if a plan has `binding_with_dns` enabled but the BOSH version is less than v266.12.0 or less than v267.6.0.
+- Golang upgraded to 1.11.0
 
 ### Known Issues
 
@@ -57,5 +25,5 @@ owner: London Services Enablement
 
 ### Minimum Version Requirements
 
-- BOSH 257+ (261+ for lifecycle errands) / BOSH lite v9000.131.0
+- BOSH v266.12.0+ or v267.6.0+ 
 - CF 238+
