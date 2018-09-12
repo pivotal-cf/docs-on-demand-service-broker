@@ -48,10 +48,10 @@ All ODB logs have a UTC timestamp.
 ### <a id="errands-syslog"></a> Syslog Forwarding for Errand Logs
 
 If you want to forward your errand logs to a syslog aggregator, Pivotal recommends
-co-locating [syslog release](https://github.com/cloudfoundry/syslog-release)
-with the errand job. For information, see [syslog release](https://github.com/cloudfoundry/syslog-release).
+co-locating syslog release with the errand job.
+For information, see the [syslog release](https://github.com/cloudfoundry/syslog-release) repository in GitHub.
 
-The manifest will look similar to the following:
+Example manifest:
 
 ```
 - name: delete-all-service-instances-and-deregister-broker
@@ -89,14 +89,16 @@ The manifest will look similar to the following:
 
 ### <a id="metrics"></a>Metrics
 
-If you have [configured broker metrics](#broker-metrics), the broker emits
+If you have configured broker metrics, the broker emits
 metrics to the Loggregator Firehose.
-You can, for example, consume these metrics by using the
-[CF CLI Firehose plugin](https://github.com/cloudfoundry/firehose-plugin).
+For how to do the configuration, see [Configure Service Metrics](./operating.html#broker-metrics).
+
+You can consume these metrics by using the CF CLI Firehose plugin.
+See the [firehose-plugin](https://github.com/cloudfoundry/firehose-plugin) repository in GitHub.
 
 <p class="note"><strong>Note</strong>:
-  The broker must be <a href="#register">registered with a Cloud Foundry</a> in
-  order for metrics to be successfully emitted</p>
+  The broker must be registered with a Cloud Foundry in order for metrics to be successfully emitted.
+  For how to register the broker, see <a href="./management.html#register-broker">Register Broker</a>.</p>
 
 #### <a id="service-metrics"></a> Service-level Metrics
 The broker emits a metric indicating the total number of instances across all plans.
@@ -123,22 +125,28 @@ If `quota_remaining` is `0` then you need to increase your plan quota in the BOS
 
 ## <a id="secure-binding-troubleshooting"></a> Secure Binding Credentials
 
-If you have [configured secure binding credentials](#secure-binding), the broker
-stores credentials on CredHub. You can see and consume these credentials by
-using the [CredHub CLI](https://github.com/cloudfoundry-incubator/credhub-cli).
+If you have configured secure binding credentials, the broker stores credentials
+on runtime CredHub.
+For more information, see [Enable Secure Binding](./operating.html#secure-binding).
 
-<p class="note"><strong>Note</strong>: Usually, CredHub is not accessible from
-outside the Cloud Foundry network. Use the CredHub CLI from within the internal
-network, or connect using an appropriate tunnel.</p>
+You can see and consume these credentials using the CredHub CLI.
+For more information, see the [credHub-cli](https://github.com/cloudfoundry-incubator/credhub-cli)
+repository in GitHub.
+
+<p class="note"><strong>Note</strong>:
+  Usually, CredHub is not accessible from outside the Cloud Foundry network.
+  Use the CredHub CLI from within the internal network, or connect using an appropriate tunnel.</p>
 
 In failure scenarios, like when CredHub is down or when the CredHub client
-credentials are wrong, the broker logs to the file at
-`/var/vcap/sys/log/broker/broker.log` where the root cause is generally
-given. See [Troubleshooting > Logs](#logs) for details.
+credentials are wrong, the broker logs to the file at `/var/vcap/sys/log/broker/broker.log`
+where the root cause is generally given.
+For more information, see [Logs](#logs) above.
 
-**Common causes of errors**
+### <a id="error-causes"></a> Common Causes of Errors
 
-* CredHub down / Wrong CredHub URL / Cannot access URL
+The following are some reasons that you might get an error:
+
+* CredHub is down / wrong CredHub URL / cannot access URL
 * Wrong credentials to access CredHub
 * Problem with CA certs for CredHub or UAA
 * Binding credentials in an exotic format (the broker only accepts string and
@@ -147,10 +155,10 @@ string map credentials)
 
 ## <a id="identifying-deployments"></a>Identify Deployments in BOSH
 
-There is a one to one mapping between the service instance id from CF and the
-deployment name in BOSH. The convention is the BOSH deployment name would be the
-service instance id prepended by `service-instance_`.
-To identify the BOSH deployment for a service instance you can.
+There is a one-to-one mapping between the service instance ID from Cloud Foundry and the
+deployment name in BOSH. The convention is that the BOSH deployment name is the
+service instance ID prefixed by `service-instance_`.
+To identify the BOSH deployment for a service instance you can do the following:
 
 1. Determine the GUID of the service.
   Run the following command:
@@ -169,7 +177,7 @@ To identify the BOSH deployment for a service instance you can.
 1. Identify your deployment.
   Run `bosh deployments` and look for `service-instance_GUID`.
 
-1. Get current tasks for your deployment.
+1. (Optional) Get current tasks for your deployment.
   Run the following command:
 
     ```
@@ -187,7 +195,10 @@ To identify the BOSH deployment for a service instance you can.
 
 Most operations on the on demand service broker API are implemented by launching BOSH tasks.
 If an operation fails, it may be useful to investigate the corresponding BOSH task.
-To do this:
+For more information about BOSH tasks, see [Tasks](https://bosh.io/docs/cli-v2/#task-mgmt)
+in the BOSH documentation.
+
+To identify tasks in BOSH, do the following:
 
 1. Determine the ID of the service for which an operation failed.
   Run the following command:
@@ -240,37 +251,39 @@ or `--cpi` as necessary.
 ## <a id="id-uaa-issues"></a>Identify Issues When Connecting to BOSH or UAA
 
 The ODB interacts with the BOSH Director to provision and deprovision instances,
-and is authenticated via the Director's UAA.
-See [Core Broker Configuration](#core-broker-configuration) for an example configuration.
+and is authenticated through the Director's UAA.
+For an example configuration, see [Core Broker Configuration](#core-broker-configuration).
 
-If BOSH and/or UAA are wrongly configured in the broker's manifest, then meaningful
-error messages are displayed in the broker's log, indicating whether the issue is
-caused by an unreachable destination or bad credentials.
+If BOSH or UAA are configured incorrectly in the broker's manifest, then
+error messages are displayed in the broker's log.
+These messages indicate whether the issue is caused by an unreachable destination
+or bad credentials.
 
 For example:
 
-```
+<pre class="terminal">
 on-demand-service-broker: [on-demand-service-broker]
 [575afbc1-b541-481d-9cde-b3d3e67e87bf] 2016/05/18 15:56:40.100579
 Error authenticating (401): {"error":"unauthorized","error_description":
 "Bad credentials"}, ensure that properties.BROKER-JOB.bosh.authentication.uaa is
 correct and try again.
-```
+</pre>
 
 ## <a id="listing-instances"></a>List Service Instances
 
-The ODB persists the list of ODB-deployed service instances and provides an endpoint
-to retrieve them. This endpoint requires basic authentication.
+ODB persists the list of ODB-deployed service instances and provides an endpoint
+to retrieve them.
+This endpoint requires basic authentication.
 
-During disaster recovery this endpoint could be used to assess the situation.
+During disaster recovery, you can use this endpoint to assess the situation.
 
-**Request**
+**Request:**
 
 `GET http://USERNAME:PASSWORD@ON-DEMAND-BROKER-IP:8080/mgmt/service_instances`
 
-**Response**
+**Response:**
 
-200 OK
+`200 OK`
 
 Example JSON body:
 
@@ -291,23 +304,21 @@ Example JSON body:
 
 ## <a id="listing-orphans"></a>List Orphan Deployments
 
-The On-Demand Broker provides an endpoint that compares the list of service instance
+ODB provides an endpoint that compares the list of service instance
 deployments against the service instances registered in Cloud Foundry. When called,
 the endpoint returns a list of orphaned deployments, if any are present.
 
-This endpoint is exercised in the [`orphan-deployments`](./management.html#orphan-deployments)
-errand.
+This endpoint is exercised in the `orphan-deployments` errand.
+For information about this errand, see [Orphan Deployments](./management.html#orphan-deployments).
 To call this endpoint without running the errand, use `curl`.
 
-**Request**
+**Request:**
 
-```
-GET http://USERNAME:PASSWORD@ON-DEMAND-BROKER-IP:8080/mgmt/orphan_deployments`
-```
+`GET http://USERNAME:PASSWORD@ON-DEMAND-BROKER-IP:8080/mgmt/orphan_deployments`
 
-**Response**
+**Response:**
 
-200 OK
+`200 OK`
 
 Example JSON body:
 
