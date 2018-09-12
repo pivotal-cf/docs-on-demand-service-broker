@@ -3,24 +3,29 @@ title: Security
 owner: London Services Enablement
 ---
 
-## <a id="security"></a>Security
+This topic provides information about API endpoints the on-demand broker (ODB)
+accesses and UAA permissions ODB needs for BOSH and for Cloud Foundry (CF).
 
-### <a id="bosh-endpoints"></a>BOSH API Endpoints
+## <a id="bosh-endpoints"></a>BOSH API Endpoints
 
-The ODB accesses the following [BOSH API](https://bosh.io/docs/director-api-v1.html) endpoints during the service instance lifecycle:
+The ODB accesses the following BOSH API endpoints during the service instance lifecycle:
 
-| API endpoint                                                     | Examples of usage in the ODB                                                                                                                                 |
-|:-----------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `POST /deployments`                                              | create, or update a service instance                                                                                                                         |
-| `POST /deployments/DEPLOYMENT-NAME/errands/ERRAND-NAME/runs` | register, or de-register the on-demand broker with the Cloud Controller, run smoke tests                                                                     |
-| `GET /deployments/DEPLOYMENT-NAME`                             | passed as argument to the service adapter for `generate-manifest` and `create-binding`                                                                       |
-| `GET /deployments/DEPLOYMENT-NAME/vms?format=full`             | passed as argument to the service adapter for `create-binding`                                                                                               |
-| `DELETE /deployments/DEPLOYMENT-NAME`                          | delete a service instance                                                                                                                                    |
-| `GET /tasks/TASK-ID/output?type=result`                        | check a task was successful (i.e. the exit code was zero), get list of VMs                                                                                   |
-| `GET /tasks/TASK-ID`                                           | poll the BOSH Director until a task finishes, e.g. create, update, or delete a deployment                                                                    |
-| `GET /tasks?deployment=DEPLOYMENT-NAME`                        | determine the last operation status and message for a service instance, e.g. 'create in progress' - used when creating, updating, deleting service instances |
+| API endpoint                                                   | Examples of usage in the ODB                                                                                                                                 |
+|:---------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `POST /deployments`                                            | Create or update a service instance                                                                                                                         |
+| `POST /deployments/DEPLOYMENT-NAME/errands/ERRAND-NAME/runs`   | <ul><li>Register or de-register the on-demand broker with the Cloud Controller</li><li>Run smoke tests</li></ul>                                                                   |
+| `GET /deployments/DEPLOYMENT-NAME`                             | Passed as argument to the service adapter for `generate-manifest` and `create-binding`                                                                       |
+| `GET /deployments/DEPLOYMENT-NAME/vms?format=full`             | Passed as argument to the service adapter for `create-binding`                                                                                               |
+| `DELETE /deployments/DEPLOYMENT-NAME`                          | Delete a service instance                                                                                                                                    |
+| `GET /tasks/TASK-ID/output?type=result`                        | <ul><li>Check a task was successful (i.e. the exit code was zero)</li><li>Get list of VMs</li></ul>                                                                                  |
+| `GET /tasks/TASK-ID`                                           | Poll the BOSH Director until a task finishes, e.g. create, update, or delete a deployment                                                                    |
+| `GET /tasks?deployment=DEPLOYMENT-NAME`                        | Determine the last operation status and message for a service instance, e.g. 'create in progress'. Used when creating, updating, deleting service instances. |
 
-### <a id="bosh-uaa"></a>BOSH UAA Permissions
+For information about BOSH API endpoints, see [Director HTTP API](https://bosh.io/docs/director-api-v1.html)
+in the BOSH documentation.
+
+
+## <a id="bosh-uaa"></a>BOSH UAA Permissions
 
 The actions that the ODB needs to be able to perform are:
 
@@ -36,12 +41,21 @@ Read only:
 - `bosh vms`
 - `bosh tasks`
 
-The minimum UAA authority required by the BOSH Director to perform these actions is `bosh.teams.TEAM.admin`. Note: a team admin cannot view or update the Director's cloud config, nor upload releases or stemcells.
+The minimum UAA authority required by the BOSH Director to perform these actions
+is `bosh.teams.TEAM.admin`.
 
-For more details on how to set up and use BOSH teams, see [Director teams and permissions configuration](https://bosh.io/docs/director-users-uaa-perms.html).
+<p class="note"><strong>Note:</strong>
+	A team admin cannot view or update the Director's cloud config, nor upload releases or stemcells.
+</p><br>
 
-#### Unused BOSH permissions
-The team admin authority also allows the following actions, which currently are not used by the ODB:
+For information on how to set up and use BOSH teams, see
+[Using Teams](https://bosh.io/docs/director-users-uaa-perms.html) in the BOSH
+documentation.
+
+### <a id="unused-bosh"></a> Unused BOSH permissions
+
+The team admin authority also allows the following actions, which currently are
+not used by the ODB:
 
 - `bosh start/stop/recreate`
 - `bosh cck`
@@ -49,32 +63,41 @@ The team admin authority also allows the following actions, which currently are 
 - `bosh releases`
 - `bosh stemcells`
 
-### <a id="ipsec"></a>PCF IPsec Add-On
+## <a id="ipsec"></a>PCF IPsec Add-On
 
-The ODB has been tested with the [PCF IPsec Add-On](https://docs.pivotal.io/addon-ipsec/installing.html), and it appears to work. Note that we excluded the BOSH Director itself from IPsec ranges, as the BOSH add-on cannot be applied to BOSH itself.
+Pivotal tested ODB with the IPsec Add-On for PCF and it appears to work.
+The tests excluded the BOSH Director itself from IPsec ranges because the BOSH
+add-on cannot be applied to BOSH itself.
 
-### <a id="cf-endpoints"></a>CF API Endpoints
+For how to install the IPsec Add-On for PCF, see
+[Installing the IPsec Add-on for PCF](https://docs.pivotal.io/addon-ipsec/installing.html).
 
-The ODB accesses the following [CF API](https://apidocs.cloudfoundry.org/268/) endpoints during the service instance lifecycle:
+
+## <a id="cf-endpoints"></a>CF API Endpoints
+
+The ODB accesses the following CF API endpoints during the service instance lifecycle:
 
 | API endpoint                                                         | Examples of usage in the ODB                                                                           |
 |:---------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------|
-| `GET /v2/info`                                                       | identify CF API version, to determine feature compatibility & availability                             |
-| `GET /v2/services`                                                   | list all services, to find our own service based on defined unique ID rather than GUID                 |
-| `GET /v2/services/SERVICE-GUID/service_plans`                      | find registered service plans for ODB service e.g. for calculating plan quota usage                    |
-| `GET /v2/service_brokers`                                            | find service broker metadata by name during broker deregistration                                      |
-| `DELETE /v2/service_brokers/SERVICE-BROKER-GUID`                   | delete ODB service broker during broker deregister errand                                              |
-| `GET /v2/service_plans/SERVICE-PLAN-GUID`                          | identify service plan when upgrading an instance to trigger any lifecycle errands                      |
-| `PUT /v2/service_plans/SERVICE-PLAN-GUID`                          | disable service access prior to service deletion                                                       |
-| `GET /v2/service_plans/SERVICE-PLAN-GUID/service_instances`        | find service instances for given plan when determining global quota and running startup checks         |
-| `GET /v2/service_instances/SERVICE-INSTANCE-GUID`                  | determine service instance state to check an operation is not in progress before triggering an upgrade |
-| `DELETE /v2/service_instances/SERVICE-INSTANCE-GUID`               | deleting a service instance during delete all service instances errand                                 |
-| `GET /v2/service_instances/SERVICE-INSTANCE-GUID/service_bindings` | finding bindings for given service instance during delete all service instances errand                 |
-| `GET /v2/service_instances/SERVICE-INSTANCE-GUID/service_keys`     | finding service keys for given service instance during delete all service instances errand             |
-| `DELETE /v2/apps/APP-GUID/service_bindings/SERVICE-BINDING-GUID` | unbinding a service instance during delete all service instances errand                                |
-| `DELETE /v2/service_keys/SERVICE-KEY-GUID`                         | deleting a service key during delete all service instances errand                                      |
+| `GET /v2/info`                                                       | Identify CF API version to determine feature compatibility & availability                              |
+| `GET /v2/services`                                                   | List all services to find our own service based on defined unique ID rather than GUID                  |
+| `GET /v2/services/SERVICE-GUID/service_plans`                        | Find registered service plans for ODB service e.g. for calculating plan quota usage                    |
+| `GET /v2/service_brokers`                                            | Find service broker metadata by name during broker deregistration                                      |
+| `DELETE /v2/service_brokers/SERVICE-BROKER-GUID`                     | Delete ODB service broker during broker deregister errand                                              |
+| `GET /v2/service_plans/SERVICE-PLAN-GUID`                            | Identify service plan when upgrading an instance to trigger any lifecycle errands                      |
+| `PUT /v2/service_plans/SERVICE-PLAN-GUID`                            | Disable service access prior to service deletion                                                       |
+| `GET /v2/service_plans/SERVICE-PLAN-GUID/service_instances`          | Find service instances for given plan when determining global quota and running startup checks         |
+| `GET /v2/service_instances/SERVICE-INSTANCE-GUID`                    | Determine service instance state to check an operation is not in progress before triggering an upgrade |
+| `DELETE /v2/service_instances/SERVICE-INSTANCE-GUID`                 | Deleting a service instance during delete all service instances errand                                 |
+| `GET /v2/service_instances/SERVICE-INSTANCE-GUID/service_bindings`   | Finding bindings for given service instance during delete all service instances errand                 |
+| `GET /v2/service_instances/SERVICE-INSTANCE-GUID/service_keys`       | Finding service keys for given service instance during delete all service instances errand             |
+| `DELETE /v2/apps/APP-GUID/service_bindings/SERVICE-BINDING-GUID`     | Unbinding a service instance during delete all service instances errand                                |
+| `DELETE /v2/service_keys/SERVICE-KEY-GUID`                           | Deleting a service key during delete all service instances errand                                      |
 
-### <a id="cf-uaa"></a>CF UAA Permissions
+For information about CF API endpoints, see [Cloud Foundry API](https://apidocs.cloudfoundry.org/268/)
+in the CF API documentation.
+
+## <a id="cf-uaa"></a>CF UAA Permissions
 
 The actions that the ODB needs to be able to perform are:
 
@@ -100,7 +123,7 @@ Read only:
 
 The minimum UAA authority required by CF to perform these actions is `cloud_controller.admin`. Admin is required as many operations are required to perform against all of the on demand service instances across a foundation, regardless of org and space.
 
-#### Unused CF permissions
+### <a id="unused-cf"></a> Unused CF permissions
 The Cloud Controller admin authority also allows the following actions, which currently are not used by the ODB:
 
 - `cf push`
