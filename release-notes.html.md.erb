@@ -14,11 +14,11 @@ Breaking changes in this release:
 
 - Input and output to the service adapter now use JSON over stdin / stdout
   instead of positional arguments on the command line. This allows handling
-  of arbitrarily long manifests, which previously would have triggered a `command-line too long` error. 
+  of arbitrarily long manifests, which previously would have triggered a `command-line too long` error.
 
     <p class="note"><strong>Note</strong>: Users of the Go SDK are insulated from this change, because the SDK handles invocation arguments.</p>
 
-    You can use an adapter built with an on-demand services SDK released before v0.22.0 
+    You can use an adapter built with an on-demand services SDK released before v0.22.0
     by setting the broker manifest property `use_stdin: false`.
 
 - The `CreateBinding` method implemented by the service adapter has new
@@ -43,8 +43,8 @@ New features and changes in this release:
   - **For operators**---[Obtain BOSH DNS Addresses for Binding Creation](./operating.html#binding-with-dns)
   - **For service authors**---[Enable ODB to Obtain BOSH DNS Addresses](./service-adapter.html#dns-addresses)
 
-- Resource quotas can be managed at the plan level. For information about 
-  setting these quotas, see [Set Service Resource Quotas](./operating.html#service-resource-quotas). 
+- Resource quotas can be managed at the plan level. For information about
+  setting these quotas, see [Set Service Resource Quotas](./operating.html#service-resource-quotas).
   This feature is not available on Pivotal Container Service (PKS).
 
 - Operators can now disable running lifecycle errands by setting the `disabled: true` property.
@@ -59,10 +59,10 @@ There are no known issues for this release.
 
 Minimum version requirements for this release:
 
-- BOSH 257 (261 for lifecycle errands and 266.12 or 267.6 for BOSH DNS info at bind) or BOSH lite v9000.131.0
+- BOSH v257 (v261 for lifecycle errands, v266.12 or v267.6 or later for BOSH DNS info at bind) or BOSH lite v9000.131.0
 - CF 238
 
 ## <a id="view"></a> View Release Notes for Another Version
 
-To view the release notes for another product version, select the version from 
+To view the release notes for another product version, select the version from
 dropdown at the top of this page.
