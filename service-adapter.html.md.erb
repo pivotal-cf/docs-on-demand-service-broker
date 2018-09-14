@@ -148,7 +148,7 @@ secrets.
     Pivotal discourages modifying the value of secrets without changing the secret name.
     If the BOSH deploy task fails during update or upgrade, ODB managed secrets might
     be left in an inconsistent state.
-    For more information, see <a href="#inconsistent-secrets">Inconsistent Secrets After a Failed Update</a>.
+    For more information, see <a href="#inconsistent-secrets">Inconsistent Secrets After a Failed Update</a> below below.
   </p>
 
 ### <a id="odb-persisting-creds"></a>Persist Credentials across Updates
@@ -180,7 +180,7 @@ For more information about using the value during a bind, see [create-binding](#
   For more information, see <a href="#inconsistent-secrets">Inconsistent Secrets After a Failed Update</a>.
 </p>
 
-When updating or upgrading a service instance, you may need to modify the value
+When updating or upgrading a service instance, you might need to modify the value
 of an ODB managed secret.
 
 To modify a secret, write code in your service adapter that does the following:
@@ -219,6 +219,10 @@ The simplest way to do this is to name the user after the binding ID.
 
 You can take one of three approaches to credentials for a service binding:
 
++ [Static Credentials](#static-credentials)
++ [Credentials Unique to Each Binding](#unique-credentials)
++ [Use an Agent](#agent)
+
 #### <a id="static-credentials"></a>Static Credentials
 
 In this case, the same credentials are used for all bindings. One option is to define these credentials in the service instance manifest.
@@ -248,7 +252,7 @@ properties:
   admin_password: ADMIN-PASSWORD
 ```
 
-#### <a id="agent"></a>Using an Agent
+#### <a id="agent"></a>Use an Agent
 
 In this case, the author defines an agent responsible for handling creation of
 credentials unique to each binding. The agent must be added as a BOSH release
