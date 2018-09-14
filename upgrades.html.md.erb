@@ -6,6 +6,22 @@ owner: London Services Enablement
 This topic provides information about upgrading the on-demand broker, service offering, and service instance
 to Pivotal Cloud Foundry (PCF) Ops Manager operators and BOSH operators.
 
+## <a id="update-addons"></a>Update Add-ons to Run with Xenial Stemcell
+
+If you are using any of the following BOSH add-ons with your deployment,
+you must update the add-on definition to include the Xenial stemcell before you
+deploy your service:
+
++ File Integrity Monitoring for PCF Add-on.
+  For update instructions,
+  see [Updating FIM Add-on for PCF to Run with Xenial Stemcells](https://docs.pivotal.io/addon-fim/updating-for-xenial.html).
++ ClamAV for PCF Add-on.
+  For update instructions,
+  see [Updating ClamAV Add-on for PCF to Run with Xenial Stemcells](https://docs.pivotal.io/addon-antivirus/updating-for-xenial.html).
++ IPsec for PCF Add-on.
+  For update instructions,
+  see [Updating IPsec Add-on for PCF to Run with Xenial Stemcells](https://docs.pivotal.io/addon-ipsec/updating-for-xenial.html).
+
 ## <a id="upgrade-broker"></a>Upgrade the Broker
 
 To upgrade the broker, do the following:
@@ -48,13 +64,13 @@ Cloud Foundry users cannot upgrade their service instances to the latest service
 Until a service instance has been upgraded, Cloud Foundry users cannot set parameters
 or change plan.
 
-For example, a developer who tries to update a Redis service instance with the 
+For example, a developer who tries to update a Redis service instance with the
 `cf update-service` command sees the following error message:
 
 <pre class="terminal">
 FAILED
-Server error, status code: 502, error code: 10001, message: 
-Service broker error: Service cannot be updated at this time, 
+Server error, status code: 502, error code: 10001, message:
+Service broker error: Service cannot be updated at this time,
 please try again later or contact your operator for more information.
 </pre>
 Operators should run the upgrade-all-service-instances errand
@@ -162,7 +178,7 @@ You are required to provide an endpoint which satisfies the API requirements det
 and also guarantees that all service instances which need to be upgraded are part of that response.
 If you configure an endpoint which does not satisfy these criteria, some service instances may become unusable.</p>
 
-The Service Instances API definition is at v0.1.0 and should be considered subject to change. 
+The Service Instances API definition is at v0.1.0 and should be considered subject to change.
 The API is made of a single endpoint which should handle the following request with the appropriate response:
 
 <strong>Example Request:</strong>
@@ -261,10 +277,10 @@ update the errand's configuration in the deployment manifest to include the foll
   azs: [AZ]
 ```
 
-Where: 
+Where:
 
 * `POLLING-INTERVAL-IN-SECONDS`: The number of seconds to wait between checking the
-status of a submitted upgrade job. 
-* `ATTEMPT-INTERVAL-IN-SECONDS`: The number of seconds to wait between retrying upgrades. 
-* `NUMBER-OF-ATTEMPTS`: The maximum number of times the errand tries a set of upgrades. 
+status of a submitted upgrade job.
+* `ATTEMPT-INTERVAL-IN-SECONDS`: The number of seconds to wait between retrying upgrades.
+* `NUMBER-OF-ATTEMPTS`: The maximum number of times the errand tries a set of upgrades.
 
