@@ -12,13 +12,20 @@ owner: London Services Enablement
 
 New features and changes in this release:
 
+- The ODB now supports Secure Manifests:
+	- Service Adapters can avoid using plaintext secrets in manifests by passing these to the ODB to store in BOSH CredHub or by using the BOSH variables block
+	- All Service Instance secrets will be provided in the CreateBinding and DeleteBinding calls.
+	- See our [documentation for operators](operating.html#secure-bind-credentials) and [the create-binding call](adapter-reference.html#create-binding) when implementing this feature.
+
 - Service authors can now use BOSH DNS names to generate certificates at deploy time.
   For instructions, see [BOSH DNS Addresses in Config Server Generated Certs](https://bosh.io/docs/dns/#dns-variables-integration).
 	- The On-Demand Services SDK supports the new BOSH manifest properties for custom certificate generation.
 	- ODB parses `custom_provider_definitions` inside `jobs`, and `consumes` inside `variables`.
 
-- ODB fails to start if a plan has `binding_with_dns` enabled but the BOSH version
-is less than v266.12.0 or less than v267.6.0.
+- The previously released `binding_with_dns` feature now requires a BOSH
+version greater than v266.11.0 or v267.5.0. This is due to a problem with how
+earlier versions of BOSH apply permissions for links. Thank you to the Redis
+Tile and BOSH teams for raising and fixing this issue.
 
 - Upgrades golang to v1.11.0.
 
