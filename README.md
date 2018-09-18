@@ -1,26 +1,28 @@
 
 # How the branches here work
 
-Use **master** for next the unreleased version, and numbered branches for the corresponding live releases. 
+Use **master** for next the unreleased version, and numbered branches for the corresponding live releases.
 
 For example:
 
-| Branch name | Use for… |
-|-------------| ------|
-| master      | Next unreleased version (edge) https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-22|
+| Branch name     | Use for|
+|-----------------| ------|
+| master          | Unreleased version (edge - 0.24) https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-2n|
+| v0.23.x         | live on Sept 18, 2018 https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-23|
+| v0.22.x         | live |
 | v0.21.x         | live |
 | v0.20.x         | live |
-| v0.19.x         | live | 
-| v0.18.x         | live | 
-| v0.17.x         | live | 
+| v0.19.x         | live |
+| v0.18.x         | live |
+| v0.17.x         | live |
 | v0.16.x         | live |
 | v0.15.x        | live |
-| v0.14.x         | obsolete, but do not delete the branch | 
-| v0.13.x         | obsolete, but do not delete the branch | 
-| v0.12.x         | obsolete, but do not delete the branch | 
-| v0.11.x         | obsolete, but do not delete the branch | 
-| v0.10.x         | obsolete, but do not delete the branch | 
-| v0.9.x         | obsolete, but do not delete the branch | 
+| v0.14.x         | obsolete, but do not delete the branch |
+| v0.13.x         | obsolete, but do not delete the branch |
+| v0.12.x         | obsolete, but do not delete the branch |
+| v0.11.x         | obsolete, but do not delete the branch |
+| v0.10.x         | obsolete, but do not delete the branch |
+| v0.9.x         | obsolete, but do not delete the branch |
 
 
 # Book repo for publishing this content
