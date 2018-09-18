@@ -9,32 +9,33 @@ owner: London Services Enablement
 **Release Date: September 18, 2018**
 
 
-<p class="note breaking"><strong>Breaking Change:</strong> ODB now passes an extra argument to the <code>delete-binding</code> subcommand.
+<p class="note breaking"><strong>Breaking Change:</strong> The on-demand broker (ODB) now passes an extra argument to the <code>delete-binding</code> subcommand.
     For SDK users, the <code>DeleteBinding</code> method now receives secrets as a new argument. The minimum change required is to update the function definition.
-    For more information, see the Secure Manifests feature listed below.</p>
+    For more information, see <a href="#features">The ODB supports Secure Manifests</a> below.</p>
 
-### Features
+###<a name="features"></a> Features
 
 New features and changes in this release:
 
-- The ODB supports Secure Manifests.
-	- Service Adapters can avoid using plaintext secrets in manifests by passing these to the ODB to store in BOSH CredHub, or by using the BOSH variables block.
-	- All Service Instance secrets are provided in the `CreateBinding` and `DeleteBinding` calls.
-	- When implementing this feature, refer to [Access Manifest Secrets at Bind Time](operating.html#secure-bind-credentials) and [create-binding](adapter-reference.html#create-binding).
+- The ODB supports secure manifests.
+	- Service Adapters can avoid using plaintext secrets in manifests by passing these
+          to the ODB to store in BOSH CredHub or by using the BOSH variables block.
+	- All service instance secrets are provided in the `CreateBinding` and `DeleteBinding` calls.
+	- When implementing this feature, see [Access Manifest Secrets at Bind Time](operating.html#secure-bind-credentials) and [create-binding](adapter-reference.html#create-binding).
 
 - Service authors can use BOSH DNS names to generate certificates at deploy time.
   For instructions, see the [BOSH documentation](https://bosh.io/docs/dns/#dns-variables-integration).
 	- The On-Demand Services SDK supports the new BOSH manifest properties for custom certificate generation.
-	- ODB parses `custom_provider_definitions` inside `jobs`, and `consumes` inside `variables`.
+	- The ODB parses `custom_provider_definitions` inside `jobs`, and `consumes` inside `variables`.
 
 - The previously released `binding_with_dns` feature requires a BOSH
-version greater than v266.11.0 or v267.5.0. This is due to a problem with how
+version later than v266.11.0 or v267.5.0. This is due to a problem with how
 earlier versions of BOSH apply permissions for links. Thank you to the Redis
-Tile and BOSH teams for raising and fixing this issue.
+tile and BOSH teams for raising and fixing this issue.
 
 - Upgrades golang to v1.11.0.
 
-- You can use Xenial stemcells with ODB. If using a Xenial stemcell in a tile you must also update any BOSH add-ons.
+- You can use Xenial stemcells with the ODB. If using a Xenial stemcell in a tile you must also update any BOSH add-ons.
 For more information, see [Update Add-ons to Run with Xenial Stemcell](./upgrades.html#update-addons).
 
 ### Known Issues
