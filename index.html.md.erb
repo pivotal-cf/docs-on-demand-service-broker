@@ -3,7 +3,8 @@ title: On-Demand Services SDK
 owner: London Services Enablement
 ---
 
-This guide is intended for people who want to author service tiles for Pivotal Cloud Foundry (PCF) using the on-demand services SDK, part of the Pivotal Cloud Foundry Services SDK.
+This guide is intended for people who want to author service tiles for Pivotal Cloud Foundry (PCF)
+using the on-demand services SDK, part of the Pivotal Cloud Foundry Services SDK.
 
 ## <a id='overview'></a>Overview
 
@@ -19,7 +20,7 @@ The operator does not pre-allocate a block of VMs for the instance pool,
 and they can specify an allowable range rather than fixed settings for instance resource levels.
 When a developer creates an on-demand service instance, they then provision it at creation time.
 
-The on-demand services SDK provides a generic on-demand broker (ODB).
+The on-demand services SDK provides a generic, on-demand broker (ODB).
 This simplifies broker and tile authoring,
 and is the standard approach for both Pivotal internal services teams and Pivotal
 partner independent software vendors (ISVs) to develop on-demand services for PCF.
@@ -44,15 +45,11 @@ on-demand services SDK.
 	</tr>
 	<tr>
 		<td>Compatible Ops Manager version(s)</td>
-		<td>v1.11, v1.12, v2.0, v2.1, v2.2, and v2.3</td>
-	</tr>
-	<tr>
-		<td>Compatible Elastic Runtime<sup>*</sup> version(s)</td>
-		<td>v1.11 and v1.12</td>
+		<td>2.2, 2.1, and 2.0</td>
 	</tr>
 	<tr>
 		<td>Compatible Pivotal Application Service (PAS)<sup>*</sup> version(s)</td>
-		<td>v1.11, v1.12, v2.0, v2.1, v2.2, and v2.3</td>
+		<td>2.2, 2.1, and 2.0</td>
 	</tr>
 	<tr>
 		<td>IaaS support</td>
@@ -60,9 +57,6 @@ on-demand services SDK.
 	</tr>
 </table>
 
-\* As of PCF v2.0, _Elastic Runtime_ is renamed _Pivotal Application Service (PAS)_.
-For more information, see
-[Pivotal Application Service (PAS) Highlights](http://docs-pcf-staging.cfapps.io/pivotalcf/2-0/installing/highlights.html#ert).
 
 ## <a id='new-features'></a>Key Features
 
