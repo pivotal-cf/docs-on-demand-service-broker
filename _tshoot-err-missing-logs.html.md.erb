@@ -1,12 +1,13 @@
 If no logs are being emitted by the on-demand broker, check that your syslog forwarding address is correct in Ops Manager.
 
 1. Ensure you have configured syslog for the tile.
-1. Ensure that you have network connectivity between the networks that the tile is using and the syslog destination. If the destination is external, you need to use the [public ip](https://docs.pivotal.io/svc-sdk/odb/0-14/tile.html#public-ip) VM extension feature available in your Ops Manager tile configuration settings.
+1. Ensure that you have network connectivity between the networks that the tile is using and the syslog destination.
+If the destination is external, you need to use the [public ip](https://docs.pivotal.io/svc-sdk/odb/tile.html#public-ip) VM extension feature available in your Ops Manager tile configuration settings.
 1. Verify that the Firehose is emitting metrics:
-  1. Install the [`cf nozzle` plugin](https://github.com/cloudfoundry/firehose-plugin)
-  1. Run `cf nozzle -f ValueMetric | 
-  grep --line-buffered "on-demand-broker/MY-SERVICE"` to find logs from your service in the `cf nozzle` output. 
+  1. Install the [`cf nozzle` plugin](https://github.com/cloudfoundry-community/firehose-plugin)
+  1. Run `cf nozzle -f ValueMetric |
+  grep --line-buffered "on-demand-broker/MY-SERVICE"` to find logs from your service in the `cf nozzle` output.
 
 If no metrics appear within five minutes, verify that the broker network has access to the Loggregator system on all required ports.
 
-[Contact Pivotal support](#support) if you are unable to resolve the issue. 
+[Contact Pivotal support](#support) if you are unable to resolve the issue.
