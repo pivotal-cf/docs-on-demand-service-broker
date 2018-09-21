@@ -137,9 +137,11 @@ To upgrade all existing service instances after the service offering has been up
         <tr>
             <td><strong>(Optional)</strong><br><code>canary\_selection\_params</code></td>
             <td>Use this to specify an org and a space that you want canaries to be sourced from during an upgrade.
-              If an org is specified, then a space must also be provided and vice versa. If <code>canaries</code> is specified, the broker upgrades that number of instances present in the org and space.
-              If fewer instances are present than specified, the broker upgrades as many instances as possible
-              in that org and space.
+              If an org is specified, then a space must also be provided and vice versa.
+              If <code>canaries</code> is specified,
+              the broker upgrades that number of instances present in the org and space.
+              If fewer instances are present than specified,
+              the broker upgrades as many instances as possible in that org and space.
               <br><br><strong>Note:</strong> If <code>canary\_selection\_params</code>
               are specified and no instances exist in that org or space, no canaries are chosen.
               If other instances exist, the broker fails, alerting you to chose different selection criteria.
