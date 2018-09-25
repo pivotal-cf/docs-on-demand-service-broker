@@ -10,16 +10,16 @@ Tags:
 Plan: dedicated-vm
 Description: Dedicated Instance
 Documentation url:
-Dashboard: 
+Dashboard:
 
 Last Operation
 Status: create failed
-Message: Instance provisioning failed: There was a problem completing your request. 
-     Please contact your operations team providing the following information: 
-     service: redis-acceptance, 
+Message: Instance provisioning failed: There was a problem completing your request.
+     Please contact your operations team providing the following information:
+     service: redis-acceptance,
      service-instance-guid: ae9e232c-0bd5-4684-af27-1b08b0c70089,
-     broker-request-id: 63da3a35-24aa-4183-aec6-db8294506bac, 
-     task-id: 442, 
+     broker-request-id: 63da3a35-24aa-4183-aec6-db8294506bac,
+     task-id: 442,
      operation: create
 Started: 2017-03-13T10:16:55Z
 Updated: 2017-03-13T10:17:58Z
@@ -27,6 +27,6 @@ Updated: 2017-03-13T10:17:58Z
 
 Use the information in the `Message` field to debug further. Provide this information to Pivotal Support when filing a ticket.
 
-The `task-id` field maps to the BOSH task id. For further information on a failed BOSH task, use the `bosh task TASK-ID` command in v1 of the BOSH CLI. For v2, use `bosh2 task TASK-ID`.
+The `task-id` field maps to the BOSH task id. For further information on a failed BOSH task, use the `bosh task TASK-ID`.
 
 The `broker-request-guid` maps to the portion of the On-Demand Broker log containing the failed step. Access the broker log through your syslog aggregator, or access BOSH logs for the broker by typing `bosh logs broker 0`. If you have more than one broker instance, repeat this process for each instance.
