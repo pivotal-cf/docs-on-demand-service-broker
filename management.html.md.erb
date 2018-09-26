@@ -34,9 +34,9 @@ The table below shows the version of the BOSH CLI supported for different versio
 
 ### <a id="register-broker"></a> Register Broker
 
-The `register-broker` errand registers the broker with Cloud Foundry 
-and enables access to plans in the service catalog. Run this errand 
-whenever the broker is re-deployed with new catalog metadata to update 
+The `register-broker` errand registers the broker with Cloud Foundry
+and enables access to plans in the service catalog. Run this errand
+whenever the broker is re-deployed with new catalog metadata to update
 the Cloud Foundry catalog.
 
 #### Add the Errand to the Manifest
@@ -97,13 +97,13 @@ To run the `register-broker` errand, do the following.
 
 ### <a id="delete-instances"></a>Delete All Service Instances
 
-<p class="note warning"><strong>WARNING:</strong> Use extreme caution when running this errand. 
-  You should only use it when you want to totally destroy all of the on-demand service instances 
+<p class="note warning"><strong>WARNING:</strong> Use extreme caution when running this errand.
+  You should only use it when you want to totally destroy all of the on-demand service instances
   from Cloud Foundry.</p>
 
-The `delete-all-service-instances` errand deletes service instances of 
+The `delete-all-service-instances` errand deletes service instances of
 your broker's service offering in every org and space of Cloud Foundry.
-Because the errand uses the Cloud Controller API, it only deletes instances 
+Because the errand uses the Cloud Controller API, it only deletes instances
 the Cloud Controller knows about.
 
 The errand does not delete orphan BOSH deployments, which do not correspond to a known service instance.
@@ -145,11 +145,11 @@ To add the `delete-all-service-instances` errand to the manifest, do the followi
       azs: [AZ]
     ```
 
-    Where:    
-    * `INTERVAL-IN-SECONDS`: The interval in seconds before a service instance is deleted. 
+    Where:
+    * `INTERVAL-IN-SECONDS`: The interval in seconds before a service instance is deleted.
     * `OFFSET-IN-SECONDS`: The offset in seconds before polling Cloud Foundry to check
     if the instance has been deleted.
-    
+
        <div class="note"><strong>Notes</strong>:
         <ul>
           <li>The <code>polling\_interval\_seconds</code> default is set to 60 seconds
@@ -273,8 +273,8 @@ do the following.
       azs: [AZ]
     ```
 
-      Where: 
-      * `INTERVAL-IN-SECONDS`: The interval in seconds before a service instance is deleted. 
+      Where:
+      * `INTERVAL-IN-SECONDS`: The interval in seconds before a service instance is deleted.
       * `OFFSET-IN-SECONDS`: The offset in seconds before polling Cloud Foundry to check
       if the instance has been deleted.
 
@@ -318,7 +318,7 @@ Cloud Foundry.</p>
 
 The `orphan-deployments` errand lists service deployments that
 have no matching service instances in Cloud Foundry and returns the list to the
-operator. 
+operator.
 
 #### Add the Errand to the Manifest
 
@@ -349,7 +349,7 @@ To run the `orphan-deployments` errand, do the following.
     bosh2 -d DEPLOYMENT-NAME run-errand orphan-deployments
     ```
 
-    Where: 
+    Where:
     - `DEPLOYMENT-NAME` is the name of your deployment.
 
     For example:
@@ -357,7 +357,7 @@ To run the `orphan-deployments` errand, do the following.
     $ bosh2 -d cf run-errand orphan-deployments
     </pre>
 
-1. See if orphan deployments are present. If orphan deployments are present, the errand outputs 
+1. See if orphan deployments are present. If orphan deployments are present, the errand outputs
 a list that resembles the following:
 
     <pre class="terminal">
@@ -379,10 +379,10 @@ To delete an orphan deployment, do the following:
 1. Run the command:
 
     ```
-    bosh2 -d DEPLOYMENT-NAME delete-deployment 
+    bosh2 -d DEPLOYMENT-NAME delete-deployment
     ```
 
-    Where: 
+    Where:
     - `DEPLOYMENT-NAME` is the name of the orphaned deployment returned in the output of the errand.
 
     For example:
@@ -394,29 +394,29 @@ To delete an orphan deployment, do the following:
 
 ## <a id="update-service-plans"></a> Service Management
 
-This section describes how to manage and update your service plans.
+This section describes how to manage and modify your service plans.
 
-### <a id="update-broker"></a>Update Broker
+### <a id="update-broker"></a>Modify the Broker
 
-To update the [core broker configuration](./operating.html#core-broker-config), do the following.
+To modify the [core broker configuration](./operating.html#core-broker-config), do the following.
 
 1. Make any necessary changes to the core broker configuration in the broker manifest.
 1. Deploy the broker.
 
-### <a id="updating-service-offering"></a>Update Service Offering
+### <a id="updating-service-offering"></a>Modify the Service Offering
 
-To update the service offering, do the following.
+To modify the service offering, do the following.
 
-1. Change properties in the `service_catalog` of the broker manifest. For example, update the 
+1. Change properties in the `service_catalog` of the broker manifest. For example, update the
 service metadata.
 1. Run the [register-broker errand](#register-broker) to update the Cloud Foundry marketplace.
-1. Run the [upgrading all service instances](./tshooting-techniques.html#upgrade-all) errand 
+1. Run the [upgrading all service instances](./tshooting-techniques.html#upgrade-all) errand
 to apply updated plans to existing service instances.
-1. Change properties in the `service_deployment` of the broker manifest. For example, update 
+1. Change properties in the `service_deployment` of the broker manifest. For example, update
 the jobs used from a service release.
 1. Deploy the broker.
 
-<p class="note warning"><strong>WARNING</strong>: When Cloud Foundry registers the broker, do not 
+<p class="note warning"><strong>WARNING</strong>: When Cloud Foundry registers the broker, do not
   change <code>service_id</code> or <code>plan_id</code> for any plan.</p>
 
 ### <a id="disabling-service-plans"></a>Disable Service Plans
@@ -439,18 +439,18 @@ To disable access to a service plan, do the following.
     cf disable-service-access my-service -p small
     </pre>
 
-<p class="note"><strong>Note:</strong> When a plan has the property <code>cf_service_access: 
+<p class="note"><strong>Note:</strong> When a plan has the property <code>cf_service_access:
   disable</code> in the <code>service_catalog</code> the <a href="#register-broker">Register Broker</a> errand disables service access to that plan.</p>
 
 ### <a id="remove-plans"></a>Remove Service Plans
 
 You can remove service plans if there are no instances using the plan.
- 
+
 To remove a plan, do the following:
 
 1. Remove the service plan from the broker manifest.
 1. Run the [Register Broker](#register-broker) errand to update the Marketplace.
 
-<p class="note warning"><strong>WARNING</strong>: If any service instances remain on a plan 
+<p class="note warning"><strong>WARNING</strong>: If any service instances remain on a plan
   that has been removed from the catalog, the On-Demand Service Broker fails to start.</p>
 
