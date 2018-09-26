@@ -8,9 +8,9 @@ to Pivotal Cloud Foundry (PCF) Ops Manager operators and BOSH operators.
 
 ## <a id="update-addons"></a>Update Add-Ons to Run with Xenial Stemcell
 
-If you are using any of the following BOSH add-ons with your deployment,
-you must update the add-on definition to include the Xenial stemcell before you
-deploy your service:
+If you are using a Xenial Stemcell for your deployment and you are using any of
+the following BOSH add-ons, you must update the add-on definition to include the
+Xenial stemcell before you deploy your service:
 
 + File Integrity Monitoring for PCF Add-on.
   For update instructions,
@@ -28,9 +28,13 @@ To upgrade the broker, do the following:
 
 1. Upload a new version of the `on-demand-service-broker-release` BOSH release to the BOSH Director.
 1. Make any necessary changes to the core broker configuration in the broker manifest.
-1. Deploy the broker.
+1. Deploy the broker by running:
 
-## <a id="upgrade-service-offering"></a>Upgrade Service Offering
+    ```
+    bosh -d DEPLOYMENT-NAME deploy DEPLOYMENT-MANIFEST.yml
+    ```
+
+## <a id="upgrade-service-offering"></a>Upgrade the Service Offering
 
 The service offering is made of the following:
 
@@ -39,28 +43,34 @@ The service offering is made of the following:
 * Service BOSH releases
 * Service stemcell
 
+<br>
 To upgrade a service offering, do the following:
 
-  1. Make any changes to the service catalog in the broker manifest.
-  1. Upload any new service BOSH releases to the BOSH Director.
-  1. Make any changes to service releases in the broker manifest.
-  1. Upload any new service stemcell to the BOSH Director.
-  1. Make any changes to the service stemcell in the `service_deployment` broker manifest.
-  1. Deploy the broker.
+1. Make any changes to the service catalog in the broker manifest.
+1. Upload any new service BOSH releases to the BOSH Director.
+1. Make any changes to service releases in the broker manifest.
+1. Upload any new service stemcell to the BOSH Director.
+1. Make any changes to the service stemcell in the `service_deployment` broker manifest.
+1. Deploy the broker by running:
+
+    ```
+    bosh -d DEPLOYMENT-NAME deploy DEPLOYMENT-MANIFEST.yml
+    ```
 
 Any new service instances are created using the latest service offering.
 
 To upgrade all existing instances, you can run the upgrade-all-service-instances errand.
 See [Upgrade All Service Instances](#upgrade-all-instances) below.
 
-<p class="note warning"><strong>WARNING</strong>: Until a service instance has been upgraded,
-<code>cf update-service</code> operations are blocked and an error is shown,
-see <a href="./management.html#updating-service-offering">Update Service Offering</a>.</p>
+<p class="note warning">
+  <strong>WARNING</strong>: Until a service instance has been upgraded,
+  <code>cf update-service</code> operations are blocked and an error is shown.
+  For more information, see <a href="#upgrade-individual-instances">About Upgrading an Individual Service Instance</a>
+  below.</p>
 
 ## <a id="upgrade-individual-instances"></a>Upgrade an Individual Service Instance
 
 Cloud Foundry users cannot upgrade their service instances to the latest service offering.
-
 Until a service instance has been upgraded, Cloud Foundry users cannot set parameters
 or change plan.
 
@@ -82,7 +92,9 @@ See [Upgrade All Service Instances](#upgrade-all-instances) below.
 To upgrade all existing service instances after the service offering has been updated or upgraded, do the following:
 
 1. Add the following instance group to your broker manifest:
-    <pre>- name: upgrade-all-service-instances
+
+    ```yaml
+    - name: upgrade-all-service-instances
       lifecycle: errand
       instances: 1
       jobs:
@@ -100,7 +112,8 @@ To upgrade all existing service instances after the service offering has been up
       vm_type: VM-TYPE
       stemcell: STEMCELL
       networks: [{name: NETWORK}]
-      azs: [AZ]</pre>
+      azs: [AZ]
+    ```
 
     The errand properties allow fine-tuning of the behavior of the upgrade job:
     <table class="nice">
@@ -158,30 +171,44 @@ To upgrade all existing service instances after the service offering has been up
         </tr>
     </table>
 
-1. Deploy the broker manifest.
-1. Run the errand with the following command:<pre>bosh2 run-errand upgrade-all-service-instances</pre>
+1. Deploy the broker manifest by running:
+
+    ```
+    bosh -d DEPLOYMENT-NAME deploy DEPLOYMENT-MANIFEST.yml
+    ```
+
+1. Run the errand with the following command:
+
+    ```
+    bosh -d DEPLOYMENT-NAME run-errand upgrade-all-service-instances
+    ```
 
 <p class="note"><strong>Note:</strong> The <code>upgrade-all-service-instances</code> errand
 triggers service instance lifecycle errands configured for the broker.
-   For more information, see <a href="./operating.html#lifecycle-errands">Service Instance Lifecycle Errands</a> below.</p>
+   For more information, see <a href="./operating.html#lifecycle-errands">Service Instance Lifecycle Errands</a>.</p>
 
 ### <a id="service-instances-api"></a> Service Instances API
 
-The service instances API is made of a single HTTP endpoint that the errand uses to collect the required state
-to drive the upgrade process against your On Demand Service Broker.
-The API endpoint called is configurable in the `upgrade-all-service-instances` errand.
+The service instances API consists of a single HTTP endpoint that the errand uses to collect the required state
+to drive the upgrade process against your on-demand service broker.
+You can configure the API endpoint that is called in the `upgrade-all-service-instances` errand.
 
 <p class="warning note"><strong>WARNING:</strong> The Service Instances API is an advanced feature.
 Configuring a Service Instances API is not required, unless you are operating in very specific circumstances,
-such as running an On Demand Service Broker with no connection to Cloud Foundry.
+such as running an on-demand service broker with no connection to Cloud Foundry.
+<br><br>
 You are required to provide an endpoint which satisfies the API requirements detailed below
 and also guarantees that all service instances which need to be upgraded are part of that response.
 If you configure an endpoint which does not satisfy these criteria, some service instances may become unusable.</p>
 
-The Service Instances API definition is at v0.1.0 and should be considered subject to change.
-The API is made of a single endpoint which should handle the following request with the appropriate response:
+<p class="note"><strong>Note:</strong>
+  The Service Instances API definition is at v0.1.0 and should be considered subject to change.</p>
 
-<strong>Example Request:</strong>
+#### General Request and Response
+
+The API endpoint should handle the request below with the appropriate response.
+
+Example Request:
 
 <pre>
 curl -u BASIC-AUTH-USERNAME:BASIC-AUTH-PASSWORD \
@@ -189,7 +216,7 @@ curl -u BASIC-AUTH-USERNAME:BASIC-AUTH-PASSWORD \
 http://SERVICE-INSTANCES-API-URL
 </pre>
 
-<strong>Example Response:</strong>
+Example Response:
 
 <pre class="terminal">
 HTTP/1.1 200 OK
@@ -203,12 +230,13 @@ Content-Type: application/json
 ]
 </pre>
 
-The Services Instances API returns other status codes such as 3xx, 4xx, or 5xx for non-successful scenarios.
+The Services Instances API returns other status codes such as `3xx`, `4xx`, or `5xx` for non-successful scenarios.
 
+The plan IDs listed in the response must correspond to the plan IDs in each plan's
+definition in the ODB deployment manifest, not any other ID that may be assigned
+by the service controller.
 
-The plan\_ids listed in the response need to correspond to the plan\_ids
-that appear in each plan's definition in the On Demand Broker deployment manifest,
-not any other id that may be assigned by the service controller.
+#### Request and Response when _canary\_selection\_params_ is Enabled
 
 When the on-demand service broker is configured to use `canary_selection_params`,
 you need to change the Service Instances API accordingly.
@@ -227,7 +255,7 @@ canary_selection_params:
 Then, the Service Instances API returns a filtered list of instances when `cf_org` and
 `cf_space` are passed as query parameters in the request.
 
-<strong>Example Request:</strong>
+Example Request:
 
 <pre>
 curl -u BASIC-AUTH-USERNAME:BASIC-AUTH-PASSWORD \
@@ -235,7 +263,7 @@ curl -u BASIC-AUTH-USERNAME:BASIC-AUTH-PASSWORD \
 http://SERVICE-INSTANCES-API-URL?cf_org=staging-org&cf_space=staging-space
 </pre>
 
-<strong>Example Response:</strong>
+Example Response:
 
 <pre class="terminal">
 HTTP/1.1 200 OK
@@ -250,10 +278,12 @@ The instances in the filtered list are used as canary instances and upgraded bef
 The number of canaries taken from this list can be configured
 by specifying the `canaries` property in the on-demand service broker manifest.
 
+#### Configure the _upgrade-all-service-instances_ Errand
+
 To configure the `upgrade-all-service-instances` errand to connect to a Service Instances API provider,
 update the errand's configuration in the deployment manifest to include the following additional properties:
 
-```
+```yaml
 - name: upgrade-all-service-instances
   lifecycle: errand
   instances: 1
@@ -283,4 +313,3 @@ Where:
 status of a submitted upgrade job.
 * `ATTEMPT-INTERVAL-IN-SECONDS`: The number of seconds to wait between retrying upgrades.
 * `NUMBER-OF-ATTEMPTS`: The maximum number of times the errand tries a set of upgrades.
-
