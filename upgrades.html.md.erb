@@ -1,5 +1,5 @@
 ---
-title: Upgrade Service Instances
+title: Upgrading
 owner: London Services Enablement
 ---
 
@@ -26,8 +26,19 @@ Xenial stemcell before you deploy your service:
 
 To upgrade the broker, do the following:
 
-1. Upload a new version of the `on-demand-service-broker-release` BOSH release to the BOSH Director.
+1. Download a new version of the on-demand service broker BOSH release from
+[Pivotal Network](https://network.pivotal.io/products/on-demand-services-sdk/).
+
+1. Upload the release to the BOSH Director by running:
+
+    ```
+    bosh -e BOSH-DIRECTOR-NAME upload-release RELEASE-FILE-NAME.tgz
+    ```
+
 1. Make any necessary changes to the core broker configuration in the broker manifest.
+For more information about the core broker configuration, see
+[Configure Your Manifest](./operating.html#core-broker-config).
+
 1. Deploy the broker by running:
 
     ```
@@ -47,18 +58,33 @@ The service offering is made of the following:
 To upgrade a service offering, do the following:
 
 1. Make any changes to the service catalog in the broker manifest.
-1. Upload any new service BOSH releases to the BOSH Director.
+For more information about the service catalog, see the
+[Starter Snippet](./operating.html#starter-snippet).
+
+1. Upload any new service BOSH releases to the BOSH Director by running:
+
+    ```
+    bosh -e BOSH-DIRECTOR-NAME upload-release RELEASE-FILE-NAME.tgz
+    ```
+
 1. Make any changes to service releases in the broker manifest.
+
 1. Upload any new service stemcell to the BOSH Director.
+
+    ```
+    bosh -e BOSH-DIRECTOR-NAME upload-stemcell STEMCELL-LOCATION
+    ```
+    Where `STEMCELL-LOCATION` is the path or URL of the stemcell.
+
 1. Make any changes to the service stemcell in the `service_deployment` broker manifest.
+
 1. Deploy the broker by running:
 
     ```
     bosh -d DEPLOYMENT-NAME deploy DEPLOYMENT-MANIFEST.yml
     ```
 
-Any new service instances are created using the latest service offering.
-
+New service instances are created using the latest service offering.
 To upgrade all existing instances, you can run the upgrade-all-service-instances errand.
 See [Upgrade All Service Instances](#upgrade-all-instances) below.
 
@@ -68,10 +94,10 @@ See [Upgrade All Service Instances](#upgrade-all-instances) below.
   For more information, see <a href="#upgrade-individual-instances">About Upgrading an Individual Service Instance</a>
   below.</p>
 
-## <a id="upgrade-individual-instances"></a>Upgrade an Individual Service Instance
+## <a id="upgrade-individual-instances"></a>About Upgrading an Individual Service Instance
 
-Cloud Foundry users cannot upgrade their service instances to the latest service offering.
-Until a service instance has been upgraded, Cloud Foundry users cannot set parameters
+App developers cannot upgrade their service instances to the latest service offering.
+Until a service instance has been upgraded, app developers cannot set parameters
 or change plan.
 
 For example, a developer who tries to update a Redis service instance with the
@@ -119,8 +145,8 @@ To upgrade all existing service instances after the service offering has been up
     <table class="nice">
       <col width="25%">
       <col width="75%">
-        <th>Errand</th>
         <th>Property</th>
+        <th>Description</th>
         <tr>
             <td><code>max\_in\_flight</code></td>
             <td>Sets the limit for the number of upgrades
@@ -189,9 +215,13 @@ triggers service instance lifecycle errands configured for the broker.
 
 ### <a id="service-instances-api"></a> Service Instances API
 
-The service instances API consists of a single HTTP endpoint that the errand uses to collect the required state
-to drive the upgrade process against your on-demand service broker.
-You can configure the API endpoint that is called in the `upgrade-all-service-instances` errand.
+The service instances API is used with an on-demand service broker without a connection
+to Cloud Foundry.
+It consists of an HTTP endpoint that the `upgrade-all-service-instances`
+errand can use to collect the required state to drive the upgrade process against
+your on-demand service broker.
+
+You can configure the API endpoint in the `upgrade-all-service-instances` errand.
 
 <p class="warning note"><strong>WARNING:</strong> The Service Instances API is an advanced feature.
 Configuring a Service Instances API is not required, unless you are operating in very specific circumstances,
@@ -204,9 +234,9 @@ If you configure an endpoint which does not satisfy these criteria, some service
 <p class="note"><strong>Note:</strong>
   The Service Instances API definition is at v0.1.0 and should be considered subject to change.</p>
 
-#### General Request and Response
+#### <a id="general-requests"></a> General Request and Response
 
-The API endpoint should handle the request below with the appropriate response.
+The API endpoint must handle the request below with the appropriate response.
 
 Example Request:
 
@@ -230,18 +260,22 @@ Content-Type: application/json
 ]
 </pre>
 
-The Services Instances API returns other status codes such as `3xx`, `4xx`, or `5xx` for non-successful scenarios.
+The Services Instances API returns other status codes such as `3xx`, `4xx`, or
+`5xx` for non-successful scenarios.
 
 The plan IDs listed in the response must correspond to the plan IDs in each plan's
 definition in the ODB deployment manifest, not any other ID that may be assigned
 by the service controller.
 
-#### Request and Response when _canary\_selection\_params_ is Enabled
+#### <a id="filtered-requests"></a> Filtered Request and Response
 
-When the on-demand service broker is configured to use `canary_selection_params`,
-you need to change the Service Instances API accordingly.
-The `canary_selection_params` property defines how to filter the canary instances from of a set of instances.
-Therefore, you need to change the Service Instances API so that it responds with a filtered list of instances
+The API endpoint must be able to provide a filtered response based on query parameters
+passed in the request.
+
+The `canary_selection_params` property defines how to filter the canary instances
+from of a set of instances.
+If the on-demand service broker is configured to use `canary_selection_params`,
+The Service Instances API must respond with a filtered list of service instances
 when the `canary_selection_params` are passed as query parameters.
 
 For example, if the `canary_selection_params` are configured as following:
@@ -278,38 +312,28 @@ The instances in the filtered list are used as canary instances and upgraded bef
 The number of canaries taken from this list can be configured
 by specifying the `canaries` property in the on-demand service broker manifest.
 
-#### Configure the _upgrade-all-service-instances_ Errand
+#### <a id="configure-errand"></a> Configure the Errand to Use the Service Instances API
 
-To configure the `upgrade-all-service-instances` errand to connect to a Service Instances API provider,
-update the errand's configuration in the deployment manifest to include the following additional properties:
+To configure the `upgrade-all-service-instances` errand to connect to a Service
+Instances API provider, update the errand's configuration in the deployment manifest
+to include the `service_instances_api` section:
 
 ```yaml
 - name: upgrade-all-service-instances
-  lifecycle: errand
-  instances: 1
+  ...
   jobs:
     - name: upgrade-all-service-instances
-      release: ODB-RELEASE-NAME
+      ...
       properties:
-        polling_interval_seconds: POLLING-INTERVAL-IN-SECONDS # defaults to 60
-        attempt_interval_seconds: ATTEMPT-INTERVAL-IN-SECONDS # defaults to 60
-        attempt_limit: NUMBER-OF-ATTEMPTS # defaults to 5
-        service_instances_api: # optional
-          url: URL-OF-SERVICE-INSTANCES-API-PROVIDER # required
-          root_ca_cert: ROOT-CA-CERT # optional
+        ...
+        service_instances_api:   # add this section
+          url: SERVICE-INSTANCES-API-URL   # required
+          root_ca_cert: ROOT-CA-CERT   # optional
           authentication:
-            basic: # required - currently the only supported authentication type
+            basic:  # required - currently the only supported authentication type
               username: USERNAME
               password: PASSWORD
-  vm_type: VM-TYPE
-  stemcell: STEMCELL
-  networks: [NETWORK]
-  azs: [AZ]
+ ...
 ```
 
-Where:
-
-* `POLLING-INTERVAL-IN-SECONDS`: The number of seconds to wait between checking the
-status of a submitted upgrade job.
-* `ATTEMPT-INTERVAL-IN-SECONDS`: The number of seconds to wait between retrying upgrades.
-* `NUMBER-OF-ATTEMPTS`: The maximum number of times the errand tries a set of upgrades.
+Where `SERVICE-INSTANCES-API-URL` is the URL of the Service Instances API provider.
