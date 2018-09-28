@@ -42,7 +42,7 @@ For more information about the core broker configuration, see
 1. Deploy the broker by running:
 
     ```
-    bosh -d DEPLOYMENT-NAME deploy DEPLOYMENT-MANIFEST.yml
+    bosh -e BOSH-DIRECTOR-NAME -d DEPLOYMENT-NAME deploy DEPLOYMENT-MANIFEST.yml
     ```
 
 ## <a id="upgrade-service-offering"></a>Upgrade the Service Offering
@@ -81,7 +81,7 @@ For more information about the service catalog, see the
 1. Deploy the broker by running:
 
     ```
-    bosh -d DEPLOYMENT-NAME deploy DEPLOYMENT-MANIFEST.yml
+    bosh -e BOSH-DIRECTOR-NAME -d DEPLOYMENT-NAME deploy DEPLOYMENT-MANIFEST.yml
     ```
 
 New service instances are created using the latest service offering.
@@ -200,7 +200,7 @@ To upgrade all existing service instances after the service offering has been up
 1. Deploy the broker manifest by running:
 
     ```
-    bosh -d DEPLOYMENT-NAME deploy DEPLOYMENT-MANIFEST.yml
+    bosh -e BOSH-DIRECTOR-NAME -d DEPLOYMENT-NAME deploy DEPLOYMENT-MANIFEST.yml
     ```
 
 1. Run the errand with the following command:
