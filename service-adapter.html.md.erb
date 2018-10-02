@@ -8,13 +8,13 @@ adapter for an on-demand service tile.
 For more information about service author responsibilities, see
 [Service Author Deliverables](./creating.html#what-is-required-of-the-service-authors).
 
-## <a id="create-a-service-adapter"></a>Create a Service Adapter
+## <a id="about"></a> About Service Adapters
 
 A service adapter is an executable invoked by the ODB.
 Pivotal has published an SDK for teams writing their service adapters in golang.
 For more information, see [Golang SDK](#sdk) below.
 
-### <a id="subcommands"></a>Subcommands in the Adapter Interface
+## <a id="subcommands"></a>Subcommands in the Adapter Interface
 
 A service adapter is expected to respond to the subcommands below.
 The parameters and expected output from these subcommands are explained in detail
@@ -51,7 +51,7 @@ in [Service Adapter Interface Reference](./adapter-reference.html).
   For more information about this subcommand, see [generate-plan-schemas](./adapter-reference.html#generate-plan-schemas).
 
 
-### <a id="odb-managed-secrets"></a>Store Secrets on CredHub
+## <a id="odb-managed-secrets"></a>About Storing Secrets on BOSH CredHub
 
 The service adapter can generate secrets and, instead of writing these secrets
 in plain text in the manifest, use ODB as a proxy to BOSH CredHub Config server.
@@ -206,7 +206,7 @@ This can cause errors with bindings.
 Pivotal recommends that you avoid modifying secrets without using new names for
 new versions of secrets.
 
-### <a id="create-binding-credentials"></a>Credentials for Bindings
+## <a id="create-binding-credentials"></a>Credentials for Bindings
 
 Binding credentials for a service instance should share a namespace and should
 be unique if possible.
@@ -223,7 +223,7 @@ You can take one of three approaches to credentials for a service binding:
 + [Credentials Unique to Each Binding](#unique-credentials)
 + [Use an Agent](#agent)
 
-#### <a id="static-credentials"></a>Static Credentials
+###<a id="static-credentials"></a>Static Credentials
 
 In this case, the same credentials are used for all bindings. One option is to define these credentials in the service instance manifest.
 
@@ -235,7 +235,7 @@ properties:
     password: PASSWORD
 ```
 
-#### <a id="unique-credentials"></a>Credentials Unique to Each Binding
+### <a id="unique-credentials"></a>Credentials Unique to Each Binding
 
 In this case, when the adapter `generate-manifest` subcommand is invoked,
 it generates random admin credentials and returns them as part of the service
@@ -252,7 +252,7 @@ properties:
   admin_password: ADMIN-PASSWORD
 ```
 
-#### <a id="agent"></a>Use an Agent
+### <a id="agent"></a>Use an Agent
 
 In this case, the author defines an agent responsible for handling creation of
 credentials unique to each binding. The agent must be added as a BOSH release
@@ -281,7 +281,7 @@ instance_groups:
         release: credentials-agent-release
 ```
 
-### <a id="dns-addresses"></a> Enable ODB to Obtain BOSH DNS Addresses
+## <a id="dns-addresses"></a> Enable ODB to Obtain BOSH DNS Addresses
 
 <p class="note"><strong>Note:</strong>
  This feature requires BOSH Director v266.3 or later.
@@ -331,7 +331,7 @@ For example:
         ...
     ```
 
-### <a id="handling-errors"></a>Handle Errors
+## <a id="handling-errors"></a>Handle Errors
 
 If a subcommand fails, the adapter must return a non-zero exit status, and may optionally print to stdout and/or stderr.
 
@@ -343,17 +343,20 @@ because the ODB does no validation on this output.
 
 See an example implementation [here](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/892d48b066c9b1d2651080484a53531001e9e920/adapter/create_binding.go#L27-L29).
 
-### <a id="packaging"></a>Packaging a Service Adapter
+## <a id="packaging"></a>Package a Service Adapter
 
-The adapter should be packaged as a BOSH release, which should be co-located with the
-ODB release in a BOSH manifest by the operator.
-This is only done in order to place the adapter executable on the same VM as the ODB
-server. As a result, the adapter BOSH job's `monit` file should  have no processes defined.
+Package the service adapter as a BOSH release.
+The operator should co-locate the service adapter release with the ODB release in
+a BOSH manifest to place the adapter executable on the same VM as the ODB server.
+As a result, the adapter BOSH job's `monit` file should  have no processes defined.
 
 See the following example service adapter releases:
 
 - <a href="https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release">Kafka example service adapter release</a>
 - <a href="https://github.com/pivotal-cf-experimental/redis-example-service-adapter-release">Redis example service adapter release</a>
+
+For more information about how to create a BOSH release, see the
+[BOSH documentation](https://bosh.io/docs/create-release/).
 
 ## <a id="sdk"></a> Golang SDK
 

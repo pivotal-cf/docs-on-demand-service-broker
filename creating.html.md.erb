@@ -70,12 +70,12 @@ The [example Kafka release](https://github.com/pivotal-cf-experimental/kafka-exa
 uses implicit job links to get the IPs of the brokers and the zookeeper.
 For more information about the links feature, see the [BOSH documentation](https://bosh.io/docs/links.html).
 
-### <a id="package-service"></a>Packaging a Service Release
+### <a id="package-service"></a>Package a Service Release
 
-The service release should be packaged as a BOSH release, which should be colocated with the
-ODB release in a BOSH manifest by the operator.
+Package the service release as a BOSH release.
+The operator should co-locate the service release with the ODB release in a BOSH manifest.
 
-For examples of a service release, see the following:
+See the following example service releases:
 
 * [Redis example service release](https://github.com/pivotal-cf-experimental/redis-example-service-release)
 * [Kafka example service release](https://github.com/pivotal-cf-experimental/kafka-example-service-release)
