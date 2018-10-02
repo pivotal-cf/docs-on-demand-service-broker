@@ -621,22 +621,38 @@ The credentials for a given service binding are stored with the following format
 The plain-text credentials are stored in CredHub under this key, and the key is
 available under the `VCAP_SERVICES` environment variable for the app.
 
-## <a id="plan-schemas"></a>Enable Plan Schemas
+
+## <a id="plan-schemas"></a>(Optional) Enable Plan Schemas
 
 As of [OSBAPI Spec v2.13](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#changes-since-v212),
-ODB supports plan schemas in the service catalog.
+ODB supports enabling plan schemas.
+When this feature is enabled, the broker validates incoming configuration parameters
+against a schema during the provision, binding, and update of service instances.
+The broker produces an error if the parameters do not conform.
 
 To enable plan schemas, do the following:
 
-1. In the manifest, set the `enable_plan_schemas` flag to `true`.
+1. Ensure that the service adapter implements the command `generate-plan-schemas`.
+If it is not implemented the broker will fail to deploy.
+For more information about this command, see [generate-plan-schemas](./adapter-reference.html#generate-plan-schemas).
+
+1. In the manifest, set the `enable_plan_schemas` flag to `true` as shown below.
    The default is `false`.
 
-2. Ensure that the service adapter implements the command `generate-plan-schemas`,
-otherwise the broker fails to deploy.
-For more information, see [generate-plan-schemas](./adapter-reference.html#generate-plan-schemas).
+      ```yaml
+      instance_groups:
+        - name: broker
+          ...
+          jobs:
+            - name: broker
+              ...
+              properties:
+                ...
+                enable_plan_schemas: true
+      ```
+For a more detailed manifest snippet, see [Configure Your Manifest](#core-broker-config) above.
 
-During provision, bind, and update, the broker validates the incoming configuration
-parameters against the schema and produces an error if the parameters do not conform.
+
 
 ## <a id="route"></a>(Optional) Register the Route
 
