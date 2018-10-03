@@ -66,9 +66,12 @@ network IP management very complex.
 Instead, Pivotal recommends using BOSH's job links feature.
 
 There are two types of job links, implicit and explicit.
-The [example Kafka release](https://github.com/pivotal-cf-experimental/kafka-example-service-release/blob/master/jobs/kafka_server/spec#L15)
-uses implicit job links to get the IPs of the brokers and the zookeeper.
-For more information about the links feature, see the [BOSH documentation](https://bosh.io/docs/links.html).
+The Kafka example service release uses implicit job links to get the IPs of the
+brokers and the zookeeper.
+See the [Kafka example service release](https://github.com/pivotal-cf-experimental/kafka-example-service-release/blob/master/jobs/kafka_server/spec#L15).
+
+For more information about the links feature, see
+[Links](https://bosh.io/docs/links.html) in the BOSH documentation.
 
 ### <a id="package-service"></a>Package a Service Release
 
@@ -80,6 +83,8 @@ See the following example service releases:
 * [Redis example service release](https://github.com/pivotal-cf-experimental/redis-example-service-release)
 * [Kafka example service release](https://github.com/pivotal-cf-experimental/kafka-example-service-release)
 
-For more information about how to create a BOSH release, see the [BOSH documentation](https://bosh.io/docs/create-release/).
+For more information about how to create a BOSH release, see
+[Creating a Release](https://bosh.io/docs/create-release/) in the BOSH documentation.
+
 Pivotal recommends creating sample manifests that deploy the service release(s),
 because later this helps you write the `generate-manifest` component of the Service Adapter.

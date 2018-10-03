@@ -10,15 +10,16 @@ For more information about service author responsibilities, see
 
 ## <a id="about"></a> About Service Adapters
 
-A service adapter is an executable invoked by the ODB.
+A service adapter is an executable invoked by the on-demand broker (ODB).
 Pivotal has published an SDK for teams writing their service adapters in golang.
 For more information, see [Golang SDK](#sdk) below.
 
 ## <a id="subcommands"></a>Subcommands in the Adapter Interface
 
 A service adapter is expected to respond to the subcommands below.
-The parameters and expected output from these subcommands are explained in detail
-in [Service Adapter Interface Reference](./adapter-reference.html).
+For more information about the parameters and expected output from these
+subcommands, see
+[Service Adapter Interface Reference](./adapter-reference.html).
 
 - `generate-manifest`:
   Generate a BOSH manifest for your service instance deployment and output to stdout
@@ -148,7 +149,8 @@ secrets.
     Pivotal discourages modifying the value of secrets without changing the secret name.
     If the BOSH deploy task fails during update or upgrade, ODB managed secrets might
     be left in an inconsistent state.
-    For more information, see <a href="#inconsistent-secrets">Inconsistent Secrets after a Failed Update</a> below.
+    For more information, see <a href="#inconsistent-secrets">Inconsistent Secrets After a Failed Update</a>
+    below.
   </p>
 
 ### <a id="odb-persisting-creds"></a>Persist Credentials across Updates
@@ -177,7 +179,8 @@ For more information about using the value during a bind, see [create-binding](#
   Pivotal discourages modifying the value of secrets without changing the secret name.
   If the BOSH deploy task fails during update or upgrade, ODB managed secrets might
   be left in an inconsistent state.
-  For more information, see <a href="#inconsistent-secrets">Inconsistent Secrets after a Failed Update</a> below.
+  For more information, see <a href="#inconsistent-secrets">Inconsistent Secrets After a Failed Update</a>
+  below.
 </p>
 
 When updating or upgrading a service instance, you might need to modify the value
@@ -192,8 +195,9 @@ that uses a new secret name.
 
 #### <a id="inconsistent-secrets"></a>Inconsistent Secrets after a Failed Update
 
-If you modify the value of a secret without providing a new secret name, ODB managed secrets can be left
-in an inconsistent state if the update or upgrade of a BOSH deployment fails.
+If you modify the value of a secret without providing a new secret name, ODB managed
+secrets can be left in an inconsistent state if the update or upgrade of a BOSH
+deployment fails.
 This is because ODB updates the secrets in CredHub before updating the deployment.
 
 The failed deployment might contain a mixture of old and new secrets depending on
@@ -206,7 +210,7 @@ This can cause errors with bindings.
 Pivotal recommends that you avoid modifying secrets without using new names for
 new versions of secrets.
 
-## <a id="create-binding-credentials"></a>Credentials for Bindings
+## <a id="create-binding-credentials"></a> Binding Credentials
 
 Binding credentials for a service instance should share a namespace and should
 be unique if possible.
@@ -225,9 +229,13 @@ You can take one of three approaches to credentials for a service binding:
 
 ###<a id="static-credentials"></a>Static Credentials
 
-In this case, the same credentials are used for all bindings. One option is to define these credentials in the service instance manifest.
+In this case, the same credentials are used for all bindings.
+One option is to define these credentials in the service instance manifest.
 
-This scenario makes sense for services that use the same credentials for all bindings, such as Redis. For example:
+This scenario makes sense for services that use the same credentials for all
+bindings, such as Redis.
+
+For example:
 
 ```yaml
 properties:
@@ -263,7 +271,7 @@ This option is useful for services where the adapter cannot or prefers not to
 directly call out to the service instance and instead delegates responsibility
 for setting up new credentials to an agent.
 
-See the following example:
+For example:
 
 ```yaml
 releases:
@@ -310,7 +318,8 @@ For example:
         type: example-type
     ```
     <br>
-For an example `spec` file, see the [Redis Example Service Release](https://github.com/pivotal-cf-experimental/redis-example-service-release/blob/master/jobs/redis-server/spec).
+For an example `spec` file, see the
+[Redis Example Service Release](https://github.com/pivotal-cf-experimental/redis-example-service-release/blob/master/jobs/redis-server/spec).
 
 2. Write code in the service adapter that shares the link you provided above in the BOSH
 manifest generated for your service instance deployment.
@@ -333,15 +342,18 @@ For example:
 
 ## <a id="handling-errors"></a>Handle Errors
 
-If a subcommand fails, the adapter must return a non-zero exit status, and may optionally print to stdout and/or stderr.
+If a subcommand fails, the adapter must return a non-zero exit status and,
+optionally, print to stdout or stderr.
 
-When a subcommand exits with an unrecognized exit code anything printed to stdout is returned to the CF CLI user.
+When a subcommand exits with an unrecognized exit code anything printed to stdout
+is returned to the CF CLI user.
 
 Both the stdout and stderr streams are printed in the broker log for the operator.
-For that reason, Pivotal recommends not printing the manifest or other sensitive details to stdout/stderr,
-because the ODB does no validation on this output.
+For that reason, Pivotal recommends not printing the manifest or other sensitive
+details to stdout or stderr, because ODB does no validation on this output.
 
-See an example implementation [here](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/892d48b066c9b1d2651080484a53531001e9e920/adapter/create_binding.go#L27-L29).
+For an example implementation, see the
+[Kafka example service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/892d48b066c9b1d2651080484a53531001e9e920/adapter/create_binding.go#L27-L29).
 
 ## <a id="packaging"></a>Package a Service Adapter
 
@@ -355,34 +367,39 @@ See the following example service adapter releases:
 - <a href="https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release">Kafka example service adapter release</a>
 - <a href="https://github.com/pivotal-cf-experimental/redis-example-service-adapter-release">Redis example service adapter release</a>
 
-For more information about how to create a BOSH release, see the
-[BOSH documentation](https://bosh.io/docs/create-release/).
+For more information about how to create a BOSH release, see
+[Creating a Release](https://bosh.io/docs/create-release/) in the BOSH documentation.
 
 ## <a id="sdk"></a> Golang SDK
 
-Pivotal has published a [SDK](https://github.com/pivotal-cf/on-demand-services-sdk) for
-teams writing their service adapters in golang. It encapsulates the command line invocation
-handling, parameter parsing, response serialization and error handling so the adapter authors
-can focus on the service-specific logic in the adapter.
+Pivotal has published an SDK for teams writing their service adapters in golang.
+It encapsulates the command line invocation handling, parameter parsing, response
+serialization and error handling so the adapter authors can focus on the
+service-specific logic in the adapter.
+For more information about the Golang SDK, see the
+[on demand service sdk](https://github.com/pivotal-cf/on-demand-services-sdk)
+repository on GitHub.
 
-Use the same version of the SDK as your ODB release. For example, if you are using v0.8.0 of
-the ODB BOSH release, you should check out the v0.8.0 tag of the SDK.
+For the generated BOSH manifest, the SDK supports properties in two levels:
+manifest global and job level.
+Global properties are deprecated in BOSH, in favor of job level properties and job links.
 
-For the generated BOSH manifest, the SDK supports properties in two levels: manifest global and job level.
-Global properties are [deprecated in BOSH](http://bosh.io/docs/manifest-v2.html#properties), in favor
-of job level properties and job links.
-
-As an example, refer to the [Kafka example service adapter property generation](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/ffe85fecc2d9cf1b663fab418875e67ddcf3327f/adapter/generate_manifest.go#L79-L123).
+For an example, see the
+[Kafka example service adapter property generation](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/ffe85fecc2d9cf1b663fab418875e67ddcf3327f/adapter/generate_manifest.go#L79-L123).
 
 ### <a id="sdk_usage"></a>Use the SDK
 
 Perform the following steps to use the SDK:
 
-1. Run the following `go get` command to install the SDK:
+1. Install the SDK by running the following `go get` command to install the SDK:
 
     ```
     go get github.com/pivotal-cf/on-demand-services-sdk
     ```
+    Use the same version of the SDK as your ODB release. For example, if you are
+    using v0.8.0 of the ODB BOSH release, you should check out the v0.8.0 tag of
+    the SDK.
+
 1. In the main function for the service adapter, call the `HandleCLI` function:
 
     ```go
@@ -411,7 +428,7 @@ Perform the following steps to use the SDK:
     }
     ```
   <p class="note"><strong>Note</strong>:
-    The HandleCommandLineInvocation function is being deprecated but its functionality
+    The HandleCommandLineInvocation function is deprecated, but its functionality
     can be seen <a href="https://docs.pivotal.io/svc-sdk/odb/0-19/creating.html#usage">here</a>.</p>
 
 ### <a id="interfaces"></a>Interfaces
@@ -461,18 +478,22 @@ The SDK provides the methods `ArbitraryContext` and `Platform`. These are
 used to extract the `context` property from the request parameters and the `platform` property from within the
 `context`.
 
-The context in the response is a feature of [Open Service Broker API (OSBAPI) v2.13
-specification](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md)
-and is used to pass through information about the environment in which the
-platform or app is executing. If the platform does not provide a `context`, the SDK returns empty values.
+The context in the response is a feature of Open Service Broker API (OSBAPI) v2.13
+specification and is used to pass through information about the environment in which the
+platform or app is executing.
+See the [OSBAPI v2.13 specification](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md).
+If the platform does not provide a `context`, the SDK returns empty values.
 
 ### <a id="error_handling"></a>Error Handling
 
-Any error returned by the interface functions is considered to be for the Cloud Foundry CLI user and is printed to stdout.
+Any error returned by the interface functions is considered to be for the Cloud
+Foundry CLI user and is printed to stdout.
 
-The adapter code is responsible for performing any error logging to stderr that the authors think is relevant for the operator logs.
+The adapter code is responsible for performing any error logging to stderr that
+the authors think is relevant for the operator logs.
 
-There are three specialised errors for the `CreateBinding` function, which allow the adapter to exit with the appropriate code:
+There are three specialised errors for the `CreateBinding` function, which allow
+the adapter to exit with the appropriate code:
 
 ```go
 serviceadapter.NewBindingAlreadyExistsError()
@@ -480,14 +501,16 @@ serviceadapter.NewBindingNotFoundError()
 serviceadapter.NewAppGuidNotProvidedError()
 ```
 
-For more complete code examples please take a look at the [Kafka adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter) or the [Redis adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter).
+For more complete code examples, see the
+[Kafka example service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter)
+or the [Redis example service adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter).
 
 ### <a id="bosh_features"></a>BOSH Features
 
 Service authors can enable configuration of BOSH Features in their service adapters.
 
-The SDK provides the following [BoshFeatures struct](https://github.com/pivotal-cf/on-demand-services-sdk/blob/49cf3649cd34db8715b673d42e36710517e0f30e/bosh/bosh_manifest.go#L36-L45)
-with the possibility of adding extra features via the `ExtraFeatures` map:
+The SDK provides the `BoshFeatures` struct below,
+with the possibility of adding extra features using the `ExtraFeatures` map:
 
 ```
 type BoshFeatures struct {
@@ -498,6 +521,6 @@ type BoshFeatures struct {
 }
 ```
 
-For an example, see the [Redis adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/4f78b89d791733d025ae96f4056eb6840989818e/adapter/redis_manifest_generator.go#L215-L222).
+For an example implementation, see the [Redis example service adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/4f78b89d791733d025ae96f4056eb6840989818e/adapter/redis_manifest_generator.go#L215-L222).
 
 For more information on BOSH Features, see [the BOSH documentation](https://bosh.io/docs/manifest-v2.html#features).
