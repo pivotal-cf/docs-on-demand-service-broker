@@ -52,14 +52,20 @@ subcommands, see
   For more information about this subcommand, see [generate-plan-schemas](./adapter-reference.html#generate-plan-schemas).
 
 
-## <a id="odb-managed-secrets"></a>About Storing Secrets on BOSH CredHub
+## <a id="odb-managed-secrets"></a> About Storing Secrets on BOSH CredHub
 
-The service adapter can generate secrets and, instead of writing these secrets
-in plain text in the manifest, use ODB as a proxy to BOSH CredHub Config server.
-To do so, the adapter should generate the manifest with a special notation and
-output the secret as part of the `secrets` map.
+The service adapter can generate secrets and use ODB as a proxy to the BOSH CredHub
+Config server, instead of writing these secrets in plain text in the manifest.
+To do this, use ODB managed secrets.
 
-For example, consider the following `generate-manifest` output:
+The adapter must do the following as part of the `generate-manifest` output:
+
+1. Generate a manifest that uses the ODB managed secrets placeholder
+`((odb_secret:SECRET-NAME))` for the secret that you want to store in CredHub.
+
+1. Output the secret as part of the `secrets` map.
+
+For example:
 
 ```json
 {
@@ -70,13 +76,17 @@ For example, consider the following `generate-manifest` output:
 }
 ```
 
-During provision, ODB does the following:
+<br>
+When you use ODB managed secrets, ODB does the following during provision:
 
 1. Generates a CredHub name for each secret in the `secrets` map in the format
 `/odb/SERVICE-OFFERING-ID/SERVICE-INSTANCE-ID/SECRET-NAME`.
+
 1. Replaces all occurrences of `((odb_secret:SECRET-NAME))` with the generated
 CredHub name.
+
 1. Deploys the updated manifest.
+
 
 ### <a id="migrating-to-stored-secrets"></a>Migrate from Plaintext Secrets to ODB Managed Secrets
 
@@ -91,7 +101,7 @@ service adapter that does the following:
 1. Detects whether a secret is a plaintext secret.
 
 1. Replaces each plaintext secret from the previous manifest with an ODB managed
-secrets placeholder in the new manifest.
+secrets placeholder `((odb_secret:SECRET-NAME))` in the new manifest.
 
 1. Returns the value of each secret in the secrets map.
 
@@ -168,10 +178,11 @@ properties:
 password: ((/odb/SERVICE-GUID/SERVICE-INSTANCE-GUID/SECRET-NAME))
 ```
 
-If the previous manifest contains CredHub names for secrets, as in the manifest snippet above,
-the `generate-manifest` command must not replace `properties.password` with `((odb_secret:SECRET-NAME))`.
+If the previous manifest contains CredHub names for secrets, the `generate-manifest`
+command must not replace `properties.password` with the placeholder `((odb_secret:SECRET-NAME))`.
 
-For more information about using the value during a bind, see [create-binding](#create-binding).
+For more information about using the value during a bind, see
+[create-binding](./adapter-reference.html#create-binding).
 
 ### <a id="modifying-secrets"></a>Modify ODB Managed Secrets
 
