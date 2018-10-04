@@ -264,7 +264,7 @@ properties:
 
 In this case, the author defines an agent responsible for handling creation of
 credentials unique to each binding. The agent must be added as a BOSH release
-in the service manifest. Moreover, the service and agent jobs should be co-located
+in the service manifest. Moreover, the service and agent jobs should be colocated
 in the same instance group.
 
 This option is useful for services where the adapter cannot or prefers not to
@@ -358,7 +358,7 @@ For an example implementation, see the
 ## <a id="packaging"></a>Package a Service Adapter
 
 Package the service adapter as a BOSH release.
-The operator should co-locate the service adapter release with the ODB release in
+The operator should colocate the service adapter release with the ODB release in
 a BOSH manifest to place the adapter executable on the same VM as the ODB server.
 As a result, the adapter BOSH job's `monit` file should  have no processes defined.
 
