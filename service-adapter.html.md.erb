@@ -52,13 +52,25 @@ subcommands, see
   For more information about this subcommand, see [generate-plan-schemas](./adapter-reference.html#generate-plan-schemas).
 
 
-## <a id="odb-managed-secrets"></a> About Storing Secrets on BOSH CredHub
+## <a id="storing-secrets"></a>Store Secrets on BOSH CredHub
 
 The service adapter can generate secrets and use ODB as a proxy to the BOSH CredHub
 Config server, instead of writing these secrets in plain text in the manifest.
 To do this, use ODB managed secrets.
 
-The adapter must do the following as part of the `generate-manifest` output:
+The following sections provide information about how to use ODB managed secrets to store,
+persist and modify secrets in BOSH CredHub:
+
+- [About ODB Managed Secrets](#odb-managed-secrets)
+- [Migrate from Plaintext Secrets to ODB Managed Secrets](#migrating-to-stored-secrets)
+- [Persist Credentials Across Updates](#odb-persisting-creds)
+- [Modify ODB Managed Secrets](#modifying-secrets)
+
+
+### <a id="odb-managed-secrets"></a> About ODB Managed Secrets
+
+To use ODB managed secrets, the service adapter must do the following for the
+`generate-manifest` output:
 
 1. Generate a manifest that uses the ODB managed secrets placeholder
 `((odb_secret:SECRET-NAME))` for the secret that you want to store in CredHub.
@@ -163,7 +175,7 @@ secrets.
     below.
   </p>
 
-### <a id="odb-persisting-creds"></a>Persist Credentials across Updates
+### <a id="odb-persisting-creds"></a>Persist Secrets across Updates
 
 When dealing with properties that need to persist across updates,
 the service adapter must extract the existing value for any ODB managed
