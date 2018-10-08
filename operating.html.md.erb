@@ -219,13 +219,35 @@ created, do the following:
     For more information about using the UAAC, see [Creating and Managing Users
     with the UAA CLI (UAAC)](https://docs.cloudfoundry.org/uaa/uaa-user-management.html).
 
-1. Configure the broker's BOSH authentication. Use the `CLIENT-ID` and
-`CLIENT-SECRET` you provided above.
+1. Configure the broker's BOSH authentication.
+<br><br>
+For example:
+
+    ```yaml
+    instance_groups:
+      - name: broker
+        ...
+        jobs:
+          - name: broker
+            ...
+            properties:
+              ...
+              bosh:
+                url: DIRECTOR-URL
+                root_ca_cert: CA-CERT-FOR-BOSH-DIRECTOR-AND-ASSOCIATED-UAA # optional, see SSL certificates
+                authentication:
+                  uaa:
+                    client_id: BOSH-CLIENT-ID
+                    client_secret: BOSH-CLIENT-SECRET
+    ```
+Where the `BOSH-CLIENT-ID` and `BOSH-CLIENT-SECRET` are the `CLIENT-ID` and `CLIENT-SECRET`
+you provided in step 1.
+<br><br>
 The broker can then only perform BOSH operations on deployments it has created.
-See [Configure Your Manifest](#core-broker-config) below.
+For a more detailed manifest snippet, see [Configure Your Manifest](#core-broker-config) below.
 
 
-For more details on securing how ODB uses BOSH, see [Security](./security.html).
+For more information about securing how ODB uses BOSH, see [Security](./security.html).
 
 ### <a id="cloud-controller"></a>Set Up Cloud Controller
 <%# This "Set Up Cloud Controller" section needs to be improved for technical accuracy.  %>
@@ -240,7 +262,7 @@ The following is an example broker manifest snippet for the client credentials:
 
 ```
 authentication:
-  . . .
+  ...
   client_credentials:
     client_id: UAA-CLIENT-ID # with cloud_controller.admin authority and client_credentials in the authorized_grant_type
     secret: UAA-CLIENT-SECRET
@@ -250,7 +272,7 @@ The following is an example broker manifest snippet for the user credentials:
 
 ```
 authentication:
-  . . .
+  ...
   user_credentials:
     username: CF-ADMIN-USERNAME # in the cloud_controller.admin and scim.read groups
     password: CF-ADMIN-PASSWORD
@@ -540,41 +562,41 @@ do the following in the ODB manifest so that the service adapter can access the 
 1. Set the `enable_secure_manifests` flag to `true`.<br><br>
 For example:
 
-      ```
-      instance_groups:
+    ```
+    instance_groups:
       - name: broker
         ...
         jobs:
-        - name: broker
-          ...
-          properties:
+          - name: broker
             ...
-            enable_secure_manifests: true
-            ...
-      ```
+            properties:
+              ...
+              enable_secure_manifests: true
+              ...
+    ```
 
 1.  Supply details for accessing the credentials stored in BOSH CredHub.
 Replace the placeholder text below with your values for accessing CredHub:
 
-      ```
-      instance_groups:
+    ```
+    instance_groups:
       - name: broker
         ...
         jobs:
-        - name: broker
-          ...
-          properties:
+          - name: broker
             ...
-            enable_secure_manifests: true
-            bosh_credhub_api:
-              url: https://BOSH-CREDHUB-ADDRESS:8844/
-              root_ca_cert: BOSH-CREDHUB-CA-CERT
-              authentication:
-                uaa:
-                  client_credentials:
-                    client_id: BOSH-CREDHUB-CLIENT-ID
-                    client_secret: BOSH-CREDHUB-CLIENT-SECRET
-      ```
+            properties:
+              ...
+              enable_secure_manifests: true
+              bosh_credhub_api:
+                url: https://BOSH-CREDHUB-ADDRESS:8844/
+                root_ca_cert: BOSH-CREDHUB-CA-CERT
+                authentication:
+                  uaa:
+                    client_credentials:
+                      client_id: BOSH-CREDHUB-CLIENT-ID
+                      client_secret: BOSH-CREDHUB-CLIENT-SECRET
+    ```
 
 <br>
 When the `enable_secure_manifests` flag is set to `true`, ODB queries
@@ -627,11 +649,11 @@ For example:
       - name: broker
         ...
         jobs:
-        - name: broker
-          consumes:
-            credhub:
-              from: credhub
-              deployment: cf
+          - name: broker
+            consumes:
+              credhub:
+                from: credhub
+                deployment: cf
     ```
 
 1. Update the broker job in the ODB manifest to include the `secure_binding_credentials` section.
@@ -644,17 +666,17 @@ For example:
       - name: broker
         ...
         jobs:
-        - name: broker
-          ...
-          properties:
+          - name: broker
             ...
-            secure_binding_credentials:
-              enabled: true
-              authentication:
-                uaa:
-                  client_id: NEW-CREDHUB-CLIENT-ID
-                  client_secret: NEW-CREDHUB-CLIENT-SECRET
-                  ca_cert: ((cf.uaa.ca_cert))
+            properties:
+              ...
+              secure_binding_credentials:
+                enabled: true
+                authentication:
+                  uaa:
+                    client_id: NEW-CREDHUB-CLIENT-ID
+                    client_secret: NEW-CREDHUB-CLIENT-SECRET
+                    ca_cert: ((cf.uaa.ca_cert))
       ```
       <br>
   Where `NEW-CREDHUB-CLIENT-ID` and `NEW-CREDHUB-CLIENT-SECRET` are the CredHub client
@@ -668,18 +690,18 @@ enable DNS. To do this, add the `consul_agent` job to the manifest as follows:
       - name: broker
         ...
         jobs:
-        ...
-        - name: consul_agent
-          release: consul
-          consumes:
-            consul: nil
-            consul_client:
-              from: consul_client_link
-              deployment: cf
-            consul_common:
-              from: consul_common_link
-              deployment: cf
-            consul_server: nil
+          ...
+          - name: consul_agent
+            release: consul
+            consumes:
+              consul: nil
+              consul_client:
+                from: consul_client_link
+                deployment: cf
+              consul_common:
+                from: consul_common_link
+                deployment: cf
+              consul_server: nil
     ```
 
 For a more detailed manifest snippet, see [Configure Your Manifest](#core-broker-config) above.
@@ -781,17 +803,19 @@ To set service instance quotas, do the following in the manifest:
   - **For plan quotas** add `quotas` the plans you want to limit:
 
         ```yaml
-        plans:
-        - name: CF-MARKETPLACE-PLAN-NAME
-          quotas:
-            service_instance_limit: INSTANCE-LIMIT
+        service_catalog:
+          ...
+          plans:
+            - name: CF-MARKETPLACE-PLAN-NAME
+              quotas:
+                service_instance_limit: INSTANCE-LIMIT
         ```
         <br>
   Where `INSTANCE-LIMIT` is the maximum number of service instances allowed.
 
 For a more detailed manifest snippet, see the [Starter Snippet](#starter-snippet) above.
 
-## <a id="service-resource-quotas"></a>(Optional) Set Service Resource Quotas
+## <a id="service-resource-quotas"></a>(Optional) Set Resource Quotas
 
 Set resource quotas to limit resources, such as memory or disk, more effectively when combining plans that
 consume different amounts of resources.
@@ -839,11 +863,13 @@ For example:
     - **For plan quotas** add `quotas` in the plans you want to limit:
 
         ```yaml
-        plans:
-        - name: my-plan
-          quotas:
-            resource_limits:
-              memory: 25
+        service_catalog:
+          ...
+          plans:
+            - name: my-plan
+              quotas:
+                resource_limits:
+                  memory: 25
         ```
 
 1. Add `resource_costs` in each plan to define the amount of resources your plan allocates
@@ -861,12 +887,12 @@ to each service instance.
     For example:
 
     ```yaml
-    plans:
-    - name: my-plan
-      quotas:
-        ...
-      resource_costs:
-        memory: 5
+    service_catalog:
+      ...
+      plans:
+        - name: my-plan
+          resource_costs:
+            memory: 5
     ```
 
 
@@ -929,21 +955,23 @@ For more information about the properties to add, see [Options for _binding\_wit
 <br><br>
 For example:
 
-    ```
-    plans:
+    ```yaml
+    service_catalog:
       ...
-      - name: plan-requiring-dns-addresses
+      plans:
         ...
-        binding_with_dns:                 # add this section
-        - name: leader-address
-          link_provider: example-link-1
-          instance_group: leader-node
-        - name: follower-address
-          link_provider: example-link-2
-          instance_group: follower-node
-          properties:
-            azs: [z1, z2]
-            status: healthy
+        - name: plan-requiring-dns-addresses
+          ...
+          binding_with_dns:                 # add this section
+            - name: leader-address
+              link_provider: example-link-1
+              instance_group: leader-node
+            - name: follower-address
+              link_provider: example-link-2
+              instance_group: follower-node
+              properties:
+                azs: [z1, z2]
+                status: healthy
     ```
 
     <br>
@@ -1040,35 +1068,35 @@ To enable lifecycle errands, do the following.
           - ANOTHER-POST-DEPLOY-ERRAND-JOB
     service_catalog:
       plans:
-          - name: CF-MARKETPLACE-PLAN-NAME
-            lifecycle_errands:
-              post_deploy:
+        - name: CF-MARKETPLACE-PLAN-NAME
+          lifecycle_errands:
+            post_deploy:
               - name: POST-DEPLOY-ERRAND-JOB          # (2)
               - name: ANOTHER-POST-DEPLOY-ERRAND-JOB
                 disabled: true                        # defaults to false
-              pre_delete:
+            pre_delete:
               - name: PRE-DELETE-ERRAND-JOB
-            instance_groups:
-              - name: SERVICE-RELEASE-JOB
-                ...
-              - name: POST-DEPLOY-ERRAND-JOB          # (3)
-                lifecycle: errand
-                vm_type: VM-TYPE
-                instances: INSTANCE-COUNT
-                networks: [NETWORK]
-                azs: [AZ]
-              - name: ANOTHER-POST-DEPLOY-ERRAND-JOB
-                lifecycle: errand
-                vm_type: VM-TYPE
-                instances: INSTANCE-COUNT
-                networks: [NETWORK]
-                azs: [AZ]
-              - name: PRE-DELETE-ERRAND-JOB
-                lifecycle: errand
-                vm_type: VM-TYPE
-                instances: INSTANCE-COUNT
-                networks: [NETWORK]
-                azs: [AZ]
+          instance_groups:
+            - name: SERVICE-RELEASE-JOB
+              ...
+            - name: POST-DEPLOY-ERRAND-JOB          # (3)
+              lifecycle: errand
+              vm_type: VM-TYPE
+              instances: INSTANCE-COUNT
+              networks: [NETWORK]
+              azs: [AZ]
+            - name: ANOTHER-POST-DEPLOY-ERRAND-JOB
+              lifecycle: errand
+              vm_type: VM-TYPE
+              instances: INSTANCE-COUNT
+              networks: [NETWORK]
+              azs: [AZ]
+            - name: PRE-DELETE-ERRAND-JOB
+              lifecycle: errand
+              vm_type: VM-TYPE
+              instances: INSTANCE-COUNT
+              networks: [NETWORK]
+              azs: [AZ]
     ```
 
 ### <a id="colocated-errands"></a> (Optional) Enable Colocated Errands
@@ -1099,19 +1127,19 @@ To enable colocated errands for a plan, do the following.
         - name: SERVICE-RELEASE
           version: SERVICE-RELEASE-VERSION
           jobs:
-          - SERVICE-RELEASE-JOB
-          - COLOCATED-POST-DEPLOY-ERRAND-JOB               # (1)
+            - SERVICE-RELEASE-JOB
+            - COLOCATED-POST-DEPLOY-ERRAND-JOB               # (1)
     service_catalog:
       plans:
-          - name: CF-MARKETPLACE-PLAN-NAME
-            lifecycle_errands:
-              post_deploy:
-                - name: COLOCATED-POST-DEPLOY-ERRAND-JOB   # (2)
-                  instances: [SERVICE-RELEASE-JOB/0]       # (3)
-                - name: NON-COLOCATED-POST-DEPLOY-ERRAND
-            instance_groups:
+        - name: CF-MARKETPLACE-PLAN-NAME
+          lifecycle_errands:
+            post_deploy:
+              - name: COLOCATED-POST-DEPLOY-ERRAND-JOB   # (2)
+                instances: [SERVICE-RELEASE-JOB/0]       # (3)
               - name: NON-COLOCATED-POST-DEPLOY-ERRAND
-                ...
-              - name: SERVICE-RELEASE-JOB
-                ...
+          instance_groups:
+            - name: NON-COLOCATED-POST-DEPLOY-ERRAND
+              ...
+            - name: SERVICE-RELEASE-JOB
+              ...
     ```
