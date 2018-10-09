@@ -234,7 +234,7 @@ For example:
               ...
               bosh:
                 url: DIRECTOR-URL
-                root_ca_cert: CA-CERT-FOR-BOSH-DIRECTOR-AND-ASSOCIATED-UAA # optional, see SSL certificates
+                root_ca_cert: CA-CERT-FOR-BOSH-DIRECTOR # optional, see SSL certificates
                 authentication:
                   uaa:
                     client_id: BOSH-CLIENT-ID
@@ -392,7 +392,7 @@ instance_groups:
                 password: CF-ADMIN-PASSWORD
           bosh:
             url: DIRECTOR-URL
-            root_ca_cert: CA-CERT-FOR-BOSH-DIRECTOR-AND-ASSOCIATED-UAA # optional, see SSL certificates
+            root_ca_cert: CA-CERT-FOR-BOSH-DIRECTOR # optional, see SSL certificates
             authentication: # either basic or uaa, not both as shown
               basic:
                 username: BOSH-USERNAME
