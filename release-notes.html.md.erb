@@ -4,38 +4,25 @@ owner: London Services Enablement
 ---
 <strong><%= modified_date %></strong>
 
-## <a id="release-notes"></a>v0.23.0
+## <a id="release-notes"></a>v0.24.0
 
-**Release Date: September 18, 2018**
+**Release Date: October xx, 2018**
 
 
-<p class="note breaking"><strong>Breaking Change:</strong> ODB now passes an extra argument to the <code>delete-binding</code> command
-	(see <strong>Features</strong> below).
-    For SDK users, <code>DeleteBinding</code> now receives secrets as a new argument. The minimum change required is to update the function definition.</p>
+<p class="note breaking"><strong>Breaking Change:</strong> Service Instances
+API configuration has moved from the `upgrade-all` errand to the broker job.
+(see <strong>Features</strong> below).
 
 ### Features
 
-New features and changes in this release:
-
-- The ODB now supports Secure Manifests:
-	- Service Adapters can avoid using plaintext secrets in manifests by passing these to the ODB to store in BOSH CredHub or by using the BOSH variables block
-	- All Service Instance secrets will be provided in the CreateBinding and DeleteBinding calls.
-	- See our [documentation for operators](operating.html#secure-bind-credentials) and [the create-binding call](adapter-reference.html#create-binding) when implementing this feature.
-
-- Service authors can now use BOSH DNS names to generate certificates at deploy time.
-  For instructions, see [BOSH DNS Addresses in Config Server Generated Certs](https://bosh.io/docs/dns/#dns-variables-integration).
-	- The On-Demand Services SDK supports the new BOSH manifest properties for custom certificate generation.
-	- ODB parses `custom_provider_definitions` inside `jobs`, and `consumes` inside `variables`.
-
-- The previously released `binding_with_dns` feature now requires a BOSH
-version greater than v266.11.0 or v267.5.0. This is due to a problem with how
-earlier versions of BOSH apply permissions for links. Thank you to the Redis
-Tile and BOSH teams for raising and fixing this issue.
-
-- Upgrades golang to v1.11.0.
-
-- You can now use Xenial stemcells with ODB.
-For information about upgrading, see [Upgrade Service Instances](./upgrades.html).
+- The `orphan-deployments` errand can now use the Service Instances API. This
+change only impacts brokers that are installed without Cloud Foundry. The
+configuration for this was previously on the `update-all-service-instances`
+errand. This configuration has been moved to the broker job. The same
+configuration is used for both the `orphan-deployments` and `upgrade-all`
+errands.
+- CredHub CLI library bumped to allow use with both v1 and v2 CredHub servers.
+- Upgrades golang to v1.11.1 ??? check this story has been done.
 
 ### Known Issues
 

@@ -220,11 +220,10 @@ triggers service instance lifecycle errands configured for the broker.
 
 The service instances API is used with an on-demand service broker without a connection
 to Cloud Foundry.
-It consists of an HTTP endpoint that the `upgrade-all-service-instances`
-errand can use to collect the required state to drive the upgrade process against
-your on-demand service broker.
+It consists of an HTTP endpoint that the `orphan-deployments` and `upgrade-all-service-instances`
+errands can use to retrieve the list of instances known to the platform.
 
-You can configure the API endpoint in the `upgrade-all-service-instances` errand.
+You can configure the API endpoint in the broker job.
 
 <p class="warning note"><strong>WARNING:</strong> The Service Instances API is an advanced feature.
 Configuring a Service Instances API is not required, unless you are operating in very specific circumstances,
@@ -315,17 +314,17 @@ The instances in the filtered list are used as canary instances and upgraded bef
 The number of canaries taken from this list can be configured
 by specifying the `canaries` property in the on-demand service broker manifest.
 
-#### <a id="configure-errand"></a> Configure the Errand to Use the Service Instances API
+#### <a id="configure-broker-siapi"></a> Configure the Broker to Use the Service Instances API
 
-To configure the `upgrade-all-service-instances` errand to connect to a Service
-Instances API provider, update the errand's configuration in the deployment manifest
-to include the `service_instances_api` section:
+To configure the broker to use a Service Instance API provider for errands,
+update the broker's configuration in its deployment manifest to include the
+`service_instances_api` section:
 
 ```yaml
 - name: upgrade-all-service-instances
   ...
   jobs:
-    - name: upgrade-all-service-instances
+    - name: broker
       ...
       properties:
         ...
