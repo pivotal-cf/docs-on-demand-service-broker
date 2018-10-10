@@ -83,7 +83,7 @@ To run the `register-broker` errand, do the following.
 1. Run the command:
 
     ```
-    bosh2 -d DEPLOYMENT-NAME run-errand register-broker
+    bosh -d DEPLOYMENT-NAME run-errand register-broker
     ```
 
     Where:
@@ -92,7 +92,7 @@ To run the `register-broker` errand, do the following.
     For example:
 
     <pre class="terminal">
-    $ bosh2 -d cf run-errand register-broker
+    $ bosh -d cf run-errand register-broker
     </pre>
 
 ### <a id="delete-instances"></a>Delete All Service Instances
@@ -167,7 +167,7 @@ To run the `delete-all-service-instances` errand, do the following.
 1. Run the command:
 
     ```
-    bosh2 -d DEPLOYMENT-NAME run-errand \
+    bosh -d DEPLOYMENT-NAME run-errand \
     delete-all-service-instances
     ```
 
@@ -177,7 +177,7 @@ To run the `delete-all-service-instances` errand, do the following.
     For example:
 
     <pre class="terminal">
-    $ bosh2 -d cf run-errand \
+    $ bosh -d cf run-errand \
     delete-all-service-instances
     </pre>
 
@@ -214,7 +214,7 @@ To run the `deregister-broker` errand, do the following.
 1. Run the command:
 
     ```
-    bosh2 -d DEPLOYMENT-NAME run-errand deregister-broker
+    bosh -d DEPLOYMENT-NAME run-errand deregister-broker
     ```
 
     Where:
@@ -223,7 +223,7 @@ To run the `deregister-broker` errand, do the following.
     For example:
 
     <pre class="terminal">
-    $ bosh2 -d cf run-errand deregister-broker
+    $ bosh -d cf run-errand deregister-broker
     </pre>
 
 ### <a id="delete-instances-and-deregister"></a>Delete All Service Instances and Deregister Broker
@@ -295,7 +295,7 @@ To run the  `delete-all-service-instances-and-deregister-broker` errand, do the 
 1. Run the command:
 
     ```
-    bosh2 -d DEPLOYMENT-NAME run-errand \
+    bosh -d DEPLOYMENT-NAME run-errand \
     delete-all-service-instances-and-deregister-broker
     ```
 
@@ -305,7 +305,7 @@ To run the  `delete-all-service-instances-and-deregister-broker` errand, do the 
     For example:
 
     <pre class="terminal">
-    $ bosh2 -d cf run-errand \
+    $ bosh -d cf run-errand \
     delete-all-service-instances-and-deregister-broker
     </pre>
 
@@ -346,7 +346,7 @@ To run the `orphan-deployments` errand, do the following.
 1. Run the command:
 
     ```
-    bosh2 -d DEPLOYMENT-NAME run-errand orphan-deployments
+    bosh -d DEPLOYMENT-NAME run-errand orphan-deployments
     ```
 
     Where:
@@ -354,7 +354,7 @@ To run the `orphan-deployments` errand, do the following.
 
     For example:
     <pre class="terminal">
-    $ bosh2 -d cf run-errand orphan-deployments
+    $ bosh -d cf run-errand orphan-deployments
     </pre>
 
 1. See if orphan deployments are present. If orphan deployments are present, the errand outputs
@@ -379,7 +379,7 @@ To delete an orphan deployment, do the following:
 1. Run the command:
 
     ```
-    bosh2 -d DEPLOYMENT-NAME delete-deployment
+    bosh -d DEPLOYMENT-NAME delete-deployment
     ```
 
     Where:
@@ -388,7 +388,7 @@ To delete an orphan deployment, do the following:
     For example:
 
     <pre class="terminal">
-    bosh2 -d service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3 \
+    bosh -d service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3 \
     delete-deployment
     </pre>
 
