@@ -3,45 +3,6 @@ title: Troubleshooting Errors
 owner: London Services Enablement
 ---
 
-<div class="quick-links">
-    <ul>
-        <li><a href="#guid">How to Retrieve a Service instance GUID</a></li>
-        <li><a href="#errors">Troubleshooting Errors</a></li>
-        <ul>
-	        <li><a href="#install-fail">Failed Install</a></li>
-	        <li><a href="#timeouts">Broker Request Timeouts</a></li>
-	        <li><a href="#cannot-create-delete">Cannot Create or Delete Service Instances</a></li>
-	        <li><a href="#cannot-bind">Cannot Bind or Unbind Service Instances to Apps</a></li>
-	        <li><a href="#cannot-connect">Cannot Connect to a Service Instance</a></li>
-	        <li><a href="#upgrade-all-fails">Upgrade All Service Instances Fails</a></li>
-	        <li><a href="#missing-logs">Missing Logs and Metrics</a></li>
-        </ul>
-        <li><a href="#components">Troubleshooting Components</a></li>
-        <ul>
-	        <li><a href="#bosh">BOSH Problems</a></li>
-	        <li><a href="#bosh-config">Configuration</a></li>
-	        <li><a href="#auth">Authentication</a></li>
-	        <li><a href="#network">Networking</a></li>
-	        <li><a href="#quotas">Quotas</a></li>
-	        <li><a href="#failing-jobs">Failing Jobs and Unhealthy Instances</a></li>
-        </ul>
-        <li><a href="#techniques">Techniques for Troubleshooting</a></li>
-        <ul>
-	        <li><a href="#parse-error">Parse a Cloud Foundry (CF) Error Message</a></li>
-	        <li><a href="#bosh-cf-access">Access Broker and Instance Logs and VMs</a></li>
-	        <li><a href="#broker-errands">Run Service Broker Errands to Manage Brokers and Instances</a></li>
-	        <li><a href="#instance-deployment">Select the BOSH Deployment for a Service Instance</a></li>
-	        <li><a href="#instance-creds">Get Admin Credentials for a Service Instance</a></li>
-	        <li><a href="#id-instance-owner">Identify Apps using a Service Instance</a></li>
-	        <li><a href="#view-resources">View BOSH Resource Saturation and Scaling</a></li>
-	        <li><a href="#monitor-quota">Monitor Quota Saturation and Service Instance Count</a></li>
-	        <li><a href="#reinstall">Reinstall a Tile</a></li>
-        </ul>
-        <li><a href="#kb">Knowledge Base (Community)</a></li>
-        <li><a href="#support">File a Support Ticket</a></li>
-    </ul>
-</div>
-
 This topic provides information for operators about troubleshooting on-demand services.
 
 
@@ -66,7 +27,7 @@ This section provides information about how to troubleshoot specific errors or e
 
 <%= partial 'tshoot-err-cannot-create-delete' %>
 
-<a id="cannot-bind"><h3></a>Cannot Bind or Unbind Service Instances to Apps</h3>
+<a id="cannot-bind"><h3></a>Cannot Bind to or Unbind from Service Instances</h3>
 
 <a id="instance-not-exist"></a><h4>Instance Does Not Exist</h4>
 
@@ -80,7 +41,7 @@ This section provides information about how to troubleshoot specific errors or e
 
 <%= partial 'tshoot-err-cannot-connect' %>
 
-<a id="upgrade-all-fails"><h3></a>Upgrade All Service Instances Fails</h3>
+<a id="upgrade-all-fails"><h3></a>Upgrade All Instances Fails</h3>
 
 <%= partial 'tshoot-err-upgrade-all-fails' %>
 
@@ -93,7 +54,7 @@ This section provides information about how to troubleshoot specific errors or e
 
 This section provides information about troubleshooting on-demand broker components.
 
-<a id="bosh"></a><h3>BOSH Problems</h3>
+<a id="bosh"></a><h3>BOSH problems</h3>
 
 <a id="no-bosh-uuid"></a><h4>Missing BOSH Director UUID</h4>
 
@@ -105,7 +66,7 @@ This section provides information about troubleshooting on-demand broker compone
 
 <a id="bosh-config"></a><h3>Configuration</h3>
 
-<a id="bosh-instance-fail"></a><h4>Service Instances in Failing State</h4>
+<a id="bosh-instance-fail"></a><h4>Service instances in failing state</h4>
 
 <%= partial 'tshoot-comp-bosh-instance-fail' %>
 
@@ -129,7 +90,7 @@ This section provides information about troubleshooting on-demand broker compone
 
 <a id="quotas"></a><h3>Quotas</h3>
 
-<a id="plan-quotas"></a><h4>Plan Quota Issues</h4>
+<a id="plan-quotas"></a><h4>Plan Quota issues</h4>
 
 <%= partial 'tshoot-comp-plan-quotas' %>
 
@@ -137,7 +98,7 @@ This section provides information about troubleshooting on-demand broker compone
 
 <%= partial 'tshoot-comp-global-quotas' %>
 
-<a id="failing-jobs"></a><h3>Failing Jobs and Unhealthy Instances</h3>
+<a id="failing-jobs"></a><h3>Failing jobs and unhealthy instances</h3>
 
 <%= partial 'tshoot-comp-failing-jobs' %>
 
