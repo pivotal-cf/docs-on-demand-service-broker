@@ -303,22 +303,22 @@ To upload a release to your BOSH Director, do the following:
 1. Run the following command.
 
     ```
-    bosh2 -e BOSH-DIRECTOR-NAME upload-release RELEASE-FILE-NAME.tgz
+    bosh -e BOSH-DIRECTOR-NAME upload-release RELEASE-FILE-NAME.tgz
     ```
 
     **Example command for ODB:**
 
     <pre class="terminal">
-    $ bosh2 -e lite upload-release on-demand-service-broker-0.22.0.tgz
+    $ bosh -e lite upload-release on-demand-service-broker-0.22.0.tgz
     </pre>
 
     <br>**Example commands for service adapter or service release:**
     <pre class="terminal">
-    $ bosh2 -e lite upload-release my-service-release.tgz
+    $ bosh -e lite upload-release my-service-release.tgz
     </pre>
 
     <pre class="terminal">
-    $ bosh2 -e lite upload-release my-service-adapter.tgz
+    $ bosh -e lite upload-release my-service-adapter.tgz
     </pre>
 
 ## <a id="broker-manifest"></a>Write a Broker Manifest
