@@ -14,7 +14,7 @@ For troubleshooting information for Ops Manager operators, see
 
 Pivotal recommends that you use the BOSH CLI for administering the deployments
 created by the on-demand broker (ODB); for example for checking VMs, ssh, viewing logs.
-For more information on installing the BOSH CLI, see 
+For more information on installing the BOSH CLI, see
 [Install](https://bosh.io/docs/cli-v2/#install).
 
 Pivotal discourages using the BOSH CLI to update or delete ODB service deployments
@@ -191,13 +191,13 @@ To identify the BOSH deployment for a service instance you can do the following:
   Run the following command:
 
     ```
-    bosh2 tasks -d service-instance_GUID
+    bosh tasks -d service-instance_GUID
     ```
     Where `GUID` is the GUID for your service instance, which you retrieved above.
     <br><br>
     For example:
     <pre class="terminal">
-    $ bosh2 tasks -d \
+    $ bosh tasks -d \
     service-instance_30d4a67f-d220-4d06-9989-58a976b86b35
     </pre>
 
@@ -228,13 +228,13 @@ To identify tasks in BOSH, do the following:
   Run the following command:
 
     ```
-    bosh2 -d BROKER-DEPLOYMENT-NAME ssh
+    bosh -d BROKER-DEPLOYMENT-NAME ssh
     ```
     Where `BROKER-DEPLOYMENT-NAME` is the name of your broker deployment.
     <br><br>
     For example:
     <pre class="terminal">
-    $ bosh2 -d my-broker ssh
+    $ bosh -d my-broker ssh
     </pre>
 
 1. In the broker log, look for lines relating to the service, identified by the service ID.
@@ -255,7 +255,7 @@ Lines recording the starting and finishing of BOSH tasks also have the BOSH task
 or `--cpi` as necessary.
   For example:
    <pre class="terminal">
-    $ bosh2 task 11470
+    $ bosh task 11470
    </pre>
 
 ## <a id="id-uaa-issues"></a>Identify Issues When Connecting to BOSH or UAA
