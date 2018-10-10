@@ -4,15 +4,15 @@ owner: London Services Enablement
 ---
 
 This topic describes how to create and manage an on-demand service broker (ODB)
- on a local development machine using Pivotal Cloud Foundry (PCF) Dev and BOSH Lite. 
+ on a local development machine using Pivotal Cloud Foundry (PCF) Dev and BOSH Lite.
 
-For more information about the components in this topic, see [PCF Dev and 
-BOSH-Lite](https://docs.pivotal.io/tiledev/environments.html#pcfdev). 
+For more information about the components in this topic, see [PCF Dev and
+BOSH-Lite](https://docs.pivotal.io/tiledev/environments.html#pcfdev).
 
 <div class="note">
-  <p style="margin-top: 0"><strong>Note: </strong> The examples in this topic are based on 
+  <p style="margin-top: 0"><strong>Note: </strong> The examples in this topic are based on
 Kafka open source messaging. See the following sample code directories:</p>
- <ul> 
+ <ul>
     <li><a href="https://github.com/pivotal-cf-experimental/kafka-example-service-release">Kafka example service</a></li>
     <li><a href="https://github.com/pivotal-cf-experimental/kafka-example-service-adapter">Kafka example service adapter</a></li>
     <li><a href=https://github.com/pivotal-cf-experimental/kafka-example-app"">Kafka example app</a></li>
@@ -20,15 +20,15 @@ Kafka open source messaging. See the following sample code directories:</p>
 </div>
 ## <a id="prereq"></a>Prerequisites
 
-Before you set up and use ODB on your local machine, 
+Before you set up and use ODB on your local machine,
 install and configure the following components:
 
 - **BOSH Lite <%= vars.odb_bosh_lite_version %> or later.**
-  To install BOSH Lite, see [Install](http://bosh.io/docs/bosh-lite/#install) 
+  To install BOSH Lite, see [Install](http://bosh.io/docs/bosh-lite/#install)
 in the BOSH Lite documentation.
 
 - **PCF Dev file <%= vars.odb_pcfdev_version %>.**
-  To install PCF Dev, see [Installing PCF Dev](https://docs.pivotal.io/pcf-dev/#installing). 
+  To install PCF Dev, see [Installing PCF Dev](https://docs.pivotal.io/pcf-dev/#installing).
   Record the PCF Dev domain for later.
   The default is `local.pcfdev.io`.
 
@@ -37,7 +37,7 @@ see [About the BOSH CLI](./management.html#about-cli).
 
 ## <a id="setup"></a>Part 1: Set Up
 
-This section details how to prepare BOSH Lite and set up the Kafka example service, 
+This section details how to prepare BOSH Lite and set up the Kafka example service,
 the Kakfa example service adapter, and ODB.
 
 ### <a id="set_up_bosh"></a>Step 1: Prepare BOSH Lite
@@ -46,12 +46,12 @@ To prepare BOSH Lite, do the following:
 
 1. Target your BOSH Lite installation.
    <pre>
-    bosh2 alias-env lite -e 192.168.50.4
+    bosh alias-env lite -e 192.168.50.4
    </pre>
 
 1. Upload the BOSH Lite stemcell.
    <pre>
-    bosh2 -e lite upload-stemcell \
+    bosh -e lite upload-stemcell \
     https<span>:</span>//bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent?v=<%= vars.odb_warden_stemcell_version %>
    </pre>
 
@@ -65,16 +65,16 @@ To set up the Kafka example service, do the following:
     https<span>:</span>//github.com/pivotal-cf-experimental/kafka-example-service-release.git
    </pre>
 
-1. In the `kafka-example-service-release` directory, create and upload the 
+1. In the `kafka-example-service-release` directory, create and upload the
    Kafka example service.
    <pre>
     cd kafka-example-service-release
-    bosh2 create-release --name kafka-example-service
+    bosh create-release --name kafka-example-service
    </pre>
 
 1. Upload the service to the BOSH director.
   <pre>
-    bosh2 -e lite upload-release
+    bosh -e lite upload-release
   </pre>
 
 ### <a id="set_up_kafka_sa"></a> Step 3: Set Up the Kafka Example Service Adapter
@@ -95,12 +95,12 @@ To set up the Kafka example service adapter, do the following:
 
 1. Create the example service adapter.
   <pre>
-    bosh2 create-release --name kafka-example-service-adapter
+    bosh create-release --name kafka-example-service-adapter
   </pre>
 
 1. Upload the example service adapter to the BOSH director.
   <pre>
-    bosh2 -e lite upload-release
+    bosh -e lite upload-release
   </pre>
 
 ### <a id="set_up_odb"></a> Step 4: Set Up ODB
@@ -112,25 +112,25 @@ see [Pivotal Cloud Foundry On Demand Services SDK](https://network.pivotal.io/pr
 
 1. Upload the `on-demand-service-broker` release.
   <pre>
-  bosh2 -e lite upload-release on-demand-service-broker-X.Y.Z.tgz
+  bosh -e lite upload-release on-demand-service-broker-X.Y.Z.tgz
   </pre>
   Where:
   - `X.Y.Z` is the ODB release version.<br><br>
   For example:
   <pre class="terminal">
-  $ bosh2 -e lite upload-release on-demand-service-broker-0.21.1.tgz
+  $ bosh -e lite upload-release on-demand-service-broker-0.21.1.tgz
   </pre>
 
 ## <a id="create"></a>Part 2: Create
 
-This section describes how to create a BOSH deployment and a service broker 
+This section describes how to create a BOSH deployment and a service broker
 on PCF Dev.
 
 ### <a id="create_bosh"></a> Step 1: Create a BOSH Deployment
 
 To create a BOSH Lite deployment, do the following:
 
-1. Create a new directory in your workspace and a `cloud_config.yml` 
+1. Create a new directory in your workspace and a `cloud_config.yml`
 for the BOSH Lite Director. For example:
 
     ```yaml
@@ -166,16 +166,16 @@ for the BOSH Lite Director. For example:
 
 1. Update the BOSH Lite cloud config using the deployment manifest.
   <pre>
-    bosh2 -e lite update-cloud-config cloud\_config.yml
+    bosh -e lite update-cloud-config cloud\_config.yml
   </pre>
 
 1. Record the URL and UUID of your BOSH Lite director.
   <pre>
-    bosh2 environment
+    bosh environment
   </pre>
   See the following example output:
   <pre class="terminal">
-    $ bosh2 environment
+    $ bosh environment
     Config
                  /Users/pivotal/.bosh_config
 
@@ -191,7 +191,7 @@ for the BOSH Lite Director. For example:
       snapshots  disabled
   </pre>
 
-1. Create a BOSH Lite deployment manifest in a file called 
+1. Create a BOSH Lite deployment manifest in a file called
 `deployment_manifest.yml` using the following as a base:
 
     ```yaml
@@ -293,20 +293,20 @@ for the BOSH Lite Director. For example:
     Where:
     - `BOSH-LITE-UUID` is the `UUID` value you recorded in the BOSH environment
        step above.
-    - `BOSH-LITE-URL` is the `URL` value you recorded in the BOSH environment 
+    - `BOSH-LITE-URL` is the `URL` value you recorded in the BOSH environment
        step above.
-    - `PCF-DEV-DOMAIN` is the PCF Dev domain you recorded in the 
+    - `PCF-DEV-DOMAIN` is the PCF Dev domain you recorded in the
       [Prerequisites](#prerequisites) above.
 
 
 1. Deploy the broker.
     <pre>
-    bosh2 -e lite -d kafka-on-demand-broker deployment\_manifest.yml
+    bosh -e lite -d kafka-on-demand-broker deployment\_manifest.yml
     </pre>
 
 1. Record the IP address of the deployed broker.
     <pre>
-    bosh2 -e lite -d kafka-on-demand-broker instances
+    bosh -e lite -d kafka-on-demand-broker instances
     </pre>
 
     See the following example output:
@@ -330,18 +330,18 @@ for the BOSH Lite Director. For example:
 
 To create a service broker on PCF Dev, do the following:
 
-1. Create a service broker on PCF Dev and enable access to its service offering. 
+1. Create a service broker on PCF Dev and enable access to its service offering.
     <pre>
     cf create-service-broker kafka-broker USERNAME PASSWORD http<span>:</span>//BROKER-IP:8080
     </pre>
     Where:<br>
     - `USERNAME` and `PASSWORD` are the broker's credentials set under `properties` in the broker job.
-    - `BROKER-IP` is the value obtained in the step above. See the last step in 
+    - `BROKER-IP` is the value obtained in the step above. See the last step in
      [Create a BOSH Deployment](#create_bosh).
-    
+
     For example:
     <pre class="terminal">
-    $ cf create-service-broker kafka-broker broker password http<span>:</span>//10.244.1.2:8080 
+    $ cf create-service-broker kafka-broker broker password http<span>:</span>//10.244.1.2:8080
     </pre>
 
 1. Enable access to the broker's service plans.
@@ -387,10 +387,10 @@ To verify and use your on-demand service, do the following:
 
 1. Verify that the on-demand service is provisioned in the BOSH deployment
     <pre>
-    bosh2 -e lite deployments
+    bosh -e lite deployments
     </pre>
 
-    See the following example output:    
+    See the following example output:
 
     <pre class="terminal">
     Name                                                    Release(s)                              Stemcell(s)                                        Cloud Config
@@ -430,7 +430,7 @@ To use the service instance that you created, do the following:
 ### <a id="complete"></a> Step 3: Read and Write to Your Service Instance
 
 Now the app runs at `https:/kafka-example-app.PCF-DEV-DOMAIN`.
-You can use it to read and write to your on-demand Kafka service instance. 
+You can use it to read and write to your on-demand Kafka service instance.
 
 For example:
 
