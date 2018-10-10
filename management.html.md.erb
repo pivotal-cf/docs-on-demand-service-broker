@@ -407,17 +407,11 @@ To update the service offering, do the following.
 
 1. Change properties in the `service_catalog` of the broker manifest. For example, update the
 service metadata.
-
-1. Run the "register broker" errand to update the Cloud Foundry marketplace.
-For how to run the errand, see [Register Broker](#register-broker) above.
-
-1. Run the "upgrade all service instances" errand to apply updated plans to
-existing service instances.
-For how to run the errand, see [Upgrade All Service Instances](./troubleshooting.html#upgrade-all).
-
+1. Run the [register-broker errand](#register-broker) to update the Cloud Foundry marketplace.
+1. Run the [upgrading all service instances](./tshooting-techniques.html#upgrade-all) errand
+to apply updated plans to existing service instances.
 1. Change properties in the `service_deployment` of the broker manifest. For example, update
 the jobs used from a service release.
-
 1. Deploy the broker.
 
 <p class="note warning"><strong>WARNING</strong>: When Cloud Foundry registers the broker, do not
