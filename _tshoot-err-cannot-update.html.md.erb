@@ -1,0 +1,19 @@
+If developers report errors such as the following when trying to run `cf-update-service`:
+
+<pre class="terminal">
+FAILED
+Server error, status code: 502, error code: 10001, message:
+Service broker error: Service cannot be updated at this time,
+please try again later or contact your operator for more information.
+</pre>
+
+<br>
+Their service instance might not be running the latest service offering.
+
+Operators must run the `upgrade-all-service-instances` errand after upgrading
+to ensure all existing service instances are upgraded to the latest service offering.
+See [Upgrade All Service Instances](#upgrade-all).
+
+App developers cannot upgrade individual service instances to the latest service
+offering.
+They cannot set parameters or change plan until you upgrade their service instances.
