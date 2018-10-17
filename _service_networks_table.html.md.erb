@@ -1,11 +1,11 @@
-Before deploying a service tile that uses the on-demand service broker (ODB), 
-request the needed network connections to allow components of Pivotal 
+Before deploying a service tile that uses the on-demand service broker (ODB),
+request the needed network connections to allow components of Pivotal
 Cloud Foundry (PCF) to communicate with ODB.
 
 The specifics of how to open those connections varies for each IaaS.
 
-See the following table for key components and their responsibilities in an on-demand 
-architecture. 
+See the following table for key components and their responsibilities in an on-demand
+architecture.
 
 <table class="nice">
 	<th>Key Components</th>
@@ -18,21 +18,21 @@ architecture.
 		<td><strong>BOSH Agent</strong></td>
 		<td>Includes an agent on every VM that it deploys. The agent
  listens for instructions from the BOSH Director and carries out those instructions.
- The agent receives job specifications from the BOSH Director and uses them to assign 
+ The agent receives job specifications from the BOSH Director and uses them to assign
 a role, or job, to the VM.</td>
 	</tr>
 	<tr>
 		<td><strong>BOSH UAA</strong></td>
-		<td>Issues OAuth2 tokens for clients to 
+		<td>Issues OAuth2 tokens for clients to
 use when they act on behalf of BOSH users.</td>
 	</tr>
 	<tr>
-		<td><strong>PAS<sup>*</sup></strong></td>
-		<td>Contains the apps that are consuming services.</td>
+		<td><strong>PAS</strong></td>
+		<td>Contains the apps that are consuming services</td>
 	</tr>
 	<tr>
 		<td><strong>ODB</strong></td>
-		<td>Instructs BOSH to create and update services, and connects 
+		<td>Instructs BOSH to create and update services, and connects
 to services to create bindings.</td>
 	</tr>
 	<tr>
@@ -41,7 +41,3 @@ to services to create bindings.</td>
  for PCF service instance runs the Redis for PCF data service.</td>
 	</tr>
 </table>
-
-\* As of PCF v2.0, _Elastic Runtime_ is renamed _Pivotal Application Service (PAS)_.
-For more information, see 
-[Pivotal Application Service (PAS) Highlights](http://docs-pcf-staging.cfapps.io/pivotalcf/2-0/installing/highlights.html#ert).
