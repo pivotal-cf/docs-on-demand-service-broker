@@ -11,22 +11,22 @@ in GitHub.
 
 To build an on-demand tile you need the following releases:
 
-- **On Demand Service Broker (ODB)**---Download ODB from [Pivotal 
+- **On Demand Service Broker (ODB)**---Download ODB from [Pivotal
 Network](https://network.pivotal.io/products/on-demand-services-sdk/).
 - **Your service adapter**---Get the service adapter from the release author.
 - **Your service release**--Get the service release from the release author.
 
 ## <a id="requirements"></a> About Networks
 
-When using the ODB in a tile with Ops Manager v2.0 and earlier, you need at least 
+When using the ODB in a tile with Ops Manager v2.0 and earlier, you need at least
 two private networks:
 
 - A network where Ops Manager deploys the on-demand broker VM
 - A different network where the on-demand broker deploys service instance VMs
 
 The network for service instances should be flagged as a Service Network in Ops Manager.
- <p class="note"><strong>Note: </strong>For Ops Manager v2.1 and later, you do not need separate networks for the on-demand broker 
-and service instances. 
+ <p class="note"><strong>Note: </strong>For Ops Manager v2.1 and later, you do not need separate networks for the on-demand broker
+and service instances.
 However, Pivotal recommends that you have at least two networks as described above.
 
 ## <a id="building"></a>Build a Tile for an On-Demand Service
@@ -36,12 +36,12 @@ This topic describes how to build a tile using the Tile Generator.
 
 To use the Tile Generator to build a tile for an on-demand service, do the following:
 
-1. Generate a `tile.yml` file by doing steps 1–4 of [How to 
+1. Generate a `tile.yml` file by doing steps 1–4 of [How to
 Use](http://docs.pivotal.io/tiledev/tile-generator.html#how-to).
 
 1. Add accessors, on-demand broker lifecycle errands, and optional features to the
 `tile.yml` file generated in step 1.
-This provides configuration for the ODB and additional configuration options for operators 
+This provides configuration for the ODB and additional configuration options for operators
 to select in Ops Manager.
 <br><br>
 For more information about what to add to the `tile.yml`, see the following sections below:
@@ -59,22 +59,22 @@ For more information about what to add to the `tile.yml`, see the following sect
 
 ### <a id="accessors"></a>Add Accessors
 
-The ODB requires tiles to be configured with certain information. 
-You must add accessors to the `tile.yml` file to provide values that operators 
+The ODB requires tiles to be configured with certain information.
+You must add accessors to the `tile.yml` file to provide values that operators
 cannot configure in Ops Manager.
 
 Add the following accessors to your `tile.yml` file:
 
 <p class="note"><strong>Note</strong>: The accessors in this section are mandatory.
-  For other accessors, see 
+  For other accessors, see
   <a href="https://docs.pivotal.io/tiledev/product-template-reference.html#ops-man-snippets">
     Ops Manager Provided Snippets</a>.</p>
 
 #### director
 
 Ops Manager uses these accessors to get values relating to the BOSH Director installation.
-For the on-demand broker to interact with BOSH Director, on-demand service tiles 
-must be configured with credentials for managing BOSH deployments.  
+For the on-demand broker to interact with BOSH Director, on-demand service tiles
+must be configured with credentials for managing BOSH deployments.
 
 The following table lists the accessors you must add:
 
@@ -91,7 +91,7 @@ bosh:
   root_ca_cert: (( $director.ca_public_key ))
 ```
 
-To see this example in context, see the 
+To see this example in context, see the
 [Example Kafka On-Demand Tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L104-L106).
 
 #### self
@@ -112,8 +112,8 @@ The following table lists the accessors you must add:
 | $self.stemcell\_version   | The stemcell that the service deployment uses                   |
 | $self.service\_network    | Service network configured for the on-demand instances          |
 
-The service network has to be created manually. 
-Create a subnet on AWS and then add it to the director. 
+The service network has to be created manually.
+Create a subnet on AWS and then add it to the director.
 In the BOSH Director tile, under Create Networks > ADD network > fill in the subnet/vpc details.
 
 For example:
@@ -127,16 +127,16 @@ bosh:
       client_secret: (( $self.uaa_client_secret ))
 ```
 
-To see this example in context, see the 
+To see this example in context, see the
 [Example Kafka On-Demand Tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L107-L111).
 
 #### (Optional) cf
 
 Ops Manager uses these accessors to get values from the Pivotal Application Service (PAS)
-or Elastic Runtime tile.
-If you want to use PAS or Elastic Runtime, add these accessors to your `tile.yml` file.
+tile.
+If you want to use PAS, add these accessors to your `tile.yml` file.
 
-The following table lists the accessors you must add to use PAS (or Elastic Runtime):
+The following table lists the accessors you must add to use PAS:
 
 | Accessor                                        | Description                                                                        |
 |:------------------------------------------------|:-----------------------------------------------------------------------------------|
@@ -200,11 +200,11 @@ upgrades is greater than one and the number of canaries is greater than zero.
 
 ### <a id="public-ip"></a>(Optional) Allow Public IP Addresses for On-Demand Service Instance Groups
 
-Ops Manager provides a VM extension called `public_ip` in the BOSH Director’s 
+Ops Manager provides a VM extension called `public_ip` in the BOSH Director’s
 cloud config.
-Use this feature to give Ops Manager operators the option to assign a public IP 
+Use this feature to give Ops Manager operators the option to assign a public IP
 address to instance groups.
-This IP is only used for outgoing traffic to the internet from VMs with the 
+This IP is only used for outgoing traffic to the internet from VMs with the
 `public_ip` extension.
 All internal traffic / incoming connections need to go over the private IP.
 
@@ -258,12 +258,12 @@ For example:
 
 ### <a id="floating-stemcell"></a>(Optional) Enable Floating Stemcells
 
-Ops Manager provides a feature called [Floating 
-Stemcells](https://docs.pivotal.io/pivotalcf/customizing/understanding-stemcells.html) 
-that allows PCF to quickly propagate a patched stemcell to all VMs in the deployment 
-that have the same compatible stemcell. 
-Both the broker deployment and the service instances deployed by the On-Demand 
-Broker can make use of this feature. 
+Ops Manager provides a feature called [Floating
+Stemcells](https://docs.pivotal.io/pivotalcf/customizing/understanding-stemcells.html)
+that allows PCF to quickly propagate a patched stemcell to all VMs in the deployment
+that have the same compatible stemcell.
+Both the broker deployment and the service instances deployed by the On-Demand
+Broker can make use of this feature.
 Enabling this feature can help ensure that all of your service instances are patched
 to the latest stemcell.
 
@@ -310,9 +310,9 @@ For example:
 ### <a id="secure-creds"></a>(Optional) Allow Secure Binding
 
 You can give Ops Manager operators the option to enable secure binding.
-If secure binding is enabled, service instance credentials are stored securely in 
+If secure binding is enabled, service instance credentials are stored securely in
 runtime CredHub.
-When users create bindings or service keys, ODB passes a secure reference to the 
+When users create bindings or service keys, ODB passes a secure reference to the
 service credentials through the network instead of plain text.
 
 <p class="note"><strong>Note:</strong>
@@ -333,25 +333,25 @@ For example:
           ca_cert: UAA_CA_CERT
     ```
 
-1. To let users enable and disable this feature in the Ops Manager UI, you need 
+1. To let users enable and disable this feature in the Ops Manager UI, you need
 to make some changes to your tile's metadata file:
 
-  1. Add a form field to allow the user to enable/disable secure bindings.  
+  1. Add a form field to allow the user to enable/disable secure bindings.
   For an example form field, see the
   [Example Kafka On-Demand Tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L39-L46).
   <br><br>
   1. Add an element in `property_blueprints` that reads the setting in the form
-  field and exposes the appropriate manifest snippet for CredHub and secure binding.  
+  field and exposes the appropriate manifest snippet for CredHub and secure binding.
   For an example `property_blueprints` section, see the
   [Example Kafka On-Demand Tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L606-L632).
   <br><br>
   1. Change the broker job so that it consumes the CredHub BOSH link from the
-  `property_blueprints` section.  
+  `property_blueprints` section.
   For an example broker job, see the
   [Example Kafka On-Demand Tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L96).
   <br><br>
   1. Change the broker job so that it consumes the generated secure bindings
-  manifest snippet.  
+  manifest snippet.
   For an example broker job, see the
   [Example Kafka On-Demand Tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L112).
 
