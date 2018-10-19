@@ -1,23 +1,19 @@
-A service instance is defined as "orphaned" when the BOSH deployment for the instance is still running, but the service is no longer registered in Cloud Foundry.
+A service instance is defined as "orphaned" when the BOSH deployment for the
+instance is still running, but the service is no longer registered in Cloud Foundry.
 
-The `orphan-deployments` errand collates a list of service deployments that have no matching service instances in Cloud Foundry and return the list to the operator. It is then up to the operator to remove the orphaned BOSH deployments.
+The `orphan-deployments` errand collates a list of service deployments that have
+no matching service instances in Cloud Foundry and return the list to the operator.
+It is then up to the operator to remove the orphaned BOSH deployments.
 
+<br>
+To run the errand, run the following command:
 
-To run the errand, do the following:
+```
+bosh -d DEPLOYMENT-NAME run-errand orphan-deployments
+```
 
-1. **For BOSH CLI v1 only:** Select the broker deployment by running the command:<br>
-
-	`bosh deployment BROKER_MANIFEST.yml`
-
-1. Run the errand using one of the following commands depending on your Ops Manager version:
-
-	| Ops Manager Version | BOSH Command |
-	|-----|---------|
-	| 1.10 and earlier | `bosh run errand orphan-deployments`|
-	| 1.11 | `bosh2 -d DEPLOYMENT-NAME run-errand orphan-deployments` |
-  | 1.12 and later | `bosh -d DEPLOYMENT-NAME run-errand orphan-deployments` |
-
-If orphan deployments exist, the errand script will:
+<br>
+**If orphan deployments exist**---The errand script does the following:
 
 * Exit with exit code 10
 * Output a list of deployment names under a `[stdout]` header
@@ -47,8 +43,8 @@ $ curl 'https<span>:</span>//bosh-user:bosh-password@bosh-url:25555/tasks/task-i
 }
 </pre>
 
-
-If no orphan deployments exist, the errand script will:
+<br>
+**If no orphan deployments exist**---The errand script does the following:
 
 * Exit with exit code 0
 * Stdout will be an empty list of deployments
@@ -64,25 +60,23 @@ None
 Errand 'orphan-deployments' completed successfully (exit code 0)
 </pre>
 
-If the errand encounters an error during running it will:
+<br>
+**If the errand encounters an error during running**---The errand script does the following:
 
 * Exit with exit 1
 * Stdout will be empty
 * Any error messages will be under stderr
 
-
-
+<br>
 To clean up orphaned instances, run the following command on each instance:
 
 <p class="note warning">
 <strong>WARNING: </strong> Running this command may leave IaaS resources in an unusable state.
 </p>
 
-| Ops Manager Version | BOSH Command |
-|-----|---------|
-| 1.10 and earlier | `bosh delete deployment service-instance_SERVICE-INSTANCE-GUID`|
-| 1.11 | `bosh2 delete-deployment service-instance_SERVICE-INSTANCE-GUID` |
-| 1.12 and later | `bosh delete-deployment service-instance_SERVICE-INSTANCE-GUID` |
+```
+bosh delete-deployment service-instance_SERVICE-INSTANCE-GUID
+```
 
 
 

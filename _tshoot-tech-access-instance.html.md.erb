@@ -1,43 +1,24 @@
-1. To target an individual service instance deployment, retrieve the GUID of your service instance with the cf CLI command `cf service MY-SERVICE --guid`.
+1. To target an individual service instance deployment, retrieve the GUID of your
+service instance with the cf CLI command:
 
-1. **For BOSH CLI v1 only:**
+	```
+	cf service MY-SERVICE --guid
+	```
 
-	1. Run `bosh status --uuid` to retrieve the BOSH Director GUID.
-	<p class="note"><strong>Note</strong>: "GUID" and "UUID" mean the same thing.</p>
+1. View VMs in the deployment by running the following command:
 
-	1. To download your BOSH manifest for the service, run `bosh download manifest service-instance_BOSH-DIRECTOR-GUID MANIFEST.yml` using the GUID you just obtained and a filename you want to save the manifest as.<br><br>
+	```
+	bosh -d DEPLOYMENT-NAME instances
+	```
 
-	1. Edit the following line in the service instance manifest that you just saved, to include the current BOSH Director GUID:
-	<pre class="code">
-	&nbsp;&nbsp;&nbsp;&nbsp;director_uuid: BOSH-DIRECTOR-GUID
-	</pre>
+1. SSH onto a VM by running the following command:
 
-	1. Run `bosh deployment MANIFEST.yml` to select the deployment using the Director UUID.
+	```
+	bosh -d service-instance_GUID ssh
+	```
 
+1. Download the instance logs by running the following command:
 
-1. View VMs in the deployment using one of the following commands:
-
-	| Ops Manager Version | BOSH Command |
-	|-----|---------|
-	| 1.10 and earlier | `bosh instances`|
-	| 1.11 | `bosh2 -d DEPLOYMENT-NAME instances` |
-	| 1.12 and later | `bosh -d DEPLOYMENT-NAME instances` |
-
-1. SSH onto a VM by running one of the following commands:
-
-	| Ops Manager Version | BOSH Command |
-	|-----|---------|
-	| 1.10 and earlier | `bosh ssh service-instance_GUID`|
-	| 1.11 | `bosh2 -d service-instance_GUID ssh` |
-	| 1.12 and later | `bosh -d service-instance_GUID ssh` |
-
-1. Download the instance logs by running one of the following commands:
-
-	| Ops Manager Version | BOSH Command |
-	-----|---------|
-	| 1.10 and earlier | `bosh logs service-instance_GUID`|
-	| 1.11 | `bosh2 -d service-instance_GUID logs` |
-	| 1.12 and later | `bosh -d service-instance_GUID logs` |
-
-
-
+	```
+	bosh -d service-instance_GUID logs
+	```

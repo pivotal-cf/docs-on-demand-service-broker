@@ -1,23 +1,17 @@
 This errand deregisters a broker from Cloud Foundry.
 
+<br>
 The errand does the following:
 
 * Deletes the service broker from Cloud Controller
 * Fails if there are any service instances, with or without bindings
 
-Use the [Delete All Service Instances errand](#delete-all) to delete any existing service instances.
+Use the [Delete All Service Instances errand](#delete-all) to delete any existing
+service instances.
 
-To run the errand, do the following:
+<br>
+To run the errand, run the following command:
 
-1. **For BOSH CLI v1 only:** Select the broker deployment by running the command:<br>
-`bosh deployment BROKER_MANIFEST.yml`.
-
-2. Run one of the following commands depending on your Ops Manager version:
-
-	| Ops Manager Version | BOSH Command |
-	|-----|---------|
-	| 1.10 and earlier | `bosh run errand deregister-broker`|
-	| 1.11 | `bosh2 -d DEPLOYMENT-NAME run-errand deregister-broker` |
-	| 1.12 and later | `bosh -d DEPLOYMENT-NAME run-errand deregister-broker` |
-
-
+```
+bosh -d DEPLOYMENT-NAME run-errand deregister-broker
+```
