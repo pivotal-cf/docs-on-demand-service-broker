@@ -1,19 +1,24 @@
-If you want to identify which apps are using a specific service instance from the BOSH deployments name, you can run the following steps:
+If you want to identify which apps are using a specific service instance from the
+BOSH deployments name, you can run the following steps:
 
 1. Take the deployment name and strip the `service-instance_` leaving you with the GUID.
 1. Log in to CF as an admin.
 1. Obtain a list of all service bindings by running the following:
-  `cf curl /v2/service_instances/GUID/service_bindings`
+
+    ```
+    cf curl /v2/service_instances/GUID/service_bindings
+    ```
 1. The output from the above curl gives you a list of `resources`,
    with each item referencing a service binding, which contains the `APP-URL`.
    To find the name, org, and space for the app, run the following:
-  1. `cf curl APP-URL` and record the app name under `entity.name`
+  1. `cf curl APP-URL` and record the app name under `entity.name`.
   1. `cf curl SPACE-URL` to obtain the space, using the `entity.space_url` from the above curl.
-     Record the space name under `entity.name`
-  1. `cf curl ORGANIZATION-URL` to obtain the org, using the `entity.organization_url` from the above curl. 
-     Record the organization name under `entity.name`
+     Record the space name under `entity.name`.
+  1. `cf curl ORGANIZATION-URL` to obtain the org, using the `entity.organization_url` from the above curl.
+     Record the organization name under `entity.name`.
 
-<p class="note"><strong>Note</strong>: When running <code>cf curl</code> ensure that you query all pages, 
-	because the responses are limited to a certain number of bindings per page.
+<p class="note"><strong>Note</strong>:
+  When running <code>cf curl</code> ensure that you query all pages, because
+  the responses are limited to a certain number of bindings per page.
 	The default is 50.
-	To find the next page curl the value under <code>next_url</code></p>
+	To find the next page curl the value under <code>next_url</code>.</p>
