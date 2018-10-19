@@ -1,8 +1,6 @@
-Run one of the following commands:
+SSH on to the service broker VM, run the following command:
 
-| Ops Manager Version | BOSH Command |
-|-----|---------|
-| 1.10 and earlier | `bosh ssh service-instance_GUID`|
-| 1.11 | `bosh2 -d service-instance_GUID ssh` |
-| 1.12 and later | `bosh -d service-instance_GUID ssh` |
+```
+bosh -d service-instance_GUID ssh
+```
 
