@@ -1,22 +1,30 @@
-On-demand PCF services rely on the BOSH 2.0 ability to dynamically deploy VMs in a dedicated network. 
-The on-demand service broker uses this capability to create single-tenant service instances in a dedicated service network.
+On-demand PCF services rely on the BOSH 2.0 ability to dynamically deploy VMs in
+a dedicated network.
+The on-demand service broker uses this capability to create single-tenant service
+instances in a dedicated service network.
 
-On-demand services use the dynamically-provisioned service network to host the single-tenant worker VMs that run as service instances 
-within development spaces. This architecture lets developers provision IaaS resources for their service instances at creation time, 
-rather than the operator pre-provisioning a fixed quantity of IaaS resources when they deploy the service broker.
+On-demand services use the dynamically-provisioned service network to host the
+single-tenant worker VMs that run as service instances within development spaces.
+This architecture lets developers provision IaaS resources for their service
+instances at creation time, rather than the operator pre-provisioning a fixed
+quantity of IaaS resources when they deploy the service broker.
 
-By making services single-tenant, where each instance runs on a dedicated VM rather than sharing VMs 
-with unrelated processes, on-demand services eliminate the "noisy neighbor" problem when one app 
-hogs resources on a shared cluster. Single-tenant services can also support regulatory compliance where 
+By making services single-tenant, where each instance runs on a dedicated VM
+rather than sharing VMs with unrelated processes, on-demand services eliminate
+the "noisy neighbor" problem when one app hogs resources on a shared cluster.
+Single-tenant services can also support regulatory compliance where
 sensitive data must be compartmentalized across separate machines.
 
-An on-demand service splits its operations between the default network and the service network. 
-Shared components of the service, such as executive controllers and databases, run centrally on the default network 
-along with the Cloud Controller, UAA, and other PCF components. 
+An on-demand service splits its operations between the default network and the
+service network.
+Shared components of the service, such as executive controllers and databases,
+run centrally on the default network along with the Cloud Controller, UAA, and
+other PCF components.
 The worker pool deployed to specific spaces runs on the service network.
 
-The diagram below shows worker VMs in an on-demand service instance 
-running on a separate services network, while other components run on the default network.
+The diagram below shows worker VMs in an on-demand service instance
+running on a separate services network, while other components run on the default
+network.
 
 ![ODB Architecture](http://docs.pivotal.io/svc-sdk/odb/img/odb-architecture.png)
 
