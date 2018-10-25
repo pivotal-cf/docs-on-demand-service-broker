@@ -993,13 +993,16 @@ The following table provides descriptions of the properties to add to the `bindi
 
 ## <a id="https"></a>(Optional) Configure the Broker to Use HTTPS
 
-<p class="note"><strong>Note</strong>: HTTPS is currently implemented for platforms that communicate directly with the broker. HTTPS should not be enabled for Cloud Foundry. </p>
+<p class="note"><strong>Note</strong>: Do not enable HTTPS for Cloud Foundry as it is currently
+  implemented for platforms that communicate directly with the broker.  </p>
 
-Existing brokers operate in a secure network environment. Communication from the platform to the broker is over HTTP, and is not typically encrypted.
+Existing brokers operate in a secure network environment.
+Communication from the platform to the broker is over HTTP and is not typically encrypted.
 
-It is possible to configure the broker to accept only HTTPS connections. This is done by providing a server certificate and private key in the broker manifest.
+You can configure the broker to accept only HTTPS connections.
+To do so, provide a server certificate and private key in the broker manifest.
 
-Example manifest snippet that enables HTTPS:
+For example:
 
 ```
 instance_groups:
@@ -1012,12 +1015,13 @@ instance_groups:
       ...
       tls:
         certificate: |
-          server certificate
+          SERVER-CERTIFICATE
         private_key: |
-          server private key
+          SERVER-PRIVATE-KEY
 ```
 
-When configured to use HTTPS, the broker will only accept connections that use TLS v1.2+, and the following cipher suites:
+When configured to use HTTPS, the broker only accepts connections that use TLS v1.2+
+and the following cipher suites:
 
 - TLS\_ECDHE\_RSA\_WITH\_AES\_128\_GCM\_SHA256
 - TLS\_ECDHE\_RSA\_WITH\_AES\_256\_GCM\_SHA384
