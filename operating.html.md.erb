@@ -990,6 +990,38 @@ The following table provides descriptions of the properties to add to the `bindi
 | properties.azs    | A list of availability zone names. When this is provided, the resultant DNS address resolves to IP addresses in these zones.                                            | Optional           |
 | properties.status | A filter for link address status (healthy, unhealthy, all, default). When this is provided, the resultant DNS address resolves to IP addresses with this status.        | Optional           |
 
+
+## <a id="https"></a>(Optional) Configure the Broker to Use HTTPS
+
+<p class="note"><strong>Note</strong>: HTTPS is currently implemented for platforms that communicate directly with the broker. HTTPS should not be enabled for Cloud Foundry. </p>
+
+Existing brokers operate in a secure network environment. Communication from the platform to the broker is over HTTP, and is not typically encrypted.
+
+It is possible to configure the broker to accept only HTTPS connections. This is done by providing a server certificate and private key in the broker manifest.
+
+Example manifest snippet that enables HTTPS:
+
+```
+instance_groups:
+- name: broker
+  ...
+  jobs:
+  - name: broker
+    ...
+    properties:
+      ...
+      tls:
+        certificate: |
+          server certificate
+        private_key: |
+          server private key
+```
+
+When configured to use HTTPS, the broker will only accept connections that use TLS v1.2+, and the following cipher suites:
+
+- TLS\_ECDHE\_RSA\_WITH\_AES\_128\_GCM\_SHA256
+- TLS\_ECDHE\_RSA\_WITH\_AES\_256\_GCM\_SHA384
+
 ## <a id="startup-checks"></a>About Broker Startup Checks
 
 The ODB does the following startup checks:
