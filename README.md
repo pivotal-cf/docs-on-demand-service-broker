@@ -25,6 +25,7 @@ For example:
 | v0.10.x         | obsolete, but do not delete the branch | 
 | v0.9.x          | obsolete, but do not delete the branch | 
 
+**Note:** Edits to partials on the v0.18.x branch should be sycned with their corresponding partial in the [Services Partials](https://github.com/pivotal/docs-services-partials) repo. Eventually, `docs-on-demamd-service-broker` partials will sourced from the Services Partials repo and removed here. 
 
 # Book repo for publishing this content
 
