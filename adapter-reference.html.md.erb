@@ -71,7 +71,8 @@ See the following example:
     "plan": "PLAN-JSON",
     "previous_plan": "PREVIOUS-PLAN-JSON",
     "previous_manifest": "PREVIOUS-MANIFEST-YAML",
-    "request_parameters": "REQUEST-PARAMETERS-JSON"
+    "request_parameters": "REQUEST-PARAMETERS-JSON",
+    "previous_secrets": "PREVIOUS-SECRETS-JSON"
   }
 }
 ```
@@ -376,6 +377,44 @@ The previous plan is nil if this is a new deployment.
 The format of the plan should match the [plan schema](#plan-schema). The previous plan 
 can be used for complex plan migration logic. For an example, the [Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go#L27:L33)
  rejects a plan migration if the new plan reduces the number of instances, to prevent data loss.
+
+####<a id="previous-secrets"></a>PREVIOUS-SECRETS-JSON
+
+If `enable_secure_manifests` is set to `true` in the broker, any secrets in the
+previous service instance manifest that use references to BOSH-generated
+variables or literal CredHub paths are resolved and sent to the adapter in the
+`PREVIOUS-SECRETS-JSON` parameter. Previous-secrets are passed during the update
+call but not during upgrade.
+
+If `enable_secure_manifests` is set to `false` in the broker, then the
+`PREVIOUS-SECRETS-JSON` parameter is empty.
+
+The following is an example previous service instance manifest:
+
+```
+...
+password: ((redis_password))
+root_ca: ((/global/root_ca))
+
+variables:
+- name: redis_password
+  type: password
+```
+
+<br>
+The service instance manifest snippet above produces a secrets JSON parameter
+similar to the following.  The keys are the reference names, and the values are
+the resolved secrets:
+
+```
+{
+  "((redis_password))": "some-bosh-generated-password",
+  "((/global/root_ca))": "some-global-value"
+}
+```
+
+<p class="note"><strong>Note</strong>: You can find the secrets key by accessing 
+the manifest field that contains the reference to the variable.</p>
 
 
 ###<a id="generate-manifest-output"></a>Output

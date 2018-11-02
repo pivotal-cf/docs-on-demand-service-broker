@@ -13,6 +13,10 @@ owner: London Services Enablement
 API configuration has moved from the `upgrade-all` errand to the broker job.
 For more information, see <strong>Features</strong> below.
 
+<p class="note breaking"><strong>Breaking Change:</strong> GenerateManifest
+method in the Service Adapter takes a new parameter `previous-secrets`
+containing secrets from the previously deployed service instance manifest.
+
 ### Features
 
 New features and changes in this release:
@@ -25,6 +29,7 @@ configuration is used for both the `orphan-deployments` and `upgrade-all`
 errands.
 - CredHub CLI library was bumped to allow use with both v1 and v2 CredHub servers.
 - Upgrades golang to v1.11.1
+- New previous-secrets parameter to GenerateManifest in the Service Adapter
 
 ### Known Issues
 
