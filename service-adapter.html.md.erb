@@ -94,7 +94,7 @@ When you use ODB managed secrets, ODB does the following during provision:
 1. Generates a CredHub name for each secret in the `secrets` map in the format
 `/odb/SERVICE-OFFERING-ID/SERVICE-INSTANCE-ID/SECRET-NAME`.
 
-1. Save the secret value in the BOSH CredHub, using the generated name.
+1. Saves the value of the secret in the BOSH CredHub using the generated name.
 
 1. Replaces all occurrences of `((odb_secret:SECRET-NAME))` with the generated
 CredHub name.
@@ -107,7 +107,7 @@ CredHub name.
 You can use the service adapter to migrate from plaintext secrets in the manifest
 to ODB managed secrets that are stored in BOSH CredHub.
 When the `generate-manifest` subcommand is provided with a previous manifest, the
-service adapter should copy secrets from the previous deployment to the new manifest.
+service adapter copies secrets from the previous deployment to the new manifest.
 
 To migrate from plaintext secrets to ODB managed secrets, write code in your
 service adapter that does the following:
@@ -200,24 +200,24 @@ For more information about using the value during a bind, see
 
 ### <a id="odb-detecting-new-secrets"></a>Detect Changes to Secrets
 
-The need to change the value of a secret can arise from several different
-sources.
+You may need to change the value of a secret in these circumstances:
 
-- per-plan secrets configured through the On Demand Broker manifest
-- adapter secrets given in the adapter config
-- some adapters may allow secrets to be configured via update parameters
+  - per-plan secrets configured through the On Demand Broker manifest
+  - adapter secrets given in the adapter config
+  - secrets configured via update parameters
 
-ODB requires that the generate-manifest method is idempotent. This means that
-an adapter should not use the odb_secret placeholder when a secret has not
-changed; instead it should insert the CredHub path used in the previous
-manifest. To detect whether a secret has changed, ODB provides all the
-currently deployed secrets as an argument to generate-manifest.
+ODB requires that the `generate-manifest` method is idempotent. This means that
+an adapter should not use the `odb_secret` placeholder when a secret has not
+changed. Instead, the adapter should insert the CredHub path used in the previous
+manifest. 
 
-The adapter should compare the previous value of the secret to the new value
-before inserting the odb_secret placeholder and adding the value to the secrets
-map. See the [Redis Example Adapter]
-(https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/ecf33c082bcd5180cf37ad32de03696fe2a0568f/adapter/redis_manifest_generator.go#L471-L483)
-for an example.
+To detect whether a secret has changed, ODB provides all the
+currently deployed secrets as an argument to `generate-manifest`.
+
+The adapter compares the previous value of the secret to the new value
+before inserting the `odb_secret` placeholder and adding the value to the secrets
+map. For an example, see the [Redis Example Adapter]
+(https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/ecf33c082bcd5180cf37ad32de03696fe2a0568f/adapter/redis_manifest_generator.go#L471-L483).
 
 ### <a id="modifying-secrets"></a>Modify ODB Managed Secrets
 
