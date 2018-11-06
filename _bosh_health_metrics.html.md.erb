@@ -1,6 +1,0 @@
-The BOSH layer that underlies PCF generates `healthmonitor` metrics for all VMs in the deployment. 
-However, these metrics are not included in the Loggregator Firehose by default.
-To get these metrics, do either of the following:
-
-* To send BOSH HM metrics through the Firehose, install the open-source [HM Forwarder](https://github.com/cloudfoundry/bosh-hm-forwarder). 
-* To retrieve BOSH health metrics outside of the Firehose, install the [JMX Bridge](https://docs.pivotal.io/jmx-bridge/1-8/index.html) for PCF tile.
