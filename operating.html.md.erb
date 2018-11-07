@@ -353,13 +353,13 @@ instance_groups:
           port: BROKER-PORT
           username: BROKER-USERNAME
           password: BROKER-PASSWORD
-          disable_ssl_cert_verification: true|false # optional, defaults to false. This should NOT set to true in production
-          shutdown_timeout_in_seconds: 60 # optional, defaults to 60 seconds. This allows the broker to gracefully wait for any open requests to complete before shutting down.
-          expose_operational_errors: true|false # optional, defaults to false. This allows for BOSH operational errors to be displayed for the CF user.
-          enable_plan_schemas: true|false # optional, defaults to false. If set to true, plan schemas are included in the catalog, and the broker fails if the adapter does not implement generate-plan-schemas.
+          disable_ssl_cert_verification: true|false # optional - defaults to false. This should NOT set to true in production
+          shutdown_timeout_in_seconds: 60 # optional - defaults to 60 seconds. This allows the broker to gracefully wait for any open requests to complete before shutting down.
+          expose_operational_errors: true|false # optional - defaults to false. This allows for BOSH operational errors to be displayed for the CF user.
+          enable_plan_schemas: true|false # optional - defaults to false. If set to true, plan schemas are included in the catalog, and the broker fails if the adapter does not implement generate-plan-schemas.
           cf:
             url: CF-API-URL
-            root_ca_cert: CA-CERT-FOR-CLOUD-CONTROLLER # optional, see SSL certificates
+            root_ca_cert: CA-CERT-FOR-CLOUD-CONTROLLER # optional - see SSL certificates
             authentication: # either client_credentials or user_credentials, not both as shown
               url: CF-UAA-URL
               client_credentials:
@@ -370,7 +370,7 @@ instance_groups:
                 password: CF-ADMIN-PASSWORD
           bosh:
             url: DIRECTOR-URL
-            root_ca_cert: CA-CERT-FOR-BOSH-DIRECTOR-AND-ASSOCIATED-UAA # optional, see SSL certificates
+            root_ca_cert: CA-CERT-FOR-BOSH-DIRECTOR-AND-ASSOCIATED-UAA # optional - see SSL certificates
             authentication: # either basic or uaa, not both as shown
               basic:
                 username: BOSH-USERNAME
@@ -379,7 +379,7 @@ instance_groups:
                 client_id: BOSH-CLIENT-ID
                 client_secret: BOSH-CLIENT-SECRET
           service_adapter:
-            path: PATH-TO-SERVICE-ADAPTER-BINARY # optional, provided by the Service Author. Defaults to /var/vcap/packages/odb-service-adapter/bin/service-adapter
+            path: PATH-TO-SERVICE-ADAPTER-BINARY # optional - provided by the Service Author. Defaults to /var/vcap/packages/odb-service-adapter/bin/service-adapter
 
           # There are more broker properties that are discussed below
 ```
@@ -461,7 +461,7 @@ service_catalog:
     provider_display_name: PROVIDER-DISPLAY-NAME
     documentation_url: DOCUMENTATION-URL
     support_url: SUPPORT-URL
-  global_properties: {} # optional, applied to every plan.
+  global_properties: {} # optional - applied to every plan.
   global_quotas: # optional
     service_instance_limit: INSTANCE-LIMIT # the maximum number of service instances across all plans
     resource_limits: # optional - resource usage limits, determined by the 'cost' of each service instance plan
@@ -469,11 +469,11 @@ service_catalog:
       memory: RESOURCE-LIMIT
   plans:
     - name: CF-MARKETPLACE-PLAN-NAME
-      free: TRUE|FALSE # optional. Is used by the cf cli to display whether this plan is "free" or "paid"
+      free: TRUE|FALSE # optional - used by the cf CLI to display whether this plan is "free" or "paid"
       plan_id: CF-MARKETPLACE-PLAN-ID
       description: CF-MARKETPLACE-DESCRIPTION
-      cf_service_access: ENABLE|DISABLE|MANUAL # optional, enable by default.
-      bindable: TRUE|FALSE # optional. If specified, this takes precedence over the bindable attribute of the service
+      cf_service_access: ENABLE|DISABLE|MANUAL # optional - enable by default.
+      bindable: TRUE|FALSE # optional -  if specified, this takes precedence over the bindable attribute of the service
       metadata: # optional
         display_name: DISPLAY-NAME
         bullets: [BULLET1, BULLET2]
@@ -511,11 +511,11 @@ service_catalog:
       lifecycle_errands: # optional
         post_deploy: # optional
           - name: ERRAND-NAME
-            instances: [INSTANCE-NAME, ...] # optional, for co-locating errand
+            instances: [INSTANCE-NAME, ...] # optional - for co-locating errand
           - name: ANOTHER_ERRAND_NAME
         pre_delete: # optional
           - name: ERRAND-NAME
-            instances: [INSTANCE-NAME, ...] # optional, for co-locating errand
+            instances: [INSTANCE-NAME, ...] # optional - for co-locating errand
 ```
 ## <a id="secure-bind-credentials"></a>(Optional) Access Manifest Secrets at Bind Time
 
