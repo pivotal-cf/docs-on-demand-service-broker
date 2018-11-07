@@ -380,11 +380,12 @@ can be used for complex plan migration logic. For an example, the [Kafka service
 
 ####<a id="previous-secrets"></a>PREVIOUS-SECRETS-JSON
 
-If `enable_secure_manifests` is set to `true` in the broker, any secrets in the
-previous service instance manifest that use references to BOSH-generated
-variables or literal CredHub paths are resolved and sent to the adapter in the
-`PREVIOUS-SECRETS-JSON` parameter. Previous-secrets are passed during the update
-call but not during upgrade.
+If `enable_secure_manifests` is set to `true` in the broker, any secrets
+that use references to BOSH-generated variables or literal CredHub paths in the
+previous service instance manifest are resolved and sent to the adapter in the
+`PREVIOUS-SECRETS-JSON` parameter. 
+
+These secrets are passed during updates but not during upgrades.
 
 If `enable_secure_manifests` is set to `false` in the broker, then the
 `PREVIOUS-SECRETS-JSON` parameter is empty.
@@ -413,7 +414,7 @@ the resolved secrets:
 }
 ```
 
-<p class="note"><strong>Note</strong>: You can find the secrets key by accessing 
+<p class="note"><strong>Note:</strong> You can find the secrets key by accessing 
 the manifest field that contains the reference to the variable.</p>
 
 

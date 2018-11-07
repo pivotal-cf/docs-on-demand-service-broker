@@ -33,7 +33,7 @@ For a list of deliverables provided by the Service Author, see
 
 ## <a id="networking"></a>Set Up Networking
 
-<%= partial 'service_networks_table' %>
+<%= partial 'odb/service_networks_table' %>
 
 <br>
 Regardless of the specific network layout, the operator must ensure network
@@ -990,41 +990,6 @@ The following table provides descriptions of the properties to add to the `bindi
 | properties.azs    | A list of availability zone names. When this is provided, the resultant DNS address resolves to IP addresses in these zones.                                            | Optional           |
 | properties.status | A filter for link address status (healthy, unhealthy, all, default). When this is provided, the resultant DNS address resolves to IP addresses with this status.        | Optional           |
 
-
-## <a id="https"></a>(Optional) Configure the Broker to Use HTTPS
-
-<p class="note"><strong>Note</strong>: Do not enable HTTPS for Cloud Foundry as it is currently
-  implemented for platforms that communicate directly with the broker.  </p>
-
-Existing brokers operate in a secure network environment.
-Communication from the platform to the broker is over HTTP and is not typically encrypted.
-
-You can configure the broker to accept only HTTPS connections.
-To do so, provide a server certificate and private key in the broker manifest.
-
-For example:
-
-```
-instance_groups:
-- name: broker
-  ...
-  jobs:
-  - name: broker
-    ...
-    properties:
-      ...
-      tls:
-        certificate: |
-          SERVER-CERTIFICATE
-        private_key: |
-          SERVER-PRIVATE-KEY
-```
-
-When configured to use HTTPS, the broker only accepts connections that use TLS v1.2+
-and the following cipher suites:
-
-- TLS\_ECDHE\_RSA\_WITH\_AES\_128\_GCM\_SHA256
-- TLS\_ECDHE\_RSA\_WITH\_AES\_256\_GCM\_SHA384
 
 ## <a id="startup-checks"></a>About Broker Startup Checks
 

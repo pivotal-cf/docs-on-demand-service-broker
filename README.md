@@ -35,6 +35,12 @@ Book repo: **docs-book-services-sdk**
 
 * **master:** book branch that publishes all the live versions in production. <br>**Pipeline:** https://concourse.run.pivotal.io/teams/cf-docs/pipelines/cf-services-sdk
 
+## Partials
+
+Cross-product partials for **On-Demand Service Broker SDK** are single sourced from the [Services Partials](https://github.com/pivotal-cf/docs-services-partials) repo.
+
+Previously, these partials were sourced from the v018.x branch of the [On Demand Service Broker SDK](https://github.com/pivotal-cf/docs-on-demand-service-broker/tree/v0.18.x) content repo.
+
 # Proccess for working in this repo
 
 ## Submit changes to the docs through PRs

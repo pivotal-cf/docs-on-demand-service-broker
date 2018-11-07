@@ -47,7 +47,7 @@ This topic provides information for operators about troubleshooting on-demand se
 
 <a id="guid"></a><h2>How to Retrieve a Service Instance GUID</h2>
 
-<%= partial 'retrieve-guid' %>
+<%= partial 'odb/retrieve-guid' %>
 
 
 <a id="errors"></a><h2>Troubleshooting Errors</h2>
@@ -56,25 +56,25 @@ This section provides information about how to troubleshoot specific errors or e
 
 <a id="install-fail"></a><h3>Failed Install</h3>
 
-<%= partial 'tshoot-err-install-fail' %>
+<%= partial 'odb/tshoot-err-install-fail' %>
 
 <a id="timeouts"></a><h3>Broker Request Timeouts</h3>
 
-<%= partial 'tshoot-err-timeouts' %>
+<%= partial 'odb/tshoot-err-timeouts' %>
 
 <a id="cannot-create-delete"></a><h3>Cannot Create or Delete Service Instances</h3>
 
-<%= partial 'tshoot-err-cannot-create-delete' %>
+<%= partial 'odb/tshoot-err-cannot-create-delete' %>
 
 <a id="cannot-bind"><h3></a>Cannot Bind or Unbind Service Instances to Apps</h3>
 
 <a id="instance-not-exist"></a><h4>Instance Does Not Exist</h4>
 
-<%= partial 'tshoot-err-instance-not-exist' %>
+<%= partial 'odb/tshoot-err-instance-not-exist' %>
 
 <a id="other-errors"></a><h4>Other Errors</h4>
 
-<%= partial 'tshoot-err-other-errors' %>
+<%= partial 'odb/tshoot-err-other-errors' %>
 
 <a id="upgrade-individual-instances"></a><h3>Cannot Update a Service Instance</h3>
 
@@ -82,15 +82,15 @@ This section provides information about how to troubleshoot specific errors or e
 
 <a id="cannot-connect"></a><h3>Cannot Connect to a Service Instance</h3>
 
-<%= partial 'tshoot-err-cannot-connect' %>
+<%= partial 'odb/tshoot-err-cannot-connect' %>
 
 <a id="upgrade-all-fails"><h3></a>Upgrade All Service Instances Fails</h3>
 
-<%= partial 'tshoot-err-upgrade-all-fails' %>
+<%= partial 'odb/tshoot-err-upgrade-all-fails' %>
 
 <a id="missing-logs"></a><h3>Missing Logs and Metrics</h3>
 
-<%= partial 'tshoot-err-missing-logs' %>
+<%= partial 'odb/tshoot-err-missing-logs' %>
 
 
 <a id="components"></a><h2>Troubleshooting Components</h2>
@@ -101,45 +101,45 @@ This section provides information about troubleshooting on-demand broker compone
 
 <a id="large-queue"></a><h4>Large BOSH Queue</h4>
 
-<%= partial 'tshoot-comp-large-queue' %>
+<%= partial 'odb/tshoot-comp-large-queue' %>
 
 <a id="bosh-config"></a><h3>Configuration</h3>
 
 <a id="bosh-instance-fail"></a><h4>Service Instances in Failing State</h4>
 
-<%= partial 'tshoot-comp-bosh-instance-fail' %>
+<%= partial 'odb/tshoot-comp-bosh-instance-fail' %>
 
 <a id="auth"></a><h3>Authentication</h3>
 
 <a id="uaa-change"></a><h4>UAA Changes</h4>
 
-<%= partial 'tshoot-comp-uaa-change' %>
+<%= partial 'odb/tshoot-comp-uaa-change' %>
 
 <a id="network"></a><h3>Networking</h3>
 
-<%= partial 'tshoot-comp-network' %>
+<%= partial 'odb/tshoot-comp-network' %>
 
 <a id="broker-to-instances"></a><h4>Validate Service Broker Connectivity to Service Instances</h4>
 
-<%= partial 'tshoot-comp-broker-to-instances' %>
+<%= partial 'odb/tshoot-comp-broker-to-instances' %>
 
 <a id="app-to-instances"></a><h4>Validate App Access to Service Instance</h4>
 
-<%= partial 'tshoot-comp-app-to-instances' %>
+<%= partial 'odb/tshoot-comp-app-to-instances' %>
 
 <a id="quotas"></a><h3>Quotas</h3>
 
 <a id="plan-quotas"></a><h4>Plan Quota Issues</h4>
 
-<%= partial 'tshoot-comp-plan-quotas' %>
+<%= partial 'odb/tshoot-comp-plan-quotas' %>
 
 <a id="global-quotas"></a><h4>Global Quota Issues</h4>
 
-<%= partial 'tshoot-comp-global-quotas' %>
+<%= partial 'odb/tshoot-comp-global-quotas' %>
 
 <a id="failing-jobs"></a><h3>Failing Jobs and Unhealthy Instances</h3>
 
-<%= partial 'tshoot-comp-failing-jobs' %>
+<%= partial 'odb/tshoot-comp-failing-jobs' %>
 
 
 <a id="techniques"></a><h2>Techniques for Troubleshooting</h2>
@@ -152,69 +152,69 @@ This section provides general techniques for troubleshooting, which might includ
 
 <a id="parse-error"></a><h3>Parse a Cloud Foundry (CF) Error Message</h3>
 
-<%= partial 'tshoot-tech-parse-error' %>
+<%= partial 'odb/tshoot-tech-parse-error' %>
 
 <a id="bosh-cf-access"></a><h3>Access Broker and Instance Logs and VMs</h3>
 
-<%= partial 'tshoot-tech-bosh-cf-access' %>
+<%= partial 'odb/tshoot-tech-bosh-cf-access' %>
 
 <a id="access-broker"></a><h4>Access Broker Logs and VM(s)</h4>
 
-<%= partial 'tshoot-tech-access-broker' %>
+<%= partial 'odb/tshoot-tech-access-broker' %>
 
 <a id="access-instance"></a><h4>Access Service Instance Logs and VMs</h4>
 
-<%= partial 'tshoot-tech-access-instance' %>
+<%= partial 'odb/tshoot-tech-access-instance' %>
 
 <a id="broker-errands"></a><h3>Run Service Broker Errands to Manage Brokers and Instances</h3>
 
-<%= partial 'tshoot-tech-broker-errands' %>
+<%= partial 'odb/tshoot-tech-broker-errands' %>
 
 <a id="register-broker"></a><h4>Register Broker</h4>
 
-<%= partial 'tshoot-tech-register-broker' %>
+<%= partial 'odb/tshoot-tech-register-broker' %>
 
 <a id="deregister-broker"></a><h4>Deregister Broker</h4>
 
-<%= partial 'tshoot-tech-deregister-broker' %>
+<%= partial 'odb/tshoot-tech-deregister-broker' %>
 
 <a id="upgrade-all"></a><h4>Upgrade All Service Instances</h4>
 
-<%= partial 'tshoot-tech-upgrade-all' %>
+<%= partial 'odb/tshoot-tech-upgrade-all' %>
 
 <a id="delete-all"></a><h4>Delete All Service Instances</h4>
 
-<%= partial 'tshoot-tech-delete-all' %>
+<%= partial 'odb/tshoot-tech-delete-all' %>
 
 <a id="detect-orphans"></a><h4>Detect Orphaned Instances Service Instances</h4>
 
-<%= partial 'tshoot-tech-detect-orphans' %>
+<%= partial 'odb/tshoot-tech-detect-orphans' %>
 
 <a id="instance-creds"></a><h3>Get Admin Credentials for a Service Instance</h3>
 
-<%= partial 'tshoot-tech-instance-creds' %>
+<%= partial 'odb/tshoot-tech-instance-creds' %>
 
 <a id="id-instance-owner"></a><h3>Identify Apps using a Service Instance</h3>
 
-<%= partial 'tshoot-tech-id-instance-owner' %>
+<%= partial 'odb/tshoot-tech-id-instance-owner' %>
 
 <a id="view-resources"></a><h3>View BOSH Resource Saturation and Scaling</h3>
 
-<%= partial 'tshoot-tech-view-resources' %>
+<%= partial 'odb/tshoot-tech-view-resources' %>
 
 <a id="monitor-quota"></a><h3>Monitor Quota Saturation and Service Instance Count</h3>
 
-<%= partial 'tshoot-tech-monitor-quota' %>
+<%= partial 'odb/tshoot-tech-monitor-quota' %>
 
 <a id="reinstall"></a><h3>Reinstall a Tile</h3>
 
-<%= partial 'tshoot-tech-reinstall' %>
+<%= partial 'odb/tshoot-tech-reinstall' %>
 
 
 <a id="kb"></a><h2>Knowledge Base (Community)</h2>
 
-<%= partial 'tshoot-kb' %>
+<%= partial 'odb/tshoot-kb' %>
 
 <a id="support"></a><h2>File a Support Ticket</h2>
 
-<%= partial '/tshoot-support' %>
+<%= partial 'odb/tshoot-support' %>
