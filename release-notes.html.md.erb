@@ -14,7 +14,7 @@ API configuration has moved from the `upgrade-all` errand to the broker job.
 For more information, see <strong>Features</strong> below.
 
 <p class="note breaking"><strong>Breaking Change:</strong> GenerateManifest
-method in the Service Adapter takes a new parameter `previous-secrets`
+method in the Service Adapter takes a new parameter `previousSecrets`
 containing secrets from the previously deployed service instance manifest.
 
 ### Features
@@ -28,8 +28,9 @@ errand, and has been moved to the broker job. <br><br>The same
 configuration is used for both the `orphan-deployments` and `upgrade-all`
 errands.
 - CredHub CLI library was bumped to allow use with both v1 and v2 CredHub servers.
-- Upgrades golang to v1.11.1
-- New previous-secrets parameter to GenerateManifest in the Service Adapter
+This is required to use PCF-2.4 and above.
+- Upgrades golang to v1.11.2
+- New `previousSecrets` parameter to `GenerateManifest()` in the Service Adapter
 
 ### Known Issues
 
