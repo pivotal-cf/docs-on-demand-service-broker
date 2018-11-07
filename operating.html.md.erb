@@ -469,6 +469,7 @@ service_catalog:
       memory: RESOURCE-LIMIT
   plans:
     - name: CF-MARKETPLACE-PLAN-NAME
+      free: TRUE|FALSE # optional. Is used by the cf cli to display whether this plan is "free" or "paid"
       plan_id: CF-MARKETPLACE-PLAN-ID
       description: CF-MARKETPLACE-DESCRIPTION
       cf_service_access: ENABLE|DISABLE|MANUAL # optional, enable by default.
