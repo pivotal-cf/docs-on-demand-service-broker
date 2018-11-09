@@ -117,7 +117,9 @@ service adapter that does the following:
 1. Replaces each plaintext secret from the previous manifest with an ODB managed
 secrets placeholder `((odb_secret:SECRET-NAME))` in the new manifest.
 
-1. Returns the value of each secret in the secrets map.
+1. Returns the value of each secret in the `secrets` map.
+For more information about the `secrets` map, see
+[About ODB Managed Secrets](#odb-managed-secrets) above.
 
 For example:
 
@@ -136,7 +138,7 @@ func extractSecret(oldValue, secretName string, secretsMap map[string]string, ne
     return newValue, secretsMap
   } else {
     // else: this secret could be one of the following:
-    // - a custom CredHub path
+    // - a custom CredHub name
     // - a reference to the BOSH generated variables block
     // - a CredHub reference to a secret already managed by the ODB
     // In all cases, the ODB does not need to send the secret to CredHub, so it
@@ -149,8 +151,8 @@ func extractSecret(oldValue, secretName string, secretsMap map[string]string, ne
 <br>
 Keep in mind the following:
 
-* Do not include unchanged secrets in the secrets map.
-Your service adapter should only return secrets in the secrets map when the value
+* Do not include unchanged secrets in the `secrets` map.
+Your service adapter should only return secrets in the `secrets` map when the value
 of the secret is set for the first time, or if the value is changed.
 For example, this might be when:
 
@@ -158,9 +160,9 @@ For example, this might be when:
  * You migrate plaintext secrets into CredHub.
  * You want to change the value for previously set secrets.
 
-* Each placeholder in the manifest must have a corresponding entry in the secrets map.
+* Each placeholder in the manifest must have a corresponding entry in the `secrets` map.
 
-* Each key in the secrets map must have at least one corresponding placeholder in the manifest.
+* Each key in the `secrets` map must have at least one corresponding placeholder in the manifest.
 
 * Secrets already stored in CredHub do not need the placeholder.
 This is because CredHub references are ignored by ODB during `generate-manifest`.
@@ -198,27 +200,6 @@ command must not replace `properties.password` with the placeholder `((odb_secre
 For more information about using the value during a bind, see
 [create-binding](./adapter-reference.html#create-binding).
 
-### <a id="odb-detecting-new-secrets"></a>Detect Changes to Secrets
-
-You may need to change the value of a secret in these circumstances:
-
-  - per-plan secrets configured through the On Demand Broker manifest
-  - adapter secrets given in the adapter config
-  - secrets configured via update parameters
-
-ODB requires that the `generate-manifest` method is idempotent. This means that
-an adapter should not use the `odb_secret` placeholder when a secret has not
-changed. Instead, the adapter should insert the CredHub path used in the previous
-manifest. 
-
-To detect whether a secret has changed, ODB provides all the
-currently deployed secrets as an argument to `generate-manifest`.
-
-The adapter compares the previous value of the secret to the new value
-before inserting the `odb_secret` placeholder and adding the value to the secrets
-map. For an example, see the [Redis Example Adapter]
-(https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/ecf33c082bcd5180cf37ad32de03696fe2a0568f/adapter/redis_manifest_generator.go#L471-L483).
-
 ### <a id="modifying-secrets"></a>Modify ODB Managed Secrets
 
 <p class="note warning"><strong>WARNING</strong>:
@@ -229,15 +210,52 @@ map. For an example, see the [Redis Example Adapter]
   below.
 </p>
 
-When updating or upgrading a service instance, you might need to modify the value
+When updating or upgrading a service instance, operators might need to modify the value
 of an ODB managed secret.
+These secrets are passed to the service adapter from the following:
 
-To modify a secret, write code in your service adapter that does the following:
+- Plan properties in the on-demand broker manifest
+- Adapter secrets given in the adapter config
+- Configuration parameters in the `cf update-service` command
+
+To regenerate the manifest with modified secrets, write code in your service adapter
+that does the following:
 
 1. Replaces the property in the manifest with an ODB managed secrets placeholder
 that uses a new secret name.
 
-1. Uses the `GenerateManifest` method to return the new secret in the secrets map.
+1. Uses the `GenerateManifest` method to return the new secret in the `secrets` map.
+
+#### <a id="odb-detecting-new-secrets"></a>Detect When Secrets Are Modified
+
+The service adapter must only insert the ODB managed secrets placeholder if
+a secret has been modified.
+This is because ODB requires that the `GenerateManifest` method is idempotent.
+When the service adapter generates a new manifest after a deployment update,
+it must be the same as the previous manifest when `GenerateManifest` is given the same input.
+
+ODB provides all the currently deployed secrets to the `GenerateManifest` method
+using the `previousSecrets` argument.
+For more information about the input to the `previousSecrets` argument, see
+[PREVIOUS-SECRETS-JSON](./adapter-reference.html#previous-secrets).
+
+To detect whether a secret has been modified, write code in your service adapter
+that does the following:
+
+1. Compares the previous value of the secret to the new value.
+
+1. **If the secret has changed:**
+  <ol>
+    <li>Inserts the ODB managed secrets placeholder.</li>
+    <li>Adds the value to the `secrets` map.</li>
+  </ol>
+  **If the secret has remained the same:**
+  <ol>
+    <li>Inserts the CredHub name from the previous manifest.</li>
+  </ol>
+
+For example code that does the above, see the [Redis Example Adapter]
+(https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/ecf33c082bcd5180cf37ad32de03696fe2a0568f/adapter/redis_manifest_generator.go#L471-L483).
 
 #### <a id="inconsistent-secrets"></a>Inconsistent Secrets after a Failed Update
 
@@ -255,6 +273,7 @@ This can cause errors with bindings.
 
 Pivotal recommends that you avoid modifying secrets without using new names for
 new versions of secrets.
+
 
 ## <a id="create-binding-credentials"></a> Binding Credentials
 
