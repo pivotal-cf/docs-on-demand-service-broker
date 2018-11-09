@@ -25,11 +25,9 @@ For example:
 | v0.10.x         | obsolete, but do not delete the branch | 
 | v0.9.x          | obsolete, but do not delete the branch | 
 
-**Note:** Edits to partials on the v0.18.x branch should be sycned with their corresponding partial in the [Services Partials](https://github.com/pivotal/docs-services-partials) repo. Eventually, `docs-on-demamd-service-broker` partials will sourced from the Services Partials repo and removed here. 
-
 # Book repo for publishing this content
 
-Book repo: **docs-book-services-sdk**
+Book repo: **docs-book-odb**
 
 * **edge:** book branch that publishes the next unreleased version, from the **master** content branch. <br>**Pipeline:** https://concourse.run.pivotal.io/teams/cf-docs/pipelines/cf-services-sdk-edge
 
@@ -37,7 +35,7 @@ Book repo: **docs-book-services-sdk**
 
 ## Partials
 
-Cross-product partials for **On-Demand Service Broker SDK** are single sourced from the [Services Partials](https://github.com/pivotal-cf/docs-services-partials) repo.
+Cross-product partials for **On-Demand Service Broker SDK** v0.23.x branch are single sourced from the [Services Partials](https://github.com/pivotal-cf/docs-services-partials) repo.
 
 Previously, these partials were sourced from the v018.x branch of the [On Demand Service Broker SDK](https://github.com/pivotal-cf/docs-on-demand-service-broker/tree/v0.18.x) content repo.
 
