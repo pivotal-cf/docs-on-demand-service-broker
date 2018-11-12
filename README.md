@@ -12,12 +12,12 @@ For example:
 | v0.23.x         | live on Sept 18, 2018 https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-23|
 | v0.22.x         | live |
 | v0.21.x         | live |
-| v0.20.x         | live |
-| v0.19.x         | live | 
-| v0.18.x         | live | 
-| v0.17.x         | live | 
-| v0.16.x         | live |
-| v0.15.x         | live |
+| v0.20.x         | obsolete, but do not delete the branch. PDF available at https://docs.pivotal.io/archives/odb-0.20.pdf. |
+| v0.19.x         | obsolete, but do not delete the branch. PDF available at https://docs.pivotal.io/archives/odb-0.19.pdf. | 
+| v0.18.x         | obsolete, but do not delete the branch. PDF available at https://docs.pivotal.io/archives/odb-0.18.pdf. | 
+| v0.17.x         | obsolete, but do not delete the branch. PDF available at https://docs.pivotal.io/archives/odb-0.17.pdf. | 
+| v0.16.x         | obsolete, but do not delete the branch. PDF available at https://docs.pivotal.io/archives/odb-0.16.pdf. |
+| v0.15.x         | obsolete, but do not delete the branch. PDF available at https://docs.pivotal.io/archives/odb-0.15.pdf. |
 | v0.14.x         | obsolete, but do not delete the branch | 
 | v0.13.x         | obsolete, but do not delete the branch | 
 | v0.12.x         | obsolete, but do not delete the branch | 
