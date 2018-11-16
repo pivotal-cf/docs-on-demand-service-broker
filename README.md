@@ -9,8 +9,8 @@ For example:
 | Branch name     | Use for|
 |-----------------| ------|
 | master          | Unreleased version (edge - 0.24) https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-2n|
-| v0.24.x         | live on Nov 16, 2018 https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-24|
-| v0.23.x         | live on Sept 18, 2018 https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-23|
+| v0.24.x         | live on Nov 16, 2018 https://docs.pivotal.io/svc-sdk/odb/0-24|
+| v0.23.x         | live on Sept 18, 2018 https://docs.pivotal.io/svc-sdk/odb/0-23|
 | v0.22.x         | live |
 | v0.21.x         | live |
 | v0.20.x         | obsolete, but do not delete the branch. PDF available at https://docs.pivotal.io/archives/odb-0.20.pdf. |
