@@ -160,7 +160,7 @@ For more information, see <a href="#lifecycle-errands"> Service Instance Lifecyc
 
 ### <a id="ssl-certs"></a>Configure SSL Certificates
 
-If ODB is configured to communicate with BOSH on the Director's public IP, you may
+If ODB is configured to communicate with BOSH on the Director's public IP address, you may
 be using a self-signed certificate unless you have a domain for your BOSH Director.
 ODB does not ignore TLS certificate validation errors by default.
 
@@ -751,23 +751,31 @@ For a more detailed manifest snippet, see [Configure Your Manifest](#core-broker
 
 
 
-## <a id="route"></a>(Optional) Register the Route
+## <a id="route"></a>(Optional) Register the Route to the Broker
 
-You can colocate the `route_registrar` job from the routing release
-with the `on-demand-service-broker`.
-
-The `route_registration` job achieves the following:
+You can register a route to the broker, using the `route_registrar` job from the
+routing release.
+The `route_registrar` job achieves the following:
 
 * Load balances multiple instances of ODB using Cloud Foundry router
-* Allows access of ODB from the public internet
+* Allows access to ODB from the public internet
 
-To register the route, do the following:
+For more information, see [route_registrar job](http://bosh.io/jobs/route_registrar?source=github.com/cloudfoundry-incubator/cf-routing-release).
+
+To register the route, colocate the `route_registrar` job with the `on-demand-service-broker`:
 
 1. Download the routing release.
    See [cf-routing Release](http://bosh.io/releases/github.com/cloudfoundry-incubator/cf-routing-release?all=1).
 1. Upload the routing release to your BOSH Director.
-1. Configure the job properties, replacing the URL query string as appropriate.
-   For more information, see [route_registrar job](http://bosh.io/jobs/route_registrar?source=github.com/cloudfoundry-incubator/cf-routing-release).
+1. Add the `route_registrar` job to your deployment manifest and configure it with an HTTP route.
+This creates a URI for your broker.
+
+For how to configure the `route_registrar` job, see the
+[routing release](https://github.com/cloudfoundry/routing-release/blob/d59974071d97b9f1770dd170240bff2fe5ba1558/jobs/route_registrar/spec#L95-L100)
+GitHub repository.
+
+<p class="note"><strong>Note:</strong>
+  You must use the same port for the broker and the route. The broker defaults to 8080.</p>
 1. If you configure a route, set the `broker_uri` property in the [register-broker errand](./management.html#register-broker).
 
 ## <a id="service-instance-quotas"></a>(Optional) Set Service Instance Quotas
