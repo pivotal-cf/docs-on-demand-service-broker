@@ -140,6 +140,14 @@ with external service instances API configured.
 <%= partial 'mmd/upgrade_all_instances_with_si_api_workflow.mmd' %>
 
 
+## <a id="recreating"></a>About Recreating All Service Instances
+
+ODB provides the BOSH errand `recreate-all-service-instances`. This errand executes a
+`bosh -d DEPLOYMENT_NAME recreate --fix` on each service instance managed by the broker.
+It is used for triggering low-level BOSH agent certificate re-installation, or for
+backup and restore purposes, for instance in a migration between foundations.
+
+<%= partial 'mmd/recreate_all_instances_workflow.mmd' %>
 
 ## <a id="binding"></a>About Binding and Unbinding Service Instances
  
