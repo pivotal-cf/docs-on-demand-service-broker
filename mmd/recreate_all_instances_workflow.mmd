@@ -1,0 +1,16 @@
+<div class="mermaid">
+sequenceDiagram
+  Operator->>Recreate Errand:bosh run errand recreate-all-service-instances
+  Recreate Errand->>On Demand Broker:GET instances
+  On Demand Broker->>CF / SI API:GET instances
+  CF / SI API->>On Demand Broker:instances
+  On Demand Broker->>Recreate Errand:instances
+  loop for all instances
+    Recreate Errand->>On Demand Broker: PATCH instance (recreate)
+    On Demand Broker->>BOSH: recreate --fix
+    BOSH->>On Demand Broker: accepted
+    On Demand Broker->>Recreate Errand: accepted
+    Note over Recreate Errand,BOSH: Recreate Errand polls On Demand Broker for last operation until complete
+  end
+  Recreate Errand->>Operator:completed successfully
+</div>

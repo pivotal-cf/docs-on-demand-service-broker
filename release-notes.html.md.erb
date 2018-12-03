@@ -4,35 +4,27 @@ owner: London Services Enablement
 ---
 <strong><%= modified_date %></strong>
 
-## <a id="release-notes"></a>v0.24.0
+## <a id="release-notes"></a>v0.25.0
 
-**Release Date: October 12, 2018**
-
-
-<p class="note breaking"><strong>Breaking Change:</strong> Service Instances
-API configuration has moved from the <code>upgrade-all-service-instances</code>
-errand to the broker job.
-For more information, see <strong>Features</strong> below.</p>
-
-<p class="note breaking"><strong>Breaking Change:</strong> The service adapter
-  method <code>GenerateManifest()</code> takes a new parameter, <code>previousSecrets</code>.
-  This parameter contains secrets from the previously deployed service instance manifest.</p>
+**Release Date: December 3, 2018**
 
 ### Features
 
 New features and changes in this release:
 
-- The `orphan-deployments` errand can use the Service Instances API. This
-change only impacts brokers that are installed without Cloud Foundry. The
-configuration for this was previously on the `update-all-service-instances`
-errand, and has been moved to the broker job. <br><br>The same
-configuration is used for both the `orphan-deployments` and `upgrade-all`
-errands.
-- Upgrades the CredHub CLI library to enable use with both v1 and v2 CredHub servers.
-This is required to use Pivotal Cloud Foundry (PCF) v2.4 and later.
+- Introduces a new errand `recreate-all-service-instances`. This should be added to service
+ broker manifests to enable operators to recreate all service instances
+ managed by a broker. If your broker has lifecycle errands configured, these will NOT be run by the `recreate-all-service-instances` errand. We plan to implement this functionality in a future release.
+ This errand may be useful for:
+   * performing a seamless rotation of the Ops Manager root CA. For further information, see the [Ops Manager cert rotation docs](https://docs.pivotal.io/pivotalcf/2-2/security/pcf-infrastructure/api-cert-rotation.html#rotate-ca).
+   * performing a full restore of the platform, such as during disaster recovery or migrations.
+
+- Adds a new configuration option for the `cf_service_access` broker property. This allows brokers to be configured to enable service access for a single org only. Previously it was only possible to enable access either for all or no orgs.
 - Upgrades golang to v1.11.2
-- Adds the parameter `previousSecrets` to the `GenerateManifest()` method in
-the Service Adapter.
+
+### Breaking Changes
+
+There are no breaking changes in this release.
 
 ### Known Issues
 

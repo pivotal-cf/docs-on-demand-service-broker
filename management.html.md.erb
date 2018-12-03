@@ -396,6 +396,61 @@ To delete an orphan deployment, do the following:
     delete-deployment
     </pre>
 
+## <a id="recreate-all-service-instances"></a>Recreate All Service Instances
+
+<p class="note">
+  <strong>Note:</strong> The <code>recreate-all-service-instances</code> errand
+  does NOT trigger service instance post-deploy errands.
+</p>
+
+To allow a VM recreate of all service instances (for example, following a BOSH root certificate authority rotation),
+add the recreate-all-service-instances errand as an instance group in your broker manifest:
+
+    ```yaml
+    - name: recreate-all-service-instances
+      lifecycle: errand
+      instances: 1
+      jobs:
+        - name: recreate-all-service-instances
+          release: ODB-RELEASE-NAME
+          properties:
+            polling_interval_seconds: POLLING-INTERVAL-IN-SECONDS # defaults to 60
+            attempt_interval_seconds: ATTEMPT-INTERVAL-IN-SECONDS # defaults to 60
+            attempt_limit: NUMBER-OF-ATTEMPTS # defaults to 5
+      vm_type: VM-TYPE
+      stemcell: STEMCELL
+      networks: [{name: NETWORK}]
+      azs: [AZ]
+    ```
+
+The errand properties allow fine-tuning of the behavior of the recreate errand:
+<table class="nice">
+  <col width="35%">
+  <col width="65%">
+  <th>Property</th>
+  <th>Description</th>
+  <tr>
+    <td><code>polling\_interval\_seconds</code></td>
+    <td> This controls the wait between checking the status of the successfully
+    submitted BOSH recreate tasks. </td> </tr>
+  <tr>
+    <td><code>attempt\_interval\_seconds</code></td>
+    <td> When there are BOSH tasks in progress on a service instance which is
+    the target of a recreate, the instance will be put in a retry queue. This
+    property controls the pause between successive retries. </td> </tr>
+  <tr>
+    <td><code>attempt\_limit</code></td>
+    <td> The number of times to check whether each instance is available to be
+    recreated. After the limit is reached for an instance, the errand will
+    terminate.</td> </tr>
+</table>
+
+Run the errand with the following command:
+
+    ```
+    bosh -d DEPLOYMENT-NAME run-errand recreate-all-service-instances
+    ```
+
 ## <a id="update-service-plans"></a> Service Management
 
 This section describes how to update, disable, and remove service plans.
