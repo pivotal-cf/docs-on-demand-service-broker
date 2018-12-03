@@ -67,14 +67,17 @@ To add the `register-broker` errand to the manifest, do the following.
       networks: [NETWORK]
       azs: [AZ]
     ```
-      - If the `broker_uri` property is set, you must register a route for your broker with Cloud Foundry. See the [Route Registration](./operating.html#route) section for more details.
+      - If the `broker_uri` property is set, you must register a route for your broker with Cloud Foundry.
+      See the [Route Registration](./operating.html#route) section for more details.
       - When `enable_service_access`: `false` is set, the errand does not change service access for any plan.
-      - You can enable individual plans by using the optional `cf_service_access` property. The values accepted are the following:
+      - You can enable individual plans by using the optional `cf_service_access` property.
+      The values accepted are the following:
         - `enable`: the errand enables access for that plan. This is the default value.
         - `disable`: the errand disables access for that plan
         - `manual`: the errand performs no action.
 
-        Only Cloud Foundry admin users can see plans with disabled service access. Org Managers and Space Managers cannot see these plans.
+        Only Cloud Foundry admin users can see plans with disabled service access.
+        Org Managers and Space Managers cannot see these plans.
 
 #### Run the Errand
 
@@ -228,7 +231,9 @@ To run the `deregister-broker` errand, do the following.
 
 ### <a id="delete-instances-and-deregister"></a>Delete All Service Instances and Deregister Broker
 
-<p class="note warning"><strong>WARNING:</strong> Use extreme caution when running this errand. You should only use it when you want to destroy all of the on-demand service instances and deregister the broker from Cloud Foundry.</p>
+<p class="note warning"><strong>WARNING:</strong> Use extreme caution when running this errand.
+  You should only use it when you want to destroy all of the on-demand service
+  instances and deregister the broker from Cloud Foundry.</p>
 
 The `delete-all-service-instances-and-deregister-broker` errand performs a similar operation to the
 errands [delete-all-service-instances](#delete-instances) and [deregister-broker](#deregister-broker).
@@ -396,15 +401,26 @@ To delete an orphan deployment, do the following:
     delete-deployment
     </pre>
 
-## <a id="recreate-all-service-instances"></a>Recreate All Service Instances
+### <a id="recreate-all-service-instances"></a>Recreate All Service Instances
 
 <p class="note">
   <strong>Note:</strong> The <code>recreate-all-service-instances</code> errand
-  does NOT trigger service instance post-deploy errands.
-</p>
+  does not trigger service instance post-deploy errands.</p>
 
-To allow a VM recreate of all service instances (for example, following a BOSH root certificate authority rotation),
-add the recreate-all-service-instances errand as an instance group in your broker manifest:
+The `recreate-all-service-instances` errand recreates all service instance VMs
+managed by a broker.
+You may want use this errand when doing, for example, the following:
+
+   * Rotating the Ops Manager root certificate authority (CA).
+   For more information about rotating CAs, see [Rotate CAs and Leaf Certificates](https://docs.pivotal.io/pivotalcf/security/pcf-infrastructure/api-cert-rotation.html#rotate-ca).
+   * A full restore of the platform during disaster recovery or migration.
+
+
+#### Add the Errand to the Manifest
+
+To add the `recreate-all-service-instances` errand to the manifest, do the following.
+
+1. Add the following instance group to your manifest:
 
     ```yaml
     - name: recreate-all-service-instances
@@ -423,33 +439,44 @@ add the recreate-all-service-instances errand as an instance group in your broke
       azs: [AZ]
     ```
 
-The errand properties allow fine-tuning of the behavior of the recreate errand:
-<table class="nice">
-  <col width="35%">
-  <col width="65%">
-  <th>Property</th>
-  <th>Description</th>
-  <tr>
-    <td><code>polling\_interval\_seconds</code></td>
-    <td> This controls the wait between checking the status of the successfully
-    submitted BOSH recreate tasks. </td> </tr>
-  <tr>
-    <td><code>attempt\_interval\_seconds</code></td>
-    <td> When there are BOSH tasks in progress on a service instance which is
-    the target of a recreate, the instance will be put in a retry queue. This
-    property controls the pause between successive retries. </td> </tr>
-  <tr>
-    <td><code>attempt\_limit</code></td>
-    <td> The number of times to check whether each instance is available to be
-    recreated. After the limit is reached for an instance, the errand will
-    terminate.</td> </tr>
-</table>
+    You can configure the behavior of this errand using following properties:
 
-Run the errand with the following command:
+    <table class="nice">
+      <col width="35%">
+      <col width="65%">
+      <th>Property</th>
+      <th>Description</th>
+      <tr>
+        <td><code>polling_interval_seconds</code></td>
+        <td> This controls the wait between checking the status of successfully
+        submitted BOSH recreate tasks. </td> </tr>
+      <tr>
+        <td><code>attempt_interval_seconds</code></td>
+        <td> When there are BOSH tasks in progress on the service instance to
+        recreate, the instance is put in a retry queue.
+        This property controls the pause between retries. </td> </tr>
+      <tr>
+        <td><code>attempt_limit</code></td>
+        <td> The number of times to check whether each instance is available to be
+        recreated. After an instance reaches the limit, the errand terminates.</td> </tr>
+    </table>
+
+#### Run the Errand
+
+To run the `recreate-all-service-instances` errand, do the following.
+
+1. Run the command:
 
     ```
     bosh -d DEPLOYMENT-NAME run-errand recreate-all-service-instances
     ```
+    Where:
+    - `DEPLOYMENT-NAME` is the name of your deployment.
+
+    For example:
+    <pre class="terminal">
+    $ bosh -d cf run-errand recreate-all-service-instances
+    </pre>
 
 ## <a id="update-service-plans"></a> Service Management
 

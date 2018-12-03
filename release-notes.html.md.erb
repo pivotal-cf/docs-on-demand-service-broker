@@ -12,14 +12,19 @@ owner: London Services Enablement
 
 New features and changes in this release:
 
-- Introduces a new errand `recreate-all-service-instances`. This should be added to service
- broker manifests to enable operators to recreate all service instances
- managed by a broker. If your broker has lifecycle errands configured, these will NOT be run by the `recreate-all-service-instances` errand. We plan to implement this functionality in a future release.
- This errand may be useful for:
-   * performing a seamless rotation of the Ops Manager root CA. For further information, see the [Ops Manager cert rotation docs](https://docs.pivotal.io/pivotalcf/2-2/security/pcf-infrastructure/api-cert-rotation.html#rotate-ca).
-   * performing a full restore of the platform, such as during disaster recovery or migrations.
-
-- Adds a new configuration option for the `cf_service_access` broker property. This allows brokers to be configured to enable service access for a single org only. Previously it was only possible to enable access either for all or no orgs.
+- Introduces the `recreate-all-service-instances` errand.
+The errand enables operators to recreate all service instances managed by a broker.
+This errand may be useful when doing the following:
+<ul>
+   <li> A seamless rotation of the Ops Manager root certificate authority (CA).</li>
+   <li>A full restore of the platform, such as during disaster recovery or migration.</li>
+</ul>
+The `recreate-all-service-instances` errand does not trigger lifecycle errands.
+For how to use this errand, see [Recreate All Service Instances](./management.html#recreate-all-service-instances).
+- Adds a new configuration option for the `cf_service_access` broker property.
+This allows you to configure the broker to enable service access for a single org only.
+This allows brokers to be configured to enable service access for a single org only.
+Previously it was only possible to enable access either for all or no orgs.
 - Upgrades golang to v1.11.2
 
 ### Breaking Changes
