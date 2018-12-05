@@ -8,7 +8,9 @@ For example:
 
 | Branch name     | Use for|
 |-----------------| ------|
-| master          | Unreleased version (edge - 0.24) https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-2n|
+| master          | Unreleased version (edge - 0.26) https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-2n|
+| v0.25.x         | live on Dec 5, 2018 https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-25|
+| v0.24.x         | live on Nov 14, 2018 https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-24|
 | v0.23.x         | live on Sept 18, 2018 https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-23|
 | v0.22.x         | live |
 | v0.21.x         | live |
