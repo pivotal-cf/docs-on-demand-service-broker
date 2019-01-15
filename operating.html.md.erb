@@ -633,7 +633,11 @@ This may be provided as part of your Cloud Foundry deployment.
 
 - Your instance group requires access to the local DNS provider because the address
 for CredHub is a local domain name.
-Currently, most Cloud Foundry deployments use Consul as a DNS provider.
+
+<p class="note"><strong>Note: </strong>
+  Pivotal recommends using BOSH DNS as a DNS provider.
+  If you are using PCF v2.4 or later, you cannot use consul as a DNS provider
+  because consul server VMs have been removed in Pivotal Application Service (PAS) v2.4 .</p>
 
 ### Procedure for Enabling Secure Binding
 
@@ -684,28 +688,6 @@ For example:
       <br>
   Where `NEW-CREDHUB-CLIENT-ID` and `NEW-CREDHUB-CLIENT-SECRET` are the CredHub client
   credentials you created in step 1.
-
-1. If you use Consul as a DNS provider, you might want to consume Consul links to
-enable DNS. To do this, add the `consul_agent` job to the manifest as follows:
-
-    ```
-    instance_groups:
-      - name: broker
-        ...
-        jobs:
-          ...
-          - name: consul_agent
-            release: consul
-            consumes:
-              consul: nil
-              consul_client:
-                from: consul_client_link
-                deployment: cf
-              consul_common:
-                from: consul_common_link
-                deployment: cf
-              consul_server: nil
-    ```
 
 For a more detailed manifest snippet, see [Configure Your Manifest](#core-broker-config) above.
 
