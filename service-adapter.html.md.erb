@@ -498,7 +498,7 @@ Perform the following steps to use the SDK:
 
 ### <a id="interfaces"></a>Interfaces
 
-The `HandleCLI` function accepts structs that implement the following interfaces:
+The `HandleCLI` function accepts structs that implement the following interfaces. These correspond to the <a href="#subcommands-in-the-adapter-interface">adapter interfaces</a> documented above.
 
 ```go
 type CommandLineHandler struct {
@@ -507,22 +507,73 @@ type CommandLineHandler struct {
 	DashboardURLGenerator DashboardUrlGenerator
 	SchemaGenerator       SchemaGenerator
 }
+```
+
+A manifest generator should be provided to the CommandLineHandler.
+```go
 
 type ManifestGenerator interface {
-	GenerateManifest(serviceDeployment ServiceDeployment, plan Plan, requestParams RequestParameters, previousManifest *bosh.BoshManifest, previousPlan *Plan) (bosh.BoshManifest, error)
+	GenerateManifest(params GenerateManifestParams) (bosh.BoshManifest, error)
 }
+
+type GenerateManifestParams struct {
+	ServiceDeployment ServiceDeployment
+	Plan              Plan
+	RequestParams     RequestParameters
+	PreviousManifest  *bosh.BoshManifest
+	PreviousPlan      *Plan
+	PreviousSecrets   ManifestSecrets
+	PreviousConfigs   BOSHConfigs
+}
+```
+
+Most service adapters should provide a Binder.
+```go
 
 type Binder interface {
-	CreateBinding(bindingID string, deploymentTopology bosh.BoshVMs, manifest bosh.BoshManifest, requestParams RequestParameters) (Binding, error)
-	DeleteBinding(bindingID string, deploymentTopology bosh.BoshVMs, manifest bosh.BoshManifest, requestParams RequestParameters) error
+	CreateBinding(params CreateBindingParams) (Binding, error)
+	DeleteBinding(params DeleteBindingParams) error
 }
+
+type CreateBindingParams struct {
+	BindingID          string
+	DeploymentTopology bosh.BoshVMs
+	Manifest           bosh.BoshManifest
+	RequestParams      RequestParameters
+	Secrets            ManifestSecrets
+	DnsAddresses       DNSAddresses
+}
+
+type DeleteBindingParams struct {
+	BindingID          string
+	DeploymentTopology bosh.BoshVMs
+	Manifest           bosh.BoshManifest
+	RequestParams      RequestParameters
+	Secrets            ManifestSecrets
+}
+```
+A DashboardUrlGenerator can optionally be provided.
+```go
 
 type DashboardUrlGenerator interface {
-	DashboardUrl(instanceID string, plan Plan, manifest bosh.BoshManifest) (DashboardUrl, error)
+	DashboardUrl(params DashboardUrlParams) (DashboardUrl, error)
 }
 
+type DashboardUrlParams struct {
+	InstanceID string
+	Plan       Plan
+	Manifest   bosh.BoshManifest
+}
+```
+A SchemaGenerator can optionally be provided.
+```go
+
 type SchemaGenerator interface {
-	GeneratePlanSchema(plan Plan) (PlanSchema, error)
+	GeneratePlanSchema(params GeneratePlanSchemaParams) (PlanSchema, error)
+}
+
+type GeneratePlanSchemaParams struct {
+	Plan Plan
 }
 ```
 
