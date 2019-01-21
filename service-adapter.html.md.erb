@@ -498,7 +498,9 @@ Perform the following steps to use the SDK:
 
 ### <a id="interfaces"></a>Interfaces
 
-The `HandleCLI` function accepts structs that implement the following interfaces. These correspond to the <a href="#subcommands-in-the-adapter-interface">adapter interfaces</a> documented above.
+The `HandleCLI` function accepts structs that implement the following interfaces.
+For more information about the corresponding adapter interfaces, see
+[Subcommands in the Adapter Interface](#subcommands) above.
 
 ```go
 type CommandLineHandler struct {
@@ -510,6 +512,7 @@ type CommandLineHandler struct {
 ```
 
 A manifest generator should be provided to the CommandLineHandler.
+
 ```go
 
 type ManifestGenerator interface {
@@ -526,8 +529,9 @@ type GenerateManifestParams struct {
 	PreviousConfigs   BOSHConfigs
 }
 ```
-
+<br><br>
 Most service adapters should provide a Binder.
+
 ```go
 
 type Binder interface {
@@ -552,7 +556,9 @@ type DeleteBindingParams struct {
 	Secrets            ManifestSecrets
 }
 ```
+
 A DashboardUrlGenerator can optionally be provided.
+
 ```go
 
 type DashboardUrlGenerator interface {
@@ -565,7 +571,9 @@ type DashboardUrlParams struct {
 	Manifest   bosh.BoshManifest
 }
 ```
+
 A SchemaGenerator can optionally be provided.
+
 ```go
 
 type SchemaGenerator interface {
