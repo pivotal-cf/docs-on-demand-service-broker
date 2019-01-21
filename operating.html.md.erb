@@ -418,26 +418,26 @@ For an example, see the [Starter Snippet](#starter-snippet) below.
 
 When configuring the service catalog, supply the following:
 
-* **Each release job specified by the service author:**
+* **The release jobs specified by the service author:**
   * Supply each release job exactly once.
-  * You can include releases that provide many jobs, as long as each required job is
-provided by exactly one release.
-<br><br>
+  * You can include releases that provide many jobs, as long as each required job
+  is provided by exactly one release.<br><br>
+
 * **A stemcell:**
   * This is used on each VM in the service deployments.
-  * Only supply one stemcell. ODB does not currently support service instance deployments that use a different
-stemcell for different instance groups.
+  * Only supply one stemcell. ODB does not currently support service instance
+  deployments that use a different stemcell for different instance groups.
   * Use exact versions for releases and stemcells. The use of `latest` and floating
-stemcells are not supported.
-<br><br>
+stemcells are not supported.<br><br>
+
 * **Cloud Foundry service metadata for the service offering:**
-  * This metadata
-is aggregated in the Marketplace and displayed in Apps Manager and the cf CLI.
-  * You can use other arbitrary field names as needed in addition to the Open Service Broker API
-(OSBAPI) recommended fields.
-For information about the recommended fields for service metadata,
-see the [Open Service Broker API Profile](https://docs.pivotal.io/pivotalcf/services/catalog-metadata.html#services-metadata).
-in GitHub.
+  * This metadata is aggregated in the Marketplace and displayed in Apps Manager
+  and the cf CLI.
+  * You can use other arbitrary field names as needed in addition to the Open
+  Service Broker API (OSBAPI) recommended fields.
+  For information about the recommended fields for service metadata, see the
+  [Open Service Broker API Profile](https://docs.pivotal.io/pivotalcf/services/catalog-metadata.html#services-metadata)
+  in GitHub.
 
 #### <a id="compose-plans"></a> Compose Plans
 
@@ -450,7 +450,8 @@ When composing plans, supply the following:
 * **Cloud Foundry plan metadata for each plan:**<br><br>
   You can use other arbitrary field names in addition to the OSBAPI recommended fields.
   For information about the recommended fields for plan metadata,
-  see the [Open Service Broker API Profile](https://github.com/openservicebrokerapi/servicebroker/blob/master/profile.md#plan-metadata-fields) in GitHub.<br><br>
+  see the [Open Service Broker API Profile](https://github.com/openservicebrokerapi/servicebroker/blob/master/profile.md#plan-metadata-fields)
+  in GitHub.<br><br>
 
 * **Resource mapping:**
   * For each plan, supply resource mapping for each instance group that service authors specify.
@@ -472,11 +473,13 @@ When composing plans, supply the following:
   For example including a boolean to enable disk persistence for Redis, or a list
   of strings representing RabbitMQ plugins to load.
   * The service author should document whether a plan property:
-     * Is mandatory or optional
-     * Precludes the use of another
-     * Affects recommended instance group to resource mappings
-  * You can also specify global properties at the service offering level, where they are applied to every plan.
-  If there is a conflict between global and plan-level properties, the plan properties take precedence.<br><br>
+    * Is mandatory or optional
+    * Precludes the use of another
+    * Affects recommended instance group to resource mappings
+  * You can also specify global properties at the service offering level, where
+  they are applied to every plan.
+  If there is a conflict between global and plan-level properties, the plan
+  properties take precedence.<br><br>
 
 * **(Optional) Provide an update block for each plan**
   * You might require plan-specific configuration for BOSH's update instance operation.
@@ -484,7 +487,7 @@ When composing plans, supply the following:
   * Plan-specific update blocks should have the same structure as the update block in a BOSH manifest.
   See [Update Block](https://bosh.io/docs/manifest-v2.html#update) in the BOSH documentation.
   * The service author can define a default update block to be used when a plan-specific update block is not provided,
-if the service adapter supports configuring update blocks in the manifest.
+  if the service adapter supports configuring update blocks in the manifest.
 
 #### <a id="starter-snippet"></a>Starter Snippet
 
