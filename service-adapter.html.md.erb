@@ -498,9 +498,9 @@ Perform the following steps to use the SDK:
 
 ### <a id="interfaces"></a>Interfaces
 
-The `HandleCLI` function accepts structs that implement the following interfaces.
+The `HandleCLI` function accepts structs that implement the interfaces below.
 For more information about the corresponding adapter interfaces, see
-[Subcommands in the Adapter Interface](#subcommands) above.
+[Subcommands in the Adapter Interface](#subcommands).
 
 ```go
 type CommandLineHandler struct {
@@ -510,80 +510,82 @@ type CommandLineHandler struct {
 	SchemaGenerator       SchemaGenerator
 }
 ```
+<br>
+Service adapters provide the following to the `CommandLineHandler`:
 
-A manifest generator should be provided to the CommandLineHandler.
+* Service adapters must provide a `ManifestGenerator`.
 
-```go
+    ```go
 
-type ManifestGenerator interface {
-	GenerateManifest(params GenerateManifestParams) (bosh.BoshManifest, error)
-}
+    type ManifestGenerator interface {
+    	GenerateManifest(params GenerateManifestParams) (bosh.BoshManifest, error)
+    }
 
-type GenerateManifestParams struct {
-	ServiceDeployment ServiceDeployment
-	Plan              Plan
-	RequestParams     RequestParameters
-	PreviousManifest  *bosh.BoshManifest
-	PreviousPlan      *Plan
-	PreviousSecrets   ManifestSecrets
-	PreviousConfigs   BOSHConfigs
-}
-```
-<br><br>
-Most service adapters should provide a Binder.
+    type GenerateManifestParams struct {
+    	ServiceDeployment ServiceDeployment
+    	Plan              Plan
+    	RequestParams     RequestParameters
+    	PreviousManifest  *bosh.BoshManifest
+    	PreviousPlan      *Plan
+    	PreviousSecrets   ManifestSecrets
+    	PreviousConfigs   BOSHConfigs
+    }
+    ```
+<br>
+* Most service adapters should provide a `Binder`.
 
-```go
+    ```go
 
-type Binder interface {
-	CreateBinding(params CreateBindingParams) (Binding, error)
-	DeleteBinding(params DeleteBindingParams) error
-}
+    type Binder interface {
+    	CreateBinding(params CreateBindingParams) (Binding, error)
+    	DeleteBinding(params DeleteBindingParams) error
+    }
 
-type CreateBindingParams struct {
-	BindingID          string
-	DeploymentTopology bosh.BoshVMs
-	Manifest           bosh.BoshManifest
-	RequestParams      RequestParameters
-	Secrets            ManifestSecrets
-	DnsAddresses       DNSAddresses
-}
+    type CreateBindingParams struct {
+    	BindingID          string
+    	DeploymentTopology bosh.BoshVMs
+    	Manifest           bosh.BoshManifest
+    	RequestParams      RequestParameters
+    	Secrets            ManifestSecrets
+    	DnsAddresses       DNSAddresses
+    }
 
-type DeleteBindingParams struct {
-	BindingID          string
-	DeploymentTopology bosh.BoshVMs
-	Manifest           bosh.BoshManifest
-	RequestParams      RequestParameters
-	Secrets            ManifestSecrets
-}
-```
+    type DeleteBindingParams struct {
+    	BindingID          string
+    	DeploymentTopology bosh.BoshVMs
+    	Manifest           bosh.BoshManifest
+    	RequestParams      RequestParameters
+    	Secrets            ManifestSecrets
+    }
+    ```
+<br>
+* (Optional) Service adapters can provide a `DashboardUrlGenerator`.
 
-A DashboardUrlGenerator can optionally be provided.
+    ```go
 
-```go
+    type DashboardUrlGenerator interface {
+    	DashboardUrl(params DashboardUrlParams) (DashboardUrl, error)
+    }
 
-type DashboardUrlGenerator interface {
-	DashboardUrl(params DashboardUrlParams) (DashboardUrl, error)
-}
+    type DashboardUrlParams struct {
+    	InstanceID string
+    	Plan       Plan
+    	Manifest   bosh.BoshManifest
+    }
+    ```
+<br>
+* (Optional) Service adapters can provide a `SchemaGenerator`.
 
-type DashboardUrlParams struct {
-	InstanceID string
-	Plan       Plan
-	Manifest   bosh.BoshManifest
-}
-```
+    ```go
 
-A SchemaGenerator can optionally be provided.
+    type SchemaGenerator interface {
+    	GeneratePlanSchema(params GeneratePlanSchemaParams) (PlanSchema, error)
+    }
 
-```go
-
-type SchemaGenerator interface {
-	GeneratePlanSchema(params GeneratePlanSchemaParams) (PlanSchema, error)
-}
-
-type GeneratePlanSchemaParams struct {
-	Plan Plan
-}
-```
+    type GeneratePlanSchemaParams struct {
+    	Plan Plan
+    }
+    ```
 
 ### <a id="helper_function"></a>Helpers
 
