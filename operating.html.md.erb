@@ -411,7 +411,7 @@ instance_groups:
 ### <a id="catalog"></a>Configure the Service Catalog and Plan Composition
 
 Configure the service catalog and compose plans in the properties section of broker job
-using the following sections a guide.
+using the following sections as a guide.
 For an example, see the [Starter Snippet](#starter-snippet) below.
 
 #### <a id="create-metadata"></a> Configure the Service Catalog
@@ -470,12 +470,12 @@ When composing plans, supply the following:
 
 * **Values for plan properties:**
   * Plan properties are key-value pairs defined by the service authors.
-  For example including a boolean to enable disk persistence for Redis, or a list
+  For example, including a boolean to enable disk persistence for Redis or a list
   of strings representing RabbitMQ plugins to load.
   * The service author should document whether a plan property:
-    * Is mandatory or optional
-    * Precludes the use of another
-    * Affects recommended instance group to resource mappings
+      * Is mandatory or optional
+      * Precludes the use of another
+      * Affects recommended instance group to resource mappings
   * You can also specify global properties at the service offering level, where
   they are applied to every plan.
   If there is a conflict between global and plan-level properties, the plan
@@ -491,7 +491,7 @@ When composing plans, supply the following:
 
 #### <a id="starter-snippet"></a>Starter Snippet
 
-Add this Snippet to your broker job properties section, and provide the information listed in [Configure the Service Catalog and Plan Composition](#catalog) above.
+Add this snippet to your broker job properties section and provide the information listed in [Configure the Service Catalog and Plan Composition](#catalog) above.
 
 ```yaml
 service_deployment:
