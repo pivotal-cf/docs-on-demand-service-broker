@@ -497,85 +497,121 @@ Add this snippet to your broker job properties section and provide the informati
 service_deployment:
   releases:
     - name: SERVICE-RELEASE
-      version: SERVICE-RELEASE-VERSION # Exact release version
-      jobs: [RELEASE-JOBS-NEEDED-FOR-DEPLOYMENT-AND-LIFECYCLE-ERRANDS] # service author will specify list of jobs required
-  stemcell: # every instance group in the service deployment has the same stemcell
+      # Exact release version:
+      version: SERVICE-RELEASE-VERSION
+      # service author will specify list of jobs required:
+      jobs: [RELEASE-JOBS-NEEDED-FOR-DEPLOYMENT-AND-LIFECYCLE-ERRANDS]
+  # every instance group in the service deployment has the same stemcell:
+  stemcell:
     os: SERVICE-STEMCELL
-    version: SERVICE-STEMCELL-VERSION # Exact stemcell version
+    # Exact stemcell version:
+    version: SERVICE-STEMCELL-VERSION
 service_catalog:
   id: CF-MARKETPLACE-ID
   service_name: CF-MARKETPLACE-SERVICE-OFFERING-NAME
   service_description: CF-MARKETPLACE-DESCRIPTION
   bindable: TRUE|FALSE
-  plan_updatable: TRUE|FALSE # optional
-  tags: [TAGS] # optional
-  requires: [REQUIRED-PERMISSIONS] # optional
-  dashboard_client: # optional
+  # optional:
+  plan_updatable: TRUE|FALSE
+  # optional:
+  tags: [TAGS]
+  # optional:
+  requires: [REQUIRED-PERMISSIONS]
+  # optional:
+  dashboard_client:
     id: DASHBOARD-OAUTH-CLIENT-ID
     secret: DASHBOARD-OAUTH-CLIENT-SECRET
     redirect_uri: DASHBOARD-OAUTH-REDIRECT-URI
-  metadata: # optional
+  # optional:
+  metadata:
     display_name: DISPLAY-NAME
     image_url: IMAGE-URL
     long_description: LONG-DESCRIPTION
     provider_display_name: PROVIDER-DISPLAY-NAME
     documentation_url: DOCUMENTATION-URL
     support_url: SUPPORT-URL
-  global_properties: {} # optional - applied to every plan.
+  # optional - applied to every plan:
+  global_properties: {}
   global_quotas: # optional
-    service_instance_limit: INSTANCE-LIMIT # the maximum number of service instances across all plans
-    resource_limits: # optional - resource usage limits, determined by the 'cost' of each service instance plan
+    # the maximum number of service instances across all plans:
+    service_instance_limit: INSTANCE-LIMIT
+    # optional - resource usage limits, determined by the 'cost' of each service instance plan:
+    resource_limits:
       ips: RESOURCE-LIMIT
       memory: RESOURCE-LIMIT
   plans:
     - name: CF-MARKETPLACE-PLAN-NAME
-      free: TRUE|FALSE # optional - used by the cf CLI to display whether this plan is "free" or "paid"
+      # optional - used by the cf CLI to display whether this plan is "free" or "paid":
+      free: TRUE|FALSE
       plan_id: CF-MARKETPLACE-PLAN-ID
       description: CF-MARKETPLACE-DESCRIPTION
-      cf_service_access: ENABLE|DISABLE|MANUAL # optional - enable by default.
-      bindable: TRUE|FALSE # optional -  if specified, this takes precedence over the bindable attribute of the service
-      metadata: # optional
+      # optional - enable by default.
+      cf_service_access: ENABLE|DISABLE|MANUAL
+      # optional -  if specified, this takes precedence over the bindable attribute of the service:
+      bindable: TRUE|FALSE
+      # optional:
+      metadata:
         display_name: DISPLAY-NAME
         bullets: [BULLET1, BULLET2]
         costs:
           - amount:
               CURRENCY-CODE-STRING: CURRENCY-AMOUNT-FLOAT
             unit: FREQUENCY-OF-COST
-      resource_costs: # optional – the 'cost' of each instance in terms of resource quotas
+      # optional – the 'cost' of each instance in terms of resource quotas:
+      resource_costs:
         memory: AMOUNT-OF-RESOURCE-IN-THIS-PLAN
-      quotas: # optional
-        service_instance_limit: INSTANCE-LIMIT # the maximum number of service instances for this plan
-        resource_limits: # optional - resource usage limits for this plan
+      # optional:
+      quotas:
+        # the maximum number of service instances for this plan:
+        service_instance_limit: INSTANCE-LIMIT
+        # optional - resource usage limits for this plan:
+        resource_limits:
           memory: RESOURCE-LIMIT
-      instance_groups: # resource mapping for the instance groups defined by the service author
+      # resource mapping for the instance groups defined by the service author:
+      instance_groups:
         - name: SERVICE-AUTHOR-PROVIDED-INSTANCE-GROUP-NAME
           vm_type: VM-TYPE
-          vm_extensions: [VM-EXTENSIONS] # optional
+          # optional:
+          vm_extensions: [VM-EXTENSIONS]
           instances: INSTANCE-COUNT
           networks: [NETWORK]
           azs: [AZ]
-          persistent_disk_type: DISK # optional
-        - name: SERVICE-AUTHOR-PROVIDED-LIFECYCLE-ERRAND-NAME # optional
+          # optional:
+          persistent_disk_type: DISK
+          # optional:
+        - name: SERVICE-AUTHOR-PROVIDED-LIFECYCLE-ERRAND-NAME
           lifecycle: errand
           vm_type: VM-TYPE
           instances: INSTANCE-COUNT
           networks: [NETWORK]
           azs: [AZ]
-      properties: {} # valid property key-value pairs are defined by the service author
-      update: # optional
-        canaries: 1 # optional
-        max_in_flight: 2  # required
-        canary_watch_time: 1000-30000 # required
-        update_watch_time: 1000-30000 # required
-        serial: true # optional
-      lifecycle_errands: # optional
-        post_deploy: # optional
+      # valid property key-value pairs are defined by the service author:
+      properties: {}
+      # optional:
+      update:
+        # optional
+        canaries: 1
+        # required:
+        max_in_flight: 2
+        # required:
+        canary_watch_time: 1000-30000
+        # required:
+        update_watch_time: 1000-30000
+        # optional:
+        serial: true
+      # optional:
+      lifecycle_errands:
+        # optional:
+        post_deploy:
           - name: ERRAND-NAME
-            instances: [INSTANCE-NAME, ...] # optional - for co-locating errand
+            # optional - for co-locating errand:
+            instances: [INSTANCE-NAME, ...]
           - name: ANOTHER_ERRAND_NAME
-        pre_delete: # optional
+        # optional:
+        pre_delete:
           - name: ERRAND-NAME
-            instances: [INSTANCE-NAME, ...] # optional - for co-locating errand
+            # optional - for co-locating errand:
+            instances: [INSTANCE-NAME, ...]
 ```
 ## <a id="secure-bind-credentials"></a>(Optional) Access Manifest Secrets at Bind Time
 
