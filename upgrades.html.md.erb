@@ -309,12 +309,17 @@ update the broker's configuration in its deployment manifest to include the
       ...
       properties:
         ...
-        service_instances_api:   # add this section
-          url: SERVICE-INSTANCES-API-URL   # required
-          root_ca_cert: ROOT-CA-CERT   # optional
-          disable_ssl_cert_verification: True or False # Optional. Defaults to false.
+        # Add the following section:
+        service_instances_api:
+          # Required:
+          url: SERVICE-INSTANCES-API-URL
+          # Optional:
+          root_ca_cert: ROOT-CA-CERT
+          # Optional - defaults to false
+          disable_ssl_cert_verification: TRUE|FALSE
           authentication:
-            basic:  # required - currently the only supported authentication type
+            # Required - currently the only supported authentication type
+            basic:
               username: USERNAME
               password: PASSWORD
  ...
