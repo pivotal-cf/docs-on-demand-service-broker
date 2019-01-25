@@ -19,7 +19,7 @@ the Cloud Foundry catalog.
 
 #### Add the Errand to the Manifest
 
-To add the `register-broker` errand to the manifest, do the following.
+To add the `register-broker` errand to the manifest, do the following:
 
 1. Add the following instance group to your manifest:
 
@@ -59,7 +59,7 @@ To add the `register-broker` errand to the manifest, do the following.
 
 #### Run the Errand
 
-To run the `register-broker` errand, do the following.
+To run the `register-broker` errand, do the following:
 
 1. Run the command:
 
@@ -105,7 +105,7 @@ In this case, Pivotal recommends running the errand again.
 
 #### Add the Errand to the Manifest
 
-To add the `delete-all-service-instances` errand to the manifest, do the following.
+To add the `delete-all-service-instances` errand to the manifest, do the following:
 
 1. Add the following instance group to your manifest:
 
@@ -143,7 +143,7 @@ To add the `delete-all-service-instances` errand to the manifest, do the followi
 
 #### Run the Errand
 
-To run the `delete-all-service-instances` errand, do the following.
+To run the `delete-all-service-instances` errand, do the following:
 
 1. Run the command:
 
@@ -169,7 +169,7 @@ It requires that there are no existing service instances.
 
 #### Add the Errand to the Manifest
 
-To add the `deregister-broker` errand to the manifest, do the following.
+To add the `deregister-broker` errand to the manifest, do the following:
 
 1. Add the following instance group to your manifest:
 
@@ -190,7 +190,7 @@ To add the `deregister-broker` errand to the manifest, do the following.
 
 #### Run the Errand
 
-To run the `deregister-broker` errand, do the following.
+To run the `deregister-broker` errand, do the following:
 
 1. Run the command:
 
@@ -234,7 +234,7 @@ In this case, Pivotal recommends running the errand again.
 #### Add the Errand to the Manifest
 
 To add the `delete-all-service-instances-and-deregister-broker` errand to the manifest,
-do the following.
+do the following:
 
 1. Add the following instance group to your manifest:
 
@@ -273,7 +273,7 @@ do the following.
 
 #### Run the Errand
 
-To run the  `delete-all-service-instances-and-deregister-broker` errand, do the following.
+To run the  `delete-all-service-instances-and-deregister-broker` errand, do the following:
 
 1. Run the command:
 
@@ -305,7 +305,7 @@ operator.
 
 #### Add the Errand to the Manifest
 
-To add the `orphan-deployments` errand to the manifest, do the following.
+To add the `orphan-deployments` errand to the manifest, do the following:
 
 1. Add the following instance group to your manifest:
 
@@ -328,7 +328,7 @@ To add the `orphan-deployments` errand to the manifest, do the following.
 
 #### Run the Errand
 
-To run the `orphan-deployments` errand, do the following.
+To run the `orphan-deployments` errand, do the following:
 
 1. Run the command:
 
@@ -396,7 +396,7 @@ You might want use this errand when doing, for example, the following:
 
 #### Add the Errand to the Manifest
 
-To add the `recreate-all-service-instances` errand to the manifest, do the following.
+To add the `recreate-all-service-instances` errand to the manifest, do the following:
 
 1. Add the following instance group to your manifest:
 
@@ -441,7 +441,7 @@ To add the `recreate-all-service-instances` errand to the manifest, do the follo
 
 #### Run the Errand
 
-To run the `recreate-all-service-instances` errand, do the following.
+To run the `recreate-all-service-instances` errand, do the following:
 
 1. Run the command:
 
@@ -463,14 +463,17 @@ For how to upgrade the broker and service plans, see [Upgrading](./upgrades.html
 
 ### <a id="update-broker"></a>Update the Broker
 
-To modify the [core broker configuration](./operating.html#core-broker-config), do the following.
+To modify the broker, do the following:
 
 1. Make any necessary changes to the core broker configuration in the broker manifest.
+For more information about the core broker configuration, see [Configure Your Broker](./operating.html#core-broker-config).
+
 1. Deploy the broker.
+
 
 ### <a id="updating-service-offering"></a>Update the Service Offering
 
-To modify the service offering, do the following.
+To modify the service offering, do the following:
 
 1. Change properties in the `service_catalog` of the broker manifest. For example, update the
 service metadata.
@@ -492,7 +495,7 @@ the jobs used from a service release.
 
 ### <a id="disabling-service-plans"></a>Disable Service Plans
 
-To disable access to a service plan, do the following.
+To disable access to a service plan, do the following:
 
 1. Run the following command:
 

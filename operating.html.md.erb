@@ -181,7 +181,7 @@ see [Configuring SSL Certificates](https://bosh.io/docs/director-certs.html) in 
 
 Optionally, you can configure a separate root CA certificate that is used when ODB communicates with the Cloud Foundry API (Cloud Controller).
 For an example of how to add this in the manifest, see the line containing
-`CA-CERT-FOR-CLOUD-CONTROLLER` in the manifest snippet in [Configure Your Manifest](#core-broker-config) below.
+`CA-CERT-FOR-CLOUD-CONTROLLER` in the manifest snippet in [Starter Snippet for Your Broker](#broker-starter-snippet) below.
 
 
 ### <a id="bosh-teams"></a>Use BOSH Teams
@@ -246,7 +246,7 @@ Where the `BOSH-CLIENT-ID` and `BOSH-CLIENT-SECRET` are the `CLIENT-ID` and `CLI
 you provided in step 1.
 <br><br>
 The broker can then only perform BOSH operations on deployments it has created.
-For a more detailed manifest snippet, see [Configure Your Manifest](#core-broker-config) below.
+For a more detailed manifest snippet, see [Starter Snippet for Your Broker](#broker-starter-snippet) below.
 
 
 For more information about securing how ODB uses BOSH, see [Security](./security.html).
@@ -323,12 +323,13 @@ To upload a release to your BOSH Director, do the following:
     $ bosh -e lite upload-release my-service-adapter.tgz
     </pre>
 
+
 ## <a id="broker-manifest"></a>Write a Broker Manifest
 
-There are two parts to writing your broker manifest:
+There are two parts to writing your broker manifest. You must:
 
-* [Configure Your Manifest](#core-broker-config)
-* [Configure the Service Catalog and Plan Composition](#catalog)
+* [Configure Your Broker](#core-broker-config)
+* [Configure Your Service Catalog and Plan Composition](#catalog)
 
 If you are unfamiliar with writing BOSH v2 manifests, see [Manifest v2 Schema](http://bosh.io/docs/manifest-v2.html).
 
@@ -338,30 +339,31 @@ For example manifests, see the following:
 
   * For a Kafka service---[kafka-example-service-adapter-release](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml).
 
-<p class="note"><strong>Note:</strong>
-  If you are using a Xenial stemcell, you must update any BOSH add-ons to support Xenial stemcells.
-  See <a href="./upgrades.html#update-addons">Update Add-ons to Run with Xenial Stemcell</a>.</p>
+### <a id="core-broker-config"></a> Configure Your Broker
 
-### <a id="core-broker-config"></a> Configure Your Manifest
-
-Your manifest must contain one non-errand instance group that is colocated with
+Your manifest must contain exactly one non-errand instance group that is colocated with
 both of the following:
 
 * The broker job from `on-demand-service-broker`
 * Your service adapter job from your service adapter release
 
 The broker is stateless and does not need a persistent disk.
-The VM type can be small: a single CPU and 1 GB of memory is sufficient in most cases.
+Its VM type can be small: a single CPU and 1 GB of memory is sufficient in most cases.
 
-The snippet below uses the BOSH v2 syntax as well as global cloud
-config and job-level properties.
+#### <a id="broker-starter-snippet"></a>Starter Snippet for Your Broker
+
+Use the snippet below to help you to configure your broker.
+The snippet uses BOSH v2 syntax as well as global cloud config and job-level properties.
+
+For examples of complete broker manifests, see [Write a Broker Manifest](#broker-manifest) above.
 
 <p class="note warning"><strong>WARNING</strong>: The <code>disable_ssl_cert_verification</code>
   option is dangerous and should be set to <code>false</code> in production.</p>
 
 ```yaml
 instance_groups:
-  - name: broker # this can be anything
+  # the name can be anything:
+  - name: broker
     instances: 1
     vm_type: VM-TYPE
     stemcell: STEMCELL
@@ -373,29 +375,39 @@ instance_groups:
       - name: broker
         release: on-demand-service-broker
         properties:
-          # choose a port and basic auth credentials for the broker
+          # choose a port and basic auth credentials for the broker:
           port: BROKER-PORT
           username: BROKER-USERNAME
           password: BROKER-PASSWORD
-          disable_ssl_cert_verification: true|false # optional - defaults to false. This should NOT set to true in production
-          shutdown_timeout_in_seconds: 60 # optional - defaults to 60 seconds. This allows the broker to gracefully wait for any open requests to complete before shutting down.
-          expose_operational_errors: true|false # optional - defaults to false. This allows for BOSH operational errors to be displayed for the CF user.
-          enable_plan_schemas: true|false # optional - defaults to false. If set to true, plan schemas are included in the catalog, and the broker fails if the adapter does not implement generate-plan-schemas.
+          # optional - defaults to false. This should NOT set to true in production.
+          disable_ssl_cert_verification: TRUE|FALSE
+          # optional - defaults to 60 seconds. This allows the broker to gracefully wait for any open requests to complete before shutting down.
+          shutdown_timeout_in_seconds: 60
+          # optional - defaults to false. This allows for BOSH operational errors to be displayed for the CF user.
+          expose_operational_errors: TRUE|FALSE
+          # optional - defaults to false. If set to true, plan schemas are included in the catalog, and the broker fails if the adapter does not implement generate-plan-schemas.
+          enable_plan_schemas: TRUE|FALSE
           cf:
             url: CF-API-URL
-            root_ca_cert: CA-CERT-FOR-CLOUD-CONTROLLER # optional - see SSL certificates
-            authentication: # either client_credentials or user_credentials, not both as shown
+            # optional - see the Configure SSL Certificates section above:
+            root_ca_cert: CA-CERT-FOR-CLOUD-CONTROLLER
+            # either client_credentials or user_credentials, not both as shown:
+            authentication:
               url: CF-UAA-URL
               client_credentials:
-                client_id: UAA-CLIENT-ID # with cloud_controller.admin authority and client_credentials in the authorized_grant_type
+                # with cloud_controller.admin authority and client_credentials in the authorized_grant_type:
+                client_id: UAA-CLIENT-ID
                 secret: UAA-CLIENT-SECRET
               user_credentials:
-                username: CF-ADMIN-USERNAME # in the cloud_controller.admin and scim.read groups
+                # in the cloud_controller.admin and scim.read groups:
+                username: CF-ADMIN-USERNAME
                 password: CF-ADMIN-PASSWORD
           bosh:
             url: DIRECTOR-URL
-            root_ca_cert: CA-CERT-FOR-BOSH-DIRECTOR # optional - see SSL certificates
-            authentication: # either basic or uaa, not both as shown
+            # optional - see the Configure SSL Certificates section above:
+            root_ca_cert: CA-CERT-FOR-BOSH-DIRECTOR
+            # either basic or uaa, not both as shown, see
+            authentication:
               basic:
                 username: BOSH-USERNAME
                 password: BOSH-PASSWORD
@@ -403,18 +415,20 @@ instance_groups:
                 client_id: BOSH-CLIENT-ID
                 client_secret: BOSH-CLIENT-SECRET
           service_adapter:
-            path: PATH-TO-SERVICE-ADAPTER-BINARY # optional - provided by the service author. Defaults to /var/vcap/packages/odb-service-adapter/bin/service-adapter
+            # optional - provided by the service author. Defaults to /var/vcap/packages/odb-service-adapter/bin/service-adapter.
+            path: PATH-TO-SERVICE-ADAPTER-BINARY
 
           # There are more broker properties that are discussed below
 ```
 
-### <a id="catalog"></a>Configure the Service Catalog and Plan Composition
 
-Configure the service catalog and compose plans in the properties section of broker job
-using the following sections as a guide.
-For an example, see the [Starter Snippet](#starter-snippet) below.
+### <a id="catalog"></a>Configure Your Service Catalog and Plan Composition
 
-#### <a id="create-metadata"></a> Configure the Service Catalog
+Use the following sections as a guide to configure the service catalog and compose
+plans in the properties section of broker job.
+For an example snippet, see the [Starter Snippet for the Service Catalog and Plans](#starter-snippet) below.
+
+#### <a id="configure-catalog"></a> Configure the Service Catalog
 
 When configuring the service catalog, supply the following:
 
@@ -424,11 +438,14 @@ When configuring the service catalog, supply the following:
   is provided by exactly one release.<br><br>
 
 * **A stemcell:**
+  <p class="note"><strong>Note:</strong>
+  If you are using a Xenial stemcell, you must update any BOSH add-ons to support Xenial stemcells.
+  See <a href="./upgrades.html#update-addons">Update Add-ons to Run with Xenial Stemcell</a>.</p>
   * This is used on each VM in the service deployments.
   * Only supply one stemcell. ODB does not currently support service instance
   deployments that use a different stemcell for different instance groups.
   * Use exact versions for releases and stemcells. The use of `latest` and floating
-stemcells are not supported.<br><br>
+  stemcells are not supported.<br><br>
 
 * **Cloud Foundry service metadata for the service offering:**
   * This metadata is aggregated in the Marketplace and displayed in Apps Manager
@@ -489,22 +506,27 @@ When composing plans, supply the following:
   * The service author can define a default update block to be used when a plan-specific update block is not provided,
   if the service adapter supports configuring update blocks in the manifest.
 
-#### <a id="starter-snippet"></a>Starter Snippet
+#### <a id="starter-snippet"></a>Starter Snippet for the Service Catalog and Plans
 
-Add this snippet to your broker job properties section and provide the information listed in [Configure the Service Catalog and Plan Composition](#catalog) above.
+Append the snippet below to the properties section of the broker job that you
+configured in _Configure Your Broker_.
+Ensure that you provide the required information listed in
+[Configure Your Service Catalog and Plan Composition](#catalog) above.
+
+For examples of complete broker manifests, see [Write a Broker Manifest](#broker-manifest) above.
 
 ```yaml
 service_deployment:
   releases:
     - name: SERVICE-RELEASE
-      # Exact release version:
+      # exact release version:
       version: SERVICE-RELEASE-VERSION
       # service author will specify list of jobs required:
       jobs: [RELEASE-JOBS-NEEDED-FOR-DEPLOYMENT-AND-LIFECYCLE-ERRANDS]
   # every instance group in the service deployment has the same stemcell:
   stemcell:
     os: SERVICE-STEMCELL
-    # Exact stemcell version:
+    # exact stemcell version:
     version: SERVICE-STEMCELL-VERSION
 service_catalog:
   id: CF-MARKETPLACE-ID
@@ -589,7 +611,7 @@ service_catalog:
       properties: {}
       # optional:
       update:
-        # optional
+        # optional:
         canaries: 1
         # required:
         max_in_flight: 2
@@ -613,6 +635,8 @@ service_catalog:
             # optional - for co-locating errand:
             instances: [INSTANCE-NAME, ...]
 ```
+
+
 ## <a id="secure-bind-credentials"></a>(Optional) Access Manifest Secrets at Bind Time
 
 <p class="note alert"><strong>Note</strong>: This feature does not work if you have configured <code>use_stdin</code> to be false.</p>
@@ -761,7 +785,7 @@ For example:
   Where `NEW-CREDHUB-CLIENT-ID` and `NEW-CREDHUB-CLIENT-SECRET` are the CredHub client
   credentials you created in step 1.
 
-For a more detailed manifest snippet, see [Configure Your Manifest](#core-broker-config) above.
+For a more detailed manifest snippet, see [Starter Snippet for Your Broker](#broker-starter-snippet) above.
 
 ### How Credentials Are Stored on CredHub
 
@@ -803,7 +827,7 @@ For more information about this command, see [generate-plan-schemas](./adapter-r
                 ...
                 enable_plan_schemas: true
       ```
-For a more detailed manifest snippet, see [Configure Your Manifest](#core-broker-config) above.
+For a more detailed manifest snippet, see [Starter Snippet for Your Broker](#broker-starter-snippet) above.
 
 
 
@@ -876,7 +900,7 @@ To set service instance quotas, do the following in the manifest:
         <br>
   Where `INSTANCE-LIMIT` is the maximum number of service instances allowed.
 
-For a more detailed manifest snippet, see the [Starter Snippet](#starter-snippet) above.
+For a more detailed manifest snippet, see the [Starter Snippet for the Service Catalog and Plans](#starter-snippet) above.
 
 ## <a id="service-resource-quotas"></a>(Optional) Set Resource Quotas
 
@@ -959,7 +983,7 @@ to each service instance.
     ```
 
 
-For a more detailed manifest snippet, see the [Starter Snippet](#starter-snippet) above.
+For a more detailed manifest snippet, see the [Starter Snippet for the Service Catalog and Plans](#starter-snippet) above.
 
 ## <a id="broker-metrics"></a>(Optional) Configure Service Metrics
 
