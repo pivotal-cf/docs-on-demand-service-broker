@@ -21,7 +21,7 @@ the Cloud Foundry catalog.
 
 To add the `register-broker` errand to the manifest, do the following.
 
-1. Add the following instance group to your manifest:
+1. Add the following instance groups to your manifest:
 
     ```yaml
     - name: register-broker
@@ -44,15 +44,35 @@ To add the `register-broker` errand to the manifest, do the following.
       stemcell: STEMCELL
       networks: [NETWORK]
       azs: [AZ]
+
+    # Optional. Add the cf_service_access property to the broker job:
+    - name: broker
+      ...
+      jobs:
+        - name: broker
+          ...
+          properties:
+            ...
+            service_catalog:
+              ...
+              plans:
+                - name: PLAN-NAME
+                  ...
+                  cf_service_access: ENABLE|DISABLE|MANUAL #optional, defaults to enable
+
     ```
       - If the `broker_uri` property is set, you must register a route for your broker with Cloud Foundry.
       See the [Route Registration](./operating.html#route) section for more details.
       - When `enable_service_access`: `false` is set, the errand does not change service access for any plan.
-      - You can enable individual plans by using the optional `cf_service_access` property.
+      - When `default_access_org` is set, the errand enables access to that org
+      for any plans configured with `cf_service_access: org-restricted`.
+      - (Optional) Use the `cf_service_access` property to enable access to
+      individual plans. Set the property on each plan in the broker job.
       The values accepted are the following:
         - `enable`: the errand enables access for that plan. This is the default value.
-        - `disable`: the errand disables access for that plan
-        - `manual`: the errand performs no action.
+        - `disable`: the errand disables access for that plan.
+        - `manual`: the errand does not modify service access for this plan.
+        - `org-restricted`: the errand enables access for this plan to the `default_access_org` only.
 
         Only Cloud Foundry admin users can see plans with disabled service access.
         Org Managers and Space Managers cannot see these plans.
@@ -165,7 +185,12 @@ To run the `delete-all-service-instances` errand, do the following.
 ### <a id="deregister-broker"></a>Deregister Broker
 
 The `deregister-broker` errand deregisters a broker from Cloud Foundry.
-It requires that there are no existing service instances.
+It requires that there are no existing service instances of your broker's service offering.
+If you run this errand with service instances remaining, it fails.
+Run the "delete all service instances and deregister broker"
+errand to remove remaining service instances before deregistering the broker.
+See <a href="#delete-instances-and-deregister">Delete All Service Instances and Deregister Broker</a>
+below.
 
 #### Add the Errand to the Manifest
 
@@ -357,8 +382,7 @@ a list that resembles the following:
 
 #### Delete an Orphan Deployment
 
-<%# Need technical clarification for the note below from the ODB team. %>
-<p class="note warning"><strong>WARNING:</strong> Deleting the BOSH deployment destroys the VM.
+<p class="note warning"><strong>WARNING:</strong> Deleting the BOSH deployment destroys the service instance.
   Any data present is lost.</p>
 
 To delete an orphan deployment, do the following:
@@ -475,17 +499,17 @@ To modify the service offering, do the following.
 1. Change properties in the `service_catalog` of the broker manifest. For example, update the
 service metadata.
 
+1. Change properties in the `service_deployment` of the broker manifest. For example, update
+the jobs used from a service release.
+
+1. Deploy the broker.
+
 1. Run the "register broker" errand to update the Cloud Foundry marketplace.
 For how to run the errand, see [Register Broker](#register-broker) above.
 
 1. Run the "upgrade all service instances" errand to apply updated plans to
 existing service instances.
 For how to run the errand, see [Upgrade All Service Instances](./troubleshooting.html#upgrade-all).
-
-1. Change properties in the `service_deployment` of the broker manifest. For example, update
-the jobs used from a service release.
-
-1. Deploy the broker.
 
 <p class="note warning"><strong>WARNING</strong>: When Cloud Foundry registers the broker, do not
   change <code>service_id</code> or <code>plan_id</code> for any plan.</p>
