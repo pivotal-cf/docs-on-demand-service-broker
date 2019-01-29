@@ -111,7 +111,7 @@ The following table describes the JSON structure required for `SERVICE-DEPLOYMEN
 
 | Field                     | Type              | Description                                                            |
 |:--------------------------|:------------------|:-----------------------------------------------------------------------|
-| deployment_name           | string            | Name of the deployment on the Director, in the format `service-instance_$GUID`|
+| deployment_name           | string            | Name of the deployment on the Director, in the format `service-instance_GUID`|
 | releases                  | array of releases | List of service releases configured for the deployment by the operator |
 | release.name              | string            | Name of the release on the Director                                    |
 | release.version           | string            | Version of the release                                                 |
@@ -124,7 +124,7 @@ For example:
 
 ```json
 {
-    "deployment_name": "service-instance_$GUID",
+    "deployment_name": "service-instance_GUID",
     "releases": [{
         "name": "kafka",
         "version": "dev.42",
