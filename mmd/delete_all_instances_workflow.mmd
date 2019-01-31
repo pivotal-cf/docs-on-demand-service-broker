@@ -1,42 +1,42 @@
 <div class="mermaid">
 sequenceDiagram
   Operator->>Delete Errand:bosh run errand delete-all-service-instances
-  Delete Errand->>CF:GET instances
-  CF->>Delete Errand:instances
+  Delete Errand->>Cloud Controller:GET instances
+  Cloud Controller->>Delete Errand:instances
   loop for all instances
-    Delete Errand->>CF:GET bindings
-    CF->>Delete Errand:bindings
+    Delete Errand->>Cloud Controller:GET bindings
+    Cloud Controller->>Delete Errand:bindings
     loop for all bindings
-    Delete Errand->>CF:cf unbind-service
-      CF->>On Demand Broker: DELETE binding
+    Delete Errand->>Cloud Controller:cf unbind-service
+      Cloud Controller->>On Demand Broker: DELETE binding
       On Demand Broker->>Service Adapter:delete-binding
       Service Adapter->>On Demand Broker:exit code 0
-      On Demand Broker->>CF:OK
-      CF->>Delete Errand:OK
+      On Demand Broker->>Cloud Controller:OK
+      Cloud Controller->>Delete Errand:OK
     end
-    Delete Errand->>CF:GET service keys
-    CF->>Delete Errand:service keys
+    Delete Errand->>Cloud Controller:GET service keys
+    Cloud Controller->>Delete Errand:service keys
     loop for all service keys
-    Delete Errand->>CF:cf delete-service-key
-      CF->>On Demand Broker: DELETE binding
+    Delete Errand->>Cloud Controller:cf delete-service-key
+      Cloud Controller->>On Demand Broker: DELETE binding
       On Demand Broker->>Service Adapter:delete-binding
       Service Adapter->>On Demand Broker:exit code 0
-      On Demand Broker->>CF:OK
-      CF->>Delete Errand:OK
+      On Demand Broker->>Cloud Controller:OK
+      Cloud Controller->>Delete Errand:OK
     end
-    Delete Errand->>CF:cf delete-service
-    CF->>On Demand Broker:DELETE instance
+    Delete Errand->>Cloud Controller:cf delete-service
+    Cloud Controller->>On Demand Broker:DELETE instance
     On Demand Broker->>BOSH:delete deployment
     BOSH->>On Demand Broker:accepted
-    On Demand Broker->>CF:accepted
-    CF->>Delete Errand:accepted
+    On Demand Broker->>Cloud Controller:accepted
+    Cloud Controller->>Delete Errand:accepted
     loop until DELETE completes
-      Delete Errand->>CF:GET instance
-      CF->>Delete Errand:delete instance in progress
-      Note over CF,BOSH: CF asynchronously polls ODB, which in turn polls BOSH for last operation status
+      Delete Errand->>Cloud Controller:GET instance
+      Cloud Controller->>Delete Errand:delete instance in progress
+      Note over Cloud Controller,BOSH: The Cloud Controller asynchronously polls ODB, which in turn polls BOSH for last operation status
     end
-    Delete Errand->>CF:GET instance
-    CF->>Delete Errand:instance not found
+    Delete Errand->>Cloud Controller:GET instance
+    Cloud Controller->>Delete Errand:instance not found
   end
   Delete Errand->>Operator:completed successfully
 </div>

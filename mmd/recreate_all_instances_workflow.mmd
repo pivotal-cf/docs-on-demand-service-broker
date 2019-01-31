@@ -2,8 +2,8 @@
 sequenceDiagram
   Operator->>Recreate Errand:bosh run errand recreate-all-service-instances
   Recreate Errand->>On Demand Broker:GET instances
-  On Demand Broker->>CF / SI API:GET instances
-  CF / SI API->>On Demand Broker:instances
+  On Demand Broker->>CC / SI API:GET instances
+  CC / SI API->>On Demand Broker:instances
   On Demand Broker->>Recreate Errand:instances
   loop for all instances
     Recreate Errand->>On Demand Broker: PATCH instance (recreate)
