@@ -108,7 +108,7 @@ instance when post-deploy errands are configured.
 ### <a id="recreating"></a>Recreate All Service Instances
 
 ODB provides the BOSH errand `recreate-all-service-instances`. This errand executes a
-`bosh -d DEPLOYMENT-NAME recreate --fix` on each service instance managed by the broker.
+`bosh -d DEPLOYMENT-NAME recreate --fix` on each service instance (SI) managed by the broker.
 It is used for triggering low-level BOSH agent certificate re-installation, or for
 backup and restore purposes, for example in a migration between foundations.
 
