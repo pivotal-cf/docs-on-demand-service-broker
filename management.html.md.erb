@@ -35,7 +35,7 @@ To add the `register-broker` errand to the manifest, do the following:
             broker_uri: BROKER-URI # optional, only required when a route has been registered
             disable_ssl_cert_verification: TRUE|FALSE # defaults to false
             enable_service_access: TRUE|FALSE # defaults to true
-            cf_service_access: ENABLE|DISABLE|MANUAL #optional, defaults to enable
+            default_access_org: ORG-NAME # optional, defaults to system
             cf:
               api_url: CF-API-URL
               admin_username: CF-API-ADMIN-USERNAME
@@ -58,7 +58,7 @@ To add the `register-broker` errand to the manifest, do the following:
               plans:
                 - name: PLAN-NAME
                   ...
-                  cf_service_access: ENABLE|DISABLE|MANUAL #optional, defaults to enable
+                  cf_service_access: ENABLE|DISABLE|MANUAL|ORG-RESTRICTED # optional, defaults to enable
 
     ```
       - If the `broker_uri` property is set, you must register a route for your broker with Cloud Foundry.
@@ -187,8 +187,8 @@ To run the `delete-all-service-instances` errand, do the following:
 The `deregister-broker` errand deregisters a broker from Cloud Foundry.
 It requires that there are no existing service instances of your broker's service offering.
 If you run this errand with service instances remaining, it fails.
-Run the "delete all service instances and deregister broker"
-errand to remove remaining service instances before deregistering the broker.
+Run the `delete-all-service-instances-and-deregister-broker`
+errand to remove remaining service instances and deregistering the broker.
 See <a href="#delete-instances-and-deregister">Delete All Service Instances and Deregister Broker</a>
 below.
 
@@ -507,10 +507,10 @@ the jobs used from a service release.
 
 1. Deploy the broker.
 
-1. Run the "register broker" errand to update the Cloud Foundry marketplace.
+1. Run the `register-broker` errand to update the Marketplace.
 For how to run the errand, see [Register Broker](#register-broker) above.
 
-1. Run the "upgrade all service instances" errand to apply updated plans to
+1. Run the `upgrade-all-service-instances` errand to apply updated plans to
 existing service instances.
 For how to run the errand, see [Upgrade All Service Instances](./troubleshooting.html#upgrade-all).
 
@@ -547,7 +547,8 @@ You can remove service plans if there are no instances using the plan.
 To remove a plan, do the following:
 
 1. Remove the service plan from the broker manifest.
-1. Run the [Register Broker](#register-broker) errand to update the Marketplace.
+1. Run the `register-broker` errand to update the Marketplace. 
+For more information about this errand, see [Register Broker](#register-broker) above.
 
 <p class="note warning"><strong>WARNING</strong>: If any service instances remain on a plan
   that has been removed from the catalog, the On-Demand Service Broker fails to start.</p>
