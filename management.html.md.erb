@@ -117,7 +117,7 @@ The errand does the following:
 1. Deletes all service instances sequentially. Each service instance deletion includes:
   1. Running any pre-delete errands
   1. Deleting the BOSH deployment of the service instance
-  1. Removing any ODB-managed secrets from Credhub
+  1. Removing any ODB-managed secrets from CredHub
   1. Checking for instance deletion failure, which results in the errand failing immediately
 1. Determines whether any instances have been created while the errand was running.
 If new instances are detected, the errand returns an error.
@@ -249,7 +249,7 @@ access to ensure that new instances cannot be provisioned during the lifetime of
 1. Deletes all service instances sequentially. Each service instance deletion includes:
   1. Running any pre-delete errands
   1. Deleting the BOSH deployment of the service instance
-  1. Removing any ODB-managed secrets from Credhub
+  1. Removing any ODB-managed secrets from CredHub
   1. Checking for instance deletion failure, which results in the errand failing immediately
 1. Determines whether any instances have been created while the errand was running.
 If new instances are detected, the errand returns an error.
