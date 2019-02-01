@@ -2,7 +2,7 @@
 sequenceDiagram
   Operator->>Upgrade Errand:bosh run errand upgrade-all-service-instances
   Upgrade Errand->>SI API:GET instances
-  SI API->>Upgrade Errand:Service instances with Plan ID
+  Service Instances API->>Upgrade Errand:Service instances with Plan ID
   loop for all instances
     Upgrade Errand->>On Demand Broker: PATCH instance (upgrade)
     On Demand Broker->>Service Adapter: generate-manifest
