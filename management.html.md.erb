@@ -407,7 +407,7 @@ To delete an orphan deployment, do the following:
 
 <p class="note">
   <strong>Note:</strong> The <code>recreate-all-service-instances</code> errand
-  does not trigger service instance post-deploy errands.</p>
+  is supported only in the following BOSH versions: 266.10.0+, 267.10.0+, 268.2.2+, 268.4.0+</p>
 
 The `recreate-all-service-instances` errand recreates all service instance VMs
 managed by a broker.
@@ -547,9 +547,8 @@ You can remove service plans if there are no instances using the plan.
 To remove a plan, do the following:
 
 1. Remove the service plan from the broker manifest.
-1. Run the `register-broker` errand to update the Marketplace. 
+1. Run the `register-broker` errand to update the Marketplace.
 For more information about this errand, see [Register Broker](#register-broker) above.
 
 <p class="note warning"><strong>WARNING</strong>: If any service instances remain on a plan
   that has been removed from the catalog, the On-Demand Service Broker fails to start.</p>
-

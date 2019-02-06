@@ -10,7 +10,27 @@ sequenceDiagram
     On Demand Broker->>BOSH: recreate --fix
     BOSH->>On Demand Broker: accepted
     On Demand Broker->>Recreate Errand: accepted
-    Note over Recreate Errand,BOSH: Recreate Errand polls On Demand Broker for last operation until complete
+
+    loop while bosh recreate task is in progress
+      Recreate Errand->>On Demand Broker: GET last operation
+      On Demand Broker->>BOSH: GET recreate task
+      BOSH->>On Demand Broker: task in progress
+      On Demand Broker->>Recreate Errand: recreate in progress
+    end
+
+    loop until there are no more post-deploy errands to run
+      Recreate Errand->>On Demand Broker: GET last operation
+      On Demand Broker->>BOSH: GET last task status
+      BOSH->>On Demand Broker: task done
+      On Demand Broker->>BOSH: run next post-deploy errand
+      BOSH->>On Demand Broker: accepted
+      On Demand Broker->>Recreate Errand:errand in progress
+    end
+
+    Recreate Errand->>On Demand Broker: GET last operation
+    On Demand Broker->>BOSH: GET last task status
+    BOSH->>On Demand Broker: task done
+    On Demand Broker->>Recreate Errand: recreate succeeded
   end
   Recreate Errand->>Operator:completed successfully
 </div>
