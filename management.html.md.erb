@@ -390,6 +390,90 @@ To delete an orphan deployment, do the following:
     delete-deployment
     </pre>
 
+### <a id="recreate-all-service-instances"></a>Recreate All Service Instances
+
+  <div class="note">
+    <strong>Note:</strong> ODB only supports the <code>recreate-all-service-instances</code>
+    errand in the following BOSH versions:<br><br>
+    <ul>
+      <li>266.10.0–266.10.x</li>
+      <li>267.10.0–267.10.x</li>
+      <li>268.2.2–268.2.x</li>
+      <li>268.4.0 and later</li>
+    </ul>
+    Where x represents the latest version in that release line.</div>
+
+The `recreate-all-service-instances` errand recreates all service instance VMs
+managed by a broker.
+You might want use this errand when doing, for example, the following:
+
+   * Rotating the Ops Manager root certificate authority (CA).
+   For more information about rotating CAs, see [Rotate CAs and Leaf Certificates](https://docs.pivotal.io/pivotalcf/security/pcf-infrastructure/api-cert-rotation.html#rotate-ca).
+   * A full restore of the platform during disaster recovery or migration.
+
+
+#### Add the Errand to the Manifest
+
+To add the `recreate-all-service-instances` errand to the manifest, do the following:
+
+1. Add the following instance group to your manifest:
+
+    ```yaml
+    - name: recreate-all-service-instances
+      lifecycle: errand
+      instances: 1
+      jobs:
+        - name: recreate-all-service-instances
+          release: ODB-RELEASE-NAME
+          properties:
+            polling_interval_seconds: POLLING-INTERVAL-IN-SECONDS # defaults to 60
+            attempt_interval_seconds: ATTEMPT-INTERVAL-IN-SECONDS # defaults to 60
+            attempt_limit: NUMBER-OF-ATTEMPTS # defaults to 5
+      vm_type: VM-TYPE
+      stemcell: STEMCELL
+      networks: [{name: NETWORK}]
+      azs: [AZ]
+    ```
+
+    You can configure the behavior of this errand using following properties:
+
+    <table class="nice">
+      <col width="35%">
+      <col width="65%">
+      <th>Property</th>
+      <th>Description</th>
+      <tr>
+        <td><code>polling_interval_seconds</code></td>
+        <td> This controls the wait between checking the status of successfully
+        submitted BOSH recreate tasks. </td> </tr>
+      <tr>
+        <td><code>attempt_interval_seconds</code></td>
+        <td> When there are BOSH tasks in progress on the service instance to
+        recreate, the instance is put in a retry queue.
+        This property controls the pause between retries. </td> </tr>
+      <tr>
+        <td><code>attempt_limit</code></td>
+        <td> The number of times to check whether each instance is available to be
+        recreated. After an instance reaches the limit, the errand terminates.</td> </tr>
+    </table>
+
+#### Run the Errand
+
+To run the `recreate-all-service-instances` errand, do the following:
+
+1. Run the command:
+
+    ```
+    bosh -d DEPLOYMENT-NAME run-errand recreate-all-service-instances
+    ```
+    Where:
+    - `DEPLOYMENT-NAME` is the name of your deployment.
+
+    For example:
+    <pre class="terminal">
+    $ bosh -d cf run-errand recreate-all-service-instances
+    </pre>
+
 ## <a id="update-service-plans"></a> Service Management
 
 This section describes how to manage and update your service plans.
@@ -457,4 +541,3 @@ To remove a plan, do the following:
 
 <p class="note warning"><strong>WARNING</strong>: If any service instances remain on a plan
   that has been removed from the catalog, the On-Demand Service Broker fails to start.</p>
-
