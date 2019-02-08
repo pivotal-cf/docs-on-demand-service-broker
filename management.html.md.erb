@@ -405,15 +405,16 @@ To delete an orphan deployment, do the following:
 
 ### <a id="recreate-all-service-instances"></a>Recreate All Service Instances
 
-<div class="note">
-  <strong>Note:</strong> The <code>recreate-all-service-instances</code> errand
-  is only supported in the following BOSH versions:
-  <ul>
-    <li>v266.10.0 and later</li>
-    <li>v267.10.0 and later</li>
-    <li>v268.2.2 and later</li>
-    <li>v268.4.0 and later</li>
-  </ul></div>
+  <div class="note">
+    <strong>Note:</strong> ODB only supports the <code>recreate-all-service-instances</code>
+    errand in the following BOSH versions:<br><br>
+    <ul>
+      <li>266.10.0–266.10.x</li>
+      <li>267.10.0–267.10.x</li>
+      <li>268.2.2–268.2.x</li>
+      <li>268.4.0 and later</li>
+    </ul>
+    Where x represents the latest version in that release line.</div>
 
 The `recreate-all-service-instances` errand recreates all service instance VMs
 managed by a broker.
