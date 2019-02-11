@@ -126,8 +126,8 @@ rules are set up so that connections are open as described in the table below.
     </td>
     <td>8080</td>
     <td>One-way</td>
-    <td>This port may be different for individual services.
-      This port may also be configurable by the operator if allowed by the
+    <td>This port can be different for individual services.
+      This port can also be configurable by the operator if allowed by the
       tile developer.</td>
   </tr>
 </table>
@@ -162,7 +162,7 @@ For more information, see <a href="#lifecycle-errands"> Service Instance Lifecyc
 
 ### <a id="ssl-certs"></a>Configure SSL Certificates
 
-If ODB is configured to communicate with BOSH on the Director's public IP address, you may
+If ODB is configured to communicate with BOSH on the Director's public IP address, you might
 be using a self-signed certificate unless you have a domain for your BOSH Director.
 ODB does not ignore TLS certificate validation errors by default.
 
@@ -459,7 +459,7 @@ When configuring the service catalog, supply the following:
 #### <a id="compose-plans"></a> Compose Plans
 
 Service authors do not define plans, but instead expose plan properties.
-Operators compose plans consisting of combinations of these properties, along with IAAS resources
+Operators compose plans consisting of combinations of these properties, along with IaaS resources
 and catalog metadata.
 
 When composing plans, supply the following:
@@ -712,39 +712,40 @@ handle missing secrets based on whether they are required for binding creation.
 <p class="note"><strong>Note:</strong> ODB will not fail if it cannot resolve a secret.</p>
 
 ## <a id="secure-binding"></a>(Optional) Enable Secure Binding
-<p class="note alert"><strong>Note</strong>: This feature does not work if you have configured <code>use_stdin</code> to be false.</p>
+<p class="note alert"><strong>Note</strong>: This feature does not work if you
+have configured <code>use_stdin</code> to be false.</p>
 
-If you enable secure binding, service instance credentials are stored securely in
+If you enable secure binding, binding credentials are stored securely in
 runtime CredHub.
 When users create bindings or service keys, ODB passes a secure reference to the
-service credentials through the network instead of plain text.
+service credentials through the network instead of in plaintext.
 
 ### Requirements
 
 To store service credentials in runtime CredHub, your deployment must meet the
 following requirements:
 
-- Be able to connect to CredHub v1.6.x or later.
-This may be provided as part of your Cloud Foundry deployment.
+- It must be able to connect to runtime CredHub v1.6.x or later.
+This might be provided as part of your Cloud Foundry deployment.
 
-- Your instance group requires access to the local DNS provider because the address
-for CredHub is a local domain name.
+- Your instance group must have access to the local DNS provider. This is because
+the address for runtime CredHub is a local domain name.
 
 <p class="note"><strong>Note: </strong>
   Pivotal recommends using BOSH DNS as a DNS provider.
   If you are using PCF v2.4 or later, you cannot use consul as a DNS provider
-  because consul server VMs have been removed in Pivotal Application Service (PAS) v2.4 .</p>
+  because consul server VMs have been removed in Pivotal Application Service (PAS) v2.4.</p>
 
 ### Procedure for Enabling Secure Binding
 
 To enable secure binding, do the following:
 
-1. Set up a new CredHub client in Cloud Foundry UAA with `credhub.write` and
+1. Set up a new runtime CredHub client in Cloud Foundry UAA with `credhub.write` and
 `credhub.read` in its list of scopes.
 For how to do this, see [Creating and Managing Users with the UAA CLI
 (UAAC)](https://docs.cloudfoundry.org/uaa/uaa-user-management.html).
 
-1. Update the broker job in the ODB manifest to consume the CredHub link.<br><br>
+1. Update the broker job in the ODB manifest to consume the runtime CredHub link.<br><br>
 For example:
 
     ```
@@ -782,12 +783,12 @@ For example:
                     ca_cert: ((cf.uaa.ca_cert))
       ```
       <br>
-  Where `NEW-CREDHUB-CLIENT-ID` and `NEW-CREDHUB-CLIENT-SECRET` are the CredHub client
-  credentials you created in step 1.
+  Where `NEW-CREDHUB-CLIENT-ID` and `NEW-CREDHUB-CLIENT-SECRET` are the runtime
+  CredHub client credentials you created in step 1.
 
 For a more detailed manifest snippet, see [Starter Snippet for Your Broker](#broker-starter-snippet) above.
 
-### How Credentials Are Stored on CredHub
+### How Credentials Are Stored on Runtime CredHub
 
 The credentials for a given service binding are stored with the following format:
 
@@ -795,8 +796,8 @@ The credentials for a given service binding are stored with the following format
 /C/:SERVICE-GUID/:SERVICE-INSTANCE-GUID/:BINDING-GUID/CREDENTIALS
 ```
 
-The plain-text credentials are stored in CredHub under this key, and the key is
-available under the `VCAP_SERVICES` environment variable for the app.
+The plaintext credentials are stored in runtime CredHub under this key, and the
+key is available under the `VCAP_SERVICES` environment variable for the app.
 
 
 ## <a id="plan-schemas"></a>(Optional) Enable Plan Schemas
@@ -837,23 +838,24 @@ You can register a route to the broker using the `route_registrar` job from the
 routing release.
 The `route_registrar` job achieves the following:
 
-* Load balances multiple instances of ODB using Cloud Foundry router
+* Load balances multiple instances of ODB using the Cloud Foundry router
 * Allows access to ODB from the public internet
 
 For more information, see [route_registrar job](http://bosh.io/jobs/route_registrar?source=github.com/cloudfoundry-incubator/cf-routing-release).
 
-To register the route, colocate the `route_registrar` job with the `on-demand-service-broker`:
+To register the route, colocate the `route_registrar` job with `on-demand-service-broker`:
 
 1. Download the routing release.
-   See [cf-routing Release](http://bosh.io/releases/github.com/cloudfoundry-incubator/cf-routing-release?all=1).
+   See [cf-routing Release](http://bosh.io/releases/github.com/cloudfoundry-incubator/cf-routing-release?all=1)
+   for more information on doing so.
 1. Upload the routing release to your BOSH Director.
 1. Add the `route_registrar` job to your deployment manifest and configure it with an HTTP route.
 This creates a URI for your broker.
     <p class="note"><strong>Note:</strong>
     You must use the same port for the broker and the route. The broker defaults to 8080.</p>
-  For how to configure the `route_registrar` job, see the
+  For how to configure the `route_registrar` job, see
   [routing release](https://github.com/cloudfoundry/routing-release/blob/d59974071d97b9f1770dd170240bff2fe5ba1558/jobs/route_registrar/spec#L95-L100)
-  GitHub repository.
+  on GitHub.
 1. If you configure a route, set the `broker_uri` property in the [register-broker errand](./management.html#register-broker).
 
 ## <a id="service-instance-quotas"></a>(Optional) Set Service Instance Quotas
@@ -861,9 +863,9 @@ This creates a URI for your broker.
 Set service instance quotas to limit the number of service instances ODB can create.
 You can set these quotas for service instances:
 
-- **Global quotas**--limit the number of service instances across all plans.
+- **Global quotas** -- limit the number of service instances across all plans
 
-- **Plan quotas**---limit the number of service instances for a given plan.
+- **Plan quotas** -- limit the number of service instances for a given plan
 
 <p class="note"><strong>Note</strong>: These limits do not include orphans.
   See <a href="./troubleshooting-bosh.html#listing-orphans">List Orphan Deployments</a>
@@ -877,7 +879,8 @@ If this limit has not been reached, ODB checks the plan service instance limit.
 To set service instance quotas, do the following in the manifest:
 
 1. Add a quotas section for the type of quota you want to use.<br><br>
-  - **For global quotas** add `global_quotas` in the service catalog:
+  - **For global quotas** add `global_quotas` in the service catalog, as in the
+  example below:
 
         ```yaml
         service_catalog:
@@ -887,7 +890,8 @@ To set service instance quotas, do the following in the manifest:
             ...
         ```
         <br>
-  - **For plan quotas** add `quotas` the plans you want to limit:
+  - **For plan quotas** add `quotas` to the plans you want to limit, as in the
+  example below:
 
         ```yaml
         service_catalog:
@@ -904,17 +908,20 @@ For a more detailed manifest snippet, see the [Starter Snippet for the Service C
 
 ## <a id="service-resource-quotas"></a>(Optional) Set Resource Quotas
 
-Set resource quotas to limit resources, such as memory or disk, more effectively when combining plans that
-consume different amounts of resources.
+Set resource quotas to limit resources, such as memory or disk, more effectively
+when combining plans that consume different amounts of resources.
 You can set these quotas for service resources:
 
-- **Global resource quotas**---limit how much of a certain resource is consumed across all plans.
-ODB allows new instances to be created until their total resources reach the global quota.
-- **Plan resource quotas**---limit how much of a certain resource is consumed by a specific plan.
+- **Global resource quotas** limit how much of a certain resource is consumed
+across all plans. ODB allows new instances to be created until their total
+resources reach the global quota.
+- **Plan resource quotas** limit how much of a certain resource is consumed by a
+specific plan.
 
 <p class="note"><strong>Note</strong>: These limits do not include orphans.
   See <a href="./troubleshooting-bosh.html#listing-orphans">List Orphan Deployments</a>
-   and <a href="./management.html#orphan-deployments">Delete Orphaned Deployments</a>.</p>
+   and <a href="./management.html#orphan-deployments">Delete Orphaned Deployments</a>
+ for more information.</p>
 
 When creating a service instance, ODB checks the global resource limit.
 If this limit has not been reached, ODB checks the plan resource limit.
@@ -923,7 +930,8 @@ If this limit has not been reached, ODB checks the plan resource limit.
 
 To set resource quotas, do the following in the manifest:
 
-1. Add a quotas section for the type of quota you want to use.
+1. Add a quotas section for the type of quota you want to use by entering the
+following.
 
     ```
     quotas:
@@ -936,7 +944,8 @@ To set resource quotas, do the following in the manifest:
     <li><code>RESOURCE-LIMIT</code> is a value for the maximum allowed for each resource.</li>
   </ul>
 For example:
-    - **For global quotas** add `global_quotas` in the service catalog:
+    - **For global quotas** add `global_quotas` in the service catalog, as in
+    this example:
 
         ```yaml
         service_catalog:
@@ -947,7 +956,8 @@ For example:
               memory: 150
         ```
         <br>
-    - **For plan quotas** add `quotas` in the plans you want to limit:
+    - **For plan quotas** add `quotas` in the plans you want to limit, as in
+    this example:
 
         ```yaml
         service_catalog:
@@ -959,17 +969,20 @@ For example:
                   memory: 25
         ```
 
-1. Add `resource_costs` in each plan to define the amount of resources your plan allocates
-to each service instance.
+1. Add `resource_costs` in each plan to define the amount of resources your plan
+allocates to each service instance. The key is string-matched against keys in
+the global- and plan-level resource quotas. See the example below.
 
     ```yaml
     resource_costs:
-      RESOURCE-NAME: AMOUNT-OF-RESOURCE # the key is string-matched against keys in the global and plan-level resource quotas
+      RESOURCE-NAME: AMOUNT-OF-RESOURCE
     ```
     Where:<br>
     - `RESOURCE-NAME` is a string defining the resource you want to limit.
     - `AMOUNT-OF-RESOURCE` is the amount of the resource allocated to each
     service instance of this plan.
+
+
 
     For example:
 
@@ -992,6 +1005,8 @@ when colocated with [Pivotal Cloud Foundry Service Metrics SDK](https://network.
 To do this, you must include the [Loggregator](https://github.com/cloudfoundry/loggregator) release.
 
 Add the following jobs to the broker instance group:
+
+<!-- Re-work the below snippet so it uses placeholders, not comments. -->
 
 ```yaml
 - name: service-metrics
@@ -1020,7 +1035,7 @@ For more information about service metrics, see [Service Metrics for Pivotal Clo
 
 You can configure ODB to retrieve BOSH DNS addresses for service instances.
 These addresses are passed to the service adapter when you create a binding.
-This may be necessary when the binding for a service instance contains, or relies on,
+This might be necessary when the binding for a service instance contains, or relies on,
 BOSH DNS addresses for that deployment.
 
 ### Requirements
