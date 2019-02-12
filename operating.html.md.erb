@@ -13,7 +13,7 @@ The operator is responsible for the following:
 * Requesting appropriate networking rules for on-demand service tiles.
   See [Set Up Networking](#networking) below.
 
-* Configuring the BOSH Director.
+* Configuring BOSH Director.
   See [Configure Your BOSH Director](#configure-bosh) below.
 
 * Uploading the required releases for the broker deployment and service instance deployments.
@@ -771,7 +771,8 @@ You can set these quotas for service instances:
 
 <p class="note"><strong>Note</strong>: These limits do not include orphans.
   See <a href="./troubleshooting-bosh.html#listing-orphans">List Orphan Deployments</a>
-   and <a href="./management.html#orphan-deployments">Delete Orphaned Deployments</a>.</p>
+   and <a href="./management.html#orphan-deployments">Delete Orphaned Deployments</a>
+   for more information.</p>
 
 When creating a service instance, ODB checks the global service instance limit.
 If this limit has not been reached, ODB checks the plan service instance limit.
@@ -929,10 +930,10 @@ BOSH DNS addresses for that deployment.
 
 ### Requirements
 
-- A service that has this feature enabled in the service adapter.
+- A service that has this feature enabled in the service adapter<br>
 For information for service authors about how to enable this feature for their on-demand
 service, see [Enable ODB to Obtain BOSH DNS Addresses](./service-adapter.html#dns-addresses).
-- BOSH Director v266.12 or v267.6 and later, available in Ops Manager v2.2.5 and later.
+- BOSH Director v266.12 or v267.6 and later, available in Ops Manager v2.2.5 and later
 
 ### Procedure
 
@@ -975,28 +976,31 @@ The following table provides descriptions of the properties to add to the `bindi
 
 | Property          | Description                                                                                                                                                             | Mandatory/Optional |
 | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
-| name              | An arbitrary identifier. Used to identify the address when creating a binding.                                                                                          | Mandatory          |
-| link_provider     | The exposed name of the link. You can find this: <ul><li>In the documentation for the service.</li><li>Under `provides.name` in the release `spec` file.</li></ul>It can also be overridden in the deployment manifest by setting the `as` property of the link. | Mandatory          |
-| instance_group    | The name of the instance group sharing the link. The resultant DNS address resolves to IP addresses of this instance group.                                             | Mandatory          |
-| properties.azs    | A list of availability zone names. When this is provided, the resultant DNS address resolves to IP addresses in these zones.                                            | Optional           |
-| properties.status | A filter for link address status (healthy, unhealthy, all, default). When this is provided, the resultant DNS address resolves to IP addresses with this status.        | Optional           |
+| name              | An arbitrary identifier used to identify the address when creating a binding                                                                                          | Mandatory          |
+| link_provider     | This is the exposed name of the link. You can find this in the documentation for the service and under `provides.name` in the release `spec` file.<br><br> You can override it in the deployment manifest by setting the `as` property of the link. | Mandatory          |
+| instance_group    | This is the name of the instance group sharing the link. The resultant DNS address resolves to IP addresses of this instance group.                                             | Mandatory          |
+| properties.azs    | This is a list of availability zone names. When this is provided, the resultant DNS address resolves to IP addresses in these zones.                                            | Optional           |
+| properties.status | This is a filter for link address status (healthy, unhealthy, all, default). When this is provided, the resultant DNS address resolves to IP addresses with this status.        | Optional           |
 
 
 ## <a id="startup-checks"></a>About Broker Startup Checks
 
 The ODB does the following startup checks:
 
-* Verifies that the CF and BOSH versions satisfy the minimum versions required.
-If your service offering includes lifecycle errands, the minimum required version for BOSH is higher.
-For more information, see [Set Up Your BOSH Director](#configure-bosh).
+* It verifies that the CF and BOSH versions satisfy the minimum versions required.
+If your service offering includes lifecycle errands, the minimum required version
+for BOSH is higher.
+For more information, see [Configure Your BOSH Director](#configure-bosh).
 <br><br>
-    If your system does not meet minimum requirements, you see an insufficient version error. For example:
+    If your system does not meet minimum requirements, you see an insufficient
+    version error. For example:
 
     <pre class="terminal">
     CF API error: Cloud Foundry API version is insufficient, ODB requires CF v238+.
     </pre>
 
-* Verifies that, for the service offering, no plan IDs have changed for plans that have existing service instances.
+* It verifies that, for the service offering, no plan IDs have changed for plans
+that have existing service instances.
 If there are instances, you see the following error:
 <pre class="terminal">
 You cannot change the plan_id of a plan that has existing service instances.
@@ -1006,9 +1010,9 @@ You cannot change the plan_id of a plan that has existing service instances.
 
 The broker tries to wait for any incomplete HTTPS requests to complete before shutting down.
 This reduces the risk of leaving orphan deployments in the event that
-the BOSH Director does not respond to the initial `bosh deploy` request.
+BOSH Director does not respond to the initial `bosh deploy` request.
 
-You can determine how long the broker waits before being forced to shut down
+You can determine how long the broker waits before being forced to shut down by
 using the `broker.shutdown_timeout` property in the manifest.
 The default is 60 seconds.
 For more information, see <a href="#broker-manifest">Write a Broker Manifest</a>.
@@ -1025,26 +1029,27 @@ For more information, see [Create a Service Release](./creating.html#create-a-se
 
 ODB supports the following lifecycle errands:
 
-- `post_deploy`---Runs after creating or updating a service instance. An example use case is
+- `post_deploy` runs after creating or updating a service instance. An example use case is
   running a health check to ensure the service instance is functioning.<br>
   For more information about these errands, see [Post-Deploy Errands](https://docs.pivotal.io/tiledev/tile-errands.html#post-deploy).
   For the workflow, see [Create or Update Service Instance with Post-Deploy Errands](./concepts.html#post-deploy).<br><br>
-- `pre_delete`---Runs before the deletion of a service instance.
-  An example use case is cleaning up data before a service shutdown.<br>
-  For more information about these errands, see [Pre-Delete Errands](https://docs.pivotal.io/tiledev/tile-errands.html#pre-delete).
-  For the workflow, see [Delete a Service Instance with Pre-Delete Errands](./concepts.html#pre-delete).
+- `pre_delete` runs before the deletion of a service instance.
+  An example use case is cleaning up data before a service shutdown. For more
+  information about these errands, see [Pre-Delete Errands](https://docs.pivotal.io/tiledev/tile-errands.html#pre-delete).
+  For more information about the workflow, see [Delete a Service Instance with Pre-Delete Errands](./concepts.html#pre-delete).
 
 ### <a id="enable-errands"></a> Enable Service Instance Lifecycle Errands
 
 Service instance lifecycle errands are configured on a per-plan basis.
-Lifecycle errands do not run if you change a plan's lifecycle errand configuration while an existing deployment is in progress.
+Lifecycle errands do not run if you change a plan's lifecycle errand
+configuration while an existing deployment is in progress.
 
-To enable lifecycle errands, do the following.
+To enable lifecycle errands, do the following steps.
 
-1. Add each errand job in the manifest as follows:<br><br>
-    - In the `service_deployment`.  See (1) in the example below.
-    - In the plan's `lifecycle_errands` configuration.  See (2) in the example below.
-    - In the plan's `instance_groups`.  See (3) in the example below.
+1. Add each errand job in the following manifest places:
+    - `service_deployment`
+    - The plan's `lifecycle_errands` configuration
+    - The plan's `instance_groups`
 
     Below is an example manifest snippet that configures lifecycle errands for a plan:
 
@@ -1055,7 +1060,7 @@ To enable lifecycle errands, do the following.
           version: SERVICE-RELEASE-VERSION
           jobs:
           - SERVICE-RELEASE-JOB
-          - POST-DEPLOY-ERRAND-JOB                    # (1)
+          - POST-DEPLOY-ERRAND-JOB
           - PRE-DELETE-ERRAND-JOB
           - ANOTHER-POST-DEPLOY-ERRAND-JOB
     service_catalog:
@@ -1063,15 +1068,15 @@ To enable lifecycle errands, do the following.
         - name: CF-MARKETPLACE-PLAN-NAME
           lifecycle_errands:
             post_deploy:
-              - name: POST-DEPLOY-ERRAND-JOB          # (2)
+              - name: POST-DEPLOY-ERRAND-JOB
               - name: ANOTHER-POST-DEPLOY-ERRAND-JOB
-                disabled: true                        # defaults to false
+                disabled: true
             pre_delete:
               - name: PRE-DELETE-ERRAND-JOB
           instance_groups:
             - name: SERVICE-RELEASE-JOB
               ...
-            - name: POST-DEPLOY-ERRAND-JOB          # (3)
+            - name: POST-DEPLOY-ERRAND-JOB
               lifecycle: errand
               vm_type: VM-TYPE
               instances: INSTANCE-COUNT
@@ -1091,25 +1096,27 @@ To enable lifecycle errands, do the following.
               azs: [AZ]
     ```
 
+    Where `POST-DEPLOY-ERRAND-JOB` is the errand job you want to add.
+
 ### <a id="colocated-errands"></a> (Optional) Enable Colocated Errands
 
 <p class="note"><strong>Note</strong>: This feature requires BOSH Director v263 or later.</p>
 
 You can run both `post-deploy` and `pre-delete` errands as colocated errands.
-Colocated errands run on an existing service instance group, instead of a separate one.
+Colocated errands run on an existing service instance group instead of a separate one.
 This avoids additional resource allocation.
 
 Like other lifecycle errands, colocated errands are deployed on a per-plan basis.
 Currently the ODB supports colocating only the `post-deploy` or `pre-delete` errands.
 
-For more information, see the [BOSH documentation](https://bosh.io/docs/errands.html).
+For more information, see the [BOSH documentation on using errands](https://bosh.io/docs/errands.html).
 
-To enable colocated errands for a plan, do the following.
+To enable colocated errands for a plan, do the following steps.
 
-1. Add each colocated errand job to the manifest as follows:<br><br>
-    - Add the errand in `service_deployment`. See (1) in the example below.
-    - Add the errand in the plan's `lifecycle_errands` configuration. See (2) in the example below.
-    - Set the instances the errand should run on in the `lifecycle_errands`. See (3) in the example below.
+1. Add each colocated errand job to the manifest as follows:
+    - Add the errand in `service_deployment`.
+    - Add the errand in the plan's `lifecycle_errands` configuration.
+    - Set the instances the errand should run on in the `lifecycle_errands`.
 
     Below is an example manifest that includes a colocated post-deploy errand:
 
@@ -1120,14 +1127,14 @@ To enable colocated errands for a plan, do the following.
           version: SERVICE-RELEASE-VERSION
           jobs:
             - SERVICE-RELEASE-JOB
-            - COLOCATED-POST-DEPLOY-ERRAND-JOB               # (1)
+            - COLOCATED-POST-DEPLOY-ERRAND-JOB
     service_catalog:
       plans:
         - name: CF-MARKETPLACE-PLAN-NAME
           lifecycle_errands:
             post_deploy:
-              - name: COLOCATED-POST-DEPLOY-ERRAND-JOB   # (2)
-                instances: [SERVICE-RELEASE-JOB/0]       # (3)
+              - name: COLOCATED-POST-DEPLOY-ERRAND-JOB
+                instances: [SERVICE-RELEASE-JOB/0]
               - name: NON-COLOCATED-POST-DEPLOY-ERRAND
           instance_groups:
             - name: NON-COLOCATED-POST-DEPLOY-ERRAND
@@ -1135,3 +1142,7 @@ To enable colocated errands for a plan, do the following.
             - name: SERVICE-RELEASE-JOB
               ...
     ```
+
+    Where `COLOCATED-POST-DEPLOY-ERRAND-JOB` is the colocated errand you want to
+    run and `SERVICE-RELEASE-JOB/0` is the instances you want the errand to run
+    on.
