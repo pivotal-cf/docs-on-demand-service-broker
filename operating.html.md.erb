@@ -108,7 +108,7 @@ rules are set up so that connections are open as described in the table below.
     <td>4222</td>
     <td>Two-way</td>
     <td>The BOSH Agent runs on every VM in the system, including the BOSH Director VM.
-      The BOSH Agent initiates the connection with the BOSH Director.<br>
+      The BOSH Agent initiates the connection with BOSH Director.<br>
       The default port is not configurable.  </td>
   </tr>
   <tr>
@@ -146,7 +146,7 @@ See the following topics for how to set up your BOSH Director:
 The On-Demand Broker requires the following:
 
 - BOSH Director v266.12.0 or v267.6.0 and later.
-  To install the BOSH Director, see [Quick Start](https://bosh.io/docs/quick-start/)
+  To install BOSH Director, see [Quick Start](https://bosh.io/docs/quick-start/)
   in the Cloud Foundry BOSH documentation.
 - cf-release v1.10.0 or later (PCF v2.0 or later).
 
@@ -166,9 +166,9 @@ If ODB is configured to communicate with BOSH on the Director's public IP addres
 be using a self-signed certificate unless you have a domain for your BOSH Director.
 ODB does not ignore TLS certificate validation errors by default.
 
-You have two options to configure certificate-based authentication between the BOSH Director and the ODB:
+You have two options to configure certificate-based authentication between BOSH Director and the ODB:
 
-* Add the BOSH Director's root certificate to ODB's trusted pool in the ODB manifest as follows:
+* Add BOSH Director's root certificate to ODB's trusted pool in the ODB manifest as follows:
 
     ```yaml
     bosh:
@@ -375,7 +375,7 @@ instance_groups:
       - name: broker
         release: on-demand-service-broker
         properties:
-          # choose a port and basic auth credentials for the broker:
+          # choose a port and basic authentication credentials for the broker:
           port: BROKER-PORT
           username: BROKER-USERNAME
           password: BROKER-PASSWORD
@@ -511,19 +511,19 @@ When composing plans, supply the following:
    the deployed version of a service instance. It is made up of public and
    private key/value pairs defined at the catalog and plan levels. It is
    displayed in the service catalog at plan level with plan-level maintenance
-   info aggregated into the catalog-level maintenance info. The public
-   information will be exposed in the service catalog, while all the private
-   information will be aggregated and hashed into a value representing those
+   information aggregated into the catalog-level maintenance information. The public
+   information is exposed in the service catalog, while all the private
+   information is aggregated and hashed into a value representing those
    private values.
-  * Maintenance info which is common to all plans should be defined at the
+  * Maintenance information which is common to all plans should be defined at the
     service catalog level.
-  * Plan-specific maintenance info should be defined at the plan level. Where
-    a key is redefined at the plan level, it will override the service catalog
+  * Plan-specific maintenance information should be defined at the plan level. Where
+    a key is redefined at the plan level, it overrides the service catalog
     level value.
-  * It is recommended to use YAML anchors and references to avoid repeating
-    maintenance info values within the manifest.  For instance, the stemcell
+  * Pivotal recommends using YAML anchors and references to avoid repeating
+    maintenance information values within the manifest.  For instance, the stemcell
     version can be anchors with the `&stemcellVersion` annotation, and then
-    referenced in the maintenance info with the `*stemcellVersion` tag.
+    referenced in the maintenance information with the `*stemcellVersion` tag.
 
 
 #### <a id="starter-snippet"></a>Starter Snippet for the Service Catalog and Plans
@@ -541,7 +541,7 @@ service_deployment:
     - name: SERVICE-RELEASE
       # exact release version:
       version: SERVICE-RELEASE-VERSION
-      # service author will specify list of jobs required:
+      # service author specifies the list of jobs required:
       jobs: [RELEASE-JOBS-NEEDED-FOR-DEPLOYMENT-AND-LIFECYCLE-ERRANDS]
   # every instance group in the service deployment has the same stemcell:
   stemcell:
@@ -583,7 +583,7 @@ service_catalog:
       memory: RESOURCE-LIMIT
   # optional - applied to every plan.
   maintenance_info:
-    # keys under public will be visible in service catalog
+    # keys under public are visible in service catalog
     public:
       # reference to stemcellVersion anchor above
       stemcell_version: *stemcellVersion
@@ -591,7 +591,7 @@ service_catalog:
       kubernetes_version: 1.13
       # arbitrary public maintenance_info
       docker_version: 18.06.1
-     # all keys under private will be hashed to single SHA value in service catalog
+     # all keys under private are hashed to single SHA value in service catalog
     private:
       # example of private data that would require a service update to change
       log_aggregrator_mtls_cert: *YAML_ANCHOR_TO_MTLS_CERT
@@ -645,7 +645,7 @@ service_catalog:
       properties: {}
       # optional
       maintenance_info:
-        # optional - keys will be merged with catalog level public maintenance_info keys
+        # optional - keys merge with catalog level public maintenance_info keys
         public:
           # refers to anchor in instance group above
           instance_count: *instanceCount
@@ -853,7 +853,7 @@ The broker produces an error if the parameters do not conform.
 To enable plan schemas, do the following:
 
 1. Ensure that the service adapter implements the command `generate-plan-schemas`.
-If it is not implemented, the broker will fail to deploy.
+When it is not implemented, the broker fails to deploy.
 For more information about this command, see [generate-plan-schemas](./adapter-reference.html#generate-plan-schemas).
 
 1. In the manifest, set the `enable_plan_schemas` flag to `true` as shown below.
@@ -889,7 +889,7 @@ To register the route, colocate the `route_registrar` job with `on-demand-servic
 
 1. Download the routing release.
    See [cf-routing Release](http://bosh.io/releases/github.com/cloudfoundry-incubator/cf-routing-release?all=1)
-   for more information on doing so.
+   for more information about doing so.
 1. Upload the routing release to your BOSH Director.
 1. Add the `route_registrar` job to your deployment manifest and configure it with an HTTP route.
 This creates a URI for your broker.
@@ -1172,7 +1172,7 @@ For more information, see <a href="#broker-manifest">Write a Broker Manifest</a>
 
  <p class="note"><strong>Note</strong>: This feature requires BOSH Director v261 or later.</p>
 
-Service Instance lifecycle errands allow additional short-lived jobs to run as part of service instance deployment.
+Service instance lifecycle errands allow additional short-lived jobs to run as part of service instance deployment.
 A deployment is only considered successful if all lifecycle errands exit successfully.
 
 The service adapter must offer the errands as part of the service instance deployment.
