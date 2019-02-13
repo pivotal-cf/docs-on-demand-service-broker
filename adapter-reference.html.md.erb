@@ -72,7 +72,8 @@ See the following example:
     "previous_plan": "PREVIOUS-PLAN-JSON",
     "previous_manifest": "PREVIOUS-MANIFEST-YAML",
     "request_parameters": "REQUEST-PARAMETERS-JSON",
-    "previous_secrets": "PREVIOUS-SECRETS-JSON"
+    "previous_secrets": "PREVIOUS-SECRETS-JSON",
+    "previous_configs": "PREVIOUS-CONFIGS-JSON"
   }
 }
 ```
@@ -84,7 +85,7 @@ For example:
 ```not-json
 {
   "generate_manifest": {
-    "service_deployment": "{"deployment_name":"some-name"...}"
+    "service_deployment": "{\"deployment_name\":\"some-name\"...}"
     // ...
   }
 }
@@ -417,6 +418,21 @@ the resolved secrets:
 <p class="note"><strong>Note:</strong> You can find the secrets key by accessing
 the manifest field that contains the reference to the variable.</p>
 
+####<a id="previous-configs"></a>PREVIOUS-CONFIGS-JSON
+
+This argument provides the previous BOSH configs specified for the service
+instance. If populated, it will contain a map of config types to config content.
+For example:
+
+```json
+{
+  "cloud":"
+    vm_types:
+     - name: my-service-instance-small
+       cloud_properties:
+         cpu: 1"
+}
+```
 
 ###<a id="generate-manifest-output"></a>Output
 
@@ -425,7 +441,7 @@ The following table describes the supported exit codes and output for the
 
 | Exit code     | Description     | Output                                                                                                                           |
 |:--------------|:----------------|:---------------------------------------------------------------------------------------------------------------------------------|
-| 0             | success         | <ul><li>Stdout: JSON document containing the BOSH manifest YAML and a map of adapter generated secrets to be managed by ODB</li></ul>                 |
+| 0             | success         | <ul><li>Stdout: JSON document containing the BOSH manifest YAML, a map of adapter generated secrets to be managed by ODB, and a map of BOSH configs</li></ul>                 |
 | 10            | not implemented |                                                                                                                                  |
 | anything else | failure         | <ul><li>Stdout: optional error message for CF CLI users</li> <li>Stderr: error message for operator</li> <li>ODB logs both stdout and stderr</li></ul>     |
 
@@ -435,7 +451,14 @@ Example JSON output printed when the `generate-manifest` command is successful:
 ```json
 {
   "manifest": "GENERATED-BOSH-MANIFEST-YAML",
-  "secrets": { "secret1":"value1", "secret2":"value2" }
+  "secrets": { "secret1":"value1", "secret2":"value2" },
+  "configs": {
+    "cloud":"
+       vm_types:
+       - name: my-service-instance-small
+         cloud_properties:
+           cpu: 1"
+  }
 }
 ```
 
