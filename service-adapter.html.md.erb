@@ -23,7 +23,8 @@ subcommands, see
 
 - `generate-manifest`:
   Generate a BOSH manifest for your service instance deployment and output to stdout
-  a JSON document containing the manifest as YAML, given information about the:
+  a JSON document containing the manifest as YAML, BOSH secrets and BOSH
+  Configs, given information about the:
   - BOSH Director (stemcells, release names)
   - service instance (ID, request parameters, plan properties, IAAS resources)
   - previous manifest, if this is an upgrade deployment
@@ -405,6 +406,65 @@ For example:
         ...
     ```
 
+## <a id="bosh-configs"></a>Using Generic BOSH Configs with Service Instances
+
+The service adapter can generate generic BOSH Configs and use ODB to apply them
+to the BOSH Director prior to deployment of the service instance. This enables
+the service author to provide service instance specific BOSH Configs which
+exist only for the lifetime of the service instance.
+
+See the [BOSH documentation](https://bosh.io/docs/configs/) for more details
+about generic BOSH Configs.
+
+If you need to return a BOSH Config fragment specific to a service instance manifest,
+this should be included in the response from the `generate-manifest` command.
+
+For example:
+
+```json
+{
+  "manifest": "
+    name: my-service-instance
+    instance_groups:
+    - vm_type: my-service-instance-small",
+  "configs": {
+    "cloud":"
+       vm_types:
+       - name: my-service-instance-small
+         cloud_properties:
+           cpu: 1"
+  }
+}
+```
+
+ODB will take the configs in the output and for each entry create a generic
+BOSH config on the direcor with using the map key as the config type and using
+the service instance deployment name as the config name. If we were to apply the
+example using the BOSH CLI, it would look something like:
+
+
+```bash
+$ echo <content of configs["cloud"]> > config.yml
+$ bosh update-config --type cloud --name my-service-instance config.yml
+```
+
+The valid config types are: cloud, cpi and runtime.
+
+The configs will be scoped for the BOSH team client ODB is deployed with. So
+configs will be applied to subsequently deployed service instances. However, we
+recommend service adapters to also namespace their configuration to avoid
+depending on a config value which may be deleted in the future when the
+associated service instance is removed.
+
+On updates, ODB will pass the BOSH configs previously set for the instance to
+the service adapter on `generate-manifest`. If the service adapter returns a
+new value for an existing type, the configuration will be overwritten. If no
+value is returned for an existing type, that type will remain as is. If new
+types are passed, those will be set.
+
+When the service instance is deleted, all the associated BOSH configs will also
+be deleted.
+
 ## <a id="handling-errors"></a>Handle Errors
 
 If a subcommand fails, the adapter must return a non-zero exit status and,
@@ -516,9 +576,8 @@ Service adapters provide the following to the `CommandLineHandler`:
 * Service adapters must provide a `ManifestGenerator`.
 
     ```go
-
     type ManifestGenerator interface {
-    	GenerateManifest(params GenerateManifestParams) (bosh.BoshManifest, error)
+    	GenerateManifest(params GenerateManifestParams) (GenerateManifestOutput, error)
     }
 
     type GenerateManifestParams struct {
@@ -530,12 +589,17 @@ Service adapters provide the following to the `CommandLineHandler`:
     	PreviousSecrets   ManifestSecrets
     	PreviousConfigs   BOSHConfigs
     }
+
+    type GenerateManifestOutput struct {
+        Manifest          bosh.BoshManifest `json:"manifest"`
+        ODBManagedSecrets ODBManagedSecrets `json:"secrets"`
+        Configs           BOSHConfigs       `json:"configs"`
+    }
     ```
 <br>
 * Most service adapters should provide a `Binder`.
 
     ```go
-
     type Binder interface {
     	CreateBinding(params CreateBindingParams) (Binding, error)
     	DeleteBinding(params DeleteBindingParams) error
@@ -547,7 +611,7 @@ Service adapters provide the following to the `CommandLineHandler`:
     	Manifest           bosh.BoshManifest
     	RequestParams      RequestParameters
     	Secrets            ManifestSecrets
-    	DnsAddresses       DNSAddresses
+    	DNSAddresses       DNSAddresses
     }
 
     type DeleteBindingParams struct {
@@ -556,13 +620,13 @@ Service adapters provide the following to the `CommandLineHandler`:
     	Manifest           bosh.BoshManifest
     	RequestParams      RequestParameters
     	Secrets            ManifestSecrets
+    	DNSAddresses       DNSAddresses
     }
     ```
 <br>
 * (Optional) Service adapters can provide a `DashboardUrlGenerator`.
 
     ```go
-
     type DashboardUrlGenerator interface {
     	DashboardUrl(params DashboardUrlParams) (DashboardUrl, error)
     }
@@ -577,7 +641,6 @@ Service adapters provide the following to the `CommandLineHandler`:
 * (Optional) Service adapters can provide a `SchemaGenerator`.
 
     ```go
-
     type SchemaGenerator interface {
     	GeneratePlanSchema(params GeneratePlanSchemaParams) (PlanSchema, error)
     }

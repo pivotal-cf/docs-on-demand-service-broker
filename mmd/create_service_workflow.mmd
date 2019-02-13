@@ -3,10 +3,13 @@ sequenceDiagram
   User->> Cloud Controller: cf create-service
   Cloud Controller->> On Demand Broker: POST instance (provision)
   On Demand Broker->>Service Adapter: generate-manifest
-  Service Adapter->>On Demand Broker: manifest + secrets
+  Service Adapter->>On Demand Broker: manifest + secrets + BOSH configs
   opt Secure Manifests enabled
     On Demand Broker->>BOSH CredHub: store secrets
     On Demand Broker->>On Demand Broker: update manifest with CredHub names
+  end
+  opt BOSH configs enabled
+    On Demand Broker->>BOSH: update configs
   end
   On Demand Broker->>BOSH: deploy
   BOSH->>On Demand Broker: accepted

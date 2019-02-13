@@ -41,6 +41,9 @@ sequenceDiagram
     On Demand Broker->>BOSH CredHub: DELETE ODB-managed secrets
     BOSH CredHub->>On Demand Broker: delete secrets succeeded
   end
+  opt BOSH configs enabled
+    On Demand Broker->>BOSH: delete configs
+  end
   On Demand Broker->>Cloud Controller: delete succeeded
   User->>Cloud Controller:cf service
   Cloud Controller->>User: not found
