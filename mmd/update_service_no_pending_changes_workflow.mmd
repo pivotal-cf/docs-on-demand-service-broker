@@ -1,6 +1,6 @@
 <div class="mermaid">
   sequenceDiagram
-  User->> Cloud Controller: cf update-service -c '{"some":"config"}'
+  User->> Cloud Controller: cf update-service -c '{"some":"prop"}'
   Cloud Controller->> On Demand Broker: PATCH instance (update)
   On Demand Broker->>BOSH:GET manifest
   BOSH->>On Demand Broker:previous manifest
@@ -8,14 +8,20 @@
     On Demand Broker->>BOSH CredHub: GET previous secrets
     BOSH CredHub->>On Demand Broker: secrets
   end
+  opt BOSH configs enabled
+    On Demand Broker->>BOSH:GET previous configs
+  end
   On Demand Broker->>Service Adapter: generate-manifest (without PATCH options)
   Service Adapter->>On Demand Broker: manifest
   On Demand Broker->>On Demand Broker: check for pending changes
   On Demand Broker->>Service Adapter: generate-manifest (with PATCH options)
-  Service Adapter->>On Demand Broker: manifest + secrets
+  Service Adapter->>On Demand Broker: manifest + secrets + BOSH configs
   opt Secure Manifests enabled
     On Demand Broker->>BOSH CredHub: store secrets
     On Demand Broker->>On Demand Broker: update manifest with CredHub names
+  end
+  opt BOSH configs enabled
+    On Demand Broker->>BOSH: update configs
   end
   On Demand Broker->>BOSH: deploy
   BOSH->>On Demand Broker: accepted

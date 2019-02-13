@@ -4,10 +4,6 @@
   Cloud Controller->> On Demand Broker: PATCH instance (update)
   On Demand Broker->>BOSH:GET manifest
   BOSH->>On Demand Broker:previous manifest
-  opt Secure Manifests enabled
-    On Demand Broker->>BOSH CredHub: GET previous secrets
-    BOSH CredHub->>On Demand Broker: secrets
-  end
   On Demand Broker->>Service Adapter: generate-manifest (without request parameters)
   Service Adapter->>On Demand Broker: manifest
   On Demand Broker->>On Demand Broker: check for pending changes
