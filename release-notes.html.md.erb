@@ -20,7 +20,7 @@ New features and changes in this release:
 - The `register-broker` errand spec uses the broker link to configure CF. The following properties can be removed from the errand job in your manifest as they will be silently ignored: `cf.api_url`, `cf.admin_username`, `cf.admin_password`.
 - The service catalog on the broker returns `maintenance_info`, which can be used to trigger a single-instance upgrade in the broker. Platforms can implement functionality needed to expose this feature.
 - The `recreate-all-service-instances` errand triggers service instance post-deploy errands. Supported versions: Ops Manager 2.2.16+ (BOSH Director 266.10.0+), Ops Manager 2.3.10+ (BOSH Director 267.10.0+), Ops Manager 2.4.3+ (BOSH Director 268.2.2+), Ops Manager 2.5+ (BOSH Director 268.4.0+).
-- Upgrade golang to v1.11.5.
+- Golang is upgraded to v1.11.5.
 
 ### Known Issues
 
