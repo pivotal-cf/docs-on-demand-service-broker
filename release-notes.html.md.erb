@@ -24,7 +24,10 @@ New features and changes in this release:
 
 ### Known Issues
 
-- The new `recreate-all-service-instances` errand inaccurately checks the BOSH director version on PCF 2.2 and PCF 2.3. This could result in post-deploy lifecycle errands not being run. PCF 2.1, 2.4 and later are not impacted.
+- In PCF v2.2 and v2.3, the `recreate-all-service-instances` errand inaccurately
+checks the BOSH director version.
+This can cause post-deploy lifecycle errands not to run.
+PCF v2.1 and v2.4 and later are not affected by this issue.
 
 ### Minimum Version Requirements
 
