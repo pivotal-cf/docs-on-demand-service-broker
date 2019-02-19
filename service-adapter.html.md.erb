@@ -416,7 +416,7 @@ For example:
         ...
     ```
 
-## <a id="bosh-configs"></a>Using Generic BOSH Configs with Service Instances
+## <a id="bosh-configs"></a>Use Generic BOSH Configs with Service Instances
 
 The service adapter can generate generic BOSH Configs and use ODB to apply them
 to BOSH Director before deployment of the service instance. This enables
@@ -426,46 +426,47 @@ exist only for the lifetime of the service instance.
 See the [BOSH documentation](https://bosh.io/docs/configs/) for more details
 about generic BOSH configs.
 
-If you need to return a BOSH config fragment specific to a service instance
-manifest, this should be included in the response from the `generate-manifest`
-command.
-
-For example:
+To return a BOSH config fragment specific to a service instance
+manifest, it must be included in the response from the `generate-manifest`
+command, as in the example below.
 
 ```json
 {
   "manifest": "
-    name: my-service-instance
+    name: MY-SERVICE-INSTANCE
     instance_groups:
-    - vm_type: my-service-instance-small",
+    - vm_type: MY-SERVICE-INSTANCE-small",
   "configs": {
     "cloud":"
        vm_types:
-       - name: my-service-instance-small
+       - name: MY-SERVICE-INSTANCE-small
          cloud_properties:
            cpu: 1"
   }
 }
 ```
 
+Where `MY-SERVICE-INSTANCE` is your service instance.
+
 ODB takes the configs in the output and for each entry creates a generic
 BOSH config on the director, using the map key as the config type and using
-the service instance deployment name as the config name. If we were to apply the
-example using the BOSH CLI, it would look something like:
-
+the service instance deployment name as the config name. If the
+example above were applied using the BOSH CLI, it would look similar to this:
 
 ```bash
 $ echo <content of configs["cloud"]> > config.yml
-$ bosh update-config --type cloud --name my-service-instance config.yml
+$ bosh update-config --type cloud --name MY-SERVICE-INSTANCE config.yml
 ```
 
 The valid config types are: cloud, cpi and runtime.
 
-The configs will be scoped for the BOSH team client ODB is deployed with. So
-configs will be applied to subsequently deployed service instances. However, Pivotal
-recommends that service adapters also namespace their configuration to avoid
-depending on a config value, which might be deleted in the future when the
-associated service instance is removed.
+The configs are scoped for the BOSH team client ODB is deployed with and they
+are applied to subsequently deployed service instances.
+
+<p class="note"><strong>Note:</strong> Pivotal recommends that service adapters
+also namespace their configuration to avoid depending on a config value, which
+might be deleted in the future when the associated service instance is removed.
+</p>
 
 On updates, ODB passes the BOSH configs previously set for the instance to
 the service adapter on `generate-manifest`. If the service adapter returns a
