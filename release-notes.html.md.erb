@@ -6,11 +6,19 @@ owner: London Services Enablement
 
 ## <a id="release-notes"></a>v0.26.0
 
-**Release Date: February ??, 2019**
+**Release Date: February 20, 2019**
 
-### Breaking change
-
-- On-Demand Services SDK users: In an effort to minimize future breaking changes to the SDK interfaces, we have refactored the existing functions to take data structures rather than positional parameters. That means that the signature of every function has changed, but hopefully they are more stable now.
+<p class="note breaking"><strong>Breaking Change</strong>: To minimize future
+breaking changes to the SDK interfaces, we have refactored the existing functions
+to take data structures rather than positional parameters. If you use the
+On-Demand Services SDK you must:
+  <br>
+  <br>
+  1. Modify the signature of your implementation of the interface methods to accept the new structs instead of positional parameters. For a list of the structs see <a href="https://docs.pivotal.io/svc-sdk/odb/0-25/service-adapter.html#interfaces">Interfaces</a>.
+  <br>
+  <br>
+  2. Replace all references to positional arguments with references to the new struct properties.
+</p>
 
 ### Features
 
@@ -28,18 +36,6 @@ New features and changes in this release:
 This is due to a problem with how the `recreate-all-service-instances` errand checks
 the version of the BOSH Director. 
 Ops Manager v2.1 and v2.4 and later are not affected.
-
-<p class="note breaking"><strong>Breaking Change</strong>: To minimize future
-breaking changes to the SDK interfaces, we have refactored the existing functions
-to take data structures rather than positional parameters. If you use the
-On-Demand Services SDK you must:
-  <br>
-  <br>
-  1. Modify the signature of your implementation of the interface methods to accept the new structs instead of positional parameters. For a list of the structs see <a href="https://docs.pivotal.io/svc-sdk/odb/0-25/service-adapter.html#interfaces">Interfaces</a>.
-  <br>
-  <br>
-  2. Replace all references to positional arguments with references to the new struct properties.
-</p>
 
 ### Minimum Version Requirements
 
