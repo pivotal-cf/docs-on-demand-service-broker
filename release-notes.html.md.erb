@@ -24,10 +24,10 @@ New features and changes in this release:
 
 ### Known Issues
 
-- In Ops Manager v2.2 and v2.3, the `recreate-all-service-instances` errand
-inaccurately checks the BOSH Director version. This can cause post-deploy
-lifecycle errands not to run. Ops Manager v2.1 and v2.4 and later are not
-affected by this issue.
+- Post-deploy errands might not run in Ops Manager v2.2 and v2.3. 
+This is due to a problem with how the `recreate-all-service-instances` errand checks
+the version of the BOSH Director. 
+Ops Manager v2.1 and v2.4 and later are not affected.
 
 <p class="note breaking"><strong>Breaking Change</strong>: To minimize future
 breaking changes to the SDK interfaces, we have refactored the existing functions
