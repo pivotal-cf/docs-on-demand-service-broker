@@ -156,11 +156,9 @@ func extractSecret(oldValue, secretName string, secretsMap map[string]string, ne
 }
 ```
 
-<br>
 Keep in mind the following:
 
-* Do not include unchanged secrets in the `secrets` map.
-Your service adapter should only return secrets in the `secrets` map when the value
+* Ensure your service adapter only returns secrets in the `secrets` map when the value
 of the secret is set for the first time, or if the value is changed.
 For example, this might be when:
 
@@ -168,24 +166,13 @@ For example, this might be when:
  * You migrate plaintext secrets into BOSH CredHub.
  * You want to change the value for previously set secrets.
 
-* Each placeholder in the manifest must have a corresponding entry in the `secrets` map.
+* Give each placeholder in the manifest a corresponding entry in the `secrets` map.
 
-* Each key in the `secrets` map must have at least one corresponding placeholder in the manifest.
+* Give each key in the `secrets` map at least one corresponding placeholder in the manifest.
 
-* Secrets already stored in BOSH CredHub do not need the placeholder.
-This is because BOSH CredHub references are ignored by ODB during `generate-manifest`.
-
-* Using the ODB-managed secrets placeholder, you can update the value of existing
-secrets.
-Pivotal recommends that you update both the name and value of the secret when updating
-secrets.
-  <p class="note warning"><strong>WARNING</strong>:
-    Pivotal discourages modifying the value of secrets without changing the secret name.
-    If the BOSH deploy task fails during update or upgrade, ODB-managed secrets might
-    be left in an inconsistent state.
-    For more information, see <a href="#inconsistent-secrets">Inconsistent Secrets after a Failed Update</a>
-    below.
-  </p>
+<p class="note"><strong>Note</strong>: Secrets already stored in BOSH CredHub do not need placeholders.
+This is because ODB ignores BOSH CredHub names during <code>generate-manifest</code>.
+</p>
 
 ### <a id="odb-persisting-creds"></a>Persist Secrets across Updates
 
