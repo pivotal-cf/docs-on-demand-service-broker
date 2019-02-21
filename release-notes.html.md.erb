@@ -8,23 +8,17 @@ owner: London Services Enablement
 
 **Release Date: February 20, 2019**
 
-<p class="note breaking"><strong>Breaking Change</strong>: To minimize future
-breaking changes to the SDK interfaces, we have refactored the existing functions
-to take data structures rather than positional parameters. If you use the
-On-Demand Services SDK you must:
-  <br>
-  <br>
-  1. Modify the signature of your implementation of the interface methods to accept the new structs instead of positional parameters. For a list of the structs see <a href="https://docs.pivotal.io/svc-sdk/odb/0-25/service-adapter.html#interfaces">Interfaces</a>.
-  <br>
-  <br>
-  2. Replace all references to positional arguments with references to the new struct properties.
+<p class="note breaking"><strong>Breaking Change</strong>: Functions have been refactored to use data structures instead of positional parameters. This is to reduce future breaking changes to the SDK interfaces.
+<br>
+<br>
+Service authors using the On-Demand Services SDK must modify the signatures of their implementations of the interface methods to accept the new structs instead of positional parameters. They must also replace all references to positional arguments with references to the new struct properties. For a list of the structs see <a href="https://docs.pivotal.io/svc-sdk/odb/0-26/service-adapter.html#interfaces">Interfaces</a>.
 </p>
 
 ### Features
 
 New features and changes in this release:
 
-- Service adapters can return multiple BOSH configs (for example, cloud-config or runtime-config) when generating their manifests. These configs will be applied before deploying and will only be available for that particular deployment. Configs are deleted when a deployment is deleted.
+- Service adapters can return multiple BOSH configs (for example, cloud-config or runtime-config) when generating their manifests. These configs are applied before deployment and will only be available for that particular deployment. Configs are deleted when a deployment is deleted.
 - The `register-broker` errand spec uses the broker link to configure CF. The following properties can be removed from the errand job in your manifest as they will be silently ignored: `cf.api_url`, `cf.admin_username`, `cf.admin_password`.
 - The service catalog on the broker returns `maintenance_info`, which can be used to trigger a single-instance upgrade in the broker. Platforms can implement functionality needed to expose this feature.
 - The `recreate-all-service-instances` errand triggers service instance post-deploy errands. Supported versions: Ops Manager 2.2.16+ (BOSH Director 266.10.0+), Ops Manager 2.3.10+ (BOSH Director 267.10.0+), Ops Manager 2.4.3+ (BOSH Director 268.2.2+), Ops Manager 2.5+ (BOSH Director 268.4.0+).
@@ -32,9 +26,9 @@ New features and changes in this release:
 
 ### Known Issues
 
-- Post-deploy errands might not run in Ops Manager v2.2 and v2.3. 
+- Post-deploy errands might not run in Ops Manager v2.2 and v2.3.
 This is due to a problem with how the `recreate-all-service-instances` errand checks
-the version of the BOSH Director. 
+the version of the BOSH Director.
 Ops Manager v2.1 and v2.4 and later are not affected.
 
 ### Minimum Version Requirements
