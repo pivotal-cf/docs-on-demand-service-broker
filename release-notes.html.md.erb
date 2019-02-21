@@ -4,19 +4,29 @@ owner: London Services Enablement
 ---
 <strong><%= modified_date %></strong>
 
-## <a id="release-notes"></a>vX.XX.X
+## <a id="release-notes"></a>v0.26.1
 
-**Release Date: XXX XX, XXXX**
+**Release Date: February 22, 2019**
 
 ### Features
 
 New features and changes in this release:
 
+* Updated the minimum BOSH versions for the `recreate-all-service-instances` errand to satisfy OpsManager 2.2 environments, which require BOSH 266.15.0+, and OpsManager 2.3 environments, which require BOSH 267.9.0+.
+* Bumped the On Demand Services SDK to integrate a change where deleting a binding can use BOSH DNS addresses.
+
 ### Known Issues
 
+There are no known issues with this release.
 
 ### Minimum Version Requirements
 
+The following are minimum version requirements for this release:
+
+- BOSH v266.12.0 or v267.6.0 and later
+- Cloud Foundry v238 and later
+
+For Pivotal Cloud Foundry (PCF) version support, see [Product Snapshot](./index.html#product-snapshot).
 
 ## <a id="view"></a> View Release Notes for Another Version
 
