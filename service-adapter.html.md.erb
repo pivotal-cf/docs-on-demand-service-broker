@@ -100,7 +100,7 @@ CredHub name.
 1. Deploys the updated manifest.
 
 
-### <a id="migrating-to-stored-secrets"></a>Migrate from Plaintext Secrets to ODB Managed Secrets
+### <a id="migrating-to-stored-secrets"></a>Migrate from Plaintext Secrets to ODB-managed Secrets
 
 You can use the service adapter to migrate from plaintext secrets in the manifest
 to ODB managed secrets that are stored in BOSH CredHub.
@@ -110,12 +110,29 @@ service adapter copies secrets from the previous deployment to the new manifest.
 To migrate from plaintext secrets to ODB managed secrets, write code in your
 service adapter that does the following:
 
-1. Detects whether a secret is a plaintext secret.
+<p class="note"><strong>Note</strong>: Secrets already stored in BOSH CredHub do not need placeholders.
+This is because ODB ignores BOSH CredHub names during <code>generate-manifest</code>.
+</p>
 
-1. Replaces each plaintext secret from the previous manifest with an ODB managed
+* Detects whether a secret is a plaintext secret.
+
+* Replaces each plaintext secret from the previous manifest with an ODB-managed
 secrets placeholder `((odb_secret:SECRET-NAME))` in the new manifest.
 
-1. Returns the value of each secret in the secrets map.
+* Returns the value of the secrets in the `secrets` map.
+For more information about the `secrets` map, see
+[About ODB Managed Secrets](#odb-managed-secrets) above.
+
+  * Each placeholder in the manifest a corresponding entry in the `secrets` map.
+  * Each key in the `secrets` map at least one corresponding placeholder in the manifest.
+
+* Only returns secrets in the `secrets` map when the value
+of the secret is set for the first time, or if the value is changed.
+For example, this might be when:
+
+  * A new service is created.
+  * You migrate plaintext secrets into BOSH CredHub.
+  * You want to change the value for previously set secrets.
 
 For example:
 
@@ -144,23 +161,6 @@ func extractSecret(oldValue, secretName string, secretsMap map[string]string, ne
 }
 ```
 
-Keep in mind the following:
-
-* Ensure your service adapter only returns secrets in the `secrets` map when the value
-of the secret is set for the first time, or if the value is changed.
-For example, this might be when:
-
- * A new service is created.
- * You migrate plaintext secrets into CredHub.
- * You want to change the value for previously set secrets.
-
-* Give each placeholder in the manifest a corresponding entry in the `secrets` map.
-
-* Give each key in the `secrets` map at least one corresponding placeholder in the manifest.
-
-<p class="note"><strong>Note</strong>: Secrets already stored in BOSH CredHub do not need placeholders.
-This is because ODB ignores BOSH CredHub names during <code>generate-manifest</code>.
-</p>
 
 ### <a id="odb-persisting-creds"></a>Persist Secrets across Updates
 
