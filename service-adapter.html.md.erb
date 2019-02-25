@@ -348,7 +348,7 @@ instance_groups:
 
 ## <a id="dns-addresses"></a> Enable ODB to Obtain BOSH DNS Addresses
 
-<p class="note"><strong>Note:</strong> This feature requires BOSH Director v266.3 or later. This is available in Ops Manager v2.2 and later.</p>
+<p class="note"><strong>Note:</strong> This feature requires v266.3 or later of the BOSH Director. This is available in Ops Manager v2.2 and later.</p>
 
 You can configure ODB to provide BOSH DNS addresses for service instances to the
 service adapter `create-binding` call.
@@ -397,7 +397,7 @@ For example:
 ## <a id="bosh-configs"></a>Use Generic BOSH Configs with Service Instances
 
 The service adapter can generate generic BOSH configs and use ODB to apply them
-to BOSH Director before deployment of the service instance. This enables
+to the BOSH Director before deployment of the service instance. This enables
 the service author to provide service instance-specific BOSH configs which
 exist only for the lifetime of the service instance.
 
