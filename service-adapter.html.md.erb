@@ -63,10 +63,10 @@ To do this, use ODB-managed secrets.
 The following sections provide information about how to use ODB-managed secrets to store,
 persist, and modify secrets in BOSH CredHub:
 
-- [About ODB-managed Secrets](#odb-managed-secrets)
-- [Migrate from Plaintext Secrets to ODB-managed Secrets](#migrating-to-stored-secrets)
+- [About ODB-Managed Secrets](#odb-managed-secrets)
+- [Migrate from Plaintext Secrets to ODB-Managed Secrets](#migrating-to-stored-secrets)
 - [Persist Credentials Across Updates](#odb-persisting-creds)
-- [Modify ODB-managed Secrets](#modifying-secrets)
+- [Modify ODB-Managed Secrets](#modifying-secrets)
 
 
 ### <a id="odb-managed-secrets"></a> About ODB-Managed Secrets
@@ -105,7 +105,7 @@ BOSH CredHub name.
 1. Deploys the updated manifest.
 
 
-### <a id="migrating-to-stored-secrets"></a>Migrate from Plaintext Secrets to ODB-managed Secrets
+### <a id="migrating-to-stored-secrets"></a>Migrate from Plaintext Secrets to ODB-Managed Secrets
 
 You can use the service adapter to migrate from plaintext secrets in the manifest
 to ODB-managed secrets that are stored in BOSH CredHub.
@@ -190,7 +190,7 @@ placeholder `((odb_secret:SECRET-NAME))`.
 For more information about using the value during a bind, see
 [create-binding](./adapter-reference.html#create-binding).
 
-### <a id="modifying-secrets"></a>Modify ODB-managed Secrets
+### <a id="modifying-secrets"></a>Modify ODB-Managed Secrets
 
 <p class="note warning"><strong>WARNING</strong>:
   Pivotal discourages modifying the value of secrets without changing the secret name.
@@ -394,15 +394,15 @@ For example:
         ...
     ```
 
-## <a id="bosh-configs"></a>Use Generic BOSH Configs with Service Instances
+## <a id="bosh-configs"></a>Use Dynamic BOSH Configuration
 
-The service adapter can generate generic BOSH Configs and use ODB to apply them
-to BOSH Director before deployment of the service instance. This enables
+The service adapter can generate BOSH Configs and use ODB to apply them
+to the BOSH Director before deployment of the service instance. This enables
 the service author to provide service instance-specific BOSH Configs which
 exist only for the lifetime of the service instance.
 
 See the [BOSH documentation](https://bosh.io/docs/configs/) for more details
-about generic BOSH configs.
+about BOSH configs.
 
 To return a BOSH config fragment specific to a service instance
 manifest, it must be included in the response from the `generate-manifest`
@@ -426,15 +426,15 @@ command, as in the example below.
 
 Where `MY-SERVICE-INSTANCE` is your service instance.
 
-ODB takes the configs in the output and for each entry creates a generic
+ODB takes the configs in the output and for each entry creates a
 BOSH config on the director, using the map key as the config type and using
 the service instance deployment name as the config name. If the
 example above were applied using the BOSH CLI, it would look similar to this:
 
-```bash
+<pre class="terminal">
 $ echo <content of configs["cloud"]> > config.yml
 $ bosh update-config --type cloud --name MY-SERVICE-INSTANCE config.yml
-```
+</pre>
 
 The valid config types are: cloud, cpi and runtime.
 

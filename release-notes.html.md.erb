@@ -8,18 +8,22 @@ owner: London Services Enablement
 
 **Release Date: February 22, 2019**
 
-### Features
-
-New features and changes in this release:
-
-* Updated the minimum BOSH versions for the `recreate-all-service-instances` errand to satisfy OpsManager 2.2 environments, which require BOSH 266.15.0+, and OpsManager 2.3 environments, which require BOSH 267.9.0+.
-
 ### Resolved Issues
 
-This release fixes the following issue:
+This release fixes the following issues:
 
-* Bumped the On Demand Services SDK to integrate a change where deleting a binding can use BOSH DNS addresses.
+* Post deploy errands in Ops Manager v2.2 and v2.3 are no longer affected by the problem with how the
+`recreate-all-service-instances` errand checks the version of the BOSH Director.
+The `recreate-all-service-instances` errand now satisfies Ops Manager v2.2 environments,
+which require BOSH v266.15.0+, and Ops Manager v2.3 environments, which require BOSH v267.9.0+.
 
+* On-Demand Services golang SDK now includes the use of BOSH DNS addresses when deleting a binding.
+
+### Known Issues
+
+-  Dynamic BOSH Configuration is not supported for BOSH team users in Ops Manager v2.1 and earlier.
+You must disable the feature in these environments by setting the `disable_bosh_configs`
+property to `true` in the broker job.
 
 ### Minimum Version Requirements
 
@@ -39,8 +43,7 @@ For Pivotal Cloud Foundry (PCF) version support, see [Product Snapshot](./index.
    This is to reduce future breaking changes to the SDK interfaces.
 <br>
 <br>
-Service authors using the On-Demand Services SDK must modify the signatures of their implementations
-of the interface methods to accept the new structs instead of positional parameters.
+dof the interface methods to accept the new structs instead of positional parameters.
 They must also replace all references to positional arguments with references to the new struct properties.
 For a list of the structs, see <a href="service-adapter.html#interfaces">Interfaces</a>.
 </p>
@@ -49,17 +52,30 @@ For a list of the structs, see <a href="service-adapter.html#interfaces">Interfa
 
 New features and changes in this release:
 
-- Service adapters can return multiple BOSH configs (for example, cloud-config or runtime-config) when generating their manifests.
+- Introduces Dynamic BOSH Configuration.
+  Service adapters can return multiple BOSH configs, for example, `cloud-config` or `runtime-config`,
+  when generating their manifests.
   These configs are applied before deployment and are only available for that particular deployment.
-  Configs are deleted when a deployment is deleted.
+  For more information, see [Use Dynamic BOSH Configuration](./service-adapter.html#bosh-configs).
+
 - The `register-broker` errand spec uses the broker link to configure Pivotal Cloud Foundry (PCF).
   The following properties can be removed from the errand job in your manifest
   because they are silently ignored: `cf.api_url`, `cf.admin_username`, `cf.admin_password`.
-- The service catalog on the broker returns `maintenance_info`, which can be used to trigger a single-instance upgrade in the broker.
+
+- The service catalog on the broker returns `maintenance_info`, which can be used
+  to trigger a single-instance upgrade in the broker.
   Platforms can implement functionality needed to expose this feature.
+
 - The `recreate-all-service-instances` errand triggers service instance post-deploy errands.
-  Supported versions: Ops Manager 2.2.16 and later (BOSH Director 266.10.0+), Ops Manager 2.3.10 and later (BOSH Director 267.10.0+),
-  Ops Manager 2.4.3 and later (BOSH Director 268.2.2+), Ops Manager 2.5 and later (BOSH Director 268.4.0+).
+  Supported versions:
+
+  - Ops Manager v2.2.16 and later (BOSH Director v266.10.0 and later)
+  - Ops Manager v2.3.10 and later (BOSH Director v267.10.0 and later)
+  - Ops Manager v2.4.3 and later (BOSH Director v268.2.2 and later)
+  - Ops Manager v2.5 and later (BOSH Director v268.4.0 and later)<br>
+
+   For more information about this errand, see [Recreate All Service Instances](./management.html#recreate-all-service-instances).
+
 - Golang is upgraded to v1.11.5.
 
 ### Known Issues
@@ -70,11 +86,13 @@ This release has the following issue:
 This is due to a problem with how the `recreate-all-service-instances` errand checks
 the version of the BOSH Director.
 Ops Manager v2.1 and v2.4 and later are not affected.
-- This release introduces Dynamic BOSH Configuration. This is not supported in BOSH for
-BOSH team users in Ops Manager versions 2.1 and earlier. For these environments, you
-should disable Dynamic BOSH Configuration by setting the `disable_bosh_configs`
+
+- Dynamic BOSH Configuration is not supported for BOSH team users in Ops Manager v2.1 and earlier.
+For these environments, you must disable the feature by setting the `disable_bosh_configs`
 property to `true` in the broker job.
 
+- Using BOSH DNS addresses in `delete-binding` has not been included in the On-Demand Services
+golang SDK.
 
 ### Minimum Version Requirements
 
