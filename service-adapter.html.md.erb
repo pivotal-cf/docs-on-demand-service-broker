@@ -46,7 +46,7 @@ subcommands, see
 <br><br>
 - `delete-binding`:
   Invalidate the created credentials, if possible.
-  Some services (e.g. Redis) are single-user, and this endpoint will do nothing.
+  Some services (e.g. Redis) are single-user, and this endpoint does nothing.
   For more information about this subcommand, see [delete-binding](./adapter-reference.html#delete-binding).
 <br><br>
 - `generate-plan-schemas`:
@@ -259,8 +259,8 @@ deployment.
 
 The failed deployment might contain a mixture of old and new secrets depending
 on the stage that the deployment failed.
-If an operator attempts to troubleshoot this scenario by manually re-deploying
-the previous manifest, this manifest will now contain BOSH CredHub names that refer
+When an operator attempts to troubleshoot this scenario by manually re-deploying
+the previous manifest, this manifest contains BOSH CredHub names that refer
 to the new secret values. This can cause errors with bindings.
 
 Pivotal recommends that you avoid modifying secrets without using new names for
@@ -396,9 +396,9 @@ For example:
 
 ## <a id="bosh-configs"></a>Use Generic BOSH Configs with Service Instances
 
-The service adapter can generate generic BOSH Configs and use ODB to apply them
+The service adapter can generate generic BOSH configs and use ODB to apply them
 to BOSH Director before deployment of the service instance. This enables
-the service author to provide service instance-specific BOSH Configs which
+the service author to provide service instance-specific BOSH configs which
 exist only for the lifetime of the service instance.
 
 See the [BOSH documentation](https://bosh.io/docs/configs/) for more details
@@ -447,12 +447,12 @@ might be deleted in the future when the associated service instance is removed.
 </p>
 
 On updates, ODB passes the BOSH configs previously set for the instance to
-the service adapter on `generate-manifest`. If the service adapter returns a
-new value for an existing type, the configuration will be overwritten. If no
-value is returned for an existing type, that type will remain as is. If new
-types are passed, those will be set.
+the service adapter on `generate-manifest`. When the service adapter returns a
+new value for an existing type, the configuration is overwritten. When no
+value is returned for an existing type, that type remains as is. When new
+types are passed, those are set.
 
-When the service instance is deleted, all the associated BOSH configs will also
+When the service instance is deleted, all the associated BOSH configs are also
 be deleted.
 
 ## <a id="handling-errors"></a>Handle Errors
