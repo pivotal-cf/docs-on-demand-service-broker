@@ -14,10 +14,11 @@ This release fixes the following issues:
 
 * Post deploy errands in Ops Manager v2.2 and v2.3 are no longer affected by the problem with how the
 `recreate-all-service-instances` errand checks the version of the BOSH Director.
-The `recreate-all-service-instances` errand now satisfies Ops Manager v2.2 environments,
-which require BOSH v266.15.0+, and Ops Manager v2.3 environments, which require BOSH v267.9.0+.
+The errand now satisfies Ops Manager v2.2 environments (BOSH v266.15.0 and later minor versions),
+and Ops Manager v2.3 environments (BOSH v267.9.0 and later minor versions).
 
-* On-Demand Services golang SDK now includes the use of BOSH DNS addresses when deleting a binding.
+* The [on-demand services golang SDK](https://github.com/pivotal-cf/on-demand-services-sdk)
+now includes the use of BOSH DNS addresses when deleting a binding.
 
 ### Known Issues
 
@@ -41,12 +42,12 @@ For Pivotal Cloud Foundry (PCF) version support, see [Product Snapshot](./index.
 <p class="note breaking"><strong>Breaking Change:</strong> Functions have been refactored
    to use data structures instead of positional parameters.
    This is to reduce future breaking changes to the SDK interfaces.
-<br>
-<br>
-dof the interface methods to accept the new structs instead of positional parameters.
-They must also replace all references to positional arguments with references to the new struct properties.
-For a list of the structs, see <a href="service-adapter.html#interfaces">Interfaces</a>.
-</p>
+   <br><br>
+   Service authors using the <a href="https://github.com/pivotal-cf/on-demand-services-sdk">
+     on-demand services golang SDK</a> must modify the signatures of their implementations
+   of the interface methods to accept the new structs instead of positional parameters.
+   They must also replace all references to positional arguments with references to the new struct properties.
+   For a list of the structs, see <a href="service-adapter.html#interfaces">Interfaces</a>.</p>
 
 ### Features
 
@@ -65,16 +66,17 @@ New features and changes in this release:
 - The service catalog on the broker returns `maintenance_info`, which can be used
   to trigger a single-instance upgrade in the broker.
   Platforms can implement functionality needed to expose this feature.
+  For more information about this feature, see [Maintenance Info](./operating.html#maintenance).
 
 - The `recreate-all-service-instances` errand triggers service instance post-deploy errands.
-  Supported versions:
+  In this release, this feature is supported for the following Ops Manager versions:
 
-  - Ops Manager v2.2.16 and later (BOSH Director v266.10.0 and later)
-  - Ops Manager v2.3.10 and later (BOSH Director v267.10.0 and later)
-  - Ops Manager v2.4.3 and later (BOSH Director v268.2.2 and later)
-  - Ops Manager v2.5 and later (BOSH Director v268.4.0 and later)<br>
+  - 2.2.16 and later (BOSH Director v266.10.0 and later minor versions)
+  - 2.3.10 and later (BOSH Director v267.10.0 and later minor versions)
+  - 2.4.3 and later (BOSH Director v268.2.2 and later patches)
+  - 2.5 and later (BOSH Director v268.4.0 and later)<br>
 
-   For more information about this errand, see [Recreate All Service Instances](./management.html#recreate-all-service-instances).
+    For more information about this errand, see [Recreate All Service Instances](./management.html#recreate-all-service-instances).
 
 - Golang is upgraded to v1.11.5.
 
@@ -91,8 +93,8 @@ Ops Manager v2.1 and v2.4 and later are not affected.
 For these environments, you must disable the feature by setting the `disable_bosh_configs`
 property to `true` in the broker job.
 
-- Using BOSH DNS addresses in `delete-binding` has not been included in the On-Demand Services
-golang SDK.
+- Using BOSH DNS addresses in `delete-binding` is not included in the
+[on-demand services golang SDK](https://github.com/pivotal-cf/on-demand-services-sdk).
 
 ### Minimum Version Requirements
 

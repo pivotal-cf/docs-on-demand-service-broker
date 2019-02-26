@@ -478,7 +478,7 @@ The operator should colocate the service adapter release with the ODB release in
 a BOSH manifest to place the adapter executable on the same VM as the ODB server.
 As a result, the adapter BOSH job's `monit` file should have no processes defined.
 
-See the following example service adapter releases:
+See the following example service adapter releases on GitHub:
 
 - <a href="https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release">Kafka example service adapter release</a>
 - <a href="https://github.com/pivotal-cf-experimental/redis-example-service-adapter-release">Redis example service adapter release</a>
@@ -492,8 +492,8 @@ Pivotal has published an SDK for teams writing their service adapters in golang.
 It covers command line invocation handling, parameter parsing, response
 serialization, and error handling so the adapter authors can focus on the
 service-specific logic in the adapter.
-For more information about the Golang SDK, see the
-[on demand service SDK](https://github.com/pivotal-cf/on-demand-services-sdk)
+For more information about the golang SDK, see the
+[on-demand-services-sdk](https://github.com/pivotal-cf/on-demand-services-sdk)
 repository on GitHub.
 
 The SDK supports properties in two levels for the generated BOSH manifest,
@@ -501,7 +501,8 @@ manifest global and job level.
 Global properties are deprecated in BOSH, in favor of job level properties and job links.
 
 For an example of property generation, see the
-[Kafka example service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/4a27c55ff6ea4a62e95e9a57e100333af5b24573/adapter/generate_manifest.go#L100-L129).
+[kafka-example-service-adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/4a27c55ff6ea4a62e95e9a57e100333af5b24573/adapter/generate_manifest.go#L100-L129)
+on GitHub.
 
 ### <a id="sdk_usage"></a>Use the SDK
 
