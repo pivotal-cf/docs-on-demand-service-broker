@@ -1073,7 +1073,7 @@ For more information about service metrics, see [Service Metrics for Pivotal Clo
 ## <a id="binding-with-dns"></a>(Optional) Obtain BOSH DNS Addresses for Binding Creation and Deletion
 
 You can configure ODB to retrieve BOSH DNS addresses for service instances.
-These addresses are passed to the service adapter when you create and delete a binding.
+These addresses are passed to the service adapter when you create or delete a binding.
 This might be necessary when the binding for a service instance contains, or relies on,
 BOSH DNS addresses for that deployment.
 
@@ -1089,7 +1089,7 @@ service, see [Enable ODB to Obtain BOSH DNS Addresses](./service-adapter.html#dn
 To enable ODB to obtain BOSH DNS addresses for binding creation and deletion, do the following:
 
 1. In the manifest, configure the `binding_with_dns` property on plans that require
-DNS addresses to create and delete a binding.
+DNS addresses to create and delete bindings.
 <br><br>
 For more information about the properties to add, see [Options for _binding\_with
 \_dns_](#binding-property) below.
