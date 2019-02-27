@@ -39,8 +39,16 @@ New features and changes in this release:
 
 - Golang is upgraded to v1.11.5.
 
+<<<<<<< HEAD
 - The feature that passes BOSH DNS addresses to the `CreateBinding` method, implemented by the service adapter, now passes BOSH DNS addresses to the `DeleteBinding` method as well. `DNSAddresses` contains a map of requested addresses.
 For more information about the `DNSAddresses` argument, see [Enable ODB to Obtain BOSH DNS Addresses](./service-adapter.html#dns-addresses).
+=======
+- We previously released a feature where we pass BOSH DNS addresses to the CreateBinding method implemented by the service adapter.
+We have extended this functionality to pass BOSH DNS addresses to the DeleteBinding method as well. DNSAddresses contains a map of requested addresses.
+For more information about the DNSAddresses argument, see [Enable ODB to Obtain BOSH DNS Addresses](./service-adapter.html#dns-addresses).
+
+### Known Issues
+>>>>>>> abf9dbf... Document that DeleteBinding now includes the DNSAddresses parameter
 
 ### Known Issues
 

@@ -800,8 +800,8 @@ The snippet above produces the following in `DNS-ADDRESSES-JSON`:
 <br>
 Each entry in `binding_with_dns` is converted to a single BOSH DNS address using the BOSH links API.
 
-The On Demand Services SDK includes the `DNSAddresses` parameter for the `CreateBinding` method.
-The ODB invokes the `CreateBinding` method with this parameter, which is a map of name to DNS address.
+The On Demand Services SDK includes the `DNSAddresses` parameter for the `CreateBinding` and `DeleteBinding` methods.
+The ODB invokes the `CreateBinding` and `DeleteBinding` methods with this parameter, which is a map of name to DNS address.
 
 ###<a id="create-binding-output"></a>Output
 
@@ -854,7 +854,8 @@ See the following example:
     "bosh_vms": "BOSH-VMS-JSON",
     "manifest": "MANIFEST-YAML",
     "delete_parameters": "DELETE-PARAMETERS-JSON",
-    "secrets": "MANIFEST-SECRETS-JSON"
+    "secrets": "MANIFEST-SECRETS-JSON",
+    "dns_addresses": "DNS-ADDRESSES-JSON"
   }
 }
 ```
@@ -923,6 +924,9 @@ See the following example:
 
 See [MANIFEST-SECRETS-JSON](#create-binding-secrets) above.
 
+####<a id="delete-binding-dns-addresses"></a>DNS-ADDRESSES-JSON
+
+See [DNS-ADDRESSES-JSON](#create-binding-dns-addresses) above.
 
 ###<a id="delete-binding-output"></a>Output
 
