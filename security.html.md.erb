@@ -4,7 +4,8 @@ owner: London Services Enablement
 ---
 
 This topic provides information about the API endpoints that the on-demand broker (ODB)
-accesses, and UAA permissions that ODB needs for BOSH and for Cloud Foundry (CF).
+accesses, and the minimum UAA authorities and corresponding permissions required
+for the ODB to operate correctly.
 
 ## <a id="bosh-endpoints"></a>BOSH API Endpoints
 
@@ -42,19 +43,19 @@ Read only:
 - `bosh tasks`
 
 The minimum UAA authority required by the BOSH Director to perform these actions
-is `bosh.teams.TEAM.admin`.
+is `bosh.teams.TEAM-NAME.admin`.
 
 <p class="note"><strong>Note:</strong>
 	A team admin cannot view or update the Director's cloud config, nor upload releases or stemcells.
 </p>
 
 For information on how to set up and use BOSH teams, see
-[Using Teams](https://bosh.io/docs/director-users-uaa-perms.html) in the BOSH
+[Using BOSH Teams](https://bosh.io/docs/director-bosh-teams/) in the BOSH
 documentation.
 
 ### <a id="unused-bosh"></a> Unused BOSH permissions
 
-The team admin authority also allows the following actions, which currently are
+The `bosh.teams.TEAM-NAME.admin` authority also allows the following actions, which currently are
 not used by ODB:
 
 - `bosh start/stop/recreate`
@@ -94,10 +95,10 @@ ODB accesses the following CF API endpoints during the service instance lifecycl
 | `DELETE /v2/apps/APP-GUID/service_bindings/SERVICE-BINDING-GUID`     | Unbinding a service instance during delete all service instances errand                                |
 | `DELETE /v2/service_keys/SERVICE-KEY-GUID`                           | Deleting a service key during delete all service instances errand                                      |
 
-For information about CF API endpoints, see [Cloud Foundry API](https://apidocs.cloudfoundry.org/268/)
-in the CF API documentation.
+For information about Cloud Foundry API endpoints, see the [Cloud Foundry API](https://apidocs.cloudfoundry.org/)
+documentation.
 
-## <a id="cf-uaa"></a>CF UAA Permissions
+## <a id="cf-uaa"></a>Cloud Foundry UAA Permissions
 
 The actions that ODB needs to be able to perform are:
 
@@ -121,11 +122,12 @@ Read only:
 - `cf app`
 - `cf service-keys`
 
-The minimum UAA authority required by CF to perform these actions is `cloud_controller.admin`.
+The minimum UAA authority required by Cloud Foundry to perform these actions is `cloud_controller.admin`.
 Admin is required as many operations are required to perform against all of the
-on demand service instances across a foundation, regardless of org and space.
+on-demand service instances across a foundation, regardless of org and space.
 
-### <a id="unused-cf"></a> Unused CF permissions
+### <a id="unused-cf"></a> Unused Cloud Foundry permissions
+
 The Cloud Controller admin authority also allows the following actions, which
 currently are not used by ODB:
 
@@ -147,4 +149,3 @@ currently are not used by ODB:
 - Space management
 - Org management
 - CLI plugin management
-
