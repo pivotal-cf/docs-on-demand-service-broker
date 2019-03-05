@@ -12,41 +12,15 @@ owner: London Services Enablement
 
 New features and changes in this release:
 
-- Introduces Dynamic BOSH Configuration.
-  Service adapters can return multiple BOSH configs, for example, `cloud-config` or `runtime-config`,
-  when generating their manifests.
-  These configs are applied before deployment and are only available for that particular deployment.
-  For more information, see [Use Dynamic BOSH Configuration](./service-adapter.html#bosh-configs).
+- 
 
-- The `register-broker` errand spec uses the broker link to configure Pivotal Cloud Foundry (PCF).
-  The following properties can be removed from the errand job in your manifest
-  because they are silently ignored: `cf.api_url`, `cf.admin_username`, `cf.admin_password`.
-
-- The service catalog on the broker returns `maintenance_info`, which can be used
-  to trigger a single-instance upgrade in the broker.
-  Platforms can implement functionality needed to expose this feature.
-  For more information about this feature, see [Maintenance Info](./operating.html#maintenance).
-
-- The `recreate-all-service-instances` errand triggers service instance post-deploy errands.
-  In this release, this feature is supported for the following Ops Manager versions:
-
-  - 2.2.16 and later (BOSH Director v266.10.0 and later minor versions)
-  - 2.3.10 and later (BOSH Director v267.10.0 and later minor versions)
-  - 2.4.3 and later (BOSH Director v268.2.2 and later patches)
-  - 2.5 and later (BOSH Director v268.4.0 and later)<br>
-
-    For more information about this errand, see [Recreate All Service Instances](./management.html#recreate-all-service-instances).
-
-- Golang is upgraded to v1.11.5.
-
-- The feature that passes BOSH DNS addresses to the `CreateBinding` method, implemented by the service adapter, now passes BOSH DNS addresses to the `DeleteBinding` method as well. `DNSAddresses` contains a map of requested addresses.
-For more information about the `DNSAddresses` argument, see [Enable ODB to Obtain BOSH DNS Addresses](./service-adapter.html#dns-addresses).
+- 
 
 ### Known Issues
 
 This release has the following issues:
 
-
+- 
 
 ### Minimum Version Requirements
 
