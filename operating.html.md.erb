@@ -1041,7 +1041,7 @@ For a more detailed manifest snippet, see the [Starter Snippet for the Service C
 ## <a id="broker-metrics"></a>(Optional) Configure Service Metrics
 
 The ODB BOSH release contains a metrics job that can be used to emit metrics
-when colocated with the [Pivotal Cloud Foundry Service Metrics SDK](https://network.pivotal.io/products/service-metrics-sdk/).
+when co-located with the [Pivotal Cloud Foundry Service Metrics SDK](https://network.pivotal.io/products/service-metrics-sdk/).
 To do this, you must include the [Loggregator](https://github.com/cloudfoundry/loggregator) release.
 
 Add the following jobs to the broker instance group:
@@ -1053,17 +1053,24 @@ Add the following jobs to the broker instance group:
     service_metrics:
       execution_interval_seconds: INTERVAL-BETWEEN-SUCCESSIVE-METRICS-COLLECTIONS
       origin: ORIGIN-TAG-FOR-METRICS
-      monit_dependencies: [broker] # hardcode this
+      monit_dependencies: [broker]
       ....snip....
-      #Add Loggregator configuration here: see examples @ https://github.com/pivotal-cf/service-metrics-release/blob/master/manifests
+      LOGGREGATOR-CONFIGURATION
       ....snip....
 - name: service-metrics-adapter
   release: ODB-RELEASE
 ```
 
+  Where:
+
+  - `INTERVAL-BETWEEN-SUCCESSIVE-METRICS-COLLECTIONS` is the interval in seconds between successive metrics collections.
+  - `ORIGIN-TAG-FOR-METRICS` is the origin tag for metrics.
+  - `LOGGREGATOR-CONFIGURATION` is your Loggregator configuration. For example manifests, see [service-metrics-release](https://github.com/pivotal-cf/service-metrics-release/blob/master/manifests) in GitHub.
+  - `ODB-RELEASE` is the on-demand broker release.
+
 For an example of how the service metrics can be configured for an on-demand-broker
 deployment, see the [kafka-example-service-adapter-release](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml#L106)
-manifest on GitHub.
+manifest in GitHub.
 
 Pivotal has tested this example configuration with Loggregator v58 and service-metrics v1.5.0.
 
