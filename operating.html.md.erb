@@ -163,7 +163,7 @@ The On-Demand Broker requires the following:
 
 If ODB is configured to communicate with BOSH on the Director's public IP address, you might
 be using a self-signed certificate unless you have a domain for your BOSH Director.
-ODB does not ignore TLS certificate validation errors by default.
+ODB does not ignore transport layer security (TLS) certificate validation errors by default.
 
 You have two options to configure certificate-based authentication between the BOSH Director and the ODB:
 
@@ -174,9 +174,26 @@ You have two options to configure certificate-based authentication between the B
       root_ca_cert: ROOT-CA-CERT
     ```
 
+    Where `ROOT-CA-CERT` is the root certificate authority (CA) certificate.
+
+    For example:
+
+    ```yaml
+    Instance_groups:
+        - Name: broker
+          Jobs:
+            - Name: broker
+              Properties:
+                Bosh:
+                  Root_ca_cert: ROOT_CA_CERT
+                  Authentication:
+          …
+    ```
+
 * Use BOSH's `trusted_certs` feature to add a self-signed CA certificate to each VM that BOSH deploys.
-For how to generate and use self-signed certificates for the BOSH Director and UAA,
-see [Configuring SSL Certificates](https://bosh.io/docs/director-certs.html) in the BOSH documentation.
+For instructions on how to add trusted certificates to your BOSH Director, see [Configuring Trusted Certificates](https://bosh.io/docs/trusted-certs/) in the BOSH documentation.
+For how to generate and use self-signed certificates for the BOSH Director and
+User Account and Authentication (UAA), see [Configuring SSL Certificates](https://bosh.io/docs/director-certs.html) in the BOSH documentation.
 
 Optionally, you can configure a separate root CA certificate that is used when ODB communicates with the Cloud Foundry API (Cloud Controller).
 For an example of how to add this in the manifest, see the line containing
