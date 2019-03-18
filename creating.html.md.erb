@@ -11,9 +11,9 @@ release for an on-demand service tile.
 
 Service authors provide the following:
 
-- The Service Release. See [Overview](#create-a-service-release) below.
+- The Service Release. For more information, see [Overview](#create-a-service-release) below.
 
-- The Service Adapter. See [Creating a Service Adapter](./service-adapter.html).
+- The Service Adapter. For more information, see [Creating a Service Adapter](./service-adapter.html).
 
 - Documentation for the operator to configure plan definitions for the Service Adapter.
 
@@ -30,98 +30,103 @@ To create a service release, Pivotal recommends that you do the following:
 
 1. [Package an Initial Service Release](#package-service)
 
-2. Refine your release using information in the following sections:
+2. Refine your release using the information in the following sections:
  - [Use Job Links](#job-links)
  - [Include Service Instance Lifecycle Errands](#service-instance-lifecycle-errands)
 
-3. [Package your Final Service Release](#final-release)
-
-Example service releases:
-
-* [Redis example service release](https://github.com/pivotal-cf-experimental/redis-example-service-release)
-* [Kafka example service release](https://github.com/pivotal-cf-experimental/kafka-example-service-release)
+3. [Package the Final Service Release](#final-release)
 
 
 ## <a id="package-service"></a>Package an Initial Service Release
 
-Package an initial version of the BOSH release for your service for testing purposes.
-To do so, create a BOSH release and a BOSH manifest for the service and manually
-deploy the service as follows:
+Package an initial version of the BOSH release for your service to test whether
+it deploys successfully.
 
-1. Package and test the initial service release. To do so, follow the instructions
-in [Creating a Release](https://bosh.io/docs/create-release/) in the BOSH Documentation
-up to and including _Step 6: Create a Dev Release_.
+To do so, create and manually deploy a BOSH release for the service by following
+the instructions up to and including _Step 6: Create a Dev Release_ in
+[Creating a Release](https://bosh.io/docs/create-release/) in the BOSH Documentation.
 
-1. Pivotal recommends that you create sample BOSH manifest(s) that deploy the service release.
-This will help you to write the `generate-manifest` component of the Service Adapter.
+<p class="note"><strong>Note: </strong>
+  Pivotal recommends that you create sample manifests that deploy the service release(s).
+  This helps you to write the <code>generate-manifest</code> component of the Service Adapter.
+  For how to write a manifest, see <a href="./operating.html#broker-manifest">Write a Broker Manifest</a>.</p>
 
-1. When you have finished testing the deployment, delete and clean it up.
+Example service releases:
+
+* [redis-example-service-release](https://github.com/pivotal-cf-experimental/redis-example-service-release)
+* [kafka-example-service-release](https://github.com/pivotal-cf-experimental/kafka-example-service-release)
 
 
 ## <a id="job-links"></a>Use Job Links
 
-When generating a manifest, Pivotal recommends not using static IPs, which make
-network IP management very complex.
-Instead, Pivotal recommends using BOSH's job links feature.
+When generating a manifest, Pivotal recommends that you do not use static IP addresses.
+This is because network IP management can become complex for services with
+multiple instance groups.
+Instead, Pivotal recommends that you use BOSH's job links feature.
 
-For more information about the links feature, see
+For how to use job links, see
 [Links](https://bosh.io/docs/links.html) in the BOSH documentation.
 
-The Kafka example service release uses implicit job links to get the IPs of the
-brokers and the zookeeper.
-See the [Kafka example service release](https://github.com/pivotal-cf-experimental/kafka-example-service-release/blob/master/jobs/kafka_server/spec#L15).
+For an example, see the [kafka-example-service-release](https://github.com/pivotal-cf-experimental/kafka-example-service-release/blob/master/jobs/kafka_server/spec#L15)
+on GitHub.
+This uses implicit job links to get the IP addresses of the brokers and the zookeeper.
 
 
 ## <a id="service-instance-lifecycle-errands"></a>Include Service Instance Lifecycle Errands
 
- <p class="note"><strong>Note</strong>: This feature requires BOSH director v261 or later.</p>
+ <p class="note"><strong>Note</strong>: This feature requires BOSH Director v261 or later.</p>
 
-A service release can provide job errands that are used by ODB during the management of an instance lifecycle.
-A deployment is only considered successful if along with the deployment all lifecycle errands complete successfully.
-For more information, see [Service Instance Lifecycle Errands](./operating.html#lifecycle-errands).
-Operators can configure <%# enable/disable? any other configuration? %> the service instance lifecycle errands that you add in the
-deployment manifest or in the tile.
+Service instance lifecycle errands allow additional short-lived jobs to run as
+part of service instance deployment.
+A deployment is only considered successful if along with the deployment all
+lifecycle errands complete successfully.
+
+A service release can provide job errands that ODB uses during the management of
+an instance lifecycle.
+Operators can configure these errands in the deployment manifest or in the tile.
+For how operators configure service instance lifecycle errands, see
+[Enable Service Instance Lifecycle Errands](./operating.html#enable-errands).
 
 ODB supports the following service instance lifecycle errands:
 
-- `post-deploy`: These errands run after the creation or updating of a service instance.
-For information about the workflow, see [Create or Update Service Instance with Post-Deploy Errands](./concepts.html#post-deploy).
+- `post-deploy`: These errands run after the creating or updating a service instance.
+  An example use case is running a health check to ensure the service instance is functioning.<br>
+  For more information about these errands, see [Post-Deploy Errands](https://docs.pivotal.io/tiledev/tile-errands.html#post-deploy).
+  To see the workflow, see [Create or Update Service Instance with Post-Deploy Errands](./concepts.html#post-deploy).
 - `pre-delete`: These errands run before the deletion of a service instance.
-For information about the workflow, see [Delete a Service Instance with Pre-Delete Errand](./concepts.html#pre-delete).
+  An example use case is cleaning up data before a service shutdown. <br>For more
+  information about these errands, see [Pre-Delete Errands](https://docs.pivotal.io/tiledev/tile-errands.html#pre-delete).
+  To see the workflow, see [Delete a Service Instance with Pre-Delete Errand](./concepts.html#pre-delete).
 
-To add lifecycle errands to your service release, do the following:
+To include lifecycle errands in your service release, do the following:
 
 1. Decide what errands your on-demand service needs.
-You can use information you got while testing your deployment to inform the
-errands your service instances need.
-<br>
-For example, you might use the criteria you used to test the deployment to inform
-a healthcheck post-deploy errand or you might use how you deleted and cleaned up
-the deployement to create a post-delete errand.
+For example, you could create a health check post-deploy errand using the criteria
+that you used to test the initial release.
 
-1.  Write code to run the errand and define them as jobs in the service release.
-For how to do so, see the [Using Errands](https://bosh.io/docs/errands.html#release-definition) in the BOSH documentation.
+1.  Write code to run each lifecycle errand and define them as jobs in the service release.
+For how to do so, see the [Using Errands](https://bosh.io/docs/errands.html) in the BOSH documentation.
 
 <p class="note"><strong>Note: </strong>If you are using the <code>generate-manifest</code> command, you must validate and include
 any supported errands in the instance groups array that are passed into the plan parameter.
 For more information about this command, see <a href="./adapter-reference.html#generate-manifest">generate-manifest</a>.</p>
 
-See an example implementation of a health check `post-deploy` errand in the
+For an example implementation of a health check `post-deploy` errand, see the
 [redis-example-service-release](https://github.com/pivotal-cf-experimental/redis-example-service-release/tree/master/jobs/health-check)
 on GitHub.
 
-
 ### <a id="colocated-errands"></a>Colocated Errands
 
-<p class="note"><strong>Note</strong>: This feature requires BOSH director v263 or later.</p>
+<p class="note"><strong>Note</strong>: This feature requires BOSH Director v263 or later.</p>
 
-Colocated errands run on an existing service instance group, avoiding additional resource allocation.
+Colocated errands run on an existing service instance group, avoiding additional
+resource allocation.
 Both `post-deploy` and `pre-delete` errands can be run as colocated errands.
 
 To enable a new colocated errand, add the errand to the list of jobs of an instance group.
 
 
-## <a id="final-release"></a>Package your Final Service Release
+## <a id="final-release"></a>Package the Final Service Release
 
 To package the final release, follow the instructions in [Create a Final Release](https://bosh.io/docs/create-release/#final-release) in the BOSH documentation.
 
