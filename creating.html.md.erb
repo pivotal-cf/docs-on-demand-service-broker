@@ -32,7 +32,7 @@ To create a service release, Pivotal recommends that you do the following:
 
 2. Refine your release using the information in the following sections:
  - [Use Job Links](#job-links)
- - [Include Service Instance Lifecycle Errands](#service-instance-lifecycle-errands)
+ - [Service Instance Lifecycle Errands](#service-instance-lifecycle-errands)
 
 3. [Package the Final Service Release](#final-release)
 
@@ -57,7 +57,7 @@ Example service releases:
 * [kafka-example-service-release](https://github.com/pivotal-cf-experimental/kafka-example-service-release)
 
 
-## <a id="job-links"></a>Use Job Links
+## <a id="job-links"></a> Use Job Links
 
 <!-- what do you use job links to do? -->
 Pivotal recommends that you use BOSH's job links feature instead of static
@@ -65,7 +65,7 @@ IP addresses in the manifest.
 This is because network IP management can become complex for services with
 multiple instance groups.
 
-Job links are defined in the service release.
+Job links are defined in the service release and configured in the manifest.
 For how to use job links, see
 [Links](https://bosh.io/docs/links.html) in the BOSH documentation.
 
@@ -74,29 +74,33 @@ on GitHub.
 The example uses implicit job links to get the IP addresses of the brokers and the zookeeper.
 
 
-## <a id="service-instance-lifecycle-errands"></a>Include Service Instance Lifecycle Errands
+## <a id="service-instance-lifecycle-errands"></a>Service Instance Lifecycle Errands
 
 <p class="note"><strong>Note</strong>: This feature requires BOSH Director v261 or later.</p>
 
 Service instance lifecycle errands allow additional short-lived jobs to run as
 part of service instance deployment.
+ODB uses these errands to manage an instance lifecycle
 A deployment is only considered successful if the deployment and all
 lifecycle errands complete successfully.
 For more information about errands, see [Errands](https://docs.pivotal.io/tiledev/tile-errands.html).
 
-You can provide errands in the service release for ODB to use during the management of
-an instance lifecycle.
 ODB supports the following service instance lifecycle errands:
 
 - **Post-deploy**: These errands run after creating or updating a service instance.
   For example, running a health check to ensure the service instance is functioning.
   To see the workflow for post deploy errands, see
-  [Create or Update Service Instance with Post-Deploy Errands](./concepts.html#post-deploy).<br><br>
+  [Create or Update Service Instance with Post-Deploy Errands](./concepts.html#post-deploy).
+  <br><br>
 - **Pre-delete**: These errands run before the deletion of a service instance.
   For example, cleaning up data before a service shutdown.
   To see the workflow for pre-delete errands, see [Delete a Service Instance with Pre-Delete Errand](./concepts.html#pre-delete).
 
+### <a id="include-errands"></a>Include Service Instance Lifecycle Errands
+
 Lifecycle errands are defined in the service release.
+The service adapter or operator can configure these errands when generating a manifest.
+
 To include lifecycle errands in your service release, do the following:
 
 1. Decide what errands your on-demand service needs.
@@ -110,14 +114,11 @@ For an example implementation of a health check post-deploy errand, see the
 [redis-example-service-release](https://github.com/pivotal-cf-experimental/redis-example-service-release/tree/master/jobs/health-check)
 on GitHub.
 
-<!-- The service adapter or operator can configure these errands when generating a manifest.
-If you are using the service adapter <code>generate-manifest</code> command,
+<p class="note"><strong>Note:</strong>
+When using the service adapter <code>generate-manifest</code> command,
 you must validate and only include supported errands in the instance groups array
-that is passed into the `plan` parameter.
-For more information about the generate manifest command, see <a href="./adapter-reference.html#generate-manifest">generate-manifest</a>.
-If you are an operator, to configure service instance lifecycle errands in the manifest, see
-[Enable Service Instance Lifecycle Errands](./operating.html#enable-errands). -->
-
+that is passed into the <code>plan</code> parameter.
+For more information about the generate manifest command, see <a href="./adapter-reference.html#generate-manifest">generate-manifest</a>.</p>
 
 ### <a id="colocated-errands"></a>Colocated Errands
 
