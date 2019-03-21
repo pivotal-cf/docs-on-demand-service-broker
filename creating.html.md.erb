@@ -48,8 +48,8 @@ the instructions up to and including _Step 6: Create a Dev Release_ in
 
 <p class="note"><strong>Note: </strong>
   Pivotal recommends that you create sample manifests that deploy the service release(s).
-  This helps you to write the <code>generate-manifest</code> component of the Service Adapter.
-  For how to write a manifest, see <a href="./operating.html#broker-manifest">Write a Broker Manifest</a>.</p>
+  This helps you to write the <code>generate-manifest</code> component of the service adapter.
+  <!-- how do they write this manifest? --></p>
 
 Example service releases:
 
@@ -59,45 +59,44 @@ Example service releases:
 
 ## <a id="job-links"></a>Use Job Links
 
-When generating a manifest, Pivotal recommends that you do not use static IP addresses.
+<!-- what do you use job links to do? -->
+Pivotal recommends that you use BOSH's job links feature instead of static
+IP addresses in the manifest.
 This is because network IP management can become complex for services with
 multiple instance groups.
-Instead, Pivotal recommends that you use BOSH's job links feature.
 
+Job links are defined in the service release.
 For how to use job links, see
 [Links](https://bosh.io/docs/links.html) in the BOSH documentation.
 
 For an example, see the [kafka-example-service-release](https://github.com/pivotal-cf-experimental/kafka-example-service-release/blob/master/jobs/kafka_server/spec#L15)
 on GitHub.
-This uses implicit job links to get the IP addresses of the brokers and the zookeeper.
+The example uses implicit job links to get the IP addresses of the brokers and the zookeeper.
 
 
 ## <a id="service-instance-lifecycle-errands"></a>Include Service Instance Lifecycle Errands
 
- <p class="note"><strong>Note</strong>: This feature requires BOSH Director v261 or later.</p>
+<p class="note"><strong>Note</strong>: This feature requires BOSH Director v261 or later.</p>
 
 Service instance lifecycle errands allow additional short-lived jobs to run as
 part of service instance deployment.
-A deployment is only considered successful if along with the deployment all
+A deployment is only considered successful if the deployment and all
 lifecycle errands complete successfully.
 For more information about errands, see [Errands](https://docs.pivotal.io/tiledev/tile-errands.html).
 
-A service release can provide job errands that ODB uses during the management of
+You can provide errands in the service release for ODB to use during the management of
 an instance lifecycle.
-Operators configure these errands in the deployment manifest or in the tile.
-For how operators configure service instance lifecycle errands, see
-[Enable Service Instance Lifecycle Errands](./operating.html#enable-errands).
-
 ODB supports the following service instance lifecycle errands:
 
-- **Post-deploy**: These errands run after the creating or updating a service instance.
-  An example use case is running a health check to ensure the service instance is functioning.<br>
+- **Post-deploy**: These errands run after creating or updating a service instance.
+  For example, running a health check to ensure the service instance is functioning.
   To see the workflow for post deploy errands, see
-  [Create or Update Service Instance with Post-Deploy Errands](./concepts.html#post-deploy).
+  [Create or Update Service Instance with Post-Deploy Errands](./concepts.html#post-deploy).<br><br>
 - **Pre-delete**: These errands run before the deletion of a service instance.
-  An example use case is cleaning up data before a service shutdown. <br>
+  For example, cleaning up data before a service shutdown.
   To see the workflow for pre-delete errands, see [Delete a Service Instance with Pre-Delete Errand](./concepts.html#pre-delete).
 
+Lifecycle errands are defined in the service release.
 To include lifecycle errands in your service release, do the following:
 
 1. Decide what errands your on-demand service needs.
@@ -107,13 +106,18 @@ that you used to test the initial release.
 1.  Write code to run each lifecycle errand and define them as jobs in the service release.
 For how to do so, see the [Using Errands](https://bosh.io/docs/errands.html) in the BOSH documentation.
 
-<p class="note"><strong>Note: </strong>If you are using the <code>generate-manifest</code> command, you must validate and include
-any supported errands in the instance groups array that are passed into the plan parameter.
-For more information about this command, see <a href="./adapter-reference.html#generate-manifest">generate-manifest</a>.</p>
-
 For an example implementation of a health check post-deploy errand, see the
 [redis-example-service-release](https://github.com/pivotal-cf-experimental/redis-example-service-release/tree/master/jobs/health-check)
 on GitHub.
+
+<!-- The service adapter or operator can configure these errands when generating a manifest.
+If you are using the service adapter <code>generate-manifest</code> command,
+you must validate and only include supported errands in the instance groups array
+that is passed into the `plan` parameter.
+For more information about the generate manifest command, see <a href="./adapter-reference.html#generate-manifest">generate-manifest</a>.
+If you are an operator, to configure service instance lifecycle errands in the manifest, see
+[Enable Service Instance Lifecycle Errands](./operating.html#enable-errands). -->
+
 
 ### <a id="colocated-errands"></a>Colocated Errands
 
@@ -130,7 +134,6 @@ To enable a new colocated errand, add the errand to the list of jobs of an insta
 
 To package the final release, follow the instructions in [Create a Final Release](https://bosh.io/docs/create-release/#final-release) in the BOSH documentation.
 
-The operator colocates this release with the ODB release in the broker manifest,
-or a service author needs it when creating an on-demand service tile.
-For more information, see [Write a Broker Manifest](./operating.html#broker-manifest) or
-[Creating an On-Demand Service Tile](tile.html).
+The tile author or operator uploads this release to the BOSH director.
+The operator also colocates this service release with the ODB release in the broker manifest.
+For how to do this, see [Write a Broker Manifest](./operating.html#broker-manifest).
