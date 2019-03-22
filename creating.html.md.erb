@@ -49,7 +49,8 @@ the instructions up to and including _Step 6: Create a Dev Release_ in
 <p class="note"><strong>Note: </strong>
   Pivotal recommends that you create sample manifests that deploy the service release(s).
   This helps you to write the <code>generate-manifest</code> component of the service adapter.
-  <!-- how do they write this manifest? --></p>
+  For help writing a sample manifest see [Deployment Config](https://bosh.io/docs/manifest-v2/)
+  in the BOSH documentation.</p>
 
 Example service releases:
 
@@ -116,8 +117,8 @@ on GitHub.
 
 <p class="note"><strong>Note:</strong>
 When using the service adapter <code>generate-manifest</code> command,
-you must validate and only include supported errands in the instance groups array
-that is passed into the <code>plan</code> parameter.
+you must validate that any lifecycle errands configured in the <code>plan</code>
+parameter exist in the service release and are included in the service manifest as jobs.
 For more information about the generate manifest command, see <a href="./adapter-reference.html#generate-manifest">generate-manifest</a>.</p>
 
 ### <a id="colocated-errands"></a>Colocated Errands
@@ -135,6 +136,7 @@ To enable a new colocated errand, add the errand to the list of jobs of an insta
 
 To package the final release, follow the instructions in [Create a Final Release](https://bosh.io/docs/create-release/#final-release) in the BOSH documentation.
 
-The tile author or operator uploads this release to the BOSH director.
+The tile author packages this release into the tile.
+For direct BOSH deployments, an operator uploads this release to the BOSH director.
 The operator also colocates this service release with the ODB release in the broker manifest.
 For how to do this, see [Write a Broker Manifest](./operating.html#broker-manifest).
