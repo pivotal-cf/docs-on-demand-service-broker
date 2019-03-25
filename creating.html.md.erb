@@ -49,7 +49,7 @@ the instructions up to and including _Step 6: Create a Dev Release_ in
 <p class="note"><strong>Note: </strong>
   Pivotal recommends that you create sample manifests that deploy the service release(s).
   This helps you to write the <code>generate-manifest</code> component of the service adapter.
-  For help writing a sample manifest see [Deployment Config](https://bosh.io/docs/manifest-v2/)
+  For help writing a sample manifest, see <a href="https://bosh.io/docs/manifest-v2/">Deployment Config</a>
   in the BOSH documentation.</p>
 
 Example service releases:
@@ -60,11 +60,12 @@ Example service releases:
 
 ## <a id="job-links"></a> Use Job Links
 
-<!-- what do you use job links to do? -->
-Pivotal recommends that you use BOSH's job links feature instead of static
-IP addresses in the manifest.
-This is because network IP management can become complex for services with
-multiple instance groups.
+When there are multiple jobs in the manifest that need to communicate over the network,
+Pivotal recommends that you use BOSH's job link feature instead of using static
+IP addresses.
+IP addresses must be different for each service instance.
+When you use job links, BOSH inserts IP addresses or internal DNS names when
+templating the job configuration so you do not have to do it manually.
 
 Job links are defined in the service release and configured in the manifest.
 For how to use job links, see
@@ -137,6 +138,4 @@ To enable a new colocated errand, add the errand to the list of jobs of an insta
 To package the final release, follow the instructions in [Create a Final Release](https://bosh.io/docs/create-release/#final-release) in the BOSH documentation.
 
 The tile author packages this release into the tile.
-For direct BOSH deployments, an operator uploads this release to the BOSH director.
-The operator also colocates this service release with the ODB release in the broker manifest.
-For how to do this, see [Write a Broker Manifest](./operating.html#broker-manifest).
+For direct BOSH deployments, an operator uploads this release to the BOSH Director.
