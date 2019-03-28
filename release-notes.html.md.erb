@@ -8,23 +8,16 @@ owner: London Services Enablement
 **Release Date: April 4, 2019**
 
 <p class="note breaking"><strong>Breaking Change:</strong> To support multiple stemcells for a service deployment,
-  the On Demand Services SDK has replaced <code>ServiceDeployment.Stemcell</code> with <code>ServiceDeployment.Stemcells</code>.
+  the On Demand Services SDK has replaced ServiceDeployment.Stemcell with ServiceDeployment.Stemcells.
   For more information,
   see <a href="https://github.com/pivotal-cf/on-demand-services-sdk/commit/f88592e968ebb3a327d5689ed6772268a2c0fcfc">[BREAKING CHANGE]
   SDK now supports multi-stemcell deployment</a> in GitHub.</p>
 
-<p class="note breaking"><strong>Breaking Change:</strong> The broker now uses BOSH Process Manager (BPM).
- When configuring the broker job, assign to <code>service_adapter.mount_path</code> a list of filesystem paths to the files that service adapter uses, such as config files.
- Work is planned to include BPM on errands in the future.
- For more information on configuring your broker, see <a href="./operating.html#core-broker-config">Configure Your Broker</a>.
-</p>
-
 ### Features
 
-New features in this release:
+New feature in this release:
 
-- The on-demand broker (ODB) supports service instance deployments that use different stemcells for different instance groups
-- The broker job uses BPM
+- The on-demand broker (ODB) now supports service instance deployments that use different stemcells for different instance groups.
 
 ### Known Issues
 
