@@ -50,8 +50,8 @@ This section contains the following topics:
     target="_blank">update block of the manifest</a> returned by the
     <code>generate-manifest</code> subcommand.</li>
     <li>
-    Service Authors should ensure that the service release or the stemcell
-    satisfies the functional requirements of the service adapter. This can be
+    Service Authors should ensure that the service releases and stemcells
+    satisfy the functional requirements of the service adapter. This can be
     achieved, for example, by checking that the service release satisfies a minimum
     version constraint.
     </li>
@@ -110,16 +110,16 @@ For example:
 
 The following table describes the JSON structure required for `SERVICE-DEPLOYMENT-JSON`:
 
-| Field                     | Type              | Description                                                            |
-|:--------------------------|:------------------|:-----------------------------------------------------------------------|
-| deployment_name           | string            | Name of the deployment on the Director, in the format `service-instance_GUID`|
-| releases                  | array of releases | List of service releases configured for the deployment by the operator |
-| release.name              | string            | Name of the release on the Director                                    |
-| release.version           | string            | Version of the release                                                 |
-| release.jobs              | array of strings  | List of jobs required from the release                                 |
-| stemcell                  | map               | The stemcell available on the Director                                 |
-| stemcell.stemcell_os      | string            | Stemcell OS available on the Director                                  |
-| stemcell.stemcell_version | string            | Stemcell version available on the Director                             |
+| Field                     | Type               | Description                                                            |
+|:--------------------------|:-------------------|:-----------------------------------------------------------------------|
+| deployment_name           | string             | Name of the deployment on the Director, in the format `service-instance_GUID`|
+| releases                  | array of releases  | List of service releases configured for the deployment by the operator |
+| release.name              | string             | Name of the release on the Director                                    |
+| release.version           | string             | Version of the release                                                 |
+| release.jobs              | array of strings   | List of jobs required from the release                                 |
+| stemcells                 | array of stemcells | The stemcells available on the Director                                |
+| stemcell.stemcell_os      | string             | Stemcell OS available on the Director                                  |
+| stemcell.stemcell_version | string             | Stemcell version available on the Director                             |
 <br>
 For example:
 
@@ -134,16 +134,18 @@ For example:
             "zookeeper"
         ]
     }],
-    "stemcell": {
+    "stemcells": [{
         "stemcell_os": "BeOS",
         "stemcell_version": "2"
-    }
+    }, {
+        "stemcell_os": "Windows",
+        "stemcell_version": "3"
+    }]
 }
 ```
 <br>
 Keep in mind the following:
 
-* ODB only supports injecting one stemcell into each service deployment. Different instance groups cannot have different stemcells.
 * ODB only supports using exact release and stemcell versions. The use of `latest` and floating stemcells are not supported.
 * Your Service Adapter should be opinionated about which jobs it requires to generate its manifest.
   For example, the Kafka example requires `kafka_node` and `zookeeper`.

@@ -250,9 +250,9 @@ for the BOSH Lite Director. For example:
             - name: *service-release
               version: SERVICE-RELEASE-VERSION
               jobs: [kafka_server, zookeeper_server]
-            stemcell:
-              os: ubuntu-trusty
-              version: STEMCELL-VERSION
+            stemcells:
+              - os: ubuntu-trusty
+                version: STEMCELL-VERSION
           service_catalog:
             id: D94A086D-203D-4966-A6F1-60A9E2300F72
             service_name: kafka-service-with-odb

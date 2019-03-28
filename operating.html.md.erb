@@ -455,13 +455,11 @@ When configuring the service catalog, supply the following:
   * You can include releases that provide many jobs, as long as each required job
   is provided by exactly one release.<br><br>
 
-* **A stemcell:**
+* **Stemcells:**
   <p class="note"><strong>Note:</strong>
   If you are using a Xenial stemcell, you must update any BOSH add-ons to support Xenial stemcells.
   For links to instructional topics about updating see <a href="./upgrades.html#update-addons">Update Add-ons to Run with Xenial Stemcell</a>.</p>
   * This is used on each VM in the service deployments.
-  * Only supply one stemcell. ODB does not currently support service instance
-  deployments that use a different stemcell for different instance groups.
   * Use exact versions for releases and stemcells. The use of `latest` and floating
   stemcells are not supported.<br><br>
 
@@ -561,10 +559,10 @@ service_deployment:
       # service author specifies the list of jobs required:
       jobs: [RELEASE-JOBS-NEEDED-FOR-DEPLOYMENT-AND-LIFECYCLE-ERRANDS]
   # every instance group in the service deployment has the same stemcell:
-  stemcell:
-    os: SERVICE-STEMCELL
-    # exact stemcell version:
-    version: &stemcellVersion SERVICE-STEMCELL-VERSION
+  stemcells:
+    - os: SERVICE-STEMCELL
+      # exact stemcell version:
+      version: &stemcellVersion SERVICE-STEMCELL-VERSION
 service_catalog:
   id: CF-MARKETPLACE-ID
   service_name: CF-MARKETPLACE-SERVICE-OFFERING-NAME
