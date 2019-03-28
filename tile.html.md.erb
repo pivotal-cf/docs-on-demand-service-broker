@@ -288,9 +288,9 @@ For example:
             - name: release-name
               version: 1.0.0
               jobs: [job_server]
-            stemcell:
-              os: ubuntu-trusty
-              version: (( $self.stemcell_version )) # Add this line
+            stemcells:
+              - os: ubuntu-trusty
+                version: (( $self.stemcell_version )) # Add this line
     ```
 
 1. Configure the `stemcell_criteria`.

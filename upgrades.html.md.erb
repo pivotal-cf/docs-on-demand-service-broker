@@ -52,7 +52,7 @@ The service offering is made of the following:
 * Service catalog
 * Service adapter BOSH release
 * Service BOSH releases
-* Service stemcell
+* Service stemcells
 
 <br>
 To upgrade a service offering, do the following:
@@ -69,14 +69,14 @@ For more information about the service catalog, see the
 
 1. Make any changes to service releases in the broker manifest.
 
-1. Upload any new service stemcell to the BOSH Director.
+1. Upload any new service stemcells to the BOSH Director.
 
     ```
     bosh -e BOSH-DIRECTOR-NAME upload-stemcell STEMCELL-LOCATION
     ```
     Where `STEMCELL-LOCATION` is the path or URL of the stemcell.
 
-1. Make any changes to the service stemcell in the `service_deployment` broker manifest.
+1. Make any changes to the service stemcells in the `service_deployment` broker manifest.
 
 1. Deploy the broker by running:
 
