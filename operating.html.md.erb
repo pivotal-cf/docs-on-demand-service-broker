@@ -435,7 +435,8 @@ instance_groups:
           service_adapter:
             # optional - provided by the service author. Defaults to /var/vcap/packages/odb-service-adapter/bin/service-adapter.
             path: PATH-TO-SERVICE-ADAPTER-BINARY
-
+            # optional - Filesystem paths to be mounted for use by the service adapter. This should include the paths to any config files.
+            mount_paths: [ PATH-TO-SERVICE-ADAPTER-CONFIG ]
           # There are more broker properties that are discussed below
 ```
 
