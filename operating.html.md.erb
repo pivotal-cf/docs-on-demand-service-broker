@@ -317,7 +317,7 @@ Upload the following releases to your BOSH Director:
 * **On Demand Service Broker (ODB)**---Download ODB from [Pivotal Network](https://network.pivotal.io/products/on-demand-services-sdk/).
 * **Your service adapter**---Get the service adapter from the release author.
 * **Your service release**---Get the service release from the release author.
-* **BPM release**---Get the BPM release from [BOSH releases](https://bosh.io/releases/github.com/cloudfoundry-incubator/bpm-release?all=1). You might not need to do this if BPM release is already uploaded.
+* **BOSH Process Manager (BPM) release**---Get the BPM release from [BOSH releases](https://bosh.io/releases/github.com/cloudfoundry-incubator/bpm-release?all=1) in GitHub. You might not need to do this if the BPM release is already uploaded.
 
 To upload a release to your BOSH Director, do the following:
 
@@ -354,20 +354,20 @@ If you are unfamiliar with writing BOSH v2 manifests, see [Deployment Config](ht
 
 For example manifests, see the following:
 
-  * For a Redis service---[redis-example-service-adapter-release](https://github.com/pivotal-cf-experimental/redis-example-service-adapter-release/blob/master/docs/example-manifest.yml).
+  * For a Redis service---[redis-example-service-adapter-release](https://github.com/pivotal-cf-experimental/redis-example-service-adapter-release/blob/master/docs/example-manifest.yml) in GitHub.
 
-  * For a Kafka service---[kafka-example-service-adapter-release](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml).
+  * For a Kafka service---[kafka-example-service-adapter-release](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/master/docs/example-manifest.yml) in GitHub.
 
 ### <a id="core-broker-config"></a> Configure Your Broker
 
-Your manifest must contain exactly one non-errand instance group that is colocated with
+Your manifest must contain exactly one non-errand instance group that is co-located with
 both of the following:
 
 * The broker job from `on-demand-service-broker`
 * Your service adapter job from your service adapter release
 
 The broker is stateless and does not need a persistent disk.
-Its VM type can be small: a single CPU and 1 GB of memory is sufficient in most cases.
+Its VM type can be small: a single CPU and 1&nbsp;GB of memory is sufficient in most cases.
 
 #### <a id="broker-starter-snippet"></a>Starter Snippet for Your Broker
 
@@ -381,14 +381,13 @@ For examples of complete broker manifests, see [Write a Broker Manifest](#broker
 
 ```yaml
 addons:
-  # Broker uses BPM to isolate collocated BOSH jobs from one another
+  # Broker uses BPM to isolate co-located BOSH jobs from one another
   - name: bpm
     jobs:
     - name: bpm
       release: bpm
 instance_groups:
-  # the name can be anything:
-  - name: broker
+  - name: NAME-OF-YOUR-CHOICE
     instances: 1
     vm_type: VM-TYPE
     stemcell: STEMCELL
@@ -404,11 +403,11 @@ instance_groups:
           port: BROKER-PORT
           username: BROKER-USERNAME
           password: BROKER-PASSWORD
-          # optional - defaults to false. This should NOT set to true in production.
+          # optional - defaults to false. This should not be set to true in production.
           disable_ssl_cert_verification: TRUE|FALSE
-          # optional - defaults to 60 seconds. This allows the broker to gracefully wait for any open requests to complete before shutting down.
+          # optional - defaults to 60 seconds. This enables the broker to gracefully wait for any open requests to complete before shutting down.
           shutdown_timeout_in_seconds: 60
-          # optional - defaults to false. This allows for BOSH operational errors to be displayed for the CF user.
+          # optional - defaults to false. This enables BOSH operational errors to be displayed for the CF user.
           expose_operational_errors: TRUE|FALSE
           # optional - defaults to false. If set to true, plan schemas are included in the catalog, and the broker fails if the adapter does not implement generate-plan-schemas.
           enable_plan_schemas: TRUE|FALSE
@@ -442,7 +441,7 @@ instance_groups:
           service_adapter:
             # optional - provided by the service author. Defaults to /var/vcap/packages/odb-service-adapter/bin/service-adapter.
             path: PATH-TO-SERVICE-ADAPTER-BINARY
-            # optional - Filesystem paths to be mounted for use by the service adapter. This should include the paths to any config files.
+            # optional - Filesystem paths to be mounted for use by the service adapter. These should include the paths to any config files.
             mount_paths: [ PATH-TO-SERVICE-ADAPTER-CONFIG ]
           # There are more broker properties that are discussed below
 ```
@@ -491,7 +490,7 @@ When composing plans, supply the following:
   You can use other arbitrary field names in addition to the OSBAPI recommended fields.
   For information about the recommended fields for plan metadata,
   see the [Open Service Broker API Profile](https://github.com/openservicebrokerapi/servicebroker/blob/master/profile.md#plan-metadata-fields)
-  on GitHub.<br><br>
+  in GitHub.<br><br>
 
 * **Resource mapping:**
   * For each plan, supply resource mapping for each instance group that service authors specify.
@@ -506,7 +505,7 @@ When composing plans, supply the following:
   * Service authors might provide errands for the service release.
   You can add an instance group of type `errand` by setting the `lifecycle` field.
   For an example, see `register-broker` in the [kafka-example-service-adapter-release](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/cb1597979eddc4482d4511d4402a2b3cf9dcfa9e/docs/example-manifest.yml#L160-L176)
-  on GitHub.<br><br>
+  in GitHub.<br><br>
 
 * **Values for plan properties:**
   * Plan properties are key-value pairs defined by the service authors.
@@ -529,8 +528,8 @@ When composing plans, supply the following:
   * The service author can define a default update block to be used when a plan-specific update block is not provided,
   if the service adapter supports configuring update blocks in the manifest.
 
-* **(Optional) Maintenance Info**
-  * Maintenance info is used to uniquely describe
+* **(Optional) Maintenance Information**
+  * Maintenance information is used to uniquely describe
    the deployed version of a service instance. It is made up of public and
    private key/value pairs defined at the catalog and plan levels. It is
    displayed in the service catalog at plan level with plan-level maintenance
@@ -774,7 +773,7 @@ If ODB cannot resolve a particular secret, it logs the failure and omits
 the unresolved secret from the passed secrets map. It is the responsibility of the adapter to
 handle missing secrets based on whether they are required for binding creation.
 
-<p class="note"><strong>Note:</strong> ODB will not fail if it cannot resolve a secret.</p>
+<p class="note"><strong>Note:</strong> ODB does not fail if it cannot resolve a secret.</p>
 
 ## <a id="secure-binding"></a>(Optional) Enable Secure Binding
 <p class="note alert"><strong>Note</strong>: This feature does not work if you
@@ -867,7 +866,7 @@ key is available under the `VCAP_SERVICES` environment variable for the app.
 
 ## <a id="plan-schemas"></a>(Optional) Enable Plan Schemas
 
-As of OSBAPI Spec v2.13 ODB supports enabling plan schemas. For more information, see [OSBAPI Spec v2.13](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#changes-since-v212) on GitHub.
+As of OSBAPI Spec v2.13 ODB supports enabling plan schemas. For more information, see [OSBAPI Spec v2.13](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#changes-since-v212) in GitHub.
 
 When this feature is enabled, the broker validates incoming configuration parameters
 against a schema during the provision, binding, and update of service instances.
@@ -908,7 +907,7 @@ The `route_registrar` job achieves the following:
 
 For more information, see [route_registrar job](http://bosh.io/jobs/route_registrar?source=github.com/cloudfoundry-incubator/cf-routing-release).
 
-To register the route, colocate the `route_registrar` job with `on-demand-service-broker`:
+To register the route, co-locate the `route_registrar` job with `on-demand-service-broker`:
 
 1. Download the routing release.
    See [cf-routing Release](http://bosh.io/releases/github.com/cloudfoundry-incubator/cf-routing-release?all=1)
@@ -920,7 +919,7 @@ This creates a URI for your broker.
     You must use the same port for the broker and the route. The broker defaults to 8080.</p>
   For how to configure the `route_registrar` job, see
   [routing release](https://github.com/cloudfoundry/routing-release/blob/d59974071d97b9f1770dd170240bff2fe5ba1558/jobs/route_registrar/spec#L95-L100)
-  on GitHub.
+  in GitHub.
 1. If you configure a route, set the `broker_uri` property in the [register-broker errand](./management.html#register-broker).
 
 ## <a id="service-instance-quotas"></a>(Optional) Set Service Instance Quotas
@@ -1307,27 +1306,27 @@ To enable lifecycle errands, do the following steps.
 
     Where `POST-DEPLOY-ERRAND-JOB` is the errand job you want to add.
 
-### <a id="colocated-errands"></a> (Optional) Enable Colocated Errands
+### <a id="colocated-errands"></a> (Optional) Enable Co-located Errands
 
 <p class="note"><strong>Note</strong>: This feature requires BOSH Director v263 or later.</p>
 
-You can run both `post-deploy` and `pre-delete` errands as colocated errands.
-Colocated errands run on an existing service instance group instead of a separate one.
+You can run both `post-deploy` and `pre-delete` errands as co-located errands.
+Co-located errands run on an existing service instance group instead of a separate one.
 This avoids additional resource allocation.
 
-Like other lifecycle errands, colocated errands are deployed on a per-plan basis.
+Like other lifecycle errands, co-located errands are deployed on a per-plan basis.
 Currently the ODB supports colocating only the `post-deploy` or `pre-delete` errands.
 
 For more information, see the [Errands](https://bosh.io/docs/errands.html) in the BOSH documentation.
 
-To enable colocated errands for a plan, do the following steps.
+To enable co-located errands for a plan, do the following steps.
 
-1. Add each colocated errand job to the manifest as follows:
+1. Add each co-located errand job to the manifest as follows:
     - Add the errand in `service_deployment`.
     - Add the errand in the plan's `lifecycle_errands` configuration.
     - Set the instances the errand should run on in the `lifecycle_errands`.
 
-    Below is an example manifest that includes a colocated post-deploy errand:
+    Below is an example manifest that includes a co-located post-deploy errand:
 
     ```yaml
     service_deployment:
@@ -1336,23 +1335,23 @@ To enable colocated errands for a plan, do the following steps.
           version: SERVICE-RELEASE-VERSION
           jobs:
             - SERVICE-RELEASE-JOB
-            - COLOCATED-POST-DEPLOY-ERRAND-JOB
+            - CO-LOCATED-POST-DEPLOY-ERRAND-JOB
     service_catalog:
       plans:
         - name: CF-MARKETPLACE-PLAN-NAME
           lifecycle_errands:
             post_deploy:
-              - name: COLOCATED-POST-DEPLOY-ERRAND-JOB
+              - name: CO-LOCATED-POST-DEPLOY-ERRAND-JOB
                 instances:
                   - SERVICE-RELEASE-JOB/0
-              - name: NON-COLOCATED-POST-DEPLOY-ERRAND
+              - name: NON-CO-LOCATED-POST-DEPLOY-ERRAND
           instance_groups:
-            - name: NON-COLOCATED-POST-DEPLOY-ERRAND
+            - name: NON-CO-LOCATED-POST-DEPLOY-ERRAND
               ...
             - name: SERVICE-RELEASE-JOB
               ...
     ```
 
-    Where `COLOCATED-POST-DEPLOY-ERRAND-JOB` is the colocated errand you want to
+    Where `CO-LOCATED-POST-DEPLOY-ERRAND-JOB` is the co-located errand you want to
     run and `SERVICE-RELEASE-JOB/0` is the instances you want the errand to run
     on.
