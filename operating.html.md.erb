@@ -317,6 +317,7 @@ Upload the following releases to your BOSH Director:
 * **On Demand Service Broker (ODB)**---Download ODB from [Pivotal Network](https://network.pivotal.io/products/on-demand-services-sdk/).
 * **Your service adapter**---Get the service adapter from the release author.
 * **Your service release**---Get the service release from the release author.
+* **BPM release**---Get the BPM release from [BOSH releases](https://bosh.io/releases/github.com/cloudfoundry-incubator/bpm-release?all=1). You might not need to do this if BPM release is already uploaded.
 
 To upload a release to your BOSH Director, do the following:
 
@@ -379,6 +380,12 @@ For examples of complete broker manifests, see [Write a Broker Manifest](#broker
   option is dangerous and should be set to <code>false</code> in production.</p>
 
 ```yaml
+addons:
+  # Broker uses BPM to isolate collocated BOSH jobs from one another
+  - name: bpm
+    jobs:
+    - name: bpm
+      release: bpm
 instance_groups:
   # the name can be anything:
   - name: broker
@@ -435,7 +442,8 @@ instance_groups:
           service_adapter:
             # optional - provided by the service author. Defaults to /var/vcap/packages/odb-service-adapter/bin/service-adapter.
             path: PATH-TO-SERVICE-ADAPTER-BINARY
-
+            # optional - Filesystem paths to be mounted for use by the service adapter. This should include the paths to any config files.
+            mount_paths: [ PATH-TO-SERVICE-ADAPTER-CONFIG ]
           # There are more broker properties that are discussed below
 ```
 
