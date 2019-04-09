@@ -343,12 +343,14 @@ To run the `orphan-deployments` errand, do the following.
 a list that resembles the following:
 
     <pre class="terminal">
-    [stdout]
-    [{"deployment_name":"service-instance_aoeu39fgn-8125-05h2-9023-9vbxf7676f3"}]
-    [stderr]
-    None
-    Errand 'orphan-deployments' completed successfully (exit code 0)
-    </pre>
+    Exit Code  10
+    Stdout     [{"deployment_name":"service-instance_bebbcf14-14ef-4eae-8fbd-656d15f2b4b5"}]
+
+    Stderr     [orphan-deployments] 2019/04/03 14:56:02.489064 Orphan BOSH
+    deployments detected with no corresponding service instance in the
+    platform. Before deleting any deployment it is recommended to verify the
+    service instance no longer exists in the platform and any data is safe to
+    delete </pre>
 
 #### Delete an Orphan Deployment
 
