@@ -167,11 +167,19 @@ The CA certificates used to sign the BOSH and Cloud Controller certificates are 
 
 #### <a id="odb-to-bosh-dir"></a>ODB to BOSH Director
 
-In some rare cases where the BOSH Director is not installed through Ops Manager, BOSH can be configured to be publicly accessible with a domain name and a TLS certificate issued by a public certificate authority. In such a case, you can navigate to https<span>:</span>//BOSH-DOMAIN-NAME:25555/info in a browser and see a trusted certificate padlock in the browser address bar.
+In some rare cases where the BOSH Director is not installed through Ops Manager,
+BOSH can be configured to be publicly accessible with a domain name and a TLS certificate issued
+by a public certificate authority.
+In such a case, you can navigate to https<span>:</span>//BOSH-DOMAIN-NAME:25555/info in a browser
+and see a trusted certificate padlock in the browser address bar.
 
-ODB can then be configured to use this address for BOSH and will not require a CA certificate to be provided. The public CA certificate would already be present on the ODB VM.
+ODB can then be configured to use this address for BOSH and will not require a CA certificate to be provided.
+The public CA certificate would already be present on the ODB VM.
 
-By contrast, BOSH is usually only accessible on an internal network. It uses a certificate signed by an internal CA. The CA certificate must be provided in the broker configuration so that ODB can validate the BOSH Director’s certificate. ODB always validates BOSH TLS certificates.
+By contrast, BOSH is usually only accessible on an internal network.
+It uses a certificate signed by an internal CA.
+The CA certificate must be provided in the broker configuration so that ODB can validate the BOSH Director’s certificate.
+ODB always validates BOSH TLS certificates.
 
 You have two options for providing a CA certificate to ODB for validation of the BOSH certificate. You can add the BOSH Director's root certificate to the ODB manifest or you can use BOSH's `trusted_certs` feature to add a self-signed CA certificate to each VM that BOSH deploys.
 
