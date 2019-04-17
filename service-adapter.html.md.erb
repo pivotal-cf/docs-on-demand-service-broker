@@ -526,12 +526,12 @@ Perform the following steps to use the SDK:
     	"log"
     	"os"
 
-    	"github.com/bar-org/foo-service-adapter/adapter"
+    	"URL-FOR-SERVICE-ADAPTER-REPOSITORY"
     	"github.com/pivotal-cf/on-demand-services-sdk/serviceadapter"
     )
 
     func main() {
-      logger := log.New(os.Stderr, "[foo-service-adapter] ", log.LstdFlags)
+      logger := log.New(os.Stderr, "[SERVICE-ADAPTER-NAME] ", log.LstdFlags)
       manifestGenerator := adapter.ManifestGenerator{}
       binder := adapter.Binder{}
       dashboardUrlGenerator := adapter.DashboardUrlGenerator{}
@@ -544,9 +544,14 @@ Perform the following steps to use the SDK:
       serviceadapter.HandleCLI(os.Args, handler)
     }
     ```
-  <p class="note"><strong>Note</strong>:
-    The HandleCommandLineInvocation function is deprecated, but its functionality
-    can be seen <a href="https://docs.pivotal.io/svc-sdk/odb/0-19/creating.html#usage">here</a>.</p>
+    Where:
+    * `URL-FOR-SERVICE-ADAPTER-REPOSITORY` is the repository containing your service
+    adapter, for example `github.com/bar-org/foo-service-adapter/adapter`.
+    * `SERVICE-ADAPTER-NAME` is the name of the service adapter, for example `foo-service-adapter`.
+
+    <p class="note"><strong>Note</strong>:
+      The HandleCommandLineInvocation function is deprecated, but to see its functionality,
+      see <a href="https://docs.pivotal.io/svc-sdk/odb/0-19/creating.html#usage">Usage</a>.</p>
 
 ### <a id="interfaces"></a>Interfaces
 
@@ -563,9 +568,9 @@ type CommandLineHandler struct {
 }
 ```
 <br>
-Service adapters provide some or all of the following to the `CommandLineHandler`:
+Service adapters provide the following to the `CommandLineHandler`:
 
-* A `ManifestGenerator`, which all service adapters must provide
+* A `ManifestGenerator`, required for all service adapters:
 
     ```go
     type ManifestGenerator interface {
@@ -589,7 +594,7 @@ Service adapters provide some or all of the following to the `CommandLineHandler
     }
     ```
 <br>
-* A `Binder`, which most service adapters should provide
+* A `Binder`, required for most service adapters:
 
     ```go
     type Binder interface {
@@ -616,7 +621,7 @@ Service adapters provide some or all of the following to the `CommandLineHandler
     }
     ```
 <br>
-* A `DashboardUrlGenerator`, which is optional
+* A `DashboardUrlGenerator`, optional:
 
     ```go
     type DashboardUrlGenerator interface {
@@ -630,7 +635,7 @@ Service adapters provide some or all of the following to the `CommandLineHandler
     }
     ```
 <br>
-* A `SchemaGenerator`, which is optional
+* A `SchemaGenerator`, optional
 
     ```go
     type SchemaGenerator interface {
