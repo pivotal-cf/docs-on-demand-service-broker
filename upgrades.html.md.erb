@@ -116,6 +116,10 @@ To upgrade all existing service instances after the service offering has been up
             polling_interval_seconds: POLLING-INTERVAL-IN-SECONDS # defaults to 60
             attempt_interval_seconds: ATTEMPT-INTERVAL-IN-SECONDS # defaults to 60
             attempt_limit: NUMBER-OF-ATTEMPTS # defaults to 5
+            broker_uri: BROKER-URI # optional
+            tls: # optional
+              ca_cert: BROKER-CA-CERT
+              disable_ssl_cert_verification: BOOLEAN # defaults to false
       vm_type: VM-TYPE
       stemcell: STEMCELL
       networks: [{name: NETWORK}]
@@ -196,6 +200,8 @@ To upgrade all existing service instances after the service offering has been up
 <p class="note"><strong>Note:</strong> The <code>upgrade-all-service-instances</code> errand
 triggers service instance lifecycle errands configured for the broker.
    For more information, see <a href="./operating.html#lifecycle-errands">Service Instance Lifecycle Errands</a>.</p>
+
+<p class="note alert"><strong>Note:</strong> when not configured, the errand will fall back to using BOSH provided address IP address or BOSH DNS address, depending on <a href="https://bosh.io/docs/dns/#links">configuration</a> in the broker URI. When the broker is serving TLS, the broker certificate must contain this BOSH provided address in its SAN section, otherwise the certificate cannot be verified by Cloud Foundry. For details about how to insert a BOSH DNS address into a config server generated certificate, see <a href="https://bosh.io/docs/dns/#dns-variables-integration">here</a>.</p>
 
 ### <a id="service-instances-api"></a> Service Instances API
 

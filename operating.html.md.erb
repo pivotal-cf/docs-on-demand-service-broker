@@ -563,7 +563,6 @@ When composing plans, supply the following:
     version can be anchors with the `&stemcellVersion` annotation, and then
     referenced in the maintenance information with the `*stemcellVersion` tag.
 
-
 #### <a id="starter-snippet"></a>Starter Snippet for the Service Catalog and Plans
 
 Append the snippet below to the properties section of the broker job that you
@@ -716,6 +715,39 @@ service_catalog:
             instances: [INSTANCE-NAME, ...]
 ```
 
+## <a id="broker-https"></a> (Optional) Configure the Broker to Use HTTPS
+
+<p class="note alert"><strong>Note</strong>: Do not enable HTTPS in brokers that will
+  be registered to Cloud Foundry. The broker supports HTTPS connections only for
+  platforms that communicate directly with the broker, such as PKS.
+  Attempting to register an HTTPS enabled broker with Cloud Foundry produces an error.</p>
+
+Existing brokers operate in a secure network environment.
+Communication from the platform to the broker is over HTTP and is not typically encrypted. You can configure the broker to accept only HTTPS connections.
+To do so, provide a server certificate and private key in the broker manifest.
+
+For example:
+
+```yaml
+instance_groups:
+  - name: broker
+    ...
+    jobs:
+      - name: broker
+        ...
+        properties:
+          ...
+          tls:
+            certificate: |
+              SERVER-CERTIFICATE
+            private_key: |
+              SERVER-PRIVATE-KEY
+```
+
+When configured to use HTTPS, the broker only accepts connections that use TLS v1.2 and later,and the following cipher suites:
+
+- TLS\_ECDHE\_RSA\_WITH\_AES\_128\_GCM\_SHA256
+- TLS\_ECDHE\_RSA\_WITH\_AES\_256\_GCM\_SHA384
 
 ## <a id="secure-bind-credentials"></a>(Optional) Access Manifest Secrets at Bind Time
 
@@ -1096,12 +1128,20 @@ Add the following jobs to the broker instance group:
     service_metrics:
       execution_interval_seconds: INTERVAL-BETWEEN-SUCCESSIVE-METRICS-COLLECTIONS
       origin: ORIGIN-TAG-FOR-METRICS
-      monit_dependencies: [broker]
+      monit_dependencies: [broker] # hardcode this
       ....snip....
-      LOGGREGATOR-CONFIGURATION
+      #Add Loggregator configuration here: see examples @ https://github.com/pivotal-cf/service-metrics-release/blob/master/manifests
       ....snip....
 - name: service-metrics-adapter
   release: ODB-RELEASE
+  properties:
+    # Broker URI valid for the broker certificate including http:// or https://
+    broker_uri: BROKER-URI
+    tls:
+      # CA Cert to use when communicating with the broker
+      ca_cert: CA-CERT
+      # disable_ssl_cert_verification defaults to false
+      disable_ssl_cert_verification: BOOLEAN
 ```
 
   Where:
@@ -1118,6 +1158,8 @@ manifest in GitHub.
 Pivotal has tested this example configuration with Loggregator v58 and service-metrics v1.5.0.
 
 For more information about service metrics, see [Service Metrics for Pivotal Cloud Foundry](http://docs.pivotal.io/service-metrics).
+
+<p class="note alert"><strong>Note:</strong> when not configured, the service metrics adapter will fall back to using BOSH provided address IP address or BOSH DNS address, depending on <a href="https://bosh.io/docs/dns/#links">configuration</a> in the broker URI. When the broker is serving TLS, the broker certificate must contain this BOSH provided address in its SAN section, otherwise the certificate cannot be be verified by the services metrics adapter. For details about how to insert a BOSH DNS address into a config server generated certificate, see <a href="https://bosh.io/docs/dns/#dns-variables-integration">here</a>.</p>
 
 ## <a id="binding-with-dns"></a>(Optional) Obtain BOSH DNS Addresses for Binding Creation and Deletion
 
