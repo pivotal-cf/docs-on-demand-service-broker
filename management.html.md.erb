@@ -36,6 +36,9 @@ To add the `register-broker` errand to the manifest, do the following:
             disable_ssl_cert_verification: TRUE|FALSE # defaults to false
             enable_service_access: TRUE|FALSE # defaults to true
             default_access_org: ORG-NAME # optional, defaults to system
+            tls: # optional
+              ca_cert: BROKER-CA-CERT
+              disable_ssl_cert_verification: BOOLEAN # defaults to false
             cf:
               api_url: CF-API-URL
               admin_username: CF-API-ADMIN-USERNAME
@@ -77,6 +80,11 @@ To add the `register-broker` errand to the manifest, do the following:
         Only Cloud Foundry admin users can see plans with disabled service access.
         Org Managers and Space Managers cannot see these plans.
 
+<p class="note alert"><strong>Note:</strong> when not configured, the errand will fall back to using BOSH provided
+address IP address or BOSH DNS address, depending on <a href="https://bosh.io/docs/dns/#links">configuration</a> in the broker URI. When the broker is serving TLS, the broker certificate must contain this BOSH provided address in its SAN section, otherwise the certificate cannot be verified by Cloud Foundry. For details about how to insert a BOSH DNS address into a config
+server generated certificate, see <a href="https://bosh.io/docs/dns/#dns-variables-integration">here</a>.
+</p>
+
 #### Run the Errand
 
 To run the `register-broker` errand, do the following:
@@ -100,7 +108,8 @@ To run the `register-broker` errand, do the following:
 
 <p class="note warning"><strong>WARNING:</strong> Use extreme caution when running this errand.
   You should only use it when you want to totally destroy all of the on-demand service instances
-  from Cloud Foundry.</p>
+  from Cloud Foundry.
+</p>
 
 The `delete-all-service-instances` errand deletes service instances of
 your broker's service offering in every org and space of Cloud Foundry.
@@ -236,7 +245,8 @@ To run the `deregister-broker` errand, do the following:
 
 <p class="note warning"><strong>WARNING:</strong> Use extreme caution when running this errand.
   You should only use it when you want to destroy all of the on-demand service
-  instances and deregister the broker from Cloud Foundry.</p>
+  instances and deregister the broker from Cloud Foundry.
+</p>
 
 The `delete-all-service-instances-and-deregister-broker` errand performs a similar operation to the
 errands [delete-all-service-instances](#delete-instances) and [deregister-broker](#deregister-broker).
@@ -322,7 +332,8 @@ To run the  `delete-all-service-instances-and-deregister-broker` errand, do the 
 
 <p class="note"><strong>Note:</strong> The deployment for a service instance is orphaned when the BOSH
 deployment is still running but the service is no longer registered in
-Cloud Foundry.</p>
+Cloud Foundry.
+</p>
 
 The `orphan-deployments` errand lists service deployments that
 have no matching service instances in Cloud Foundry and returns the list to the
@@ -341,6 +352,11 @@ To add the `orphan-deployments` errand to the manifest, do the following:
       jobs:
       - name: orphan-deployments
         release: ODB-RELEASE-NAME
+        properties:
+          broker_uri: BROKER-URI # optional
+          tls: # optional
+            ca_cert: BROKER-CA-CERT
+            disable_ssl_cert_verification: BOOLEAN # defaults to false
       vm_type: VM-TYPE
       stemcell: STEMCELL
       networks: [{name: NETWORK}]
@@ -350,6 +366,11 @@ To add the `orphan-deployments` errand to the manifest, do the following:
 2. The `orphan-deployments` errand can be configured to use a Service Instances
    API. This might be required if your broker is deployed without Cloud Foundry.
    For more information, see [Service Instances API](./upgrades.html#service-instances-api).
+
+<p class="note alert"><strong>Note:</strong> when not configured, the errand will fall back to using BOSH provided
+address IP address or BOSH DNS address, depending on <a href="https://bosh.io/docs/dns/#links">configuration</a> in the broker URI. When the broker is serving TLS, the broker certificate must contain this BOSH provided address in its SAN section, otherwise the certificate cannot be verified by Cloud Foundry. For details about how to insert a BOSH DNS address into a config
+server generated certificate, see <a href="https://bosh.io/docs/dns/#dns-variables-integration">here</a>.
+</p>
 
 #### Run the Errand
 
@@ -385,7 +406,8 @@ a list that resembles the following:
 #### Delete an Orphan Deployment
 
 <p class="note warning"><strong>WARNING:</strong> Deleting the BOSH deployment destroys the service instance.
-  Any data present is lost.</p>
+  Any data present is lost.
+</p>
 
 To delete an orphan deployment, do the following:
 
@@ -405,9 +427,14 @@ To delete an orphan deployment, do the following:
     delete-deployment
     </pre>
 
+
+### <a id="upgrade-all-service-instances"></a> Upgrade all service instances
+
+See [Upgrades all instances](./upgrades.html#upgrade-all-instances).
+
 ### <a id="recreate-all-service-instances"></a>Recreate All Service Instances
 
-  <div class="note">
+<div class="note">
     <strong>Note:</strong> ODB only supports the <code>recreate-all-service-instances</code>
     errand in the following BOSH versions:<br><br>
     <ul>
@@ -416,7 +443,8 @@ To delete an orphan deployment, do the following:
       <li>268.2.2–268.2.x</li>
       <li>268.4.0 and later</li>
     </ul>
-    Where x represents the latest version in that release line.</div>
+    Where x represents the latest version in that release line.
+</div>
 
 The `recreate-all-service-instances` errand recreates all service instance VMs
 managed by a broker.
@@ -444,6 +472,10 @@ To add the `recreate-all-service-instances` errand to the manifest, do the follo
             polling_interval_seconds: POLLING-INTERVAL-IN-SECONDS # defaults to 60
             attempt_interval_seconds: ATTEMPT-INTERVAL-IN-SECONDS # defaults to 60
             attempt_limit: NUMBER-OF-ATTEMPTS # defaults to 5
+            broker_uri: BROKER-URI # optional
+            tls: # optional
+              ca_cert: BROKER-CA-CERT
+              disable_ssl_cert_verification: BOOLEAN # defaults to false
       vm_type: VM-TYPE
       stemcell: STEMCELL
       networks: [{name: NETWORK}]
@@ -471,6 +503,12 @@ To add the `recreate-all-service-instances` errand to the manifest, do the follo
         <td> The number of times to check whether each instance is available to be
         recreated. After an instance reaches the limit, the errand terminates.</td> </tr>
     </table>
+
+
+<p class="note alert"><strong>Note:</strong> when not configured, the errand will fall back to using BOSH provided
+address IP address or BOSH DNS address, depending on <a href="https://bosh.io/docs/dns/#links">configuration</a> in the broker URI. When the broker is serving TLS, the broker certificate must contain this BOSH provided address in its SAN section, otherwise the certificate cannot be verified by Cloud Foundry. For details about how to insert a BOSH DNS address into a config
+server generated certificate, see <a href="https://bosh.io/docs/dns/#dns-variables-integration">here</a>.
+</p>
 
 #### Run the Errand
 
@@ -524,7 +562,8 @@ existing service instances.
 For how to run the errand, see [Upgrade All Service Instances](./troubleshooting.html#upgrade-all).
 
 <p class="note warning"><strong>WARNING</strong>: When Cloud Foundry registers the broker, do not
-  change <code>service_id</code> or <code>plan_id</code> for any plan.</p>
+  change <code>service_id</code> or <code>plan_id</code> for any plan.
+</p>
 
 ### <a id="disabling-service-plans"></a>Disable Service Plans
 
@@ -560,4 +599,5 @@ To remove a plan, do the following:
 For more information about this errand, see [Register Broker](#register-broker) above.
 
 <p class="note warning"><strong>WARNING</strong>: If any service instances remain on a plan
-  that has been removed from the catalog, the On-Demand Service Broker fails to start.</p>
+  that has been removed from the catalog, the On-Demand Service Broker fails to start.
+</p>
