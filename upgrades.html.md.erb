@@ -89,11 +89,9 @@ To upgrade all existing instances, you can run the upgrade-all-service-instances
 See [Upgrade All Service Instances](#upgrade-all-instances) below.
 
 <p class="note warning">
-  <strong>WARNING</strong>: Until a service instance has been upgraded,
-  <code>cf update-service</code> operations are blocked and an error is shown.
-  For more information, see
-  <a href="./troubleshooting.html#upgrade-individual-instances">Cannot Update a Service Instance</a>.</p>
-
+  <strong>Warning:</strong> Until a service instance has been upgraded, <code>cf update-service</code> operations are blocked and an error is shown. For more information, see <a href="./troubleshooting.html#upgrade-individual-instances">Cannot Update a Service Instance</a>.
+</p>  
+  
 ## <a id="upgrade-all-instances"></a>Upgrade All Service Instances
 
 To upgrade all existing service instances after the service offering has been updated or upgraded, do the following:
@@ -119,7 +117,7 @@ To upgrade all existing service instances after the service offering has been up
             broker_uri: BROKER-URI # optional
             tls: # optional
               ca_cert: BROKER-CA-CERT
-              disable_ssl_cert_verification: BOOLEAN # defaults to false
+              disable_ssl_cert_verification: TRUE|FALSE # defaults to false
       vm_type: VM-TYPE
       stemcell: STEMCELL
       networks: [{name: NETWORK}]
@@ -197,11 +195,10 @@ To upgrade all existing service instances after the service offering has been up
     bosh -d DEPLOYMENT-NAME run-errand upgrade-all-service-instances
     ```
 
-<p class="note"><strong>Note:</strong> The <code>upgrade-all-service-instances</code> errand
-triggers service instance lifecycle errands configured for the broker.
-   For more information, see <a href="./operating.html#lifecycle-errands">Service Instance Lifecycle Errands</a>.</p>
+<p class="note"><strong>Note:</strong> The <code>upgrade-all-service-instances</code> errand triggers service instance lifecycle errands configured for the broker. For more information, see <a href="./operating.html#lifecycle-errands">Service Instance Lifecycle Errands</a>.
+</p>
 
-<p class="note alert"><strong>Note:</strong> when not configured, the errand will fall back to using BOSH provided address IP address or BOSH DNS address, depending on <a href="https://bosh.io/docs/dns/#links">configuration</a> in the broker URI. When the broker is serving TLS, the broker certificate must contain this BOSH provided address in its SAN section, otherwise the certificate cannot be verified by Cloud Foundry. For details about how to insert a BOSH DNS address into a config server generated certificate, see <a href="https://bosh.io/docs/dns/#dns-variables-integration">here</a>.</p>
+<%= partial "ip-bosh-dns" %>
 
 ### <a id="service-instances-api"></a> Service Instances API
 
@@ -212,16 +209,10 @@ errands can use to retrieve the list of instances known to the platform.
 
 You can configure the API endpoint in the broker job.
 
-<p class="warning note"><strong>WARNING:</strong> The Service Instances API is an advanced feature.
-Configuring a Service Instances API is not required, unless you are operating in very specific circumstances,
-such as running an on-demand service broker with no connection to Cloud Foundry.
-<br><br>
-You are required to provide an endpoint which satisfies the API requirements detailed below
-and also guarantees that all service instances which need to be upgraded are part of that response.
-If you configure an endpoint which does not satisfy these criteria, some service instances may become unusable.</p>
+<p class="warning note"><strong>Warning:</strong> The Service Instances API is an advanced feature. Configuring a Service Instances API is not required, unless you are operating in very specific circumstances, such as running an on-demand service broker with no connection to Cloud Foundry. <br><br> You are required to provide an endpoint which satisfies the API requirements detailed below and also guarantees that all service instances which need to be upgraded are part of that response. If you configure an endpoint which does not satisfy these criteria, some service instances may become unusable.
+</p>
 
-<p class="note"><strong>Note:</strong>
-  The Service Instances API definition is at v0.1.0 and should be considered subject to change.</p>
+<p class="note"><strong>Note:</strong> The Service Instances API definition is at v0.1.0 and should be considered subject to change.</p>
 
 #### <a id="general-requests"></a> General Request and Response
 
