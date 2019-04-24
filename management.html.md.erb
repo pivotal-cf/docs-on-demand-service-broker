@@ -432,11 +432,11 @@ you might want to upgrade all on-demand service instances to the latest software
 The `upgrade-all-service-instances` errand does the following:
 
 * Collects all of the service instances the on-demand broker has registered
-* For each instance the errand does the following serially
+* For each instance the errand does the following, serially:
 	* Issues an upgrade command to the on-demand broker
 	* Regenerates the service instance manifest based on its latest configuration from the tile
 	* Deploys the new manifest for the service instance
-	* Waits for this operation to complete, then proceeds to the next instance
+	* Waits for this operation to complete, and then proceeds to the next instance
 * Adds to a retry list any instances that have ongoing BOSH tasks at the time of upgrade
 * Retries any instances in the retry list until all are upgraded
 
