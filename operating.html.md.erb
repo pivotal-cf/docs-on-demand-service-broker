@@ -287,13 +287,19 @@ For a more detailed manifest snippet, see [Starter Snippet for Your Broker](#bro
 For more information about securing how ODB uses BOSH, see [Security](./security.html).
 
 ### <a id="cloud-controller"></a>Set Up Cloud Controller
-<%# This "Set Up Cloud Controller" section needs to be improved for technical accuracy.  %>
 
-ODB uses the Cloud Controller as a source of truth about service offerings, plans, and instances.
+ODB uses the Cloud Controller as a source of truth for service offerings, plans, and instances.
 
 To reach the Cloud Controller, configure ODB with either client or user credentials
 in the broker manifest. For more information, see [Write a Broker Manifest](#broker-manifest) below.
 
+<div class="note">
+  <p style="margin-top: 0"><strong>Note:</strong> The client or user must have the following permissions.</p>
+  <ul>
+    <li><strong>If using client credentials</strong> then, as of Cloud Foundry v238, the UAA client must have the authority <code>cloud_controller.admin</code>.</li>
+    <li><strong>If using user credentials</strong> then the user must be a member of the <code>scim.read</code> and <code>cloud_controller.admin</code> groups.</li>
+  </ul>
+</div>
 
 The following is an example broker manifest snippet for the client credentials:
 
@@ -301,7 +307,7 @@ The following is an example broker manifest snippet for the client credentials:
 authentication:
   ...
   client_credentials:
-    client_id: UAA-CLIENT-ID # with cloud_controller.admin authority and client_credentials in the authorized_grant_type
+    client_id: UAA-CLIENT-ID
     secret: UAA-CLIENT-SECRET
 ```
 
@@ -311,21 +317,9 @@ The following is an example broker manifest snippet for the user credentials:
 authentication:
   ...
   user_credentials:
-    username: CF-ADMIN-USERNAME # in the cloud_controller.admin and scim.read groups
+    username: CF-ADMIN-USERNAME
     password: CF-ADMIN-PASSWORD
 ```
-
-
-<div class="note">
-  <p style="margin-top: 0"><strong>Note: </strong> The client or user must have the following permissions.</p>
-  <ul>
-    <li><strong>If using client credentials</strong>: As of Cloud Foundry v238, the UAA client must
-  have the authority <code>cloud_controller.admin</code>.</li>
-    <li><strong>If using user credentials</strong>: The user must be a Cloud Foundry admin user, that
-  is, a member of the <code>scim.read</code> and <code>cloud_controller.admin</code> groups
-  as a minimum.</li>
-  </ul>
-</div>
 
 ## <a id="upload-releases"></a>Upload Required Releases
 
