@@ -8,26 +8,27 @@ For example:
 
 | Branch name     | Use for|
 |-----------------| ------|
-| master          | Unreleased version (edge - 0.28) https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-2n|
-| v0.27.x         | live on April 5, 2019 https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-27|
-| v0.26.x         | live on Feb 20, 2019 https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-26| 
-| v0.25.x         | live on Dec 5, 2018 https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-25|
-| v0.24.x         | live on Nov 14, 2018 https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-24|
-| v0.23.x         | live on Sept 18, 2018 https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-23|
+| master          | Unreleased version (edge - 0.29) https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-2n|
+| v0.28.x         | live on April 26, 2019 https://docs.pivotal.io/svc-sdk/odb/0-28|
+| v0.27.x         | live on April 5, 2019 https://docs.pivotal.io/svc-sdk/odb/0-27|
+| v0.26.x         | live on Feb 20, 2019 https://docs.pivotal.io/svc-sdk/odb/0-26|
+| v0.25.x         | live on Dec 5, 2018 https://docs.pivotal.io/svc-sdk/odb/0-25|
+| v0.24.x         | live on Nov 14, 2018 https://docs.pivotal.io/svc-sdk/odb/0-24|
+| v0.23.x         | live on Sept 18, 2018 https://docs.pivotal.io/svc-sdk/odb/0-23|
 | v0.22.x         | live |
 | v0.21.x         | live |
 | v0.20.x         | obsolete, but do not delete the branch. PDF available at https://docs.pivotal.io/archives/odb-0.20.pdf. |
-| v0.19.x         | obsolete, but do not delete the branch. PDF available at https://docs.pivotal.io/archives/odb-0.19.pdf. | 
-| v0.18.x         | obsolete, but do not delete the branch. PDF available at https://docs.pivotal.io/archives/odb-0.18.pdf. | 
-| v0.17.x         | obsolete, but do not delete the branch. PDF available at https://docs.pivotal.io/archives/odb-0.17.pdf. | 
+| v0.19.x         | obsolete, but do not delete the branch. PDF available at https://docs.pivotal.io/archives/odb-0.19.pdf. |
+| v0.18.x         | obsolete, but do not delete the branch. PDF available at https://docs.pivotal.io/archives/odb-0.18.pdf. |
+| v0.17.x         | obsolete, but do not delete the branch. PDF available at https://docs.pivotal.io/archives/odb-0.17.pdf. |
 | v0.16.x         | obsolete, but do not delete the branch. PDF available at https://docs.pivotal.io/archives/odb-0.16.pdf. |
 | v0.15.x         | obsolete, but do not delete the branch. PDF available at https://docs.pivotal.io/archives/odb-0.15.pdf. |
-| v0.14.x         | obsolete, but do not delete the branch | 
-| v0.13.x         | obsolete, but do not delete the branch | 
-| v0.12.x         | obsolete, but do not delete the branch | 
-| v0.11.x         | obsolete, but do not delete the branch | 
-| v0.10.x         | obsolete, but do not delete the branch | 
-| v0.9.x          | obsolete, but do not delete the branch | 
+| v0.14.x         | obsolete, but do not delete the branch |
+| v0.13.x         | obsolete, but do not delete the branch |
+| v0.12.x         | obsolete, but do not delete the branch |
+| v0.11.x         | obsolete, but do not delete the branch |
+| v0.10.x         | obsolete, but do not delete the branch |
+| v0.9.x          | obsolete, but do not delete the branch |
 
 # Book repo for publishing this content
 
@@ -72,4 +73,3 @@ In order to display our mermaid templates locally (whilst running through `bookb
 To help with this we have two scripts to localise, and then revert these diagram files:
 * `./scripts/mmd-localise` will prepend each mermaid file with an underscore
 * `./scripts/mmd-globalise` will remove the first underscore from each mermaid file
-
