@@ -23,7 +23,14 @@ New features and changes in this release:
 
 ### Known Issues
 
-There are no known issues for this release.
+- This version is affected by a bug in CredHub 1.9.11 (OpsManager 2.2.21 and 2.3.15) producing an error similar to the following:
+  ```shell
+  Task 54 | 19:40:25 | Creating missing vms: credhub/03CCE517-F40D-42C8-B758-606FC042A8D4 (0) (00:00:53)
+               L Error: - Unable to render templates for job 'credhub'. Errors are:
+    - Failed to fetch variable '/opsmgr/cf-f0052ab642e7684aa41d/credhub_key_encryption_passwords/0/key' with id '703CCE517-F40D-42C8-B758-606FC042A8D4' from config server: Invalid JSON response
+  ```
+
+  This version of the broker should be used with CredHub 1.9.12+ and 2.1.6+ (OpsManager [2.2.22+](https://docs.pivotal.io/pivotalcf/2-2/pcf-release-notes/opsmanager-rn.html#2-2-22) and [2.3.16+](https://docs.pivotal.io/pivotalcf/2-3/pcf-release-notes/opsmanager-rn.html#2-3-16)).
 
 ## <a id="view"></a> View Release Notes for Another Version
 
