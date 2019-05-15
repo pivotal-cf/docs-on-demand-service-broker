@@ -12,7 +12,29 @@ owner: London Services Enablement
 
 New features and changes in this release:
 
-- 
+- The `register-broker` errand has been converted from a bash script into a golang binary.
+This allows the team to test functionality better and remove unnecessary dependencies.
+- Previously, the broker introduced `maintenance_info` on the service catalog, which can be used to
+trigger a single-instance upgrade in the broker. Now, `maintenance_info` includes a new `version` property.
+Platforms can implement functionality needed to expose this feature. For more information about this
+feature, see [Maintenance Info](operating.html#maintenance).
+- In the event that a BOSH service deployment becomes unresponsive and the broker's
+standard delete request fails, passing `?force=true` as a query parameter to the
+deprovision endpoint will issue a force delete for the BOSH deployment.
+In this case, the broker does its best to run any pre-delete errands configured
+for the deployment. However, if the errand fails, the broker will ignore the
+failure and continue with the next operation (the next pre-delete errand or the force deletion).
+- Golang is upgraded to v1.12.5.
+
+### Breaking Changes
+- When registering plans as `org-restricted`, previously there was a global organization
+definition in the `register-broker` errand configuration. This should now be
+configured for each plan in the broker service\_catalog with the property `service_access_org`.
+See [this example](./management.html#register-broker) of a plan configured as `org-restricted`.
+- Previously, `enable_service_access` was configured in the `register-broker` errand
+to set service access for all plans. This functionality has been removed. Now, access is defined
+only at the plan level and defaults to enabled. See [Register Broker documentation](./management.html#register-broker)
+for more information about configuring access for plans.
 
 ### Known Issues
 
