@@ -524,24 +524,83 @@ When composing plans, supply the following:
   * The service author can define a default update block to be used when a plan-specific update block is not provided,
   if the service adapter supports configuring update blocks in the manifest.
 
+<a id="maintenance"></a>
+
 * **(Optional) Maintenance Information**
-  * Maintenance information is used to uniquely describe
-   the deployed version of a service instance. It is made up of public and
-   private key/value pairs defined at the catalog and plan levels. It is
-   displayed in the service catalog at plan level with plan-level maintenance
-   information aggregated into the catalog-level maintenance information. The public
-   information is exposed in the service catalog, while all the private
-   information is aggregated and hashed into a value representing those
-   private values.
-  * Maintenance information which is common to all plans should be defined at the
-    service catalog level.
-  * Plan-specific maintenance information should be defined at the plan level. Where
-    a key is redefined at the plan level, it overrides the service catalog
-    level value.
-  * Pivotal recommends using YAML anchors and references to avoid repeating
-    maintenance information values within the manifest.  For instance, the stemcell
-    version can be anchors with the `&stemcellVersion` annotation, and then
-    referenced in the maintenance information with the `*stemcellVersion` tag.
+    * Maintenance information is used to uniquely describe the deployed version of
+    a service instance. It is used by the platform to determine when an upgrade is
+    available for that instance, allowing app developers to trigger the upgrade.
+    * In the broker manifest, it is defined in the `service_catalog`, at global and plan level:
+
+    ```yml
+    # broker properties
+    service_catalog:
+      maintenance_info: # applies to all plans
+        public:
+          stemcell: 1818
+          docker: v2.4.6
+        private:
+          secret: password
+        version: 1.4.7-rc.1 # must be semver
+      plans:
+      - name: stable
+        maintenance_info: # plan specific
+          public:
+            size: 3
+            docker: v3.0.0 # overwrites global configuration
+          version: 7.0.0
+      - name: edge
+        maintenance_info: {}
+    ```
+
+    * When the Service Catalog is requested by the platform, the broker will return
+    a maintenance_info per plan, where:
+        * Plan specific configuration takes precendence over global configuration
+        * `maintenance_info.public` is returned as configured
+        * `maintenance_info.version` is returned as configured
+        * All properties in `maintenance_info.private` are aggregated and hashed into a single string
+
+        For the example manifest above, the catalog response would be:
+
+        ```json
+        {
+            "services": [{
+                "name": "my-service",
+                "plans": [{
+                    "name": "stable",
+                    "maintenance_info": {
+                        "public": {
+                            "stemcell": "1818",
+                            "docker": "v3.0.0",
+                            "size": 3
+                        },
+                        "private": "hashedvalue",
+                        "version": "7.0.0"
+                    }
+                }, {
+                    "name": "edge",
+                    "maintenance_info": {
+                        "public": {
+                            "stemcell": "1818",
+                            "docker": "v2.4.6"
+                        },
+                        "private": "hashedvalue",
+                        "version": "1.4.7-rc.1"
+                    }
+                }]
+            }]
+        }
+        ```
+
+    * Pivotal recommends using YAML anchors and references to avoid repeating maintenance information
+    values within the manifest. For instance, the stemcell version can be anchored with the
+    `&stemcellVersion` annotation and then referenced in the maintenance information with
+    the `*stemcellVersion` tag.
+
+    <p class="note"><strong>Note:</strong> The Open Service Broker API only supports
+    <code>maintenance_info.version</code>. The usage of <code>public</code> and
+    <code>private</code> is not encouraged if Cloud Foundry is the platform communicating
+    to the broker.</p>
 
 #### <a id="starter-snippet"></a>Starter Snippet for the Service Catalog and Plans
 
@@ -612,6 +671,8 @@ service_catalog:
     private:
       # example of private data that would require a service update to change
       log_aggregrator_mtls_cert: *YAML_ANCHOR_TO_MTLS_CERT
+    # optional - should be conforming to semver
+    version: 1.2.3-rc2
   plans:
     - name: CF-MARKETPLACE-PLAN-NAME
       # optional - used by the cf CLI to display whether this plan is "free" or "paid":

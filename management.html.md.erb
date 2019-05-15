@@ -34,8 +34,6 @@ To add the `register-broker` errand to the manifest, do the following:
             broker_name: BROKER-NAME
             broker_uri: BROKER-URI # optional, only required when a route has been registered
             disable_ssl_cert_verification: TRUE|FALSE # defaults to false
-            enable_service_access: TRUE|FALSE # defaults to true
-            default_access_org: ORG-NAME # optional, defaults to system
             tls: # optional
               ca_cert: BROKER-CA-CERT
               disable_ssl_cert_verification: TRUE|FALSE # defaults to false
@@ -61,21 +59,18 @@ To add the `register-broker` errand to the manifest, do the following:
               plans:
                 - name: PLAN-NAME
                   ...
-                  cf_service_access: ENABLE|DISABLE|MANUAL|ORG-RESTRICTED # optional, defaults to enable
-
+                  cf_service_access: enable | disable | manual | org-restricted # optional, defaults to enable
+                  service_access_org: ORG-NAME # required if "cf_service_access" is set to "org-restricted"
     ```
       - If the `broker_uri` property is set, you must register a route for your broker with Cloud Foundry.
       See the [Route Registration](./operating.html#route) section for more details.
-      - When `enable_service_access`: `false` is set, the errand does not change service access for any plan.
-      - When `default_access_org` is set, the errand enables access to that org
-      for any plans configured with `cf_service_access: org-restricted`.
       - (Optional) Use the `cf_service_access` property to enable access to
       individual plans. Set the property on each plan in the broker job.
       The values accepted are the following:
         - `enable`: the errand enables access for that plan. This is the default value.
         - `disable`: the errand disables access for that plan.
         - `manual`: the errand does not modify service access for this plan.
-        - `org-restricted`: the errand enables access for this plan to the `default_access_org` only.
+        - `org-restricted`: the errand enables access to the org set as the `service_access_org` in the plan definition.
 
         Only Cloud Foundry admin users can see plans with disabled service access.
         Org Managers and Space Managers cannot see these plans.
@@ -425,8 +420,8 @@ To delete an orphan deployment, do the following:
 ### <a id="upgrade-all-service-instances"></a> Upgrade All Service Instances
 
 The `upgrade-all-service-instances` errand upgrades all existing service instances
-to the latest service offering. If you have made changes to 
-the plan definition or uploaded a new tile into Ops Manager, 
+to the latest service offering. If you have made changes to
+the plan definition or uploaded a new tile into Ops Manager,
 you might want to upgrade all on-demand service instances to the latest software or plan definition.
 
 The `upgrade-all-service-instances` errand does the following:
