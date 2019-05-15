@@ -16,6 +16,7 @@ owner: London Services Enablement
 	        <li><a href="#cannot-connect">Cannot Connect to a Service Instance</a></li>
 	        <li><a href="#upgrade-all-fails">Upgrade All Service Instances Fails</a></li>
 	        <li><a href="#missing-logs">Missing Logs and Metrics</a></li>
+          <li><a href="#credhub-error">Unable to Render Templates for Job CredHub</a></li>
         </ul>
         <li><a href="#components">Troubleshooting Components</a></li>
         <ul>
@@ -92,6 +93,21 @@ This section provides information about how to troubleshoot specific errors or e
 
 <%= partial '../../../svc-sdk/odb/odb/tshoot-err-missing-logs' %>
 
+<a id="credhub-error"></a><h3>Unable to Render Templates for Job CredHub</h3>
+
+If you receive an error similar to the following:
+
+<pre class="terminal">
+Task 54 | 19:40:25 | Creating missing vms: credhub/03CCE517-F40D-42C8-B758-606FC042A8D4 (0) (00:00:53)
+             L Error: - Unable to render templates for job 'credhub'. Errors are:
+    - Failed to fetch variable '/opsmgr/cf-f0052ab642e7684aa41d/credhub_key_encryption_passwords/0/key' with id '703CCE517-F40D-42C8-B758-606FC042A8D4' from config server: Invalid JSON response
+</pre>
+<br>
+This might be due to an issue with BOSH CredHub v1.9.11 and v2.1.5.
+<br><br>
+To solve this error, use CredHub v1.9.12 or later (included in Ops Manager v2.2.22
+or later and v2.3.16 or later) or CredHub v2.1.6 (included in Ops Manager v2.4.10
+or later and v2.5.3 or later).
 
 <a id="components"></a><h2>Troubleshooting Components</h2>
 
