@@ -8,33 +8,33 @@ owner: London Services Enablement
 
 **Release Date: MMM DD, 2019**
 
+<p class="note breaking"><strong>Breaking Change:</strong> If you set <code>cf_service_access</code> to <code>org-restricted</code> in the <code>
+  register-broker</code> errand, you must set <code>service_access_org</code> in 
+  each plan in the broker service catalog.
+For an example of a plan configured as <code>org-restricted</code>, see <a href="./management.html#register-broker">Register Broker</a>.</p>
+
+<p class="note breaking"><strong>Breaking Change:</strong> You can no longer set service access for all plans with the <code>enable_service_access</code> property. This property has been removed. You must set service access for individual plans with <code>cf_service_access</code>. This property defaults to <code>enable</code>. For more information about configuring service access for plans, see <a href="./management.html#register-broker">Register Broker</a>.</p>
+
 ### Features
 
 New features and changes in this release:
 
-- The `register-broker` errand has been converted from a bash script into a golang binary.
-This allows the team to test functionality better and remove unnecessary dependencies.
-- Previously, the broker introduced `maintenance_info` on the service catalog, which can be used to
-trigger a single-instance upgrade in the broker. Now, `maintenance_info` includes a new `version` property.
-Platforms can implement functionality needed to expose this feature. For more information about this
-feature, see [Maintenance Info](operating.html#maintenance).
-- In the event that a BOSH service deployment becomes unresponsive and the broker's
+- The `register-broker` errand is no longer a bash script. It is now a golang binary. This enables the team to better test functionality and remove unnecessary dependencies. <%# Which team? %>
+- `maintenance_info` includes a `version` property.
+Platform operators can implement the functionality needed to expose this feature. For more information about this
+feature, see [(Optional) Maintenance Info](operating.html#maintenance). <%# What does the second sentence mean? %>
+- You can pass a `?force=true` query parameter to force delete a service instance. <%# For more information, see [SOMETHING]().%> 
+
+<%# The below needs to be on its own page. Also what does this mean:
+If a BOSH service deployment becomes unresponsive and the broker's
 standard delete request fails, passing `?force=true` as a query parameter to the
-deprovision endpoint will issue a force delete for the BOSH deployment.
+deprovision endpoint issues a force delete for the BOSH deployment.
 In this case, the broker does its best to run any pre-delete errands configured
 for the deployment. However, if the errand fails, the broker will ignore the
-failure and continue with the next operation (the next pre-delete errand or the force deletion).
-- Golang is upgraded to v1.12.5.
+failure and continue with the next operation (the next pre-delete errand or the force deletion). %>
+- Updates golang to v1.12.5.
 
-### Breaking Changes
-- When registering plans as `org-restricted`, previously there was a global organization
-definition in the `register-broker` errand configuration. This should now be
-configured for each plan in the broker service\_catalog with the property `service_access_org`.
-See [this example](./management.html#register-broker) of a plan configured as `org-restricted`.
-- Previously, `enable_service_access` was configured in the `register-broker` errand
-to set service access for all plans. This functionality has been removed. Now, access is defined
-only at the plan level and defaults to enabled. See [Register Broker documentation](./management.html#register-broker)
-for more information about configuring access for plans.
+
 
 ### Known Issues
 
