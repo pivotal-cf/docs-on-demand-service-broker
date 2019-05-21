@@ -159,8 +159,8 @@ by a public certificate authority.
 In such a case, you can navigate to https<span>:</span>//BOSH-DOMAIN-NAME:25555/info in a browser
 and see a trusted certificate padlock in the browser address bar.
 
-ODB can then be configured to use this address for BOSH and will not require a CA certificate to be provided.
-The public CA certificate would already be present on the ODB VM.
+In this case, ODB can be configured to use this address for BOSH, and it does not require a CA certificate to be provided.
+The public CA certificate is already present on the ODB VM.
 
 By contrast, BOSH is usually only accessible on an internal network.
 It uses a certificate signed by an internal CA.
@@ -373,7 +373,7 @@ The snippet uses BOSH v2 syntax as well as global cloud config and job-level pro
 
 For examples of complete broker manifests, see [Write a Broker Manifest](#broker-manifest) above.
 
-<p class="note warning"><strong>WARNING</strong>: The <code>disable_ssl_cert_verification</code>
+<p class="note warning"><strong>Warning</strong>: The <code>disable_ssl_cert_verification</code>
   option is dangerous and should be set to <code>false</code> in production.</p>
 
 ```yaml
@@ -530,7 +530,7 @@ When composing plans, supply the following:
     * Maintenance information is used to uniquely describe the deployed version of
     a service instance. It is used by the platform to determine when an upgrade is
     available for that instance, allowing app developers to trigger the upgrade.
-    * In the broker manifest, it is defined in the `service_catalog`, at global and plan level:
+    * In the broker manifest, it is defined in the `service_catalog`, at global and plan levels, as in the below example:
 
     ```yml
     # broker properties
@@ -540,51 +540,51 @@ When composing plans, supply the following:
           stemcell: 1818
           docker: v2.4.6
         private:
-          secret: password
+          SECRET: PASSWORD
         version: 1.4.7-rc.1 # must be semver
       plans:
-      - name: stable
-        maintenance_info: # plan specific
+      - name: STABLE
+        maintenance_info: # plan-specific
           public:
             size: 3
             docker: v3.0.0 # overwrites global configuration
           version: 7.0.0
-      - name: edge
+      - name: EDGE
         maintenance_info: {}
     ```
 
-    * When the Service Catalog is requested by the platform, the broker will return
-    a maintenance_info per plan, where:
-        * Plan specific configuration takes precendence over global configuration
+    * When the Service Catalog is requested by the platform, the broker returns
+    the `maintenance_info` properties per plan, where:
+        * Plan-specific configuration takes precedence over global configuration
         * `maintenance_info.public` is returned as configured
         * `maintenance_info.version` is returned as configured
         * All properties in `maintenance_info.private` are aggregated and hashed into a single string
 
-        For the example manifest above, the catalog response would be:
+        For the example manifest above, the catalog response is:
 
         ```json
         {
             "services": [{
-                "name": "my-service",
+                "name": "MY-SERVICE",
                 "plans": [{
-                    "name": "stable",
+                    "name": "STABLE",
                     "maintenance_info": {
                         "public": {
                             "stemcell": "1818",
                             "docker": "v3.0.0",
                             "size": 3
                         },
-                        "private": "hashedvalue",
+                        "private": "HASHED-VALUE",
                         "version": "7.0.0"
                     }
                 }, {
-                    "name": "edge",
+                    "name": "EDGE",
                     "maintenance_info": {
                         "public": {
                             "stemcell": "1818",
                             "docker": "v2.4.6"
                         },
-                        "private": "hashedvalue",
+                        "private": "HASHED-VALUE",
                         "version": "1.4.7-rc.1"
                     }
                 }]
@@ -598,14 +598,14 @@ When composing plans, supply the following:
     the `*stemcellVersion` tag.
 
     <p class="note"><strong>Note:</strong> The Open Service Broker API only supports
-    <code>maintenance_info.version</code>. The usage of <code>public</code> and
+    <code>maintenance_info.version</code>. The use of <code>public</code> and
     <code>private</code> is not encouraged if Cloud Foundry is the platform communicating
     to the broker.</p>
 
 #### <a id="starter-snippet"></a>Starter Snippet for the Service Catalog and Plans
 
 Append the snippet below to the properties section of the broker job that you
-configured in _Configure Your Broker_.
+configured in [Configure Your Broker](core-broker-config) above.
 Ensure that you provide the required information listed in
 [Configure Your Service Catalog and Plan Composition](#catalog) above.
 
@@ -664,7 +664,7 @@ service_catalog:
       # reference to stemcellVersion anchor above
       stemcell_version: *stemcellVersion
       # arbitrary public maintenance_info
-      kubernetes_version: 1.13
+      kubernetes_version: 1.13 # optional
       # arbitrary public maintenance_info
       docker_version: 18.06.1
      # all keys under private are hashed to single SHA value in service catalog

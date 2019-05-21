@@ -98,7 +98,7 @@ To run the `register-broker` errand, do the following:
 
 ### <a id="delete-instances"></a>Delete All Service Instances
 
-<p class="note warning"><strong>WARNING:</strong> Use extreme caution when running this errand.
+<p class="note warning"><strong>Warning:</strong> Use extreme caution when running this errand.
   You should only use it when you want to totally destroy all of the on-demand service instances
   from Cloud Foundry.
 </p>
@@ -110,7 +110,8 @@ the Cloud Controller knows about.
 
 The errand does not delete orphan BOSH deployments, which do not correspond to a known service instance.
 Orphan BOSH deployments should never happen, but in practice they do.
-Use the [orphan-deployments errand](#listing-orphans) to identify them.
+Use the `orphan-deployments` errand to identify them.
+For more information, see [Orphan Deployments](#listing-orphans) below.
 
 The errand does the following:
 
@@ -190,8 +191,7 @@ It requires that there are no existing service instances of your broker's servic
 If you run this errand with service instances remaining, it fails.
 Run the `delete-all-service-instances-and-deregister-broker`
 errand to remove remaining service instances and deregistering the broker.
-See <a href="#delete-instances-and-deregister">Delete All Service Instances and Deregister Broker</a>
-below.
+For more information, see <a href="#delete-instances-and-deregister">Delete All Service Instances and Deregister Broker</a> below.
 
 #### Add the Errand to the Manifest
 
@@ -235,13 +235,14 @@ To run the `deregister-broker` errand, do the following:
 
 ### <a id="delete-instances-and-deregister"></a>Delete All Service Instances and Deregister Broker
 
-<p class="note warning"><strong>WARNING:</strong> Use extreme caution when running this errand.
+<p class="note warning"><strong>Warning:</strong> Use extreme caution when running this errand.
   You should only use it when you want to destroy all of the on-demand service
   instances and deregister the broker from Cloud Foundry.
 </p>
 
 The `delete-all-service-instances-and-deregister-broker` errand performs a similar operation to the
-errands [delete-all-service-instances](#delete-instances) and [deregister-broker](#deregister-broker).
+errands `delete-all-service-instances` and `deregister-broker`.
+For more information on both, see [Delete All Service Instances](#delete-instances) and [Deregister Broker](#deregister-broker) below.
 
 This errand does the following:
 
@@ -394,7 +395,7 @@ a list that resembles the following:
 
 #### Delete an Orphan Deployment
 
-<p class="note warning"><strong>WARNING:</strong> Deleting the BOSH deployment destroys the service instance.
+<p class="note warning"><strong>Warning:</strong> Deleting the BOSH deployment destroys the service instance.
   Any data present is lost.
 </p>
 
@@ -422,7 +423,7 @@ To delete an orphan deployment, do the following:
 The `upgrade-all-service-instances` errand upgrades all existing service instances
 to the latest service offering. If you have made changes to
 the plan definition or uploaded a new tile into Ops Manager,
-you might want to upgrade all on-demand service instances to the latest software or plan definition.
+Pivotal recommends that you upgrade all on-demand service instances to the latest software or plan definition.
 
 The `upgrade-all-service-instances` errand does the following:
 
@@ -500,11 +501,11 @@ To add the `recreate-all-service-instances` errand to the manifest, do the follo
       <tr>
         <td><code>polling_interval_seconds</code></td>
         <td> This controls the wait between checking the status of successfully
-        submitted BOSH recreate tasks. </td> </tr>
+        submitted BOSH re-create tasks. </td> </tr>
       <tr>
         <td><code>attempt_interval_seconds</code></td>
         <td> When there are BOSH tasks in progress on the service instance to
-        recreate, the instance is put in a retry queue.
+        re-create, the instance is put in a retry queue.
         This property controls the pause between retries. </td> </tr>
       <tr>
         <td><code>attempt_limit</code></td>
@@ -566,7 +567,7 @@ For how to run the errand, see [Register Broker](#register-broker) above.
 existing service instances.
 For how to run the errand, see [Upgrade All Service Instances](./troubleshooting.html#upgrade-all).
 
-<p class="note warning"><strong>WARNING</strong>: When Cloud Foundry registers the broker, do not
+<p class="note warning"><strong>Warning</strong>: When Cloud Foundry registers the broker, do not
   change <code>service_id</code> or <code>plan_id</code> for any plan.</p>
 
 ### <a id="disabling-service-plans"></a>Disable Service Plans
@@ -590,7 +591,7 @@ To disable access to a service plan, do the following:
     </pre>
 
 <p class="note"><strong>Note:</strong> When a plan has the property <code>cf_service_access:
-  disable</code> in the <code>service_catalog</code> the <a href="#register-broker">Register Broker</a> errand disables service access to that plan.</p>
+  disable</code> in the <code>service_catalog</code> the <code>register-broker</code> errand disables service access to that plan. For more information on the errand, see <a href="#register-broker">Register Broker</a> above.</p>
 
 ### <a id="remove-plans"></a>Remove Service Plans
 
