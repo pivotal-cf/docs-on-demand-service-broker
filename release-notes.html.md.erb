@@ -38,7 +38,21 @@ failure and continue with the next operation (the next pre-delete errand or the 
 
 ### Known Issues
 
-There are no known issues for this release.
+This release has the following issue:
+
+<ul>
+    <li>
+The register-broker errand fails with the following error: 
+
+    <code>[register-broker] 2019/05/22 11:57:55.699337 failed to execute register-broker: planID "my-plan" not found while updating plan access</code><br><br>
+
+    This impacts deployments that use Pivotal Application Service (PAS) because it means
+that they cannot register a new broker or update an existing broker.
+
+    <p class="note"><strong>Note:</strong> Enterprise Pivotal Container Service (Enterprise PKS)
+deployments are not affected by this issue.  </p>
+   </li>
+</ul>
 
 ## <a id="view"></a> View Release Notes for Another Version
 
