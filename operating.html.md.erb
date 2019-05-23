@@ -532,26 +532,26 @@ When composing plans, supply the following:
     available for that instance, allowing app developers to trigger the upgrade.
     * In the broker manifest, it is defined in the `service_catalog`, at global and plan levels, as in the below example:
 
-    ```yml
-    # broker properties
-    service_catalog:
-      maintenance_info: # applies to all plans
-        public:
-          stemcell: 1818
-          docker: v2.4.6
-        private:
-          SECRET: PASSWORD
-        version: 1.4.7-rc.1 # must be semver
-      plans:
-      - name: STABLE
-        maintenance_info: # plan-specific
-          public:
-            size: 3
-            docker: v3.0.0 # overwrites global configuration
-          version: 7.0.0
-      - name: EDGE
-        maintenance_info: {}
-    ```
+        ```yml
+        # broker properties
+        service_catalog:
+          maintenance_info: # applies to all plans
+            public:
+              stemcell: 1818
+              docker: v2.4.6
+            private:
+              SECRET: PASSWORD
+            version: 1.4.7-rc.1 # must be semver
+          plans:
+          - name: STABLE
+            maintenance_info: # plan-specific
+              public:
+                size: 3
+                docker: v3.0.0 # overwrites global configuration
+              version: 7.0.0
+          - name: EDGE
+            maintenance_info: {}
+        ```
 
     * When the Service Catalog is requested by the platform, the broker returns
     the `maintenance_info` properties per plan, where:
