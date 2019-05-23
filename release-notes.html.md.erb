@@ -4,28 +4,23 @@ owner: London Services Enablement
 ---
 <strong><%= modified_date %></strong>
 
-## <a id="0.30.0"></a>v0.30.0
+## <a id="0.29.1"></a>v0.29.1
 
-**Release Date: MMM DD, 2019**
+**Release Date: May XX, 2019**
 
-<% if false %>
+### Resolved Issues
 
-The below might not be true anymore
+This release fixes the following issues:
 
-<p class="note breaking"><strong>Breaking Change:</strong> If you set <code>cf_service_access</code> to <code>org-restricted</code> in the <code>
-  register-broker</code> errand, you must set <code>service_access_org</code> in
-  each plan in the broker service catalog.
-For an example of a plan configured as <code>org-restricted</code>, see <a href="./management.html#register-broker">Register Broker</a>.</p>
-
-<p class="note breaking"><strong>Breaking Change:</strong> You can no longer set service access for all plans with the <code>enable_service_access</code> property. This property has been removed. You must set service access for individual plans with <code>cf_service_access</code>. This property defaults to <code>enable</code>. For more information about configuring service access for plans, see <a href="./management.html#register-broker">Register Broker</a>.</p>
-
-<% end %>
-
-### Features
-
-New features and changes in this release:
-
-
+* Fixed a regression in the `register-broker` errand that was preventing registration because of missing plans.
+  This regression impacted deployments that use Pivotal Application Service (PAS).
+  Enterprise Pivotal Container Service (Enterprise PKS) deployments were not affected by this issue.
+* Changed the `deregister-broker` errand so that the errand succeeds even if the broker does not exist.
+  This fix allows the errand to behave in a way that is consistent with other broker errands.
+* Changed the `delete-all-service-instances` and `delete-all-service-instances-and-deregister-broker` errands.
+  These errands no longer fail if service instance is already in the process of being deleted. The errand will
+  skip the instance and continue to issue delete commands for the remaining instances.
+* Fixed a regression in the broker where the Broker API version information in request headers was not being validated.
 
 ### Known Issues
 
