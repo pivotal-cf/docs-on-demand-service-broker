@@ -21,6 +21,7 @@ This release fixes the following issues:
   These errands no longer fail if service instance is already in the process of being deleted. The errand will
   skip the instance and continue to issue delete commands for the remaining instances.
 * Fixed a regression in the broker where the Broker API version information in request headers was not being validated.
+* Errors due to JSON Schema Validation during create, update and bind will now be surfaced to the platform user.
 
 ### Known Issues
 
