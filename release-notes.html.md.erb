@@ -12,16 +12,16 @@ owner: London Services Enablement
 
 This release fixes the following issues:
 
-* Fixed a regression in the `register-broker` errand that was preventing registration because of missing plans.
+* A regression in the `register-broker` errand that prevented registration because of missing plans.
   This regression impacted deployments that use Pivotal Application Service (PAS).
   Enterprise Pivotal Container Service (Enterprise PKS) deployments were not affected by this issue.
-* Changed the `deregister-broker` errand so that the errand succeeds even if the broker does not exist.
-  This fix allows the errand to behave in a way that is consistent with other broker errands.
-* Changed the `delete-all-service-instances` and `delete-all-service-instances-and-deregister-broker` errands.
-  These errands no longer fail if service instance is already in the process of being deleted. The errand will
-  skip the instance and continue to issue delete commands for the remaining instances.
-* Fixed a regression in the broker where the Broker API version information in request headers was not being validated.
-* Errors due to JSON Schema Validation during create, update and bind will now be surfaced to the platform user.
+* A `deregister-broker` errand issue that caused the errand to fail when the broker did not exist.
+  This fix causes the errand to behave like other broker errands do in this situation.
+* An issue in the `delete-all-service-instances` and `delete-all-service-instances-and-deregister-broker`
+  errands that caused them to fail when encountering a service instance that is already being deleted. The errands now skip such instances and continue to issue delete commands for the remaining instances.
+* A broker regression that caused the Broker API version information in request headers to not be validated.
+* An issue that prevented platform users seeing errors caused by JSON Schema Validation during create,
+  update, and bind errands.
 
 ### Known Issues
 
