@@ -4,6 +4,29 @@ owner: London Services Enablement
 ---
 <strong><%= modified_date %></strong>
 
+## <a id="0.29.1"></a>v0.29.1
+
+**Release Date: May 29, 2019**
+
+### Resolved Issues
+
+This release fixes the following issues:
+
+* A regression in the `register-broker` errand that prevented registration because of missing plans.
+  This regression impacted deployments that use Pivotal Application Service (PAS).
+  Enterprise Pivotal Container Service (Enterprise PKS) deployments were not affected by this issue.
+* A `deregister-broker` errand issue that caused the errand to fail when the broker did not exist.
+  This fix causes the errand to behave like other broker errands do in this situation.
+* An issue in the `delete-all-service-instances` and `delete-all-service-instances-and-deregister-broker`
+  errands that caused them to fail when encountering a service instance that is already being deleted. The errands now skip such instances and continue to issue delete commands for the remaining instances.
+* A broker regression that caused the Broker API version information in request headers to not be validated.
+* An issue that prevented platform users seeing errors caused by JSON Schema Validation during create,
+  update, and bind errands.
+
+### Known Issues
+
+There are no known issues for this release.
+
 ## <a id="0.29.0"></a>v0.29.0
 
 **Release Date: May 22, 2019**
@@ -42,7 +65,7 @@ This release has the following issue:
 
 <ul>
     <li>
-The register-broker errand fails with the following error: 
+The register-broker errand fails with the following error:
 
     <code>[register-broker] 2019/05/22 11:57:55.699337 failed to execute register-broker: planID "my-plan" not found while updating plan access</code><br><br>
 
