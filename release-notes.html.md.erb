@@ -4,24 +4,21 @@ owner: London Services Enablement
 ---
 <strong><%= modified_date %></strong>
 
-## <a id="0.29.1"></a>v0.29.1
+## <a id="0.30.0"></a>v0.30.0
 
-**Release Date: May XX, 2019**
+**Release Date: June XX, 2019**
 
-### Resolved Issues
+### Features
 
-This release fixes the following issues:
+New feature in this release:
 
-* A regression in the `register-broker` errand that prevented registration because of missing plans.
-  This regression impacted deployments that use Pivotal Application Service (PAS).
-  Enterprise Pivotal Container Service (Enterprise PKS) deployments were not affected by this issue.
-* A `deregister-broker` errand issue that caused the errand to fail when the broker did not exist.
-  This fix causes the errand to behave like other broker errands do in this situation.
-* An issue in the `delete-all-service-instances` and `delete-all-service-instances-and-deregister-broker`
-  errands that caused them to fail when encountering a service instance that is already being deleted. The errands now skip such instances and continue to issue delete commands for the remaining instances.
-* A broker regression that caused the Broker API version information in request headers to not be validated.
-* An issue that prevented platform users seeing errors caused by JSON Schema Validation during create,
-  update, and bind errands.
+* Previously, the broker binary adopted [Bosh Process Manager](https://bosh.io/docs/bpm/bpm/) (BPM) for better job isolation and security. This release introduces BPM for all of the broker errands. 
+
+<p class="note breaking"><strong>Breaking Change:</strong> If broker management errands are <strong>not</strong> colocated with the broker, each errand job must now include the BPM release. See <a href="operating.html#broker-bpm">About ODB and Bosh Process Manager (BPM)</a> for more information.</p>
+
+<p class="note breaking"><strong>Breaking Change:</strong> If the broker management errands <strong>are</strong> colocated and you are upgrading from ODB version v0.27.0 or later, no changes are required. However, if your errands are colocated and you are upgrading from an ODB version earlier than v0.27.0, BPM will now need to be included as a release. See <a href="operating.html#broker-bpm">About ODB and Bosh Process Manager (BPM)</a> for more information.</p>
+
+
 
 ### Known Issues
 
