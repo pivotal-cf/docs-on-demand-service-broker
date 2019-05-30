@@ -13,15 +13,21 @@ owner: London Services Enablement
   see <a href="https://github.com/pivotal-cf/on-demand-services-sdk/commit/f88592e968ebb3a327d5689ed6772268a2c0fcfc">[BREAKING CHANGE]
   SDK now supports multi-stemcell deployment</a> in GitHub.</p>
 
-  <p class="note breaking"><strong>Breaking Change:</strong> To support BPM for the broker, the BPM release must be included in the broker job. Also, because BPM restricts access to the current job, the broker needs to signify to BPM that it needs access to the service adapter config. For this, the `broker` job's `service_adapter` configuration must specify the `mount_paths` to the service adapter. An example of this configuration can be found in the manifest snippet in [Starter Snippet for Your Broker](#broker-starter-snippet).
- </p>
+  <p class="note breaking"><strong>Breaking Change:</strong> To support bpm for the broker, the bpm release
+  must be included in the broker job.
+  Also, because bpm restricts access to the current job, the broker needs to signify to bpm that it needs
+  access to the service adapter configuration.
+  For this, the `broker` job `service_adapter` configuration must specify the `mount_paths` to the service adapter.
+  An example of this configuration can be found in the manifest snippet in 
+  [Starter Snippet for Your Broker](./operating.html#broker-starter-snippet).
+  </p>
 
 ### Features
 
 New feature in this release:
 
 - The on-demand broker (ODB) now supports service instance deployments that use different stemcells for different instance groups.
-- The broker binary adopted [Bosh Process Manager](https://bosh.io/docs/bpm/bpm/) (BPM) for better job isolation and security.
+- The broker binary adopted BOSH Process Manager (bpm) for better job isolation and security. For more information on bpm, see [bpm](https://bosh.io/docs/bpm/bpm/) in the BOSH documentation.
 
 ### Known Issues
 
