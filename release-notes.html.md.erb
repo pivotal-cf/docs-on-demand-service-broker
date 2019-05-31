@@ -7,19 +7,19 @@ owner: London Services Enablement
 ## <a id="release-notes"></a>v0.27.0
 **Release Date: April 4, 2019**
 
-<p class="note breaking"><strong>Breaking Change:</strong> To support multiple stemcells for a service deployment,
-  the On Demand Services SDK has replaced <code>ServiceDeployment.Stemcell</code> with <code>ServiceDeployment.Stemcells</code>.
-  For more information,
-  see <a href="https://github.com/pivotal-cf/on-demand-services-sdk/commit/f88592e968ebb3a327d5689ed6772268a2c0fcfc">[BREAKING CHANGE]
+<p class="note breaking"><strong>Breaking Change:</strong> The On Demand Services SDK has replaced
+  <code>ServiceDeployment.Stemcell</code> with <code>ServiceDeployment.Stemcells</code>.
+  This change is to support multiple stemcells for a service deployment.<br>
+  For more information, see
+  <a href="https://github.com/pivotal-cf/on-demand-services-sdk/commit/f88592e968ebb3a327d5689ed6772268a2c0fcfc">[BREAKING CHANGE]
   SDK now supports multi-stemcell deployment</a> in GitHub.</p>
 
-  <p class="note breaking"><strong>Breaking Change:</strong> To support bpm for the broker, the bpm release
-  must be included in the broker job.
-  Also, because bpm restricts access to the current job, the broker needs to signify to bpm that it needs
-  access to the service adapter configuration.
-  For this, the `broker` job `service_adapter` configuration must specify the `mount_paths` to the service adapter.
-  An example of this configuration can be found in the manifest snippet in 
-  [Starter Snippet for Your Broker](./operating.html#broker-starter-snippet).
+  <p class="note breaking"><strong>Breaking Change:</strong> To support bpm for the broker, you must include
+  the bpm release in the broker job.<br><br>
+  Also, because bpm restricts access to the current job, you must also make the broker signify to bpm that it
+  needs access to the service adapter configuration.<br><br>
+  To do so, specify the `mount_paths` to the service adapter within the `broker` job `service_adapter` configuration. 
+  For an example of this configuration, see [Starter Snippet for Your Broker](./operating.html#broker-starter-snippet).
   </p>
 
 ### Features
