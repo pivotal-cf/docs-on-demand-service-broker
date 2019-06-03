@@ -33,14 +33,6 @@ To add the `register-broker` errand to the manifest, do the following:
           properties:
             broker_name: BROKER-NAME
             broker_uri: BROKER-URI # optional, only required when a route has been registered
-            disable_ssl_cert_verification: TRUE|FALSE # defaults to false
-            tls: # optional
-              ca_cert: BROKER-CA-CERT
-              disable_ssl_cert_verification: TRUE|FALSE # defaults to false
-            cf:
-              api_url: CF-API-URL
-              admin_username: CF-API-ADMIN-USERNAME
-              admin_password: CF-API-ADMIN-PASSWORD
       vm_type: VM-TYPE
       stemcell: STEMCELL
       networks: [NETWORK]
