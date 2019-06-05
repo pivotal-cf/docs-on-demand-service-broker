@@ -44,7 +44,7 @@ New features and changes in this release:
 
 - The `register-broker` errand is no longer a bash script. It is now a golang binary. This enables the team to better test functionality and remove unnecessary dependencies. <%# Which team? %>
 - `maintenance_info` includes a `version` property.
-Platform operators can implement the functionality needed to expose this feature. For more information about this
+Operators can implement the functionality needed to expose this feature. For more information about this
 feature, see [(Optional) Maintenance Info](operating.html#maintenance). <%# What does the second sentence mean? %>
 - You can pass a `?force=true` query parameter to force delete a service instance. <%# For more information, see [SOMETHING]().%>
 
@@ -53,7 +53,7 @@ If a BOSH service deployment becomes unresponsive and the broker's
 standard delete request fails, passing `?force=true` as a query parameter to the
 deprovision endpoint issues a force delete for the BOSH deployment.
 In this case, the broker does its best to run any pre-delete errands configured
-for the deployment. However, if the errand fails, the broker will ignore the
+for the deployment. However, if the errand fails, the broker will<%# Avoid "will" as we prefer the present tense. %> ignore the
 failure and continue with the next operation (the next pre-delete errand or the force deletion). %>
 - Updates golang to v1.12.5.
 
@@ -72,8 +72,7 @@ The register-broker errand fails with the following error:
     This impacts deployments that use Pivotal Application Service (PAS) because it means
 that they cannot register a new broker or update an existing broker.
 
-    <p class="note"><strong>Note:</strong> Enterprise Pivotal Container Service (Enterprise PKS)
-deployments are not affected by this issue.  </p>
+    <p class="note"><strong>Note:</strong> Enterprise PKS deployments are not affected by this issue.</p>
    </li>
 </ul>
 
