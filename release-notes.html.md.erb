@@ -10,18 +10,19 @@ owner: London Services Enablement
 
 ### Resolved Issues
 
-This release fixes the following issues:
+This release has the following fixes:
 
-* A regression in the `register-broker` errand that prevented registration because of missing plans.
+* The `register-broker` errand no longer prevents registration because of missing plans.
   This regression impacted deployments that use Pivotal Application Service (PAS).
   Enterprise Pivotal Container Service (Enterprise PKS) deployments were not affected by this issue.
-* A `deregister-broker` errand issue that caused the errand to fail when the broker did not exist.
+* The `deregister-broker` errand no longer fails when the broker does not exist.
   This fix causes the errand to behave like other broker errands do in this situation.
-* An issue in the `delete-all-service-instances` and `delete-all-service-instances-and-deregister-broker`
-  errands that caused them to fail when encountering a service instance that is already being deleted. The errands now skip such instances and continue to issue delete commands for the remaining instances.
-* A broker regression that caused the Broker API version information in request headers to not be validated.
-* An issue that prevented platform users seeing errors caused by JSON Schema Validation during create,
-  update, and bind errands.
+* The `delete-all-service-instances` and `delete-all-service-instances-and-deregister-broker`
+  no longer fail when encountering a service instance that is already being deleted. The errands now skip such instances and continue to issue delete commands for the remaining instances.
+* The Broker API version information in request headers is now validated more consistently. This is due to the
+  removal of a broker regression.
+* Errors caused by JSON Schema Validation during create, update, and bind errands are now surfaced to platform
+  users.
 
 ### Known Issues
 
@@ -53,7 +54,7 @@ If a BOSH service deployment becomes unresponsive and the broker's
 standard delete request fails, passing `?force=true` as a query parameter to the
 deprovision endpoint issues a force delete for the BOSH deployment.
 In this case, the broker does its best to run any pre-delete errands configured
-for the deployment. However, if the errand fails, the broker will<%# Avoid "will" as we prefer the present tense. %> ignore the
+for the deployment. However, if the errand fails, the broker will ignore the
 failure and continue with the next operation (the next pre-delete errand or the force deletion). %>
 - Updates golang to v1.12.5.
 
@@ -61,19 +62,26 @@ failure and continue with the next operation (the next pre-delete errand or the 
 
 ### Known Issues
 
-This release has the following issue:
+This release has the following issues:
 
 <ul>
-    <li>
-The register-broker errand fails with the following error:
+    <li>The register-broker errand fails with the following error:
 
     <code>[register-broker] 2019/05/22 11:57:55.699337 failed to execute register-broker: planID "my-plan" not found while updating plan access</code><br><br>
 
-    This impacts deployments that use Pivotal Application Service (PAS) because it means
-that they cannot register a new broker or update an existing broker.
+    This impacts deployments that use Pivotal Application Service (PAS) because it means that they cannot register a new broker or update an existing broker.
 
     <p class="note"><strong>Note:</strong> Enterprise PKS deployments are not affected by this issue.</p>
    </li>
+   <li>
+     The <code>deregister-broker</code> errand fails when the broker does not exist.
+   </li>
+   <li>
+     The <code>delete-all-service-instances</code> and <code>delete-all-service-instances-and-deregister-broker</code> errands fail when encountering a service instance that is already being deleted.
+   </li>
+    <li>
+     Errors caused by JSON Schema Validation during create, update, and bind errands are not surfaced to the platform user.
+    </li>
 </ul>
 
 ## <a id="view"></a> View Release Notes for Another Version
