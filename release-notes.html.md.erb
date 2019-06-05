@@ -43,19 +43,13 @@ For an example of a plan configured as <code>org-restricted</code>, see <a href=
 
 New features and changes in this release:
 
-- The `register-broker` errand is no longer a bash script. It is now a golang binary. This enables the team to better test functionality and remove unnecessary dependencies. <%# Which team? %>
+- The `register-broker` errand is now a golang binary. The code is modular and there are extra tests. This enables the team to better test functionality and remove unnecessary dependencies. As a side effect, the on-demand broker no longer packages the CF CLI.
 - `maintenance_info` includes a `version` property.
-Operators can implement the functionality needed to expose this feature. For more information about this
-feature, see [(Optional) Maintenance Info](operating.html#maintenance). <%# What does the second sentence mean? %>
-- You can pass a `?force=true` query parameter to force delete a service instance. <%# For more information, see [SOMETHING]().%>
+CF and PSK teams can implement the functionality needed to expose this feature. For more information, see [(Optional) Maintenance Info](operating.html#maintenance).
+- You can pass a `force=true` query parameter to the deprovision endpoint to forcibly delete a service instance. This prevents platform users from needing to reach out to operators when service instances become unresponsive. Cloud Foundry users currently cannot use this feature.
+ <%# For more information, see [SOMETHING]().%>
 
-<%# The below needs to be on its own page. Also what does this mean:
-If a BOSH service deployment becomes unresponsive and the broker's
-standard delete request fails, passing `?force=true` as a query parameter to the
-deprovision endpoint issues a force delete for the BOSH deployment.
-In this case, the broker does its best to run any pre-delete errands configured
-for the deployment. However, if the errand fails, the broker will ignore the
-failure and continue with the next operation (the next pre-delete errand or the force deletion). %>
+<%# The below needs to be on its own page. %>
 - Updates golang to v1.12.5.
 
 
