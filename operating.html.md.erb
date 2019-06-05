@@ -1326,6 +1326,20 @@ using the `broker.shutdown_timeout` property in the manifest.
 The default is 60 seconds.
 For more information, see <a href="#broker-manifest">Write a Broker Manifest</a> above.
 
+
+## <a id="broker-bpm"></a>About ODB and Bosh Process Manager (BPM)
+
+Starting in ODB [version v0.27.0](https://docs.pivotal.io/svc-sdk/odb/0-27/release-notes.html), the broker binary adopted [Bosh Process Manager](https://bosh.io/docs/bpm/bpm/) (BPM) for better job isolation and security. Starting in ODB [version v0.30.0](https://docs.pivotal.io/svc-sdk/odb/0-30/release-notes.html), all broker management errands also use BPM. 
+
+For BPM to work with a broker:
+
+* The BPM release must be included in the broker job. An example of this configuration can be found at the top of the manifest snippet in [Starter Snippet for Your Broker](#broker-starter-snippet).
+* Because BPM restricts access to the current job, the broker needs to signify to BPM that it needs access to the service adapter config. For this, the `broker` job's `service_adapter` configuration must specify the `mount_paths` to the service adapter. An example of this configuration can be found at the bottom of the manifest snippet in [Starter Snippet for Your Broker](#broker-starter-snippet).
+
+For [broker management errands](management.html#management) that are not colocated with the broker:
+
+* The BPM release must be included in each errand job. 
+
 ## <a id="lifecycle-errands"></a>Service Instance Lifecycle Errands
 
  <p class="note"><strong>Note</strong>: This feature requires BOSH Director v261 or later.</p>
