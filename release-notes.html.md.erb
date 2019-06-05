@@ -43,14 +43,11 @@ For an example of a plan configured as <code>org-restricted</code>, see <a href=
 
 New features and changes in this release:
 
-- The `register-broker` errand is now a golang binary. The code is modular and there are extra tests. This enables the team to better test functionality and remove unnecessary dependencies. As a side effect, the on-demand broker no longer packages the CF CLI.
+- The `register-broker` errand is now a golang binary, and has modular code and extra tests. This enables better functionality testing and removal of unnecessary dependencies. As a side effect, the on-demand broker no longer packages the CF CLI.
 - `maintenance_info` includes a `version` property.
 CF and PSK teams can implement the functionality needed to expose this feature. For more information, see [(Optional) Maintenance Info](operating.html#maintenance).
 - You can pass a `force=true` query parameter to the deprovision endpoint to forcibly delete a service instance. This prevents platform users from needing to reach out to operators when service instances become unresponsive. Cloud Foundry users currently cannot use this feature.
- <%# For more information, see [SOMETHING]().%>
-
-<%# The below needs to be on its own page. %>
-- Updates golang to v1.12.5.
+- The broker uses golang v1.12.5.
 
 
 
