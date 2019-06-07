@@ -2,13 +2,13 @@
 # How the branches here work
 
 Use **master** for next the unreleased version, and numbered branches for the corresponding live releases.
-The latest version on **master** is routed to "/svc-sdk/odb/0-2n". This is to facilitate ease of access, push quicker to production, and reduce the need for large changes to the associated files.
+The latest version on **master** is routed to "/svc-sdk/odb/0-n". This is to facilitate ease of access, push quicker to production, and reduce the need for large changes to the associated files.
 
 For example:
 
 | Branch name     | Use for|
 |-----------------| ------|
-| master          | Unreleased version (edge - 0.30) https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-n|
+| master          | Unreleased version (edge - 0.31) https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-n|
 | v0.30.x         | live on June 7, 2019 https://docs.pivotal.io/svc-sdk/odb/0-30|
 | v0.29.x         | live on May 22, 2019 https://docs.pivotal.io/svc-sdk/odb/0-29|
 | v0.28.x         | live on April 26, 2019 https://docs.pivotal.io/svc-sdk/odb/0-28|
