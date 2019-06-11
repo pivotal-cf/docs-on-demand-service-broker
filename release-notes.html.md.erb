@@ -16,14 +16,34 @@ New feature in this release:
   This release introduces bpm for all of the broker errands.
   For more information, see [bpm](https://bosh.io/docs/bpm/bpm/) in the BOSH documentation.
 
-<p class="note breaking"><strong>Breaking Change:</strong> If broker management errands are not co-located with the broker, each errand job must now include the bpm release.
-For more information, see <a href="operating.html#broker-bpm">About ODB and BOSH Process Manager (bpm)</a>.</p>
+    <p class="note breaking"><strong>Breaking Change:</strong>
+Before you upgrade to the On-Demand Services SDK v0.30,
+see the table below for breaking changes related to the bpm.
+</p>
 
-<p class="note breaking"><strong>Breaking Change:</strong> If the broker management errands are co-located with the broker
-and you are upgrading from ODB version v0.27.0 or later, then no changes are required.
-However, if your errands are co-located with the broker and you are upgrading from an ODB version earlier than v0.27.0,
-then bpm now needs to be included as a release.
-For more information, see <a href="operating.html#broker-bpm">About ODB and BOSH Process Manager (bpm)</a>.</p>
+    <table class="nice">
+    <col width="27%">
+    <col width="27%">
+	<td><strong>Broker management errands are co-located with the broker?</strong></td>
+	<td><strong>Upgrading from ODB v0.027 or later?</strong></td>
+	<td><strong>Action to prevent breaking change on upgrade…</strong></td>
+	<tr>
+		<td>No</td>
+		<td>—</td>
+		<td>Include the bpm release in each errand job.</td>
+	</tr>
+	<tr>
+		<td>Yes</td>
+		<td>Yes</td>
+		<td>Include bpm as a release.</td>
+	</tr>
+	<tr>
+		<td>Yes</td>
+		<td>No</td>
+		<td>No action required.</td>
+	</tr>
+    </table>
+For more information, see <a href="operating.html#broker-bpm">About ODB and BOSH Process Manager (bpm).</a>
 
 ### Known Issues
 
