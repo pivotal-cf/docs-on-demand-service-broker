@@ -8,20 +8,13 @@ owner: London Services Enablement
 
 **Release Date: June 7, 2019**
 
-### Features
-
-New feature in this release:
-
-* Previously, the broker binary started using BOSH Process Manager (bpm) for better job isolation and security.
-  This release introduces bpm for all of the broker errands.
-  For more information, see [bpm](https://bosh.io/docs/bpm/bpm/) in the BOSH documentation.
-
-    <p class="note breaking"><strong>Breaking Change:</strong>
+<p class="note breaking"><strong>Breaking Change:</strong>
 Before you upgrade to the On-Demand Services SDK v0.30,
-see the table below for breaking changes related to the bpm.
+see the table below for breaking changes related to the bpm.<br>
+For more information, see <a href="operating.html#broker-bpm">About ODB and BOSH Process Manager (bpm).</a>
 </p>
 
-    <table class="nice">
+<table class="nice">
     <col width="27%">
     <col width="27%">
 	<td><strong>Broker management errands are co-located with the broker?</strong></td>
@@ -42,8 +35,15 @@ see the table below for breaking changes related to the bpm.
 		<td>No</td>
 		<td>No action required.</td>
 	</tr>
-    </table>
-For more information, see <a href="operating.html#broker-bpm">About ODB and BOSH Process Manager (bpm).</a>
+</table>
+
+### Features
+
+New feature in this release:
+
+* Previously, the broker binary started using BOSH Process Manager (bpm) for better job isolation and security.
+  This release introduces bpm for all of the broker errands.
+  For more information, see [bpm](https://bosh.io/docs/bpm/bpm/) in the BOSH documentation.
 
 ### Known Issues
 
