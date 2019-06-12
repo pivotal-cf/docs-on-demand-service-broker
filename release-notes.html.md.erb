@@ -20,20 +20,25 @@ For more information, see <a href="operating.html#broker-bpm">About ODB and BOSH
 	<td><strong>Broker management errands are co-located with the broker?</strong></td>
 	<td><strong>Upgrading from ODB v0.027 or later?</strong></td>
 	<td><strong>Action to prevent breaking change on upgrade…</strong></td>
-	<tr>
+  <tr>
 		<td>No</td>
-		<td>—</td>
-		<td>Include the bpm release in each errand job.</td>
+		<td>No</td>
+		<td>Include the bpm release in the broker job and each errand job</td>
+	</tr>
+  <tr>
+		<td>No</td>
+		<td>Yes</td>
+		<td>Include the bpm release in each errand job</td>
+	</tr>
+  <tr>
+		<td>Yes</td>
+		<td>No</td>
+		<td>Include the bpm release in the broker job</td>
 	</tr>
 	<tr>
 		<td>Yes</td>
 		<td>Yes</td>
-		<td>Include bpm as a release.</td>
-	</tr>
-	<tr>
-		<td>Yes</td>
-		<td>No</td>
-		<td>No action required.</td>
+		<td>No action required</td>
 	</tr>
 </table>
 
