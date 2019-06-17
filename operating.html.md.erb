@@ -654,9 +654,11 @@ service_catalog:
     # the maximum number of service instances across all plans:
     service_instance_limit: INSTANCE-LIMIT
     # optional - resource usage limits, determined by the 'cost' of each service instance plan:
-    resource_limits:
-      ips: RESOURCE-LIMIT
-      memory: RESOURCE-LIMIT
+    resources:
+      ips:
+        limit: RESOURCE-LIMIT
+      memory:
+        limit: RESOURCE-LIMIT
   # optional - applied to every plan.
   maintenance_info:
     # keys under public are visible in service catalog
@@ -691,16 +693,18 @@ service_catalog:
           - amount:
               CURRENCY-CODE-STRING: CURRENCY-AMOUNT-FLOAT
             unit: FREQUENCY-OF-COST
-      # optional – the 'cost' of each instance in terms of resource quotas:
-      resource_costs:
-        memory: AMOUNT-OF-RESOURCE-IN-THIS-PLAN
       # optional:
       quotas:
         # the maximum number of service instances for this plan:
         service_instance_limit: INSTANCE-LIMIT
         # optional - resource usage limits for this plan:
-        resource_limits:
-          memory: RESOURCE-LIMIT
+        resources:
+          # Arbitrary hash of resource types:
+          memory:
+            # optional - overwrites global limit for this resource type
+            limit: RESOURCE-LIMIT
+            # optional – the 'cost' of each instance in terms of resource type:
+            cost: RESOURCE-COST
       # resource mapping for the instance groups defined by the service author:
       instance_groups:
         - name: SERVICE-AUTHOR-PROVIDED-INSTANCE-GROUP-NAME
@@ -1061,23 +1065,30 @@ For a more detailed manifest snippet, see the [Starter Snippet for the Service C
 
 ## <a id="service-resource-quotas"></a>(Optional) Set Resource Quotas
 
-Set resource quotas to limit resources, such as memory or disk, more effectively
-when combining plans that consume different amounts of resources.
-You can set these quotas for service resources:
+Sometimes, only relying on the number of service instances when defining quotas is not enough.
+You may have a limitation not only on the number of instances but also on phisycal resources like
+memory, persistent disk size or ip addresses in the network. To determine how much of each resource a
+particular plan can use, you may want to define resource quotas.
 
-- **Global resource quotas** -- limit how much of a certain resource is consumed
-across all plans. ODB allows new instances to be created until their total
-resources reach the global quota.
-- **Plan resource quotas** -- limit how much of a certain resource is consumed by a
-specific plan.
+A resource quota is defined by an arbitrary resource type with two associated keys: limit and cost.
 
-<p class="note"><strong>Note</strong>: These limits do not include orphaned deployments.
-  See <a href="./troubleshooting-bosh.html#listing-orphans">List Orphan Deployments</a>
-   and <a href="./management.html#orphan-deployments">Delete Orphaned Deployments</a>
- for more information.</p>
+You can set resource quotas in two levels:
 
-When creating a service instance, ODB checks the global resource limit.
-If this limit has not been reached, ODB checks the plan resource limit.
+- **Global resource quota** -- limit how much of a certain resource is
+available to be consumed across all plans. ODB allows new instances to be
+created until the sum of resources consumed reach the global quota. Resource
+costs cannot be defined at the global level
+- **Plan resource quota** -- limit how much of a certain resource is
+avaialable and/or consumed by a specific plan.
+
+Resource quotas are enforced first at the global level and then at plan level,
+by checking the limits for each resource type.
+
+<p class="note"><strong>Note</strong>: When calculating the amount of resources used,
+ODB will not take orphan deployments into consideration.  See <a
+href="./troubleshooting-bosh.html#listing-orphans">List Orphan Deployments</a>
+and <a href="./management.html#orphan-deployments">Delete Orphaned
+Deployments</a> for more information.</p>
 
 ### Procedure for Setting Service Resource Quotas
 
@@ -1088,14 +1099,17 @@ following.
 
     ```
     quotas:
-      resource_limits:
-        RESOURCE-NAME: RESOURCE-LIMIT
+      resources:
+        RESOURCE-NAME:
+          limit: RESOURCE-LIMIT
+          cost: RESOURCE-COST # if at plan level
     ```
   Where:<br>
   <ul>
     <li><code>RESOURCE-NAME</code> is a string defining the resource you want to limit.</li>
     <li><code>RESOURCE-LIMIT</code> is a value for the maximum allowed for each resource.</li>
-  </ul>
+    <li><code>RESOURCE-COST</code> is a value of how much a service instance of
+    the plan will consume for that resource.</li> </ul>
 For example:
     - **For global quotas** add `global_quotas` in the service catalog, as in
     this example:
@@ -1104,13 +1118,12 @@ For example:
         service_catalog:
           ...
           global_quotas:
-            resource_limits:
-              ips: 50
-              memory: 150
+            resources:
+              ips: { limit: 50 }
+              memory: { limit: 150 }
         ```
         <br>
-    - **For plan quotas** add `quotas` in the plans you want to limit, as in
-    this example:
+    - **For plan quotas** add `quotas` in the plans you want to enforce quotas. For example:
 
         ```yaml
         service_catalog:
@@ -1118,36 +1131,13 @@ For example:
           plans:
             - name: my-plan
               quotas:
-                resource_limits:
-                  memory: 25
+                resources:
+                  ips:
+                    cost: 2 # each service will consume 2, up to 50 from the global resource limit
+                  memory:
+                    limit: 25 # maximum limit of "memory" to be consumed by this plan
+                    cost: 5 # each service instance will consume 5, up to 25 of plan resource limit
         ```
-
-1. Add `resource_costs` in each plan to define the amount of resources your plan
-allocates to each service instance. The key is string-matched against keys in
-the global- and plan-level resource quotas. See the example below.
-
-    ```yaml
-    resource_costs:
-      RESOURCE-NAME: AMOUNT-OF-RESOURCE
-    ```
-    Where:<br>
-    - `RESOURCE-NAME` is a string defining the resource you want to limit.
-    - `AMOUNT-OF-RESOURCE` is the amount of the resource allocated to each
-    service instance of this plan.
-
-
-
-    For example:
-
-    ```yaml
-    service_catalog:
-      ...
-      plans:
-        - name: my-plan
-          resource_costs:
-            memory: 5
-    ```
-
 
 For a more detailed manifest snippet, see the [Starter Snippet for the Service Catalog and Plans](#starter-snippet) above.
 
