@@ -11,7 +11,8 @@ For more information about service author responsibilities, see
 ## <a id="about"></a> Overview
 
 A service adapter is an executable invoked by the on-demand broker (ODB) that
-fulfills service specific functionality.
+fulfills service-specific functionality such as creating binding credentials and
+BOSH manifests for service instances.
 
 To create a service adapter, do the following:
 
@@ -108,15 +109,24 @@ type CommandLineHandler struct {
 }
 ```
 
-#### ManifestGenerator Interface
+#### <a id="manifestgenerator"></a>ManifestGenerator
 
-Generate a BOSH manifest for your service instance deployment and output to stdout
-a JSON document containing the manifest as YAML, BOSH secrets, and BOSH
-Configs, given information about the:
+The `ManifestGenerator` interface is required for all service adapters. <%# Would it make sense to say "This includes the generate-manifest subcommand" or "This includes the GenerateManifest method" %>
+This must generate a BOSH manifest for your service instance deployment, then output
+to stdout a JSON document containing the following:
+
+- The BOSH manifest as YAML
+- BOSH secrets
+- BOSH Configs
+
+The service adapter must generate the above items given information about the:
 
 - BOSH Director (stemcells, release names)
 - service instance (ID, request parameters, plan properties, IaaS resources)
 - previous manifest, if this is an upgrade deployment
+
+For more information about the input parameters and expected output, see
+[generate-manifest](./adapter-reference.html#generate-manifest).
 
 <p class="note"><strong>Note</strong>:
   ODB requires <code>generate-manifest</code> to be idempotent.
@@ -124,9 +134,6 @@ Configs, given information about the:
   happens during a deployment update&mdash;the command should always output
   the same BOSH manifest.
 </p>
-
-For more information about the input parameters and expected output, see
-[generate-manifest](./adapter-reference.html#generate-manifest).
 
 The code snippet below shows the interface signature:
 
@@ -152,19 +159,19 @@ type GenerateManifestOutput struct {
 }
 ```
 
-#### Binder Interface
+#### <a id="binder"></a>Binder
 
-A `Binder` is required for most service adapters. This includes:
+The `Binder` interface is required for most service adapters. This includes:
 
 - `create-binding`:
-  Create credentials for the service instance, printing them to stdout as JSON.
-  These should be unique, if possible.
+  This creates credentials for the service instance and print them to stdout as JSON.
+  These should be unique, if possible.<br>
   For more information about the input parameters and expected output, see
   [create-binding](./adapter-reference.html#create-binding).
 
 - `delete-binding`:
-  Invalidate the created credentials, if possible.
-  Some services (e.g. Redis) are single-user, and this endpoint does nothing.
+  This invalidates the created credentials, if possible.
+  For single-user services, for example Redis, this endpoint does nothing.<br>
   For more information about the input parameters and expected output, see
   [delete-binding](./adapter-reference.html#delete-binding).
 
@@ -195,9 +202,10 @@ type DeleteBindingParams struct {
 }
 ```
 
-#### (Optional) DashboardUrlGenerator Interface
+#### <a id="dashboardurlgenerator"></a>(Optional) DashboardUrlGenerator
 
-Generate an optional URL of a web-based management UI for the service instance.
+The `DashboardUrlGenerator` interface is optional.
+This generates an optional URL of a web-based management UI for the service instance.
 For more information about the input parameters and expected output, see
 [dashboard-url](./adapter-reference.html#dashboard-url).
 
@@ -215,9 +223,10 @@ type DashboardUrlParams struct {
 }
 ```
 
-#### (Optional) SchemaGenerator Interface
+#### <a id="schemagenerator"></a>(Optional) SchemaGenerator
 
-Generate a JSON schema to validate service-specific configuration parameters.
+The `SchemaGenerator` interface is optional.
+This generates a JSON schema to validate service-specific configuration parameters.
 For more information about the input parameters and expected output, see
 [generate-plan-schemas](./adapter-reference.html#generate-plan-schemas).
 
@@ -235,8 +244,13 @@ type GeneratePlanSchemaParams struct {
 
 ### <a id="helper_function"></a>Helpers
 
+The golang SDK provides helper functions.
+
+#### GenerateInstanceGroupsWithNoProperties
+
 The helper function `GenerateInstanceGroupsWithNoProperties` can generate the
 instance groups for the BOSH manifest from the arguments passed to the adapter.
+
 One of the inputs for this function is `deploymentInstanceGroupsToJobs`,
 where instance groups are mapped to jobs for the deployment.
 Your service adapter must provide the following:
@@ -245,37 +259,39 @@ Your service adapter must provide the following:
 - Job level properties for the generated instance groups. The helper
 function does not address these properties.
 
-For an example implementation, see the job mapping in the [Kafka example
-adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go#L15-L21) on GitHub.
+For an example job mapping, see the
+[kafka-example-service-adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go#L15-L21) on GitHub.
 
-The SDK provides the methods `ArbitraryContext` and `Platform`. These are
-used to extract the `context` property from the request parameters and the `platform` property from within the
-`context`.
 
-The context in the response is a feature of Open Service Broker API (OSBAPI) v2.13
-specifications and is used to pass through information about the environment in
-which the platform or app is executing. See the [OSBAPI v2.13 specification](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md) on GitHub for more information.
+#### ArbitraryContext and Platform
+
+The SDK provides the methods `ArbitraryContext` and `Platform`.
+These are used to extract the `context` property from the request parameters and
+the `platform` property from within `context`.
+
+The `context` property is a feature of Open Service Broker API (OSBAPI) v2.13
+specification.
+It is used to pass through information about the environment Authentication
+the platform or app is in.
+For more information about the `context` property, see the [OSBAPI v2.13 specification](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md) on GitHub.
 If the platform does not provide a `context`, the SDK returns empty values.
 
 ### <a id="error_handling"></a>Error Handling
 
-If a subcommand fails, the adapter must return a non-zero exit status and,
-optionally, print to stdout or stderr.
-When a subcommand exits with an unrecognized exit code anything printed to stdout
-is returned to the CF CLI user.
+
+If a subcommand fails, the adapter must return a non-zero exit status.
+Any error returned by an interface function is printed to stdout, which is returned
+to the cf CLI user.
+The adapter code is responsible for performing any error logging to stderr that
+you think is relevant for the operator logs.
 
 Both the stdout and stderr streams are printed in the broker log for the operator.
-For that reason, Pivotal recommends not printing the manifest or other sensitive
-details to stdout or stderr, because ODB does no validation on this output.
+For that reason, Pivotal recommends that the service adapter does not print the
+manifest or other sensitive details to stdout or stderr.
+ODB does no validation on this output.
 
-Any error returned by the interface functions is considered to be for the Cloud
-Foundry CLI user and is printed to stdout.
-
-The adapter code is responsible for performing any error logging to stderr that
-the authors think is relevant for the operator logs.
-
-The SDK provides three specific errors for the `CreateBinding` function, which allow
-the adapter to exit with the appropriate code:
+The SDK provides three specific errors for the `CreateBinding` function, which
+allow the adapter to exit with the appropriate code:
 
 ```go
 serviceadapter.NewBindingAlreadyExistsError()
@@ -286,6 +302,7 @@ serviceadapter.NewAppGuidNotProvidedError()
 For more complete code examples, see the
 [Kafka example service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter)
 on GitHub and the [Redis example service adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter) on GitHub.
+
 
 ### <a id="bosh_features"></a>BOSH Features
 
@@ -309,23 +326,43 @@ For more information about BOSH Features, see [the BOSH documentation](https://b
 
 ## <a id="storing-secrets"></a>(Optional) Store Secrets on BOSH CredHub
 
-The service adapter can generate secrets and use ODB as a proxy to the BOSH CredHub
-Config server, instead of writing these secrets in plaintext in the manifest.
-To do this, use ODB-managed secrets.
+To avoid writing secrets in plaintext in the manifest, you can use ODB-managed
+secrets to store secrets on BOSH CredHub.
+When using ODB-managed secrets, the service adapter generates secrets and uses
+ODB as a proxy to the BOSH CredHub Config server.
+
+For ODB-managed secrets, ODB does the following during provision:
+
+1. Generates a BOSH CredHub name for each secret in the `secrets` map in the format
+`/odb/SERVICE-OFFERING-ID/SERVICE-INSTANCE-ID/SECRET-NAME`.
+
+1. Saves the value of the secret in the BOSH CredHub using the generated name.
+
+1. Replaces all occurrences of `((odb_secret:SECRET-NAME))` with the generated
+BOSH CredHub name.
+
+1. Deploys the updated manifest.
 
 The following sections provide information about how to use ODB-managed secrets to store,
 persist, and modify secrets in BOSH CredHub:
 
-- [About ODB-managed Secrets](#odb-managed-secrets)
+- [Use ODB-managed Secrets](#odb-managed-secrets)
 - [Migrate from Plaintext Secrets to ODB-managed Secrets](#migrating-to-stored-secrets)
 - [Persist Credentials Across Updates](#odb-persisting-creds)
 - [Modify ODB-managed Secrets](#modifying-secrets)
 
 
-### <a id="odb-managed-secrets"></a> About ODB-Managed Secrets
+### <a id="odb-managed-secrets"></a> Use ODB-Managed Secrets
 
 To use ODB-managed secrets, the service adapter must do the following for the
-`generate-manifest` output:
+output of `generate-manifest`:
+
+<p class="note"><strong>Note: </strong>
+  If you have a previous manifest containing plaintext secrets that you want to
+  convert to ODB-managed secrets, see
+  <a href="migrating-to-stored-secrets">Migrate from Plaintext Secrets to ODB-managed Secrets</a>
+   below.
+</p>
 
 1. Generate a manifest that uses the ODB-managed secrets placeholder
 `((odb_secret:SECRET-NAME))` for the secret that you want to store in BOSH
@@ -343,20 +380,6 @@ For example:
   }
 }
 ```
-
-<br>
-When you use ODB-managed secrets, ODB does the following during provision:
-
-1. Generates a BOSH CredHub name for each secret in the `secrets` map in the format
-`/odb/SERVICE-OFFERING-ID/SERVICE-INSTANCE-ID/SECRET-NAME`.
-
-1. Saves the value of the secret in the BOSH CredHub using the generated name.
-
-1. Replaces all occurrences of `((odb_secret:SECRET-NAME))` with the generated
-BOSH CredHub name.
-
-1. Deploys the updated manifest.
-
 
 ### <a id="migrating-to-stored-secrets"></a>Migrate from Plaintext Secrets to ODB-managed Secrets
 
@@ -379,7 +402,7 @@ secrets placeholder `((odb_secret:SECRET-NAME))` in the new manifest.
 
 * Returns the value of the secrets in the `secrets` map.
 For more information about the `secrets` map, see
-[About ODB-managed Secrets](#odb-managed-secrets) above.
+[Use ODB-managed Secrets](#odb-managed-secrets) above.
 
   * Each placeholder in the manifest a corresponding entry in the `secrets` map.
   * Each key in the `secrets` map at least one corresponding placeholder in the manifest.
@@ -525,9 +548,11 @@ new versions of secrets.
 Ensure binding credentials for a service instance share a namespace and
 are unique, if possible.
 
-For MySQL, two bindings could include different username/password pairs, but
-share the same MySQL database tables and data. The first step is to determine
-which credentials are best to supply in the context of your service.
+For example, for a MySQL service, two bindings could include different username/password pairs, but
+share the same MySQL database tables and data.
+
+The first step is to determine which credentials are best to supply in the
+context of your service.
 Pivotal recommends that users are identified statelessly from the binding ID.
 The simplest way to do this is to name the user after the binding ID.
 
