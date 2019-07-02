@@ -12,11 +12,14 @@ owner: London Services Enablement
 
 New feature in this release:
 
-*
+**Indicator Protocol**
 
-*
+* The broker will now publish the number of service instances created per service and per plan to the PCF Healthwatch service. For that, we added [indicators](https://github.com/pivotal/monitoring-indicator-protocol) to the [on demand broker release](https://github.com/pivotal-cf/on-demand-service-broker-release/blob/master/jobs/broker/templates/indicators.yml.erb). For more information about Healthwatch, see [Pivotal Cloud Foundry Healthwatch](https://docs.pivotal.io/pcf-healthwatch/index.html).
 
-*
+**Resource quotas**
+
+* Resource quotas have a new format. See [Setting Resource Quotas](operating.html#service-resource-quotas) for instructions. The previous format is still supported and will be removed in a future release.
+* Global and Plan resource quotas metrics are now emitted by the broker. For details on these metrics, see [Monitoring Your On-Demand Broker](monitor.html)
 
 ### Known Issues
 
