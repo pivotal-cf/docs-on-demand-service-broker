@@ -1,0 +1,156 @@
+---
+title: Monitoring Your On-Demand Broker
+owner: London Services Enablement
+---
+
+This topic explains on-demand broker metrics. See [Logging and Metrics](http://docs.pivotal.io/pivotalcf/loggregator/index.html) for general information about logging and metrics in PCF.
+
+## <a id="metrics"></a>What Are Metrics
+
+Metrics are regularly generated log messages that report measured component states. Metrics are long, single lines of text that contain the following:
+
+```
+  origin:"<BROKER_DEPLOYMENT_NAME>"
+  eventType:ValueMetric
+  timestamp:1560950924586744417
+  deployment:"<BROKER_DEPLOYMENT_NAME>"
+  job:"broker"
+  index:"0"
+  ip:"<SOME_IP>"
+  tags:<
+    key:"source_id"
+    value:"broker"
+  >
+  valueMetric:<
+    name:"/on-demand-broker/<BROKER_DEPLOYMENT_NAME>/total_instances"
+    value:10
+    unit:"count"
+  >
+```
+## <a id="odb-metrics"></a>On-Demand Broker Metrics
+
+The following sections describe the metrics used for monitoring the On-Demand Broker.
+
+### <a id="global-service-instance-count-metrics"></a>Global Service Instance Count
+
+<table>
+   <tr><th colspan="2" style="text-align: center;"><br> /on-demand-broker/&lt;SERVICE_NAME&gt;/total_instances<br><br></th></tr>
+   <tr>
+      <th width="25%">Description</th>
+      <td>
+        <strong>Use</strong>: This is the global total number of instances created by the broker.
+        <br><br>
+        <strong>Origin</strong>: Doppler/Firehose<br>
+        <strong>Type</strong>: count<br>
+      </td>
+   </tr>
+   <tr>
+      <th>Recommended alert thresholds</th>
+      <td>
+        If <a target="_blank" href="operating.html#service-instance-quotas">service instance quotas</a> are configured <br><br>
+        <strong>Warning</strong>: &gt; quota * 0.8 <br>
+        <strong>Critical</strong>: &gt; quota * 0.95
+      </td>
+   </tr>
+   <tr>
+      <th>Recommended response</th>
+      <td>
+        Delete any unused service instances, or increase the global service instance limit.
+      </td>
+   </tr>
+</table>
+
+### <a id="plan-service-instance-count-metrics"></a>Service Instance Count Per Plan
+
+<table>
+   <tr><th colspan="2" style="text-align: center;"><br> /on-demand-broker/&lt;SERVICE_NAME&gt;/&lt;PLAN_NAME&gt;/total_instances<br><br></th></tr>
+   <tr>
+      <th width="25%">Description</th>
+      <td>
+        <strong>Use</strong>: This is the total number of instances created by the broker for a given plan.
+        <br><br>
+        <strong>Origin</strong>: Doppler/Firehose<br>
+        <strong>Type</strong>: count<br>
+      </td>
+   </tr>
+   <tr>
+      <th>Recommended alert thresholds</th>
+      <td>
+        If <a target="_blank" href="operating.html#service-instance-quotas">service instance quotas</a> are configured<br><br>
+        <strong>Warning</strong>: &gt; quota * 0.8 <br>
+        <strong>Critical</strong>: &gt; quota * 0.95
+      </td>
+   </tr>
+   <tr>
+      <th>Recommended response</th>
+      <td>
+        Delete any unused service instances, select a different plan, or increase the service instance limit for the given plan.
+      </td>
+   </tr>
+</table>
+
+### <a id="global-resource-quota-metrics"></a>Global Resource Quota
+
+<table>
+   <tr><th colspan="2" style="text-align: center;">
+     <br> /on-demand-broker/&lt;SERVICE_NAME&gt;/&lt;RESOURCE_TYPE&gt;/used<br>
+     <br> /on-demand-broker/&lt;SERVICE_NAME&gt;/&lt;RESOURCE_TYPE&gt;/remaining<br><br>
+   </th></tr>
+   <tr>
+      <th width="25%">Description</th>
+      <td>
+        <strong>Use</strong>: These two metrics combine to give a picture of global resource quota usage for instances created by the broker.
+        <br><br>
+        <strong>Origin</strong>: Doppler/Firehose<br>
+        <strong>Type</strong>: count<br>
+      </td>
+   </tr>
+   <tr>
+      <th>Recommended alert thresholds</th>
+      <td>
+        If <a target="_blank" href="operating.html#service-resource-quotas">service instance resource quotas</a> are configured <br><br>
+        <strong>Warning</strong>: &gt; quota * 0.8 <br>
+        <strong>Critical</strong>: &gt; quota * 0.95
+      </td>
+   </tr>
+   <tr>
+      <th>Recommended response</th>
+      <td>
+        Delete any unused service instances, or increase the global quota for this resource.
+      </td>
+   </tr>
+</table>
+
+### <a id="plan-service-instance-count-metrics"></a>Resource Quota Per Plan
+
+<table>
+   <tr>
+     <th colspan="2" style="text-align: center;">
+       <br> /on-demand-broker/&lt;SERVICE_NAME&gt;/&lt;PLAN_NAME&gt;/&lt;RESOURCE_TYPE&gt;/used<br>
+       <br> /on-demand-broker/&lt;SERVICE_NAME&gt;/&lt;PLAN_NAME&gt;/&lt;RESOURCE_TYPE&gt;/remaining<br><br>
+     </th>
+  </tr>
+   <tr>
+      <th width="25%">Description</th>
+      <td>
+        <strong>Use</strong>: These two metrics combine to give a picture of resource quota usage for instances created by the broker for a given plan.
+        <br><br>
+        <strong>Origin</strong>: Doppler/Firehose<br>
+        <strong>Type</strong>: count<br>
+      </td>
+   </tr>
+   <tr>
+      <th>Recommended alert thresholds</th>
+      <td>
+        If <a target="_blank" href="operating.html#service-resource-quotas">service instance resource quotas</a> are configured <br><br>
+        <strong>Warning</strong>: &gt; quota * 0.8 <br>
+        <strong>Critical</strong>: &gt; quota * 0.95
+      </td>
+   </tr>
+   <tr>
+      <th>Recommended response</th>
+      <td>
+        Delete any unused service instances, select a different plan, or increase the quota for this resource for the given plan.
+      </td>
+   </tr>
+</table>
