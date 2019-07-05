@@ -1017,7 +1017,7 @@ This creates a URI for your broker.
 ## <a id="service-instance-quotas"></a>(Optional) Set Service Instance Quotas
 
 Set service instance quotas to limit the number of service instances ODB can create.
-You can set these quotas for service instances:
+You can set two types quotas for service instances:
 
 - **Global quotas** -- limit the number of service instances across all plans
 
@@ -1035,53 +1035,55 @@ If this limit has not been reached, ODB checks the plan service instance limit.
 
 To set service instance quotas, do the following in the manifest:
 
-1. Add a quotas section for the type of quota you want to use.<br><br>
-  - **For global quotas** add `global_quotas` in the service catalog, as in the
-  example below:
+- **If you want to set global quotas:** add a `global_quotas` section to the service
+catalog:
 
-        ```yaml
-        service_catalog:
+      ```yaml
+      service_catalog:
+        ...
+        global_quotas:
+          service_instance_limit: INSTANCE-LIMIT
           ...
-          global_quotas:
-            service_instance_limit: INSTANCE-LIMIT
-            ...
-        ```
-        <br>
-  - **For plan quotas** add `quotas` to the plans you want to limit, as in the
-  example below:
+      ```
+      <br>
+- **If you want to set plan quotas:** add a `quotas` section to the plans that
+you want to limit:
 
-        ```yaml
-        service_catalog:
-          ...
-          plans:
-            - name: CF-MARKETPLACE-PLAN-NAME
-              quotas:
-                service_instance_limit: INSTANCE-LIMIT
-        ```
-        <br>
-  Where `INSTANCE-LIMIT` is the maximum number of service instances allowed.
+      ```yaml
+      service_catalog:
+        ...
+        plans:
+          - name: CF-MARKETPLACE-PLAN-NAME
+            quotas:
+              service_instance_limit: INSTANCE-LIMIT
+      ```
+
+Where `INSTANCE-LIMIT` is the maximum number of service instances allowed.
 
 For a more detailed manifest snippet, see the [Starter Snippet for the Service Catalog and Plans](#starter-snippet) above.
 
 ## <a id="service-resource-quotas"></a>(Optional) Set Resource Quotas
 
-Sometimes, only relying on the number of service instances when defining quotas is not enough.
-You may have a limitation not only on the number of instances but also on physical resources like
-memory, persistent disk size or ip addresses in the network. To determine how much of each resource a
-particular plan can use, you may want to define resource quotas.
+You can set resource quotas to limit the amount of a particular resource that
+service instances can use.
+If you want to limit physical resources, such as memory, persistent disk size,
+or the number of IP addresses in the network, using resource quotas gives you more control
+than service instance quotas.
 
-A resource quota is defined by an arbitrary resource type with two associated keys: limit and cost.
+A resource quota is defined by an arbitrary resource type with two
+associated keys, limit and cost.
 
-You can set resource quotas in two levels:
+You can set two types of resource quotas:
 
-- **Global resource quota** -- limit how much of a certain resource is
+- **Global resource quotas** -- limit how much of a certain resource is
 available to be consumed across all plans. ODB allows new instances to be
 created until the sum of resources consumed reach the global quota. Resource
-costs cannot be defined at the global level
-- **Plan resource quota** -- limit how much of a certain resource is
-avaialable and/or consumed by a specific plan.
+costs cannot be defined at the global level.
 
-Resource quotas are enforced first at the global level and then at plan level,
+- **Plan resource quotas** -- limit how much of a certain resource is
+available and/or consumed by a specific plan.
+
+Resource quotas are enforced, first at the global level and then at plan level,
 by checking the limits for each resource type.
 
 <p class="note"><strong>Note</strong>: When calculating the amount of resources used,
@@ -1090,54 +1092,66 @@ href="./troubleshooting-bosh.html#listing-orphans">List Orphan Deployments</a>
 and <a href="./management.html#orphan-deployments">Delete Orphaned
 Deployments</a> for more information.</p>
 
-### Procedure for Setting Service Resource Quotas
+### Procedure for Setting Resource Quotas
 
 To set resource quotas, do the following in the manifest:
 
-1. Add a quotas section for the type of quota you want to use by entering the
-following.
+- **If you want to set global quotas:** add a `global_quotas` section to the service
+catalog:
+
+    ```
+    global_quotas:
+      resources:
+        RESOURCE-NAME: { limit: RESOURCE-LIMIT }
+    ```
+  Where:<br>
+  <ul>
+    <li><code>RESOURCE-NAME</code> is a string defining the resource you want to limit.</li>
+    <li><code>RESOURCE-LIMIT</code> is a value for the maximum allowed for each resource.</li>
+  </ul>
+  For example:
+
+    ```yaml
+    service_catalog:
+      ...
+      global_quotas:
+        resources:
+          ips: { limit: 50 }
+          memory: { limit: 150 }
+    ```
+    <br>
+
+- **If you want to set plan quotas:** add a `quotas` section to the plans that you want to
+limit resources in:
 
     ```
     quotas:
       resources:
         RESOURCE-NAME:
           limit: RESOURCE-LIMIT
-          cost: RESOURCE-COST # if at plan level
+          cost: RESOURCE-COST
     ```
   Where:<br>
   <ul>
     <li><code>RESOURCE-NAME</code> is a string defining the resource you want to limit.</li>
     <li><code>RESOURCE-LIMIT</code> is a value for the maximum allowed for each resource.</li>
-    <li><code>RESOURCE-COST</code> is a value of how much a service instance of
-    the plan will consume for that resource.</li> </ul>
-For example:
-    - **For global quotas** add `global_quotas` in the service catalog, as in
-    this example:
+    <li><code>RESOURCE-COST</code> is a value of how much a service instance of the plan will consume for that resource.</li>
+  </ul>
+  For example:
 
-        ```yaml
-        service_catalog:
-          ...
-          global_quotas:
+    ```yaml
+    service_catalog:
+      ...
+      plans:
+        - name: my-plan
+          quotas:
             resources:
-              ips: { limit: 50 }
-              memory: { limit: 150 }
-        ```
-        <br>
-    - **For plan quotas** add `quotas` in the plans you want to enforce quotas. For example:
-
-        ```yaml
-        service_catalog:
-          ...
-          plans:
-            - name: my-plan
-              quotas:
-                resources:
-                  ips:
-                    cost: 2 # each service will consume 2, up to 50 from the global resource limit
-                  memory:
-                    limit: 25 # maximum limit of "memory" to be consumed by this plan
-                    cost: 5 # each service instance will consume 5, up to 25 of plan resource limit
-        ```
+              ips:
+                cost: 2 # each service instance will consume 2, up to 50 from the global resource limit
+              memory:
+                limit: 25 # maximum limit of "memory" to be consumed by this plan
+                cost: 5 # each service instance will consume 5, up to 25 of plan resource limit
+    ```
 
 For a more detailed manifest snippet, see the [Starter Snippet for the Service Catalog and Plans](#starter-snippet) above.
 
@@ -1319,7 +1333,7 @@ For more information, see <a href="#broker-manifest">Write a Broker Manifest</a>
 
 ## <a id="broker-bpm"></a>About ODB and Bosh Process Manager (BPM)
 
-Starting in ODB [version v0.27.0](https://docs.pivotal.io/svc-sdk/odb/0-27/release-notes.html), the broker binary adopted [Bosh Process Manager](https://bosh.io/docs/bpm/bpm/) (BPM) for better job isolation and security. Starting in ODB [version v0.30.0](https://docs.pivotal.io/svc-sdk/odb/0-30/release-notes.html), all broker management errands also use BPM. 
+Starting in ODB [version v0.27.0](https://docs.pivotal.io/svc-sdk/odb/0-27/release-notes.html), the broker binary adopted [Bosh Process Manager](https://bosh.io/docs/bpm/bpm/) (BPM) for better job isolation and security. Starting in ODB [version v0.30.0](https://docs.pivotal.io/svc-sdk/odb/0-30/release-notes.html), all broker management errands also use BPM.
 
 For BPM to work with a broker:
 
@@ -1328,7 +1342,7 @@ For BPM to work with a broker:
 
 For [broker management errands](management.html#management) that are not colocated with the broker:
 
-* The BPM release must be included in each errand job. 
+* The BPM release must be included in each errand job.
 
 ## <a id="lifecycle-errands"></a>Service Instance Lifecycle Errands
 
