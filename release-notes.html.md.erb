@@ -16,17 +16,20 @@ New features and changes in this release:
 
 * The broker now publishes the number of service instances created for each service
 and for each plan to the Pivotal Cloud Foundry Healthwatch service.
-For more information about Healthwatch, see [Pivotal Cloud Foundry Healthwatch](https://docs.pivotal.io/pcf-healthwatch/index.html).
+For more information about Healthwatch, see
+[Pivotal Cloud Foundry Healthwatch](https://docs.pivotal.io/pcf-healthwatch/index.html).
 <br><br>
 To enable this feature, indicators have been added to the on demand broker release.
-For more information about indicators, see the [monitoring-indicator-protocol](https://github.com/pivotal/monitoring-indicator-protocol)
+For more information about indicators, see the
+[monitoring-indicator-protocol](https://github.com/pivotal/monitoring-indicator-protocol)
 repository in GitHub.
 
 **Resource quotas**
 
 * The format for setting resource quotas in the manifest has changed.
 For instructions, see [Setting Resource Quotas](operating.html#service-resource-quotas).
-This release still supports the previous format.
+This release still supports the previous format, however, Pivotal plans to remove
+support for it in a future release.
 * The broker now emits metrics for global and plan resource quotas.
 For more information about these metrics, see [Monitoring Your On-Demand Broker](monitor.html).
 
