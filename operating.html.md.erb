@@ -357,7 +357,7 @@ For example manifests, see the following:
 
 ### <a id="core-broker-config"></a> Configure Your Broker
 
-Your manifest must contain exactly one non-errand instance group that is colocated with
+Your manifest must contain exactly one non-errand instance group that is co-located with
 both of the following:
 
 * The broker job from `on-demand-service-broker`
@@ -378,7 +378,7 @@ For examples of complete broker manifests, see [Write a Broker Manifest](#broker
 
 ```yaml
 addons:
-  # Broker uses BPM to isolate colocated BOSH jobs from one another
+  # Broker uses BPM to isolate co-located BOSH jobs from one another
   - name: bpm
     jobs:
     - name: bpm
@@ -934,7 +934,7 @@ The `route_registrar` job achieves the following:
 
 For more information, see [route_registrar job](http://bosh.io/jobs/route_registrar?source=github.com/cloudfoundry-incubator/cf-routing-release).
 
-To register the route, colocate the `route_registrar` job with `on-demand-service-broker`:
+To register the route, co-locate the `route_registrar` job with `on-demand-service-broker`:
 
 1. Download the routing release.
    See [cf-routing Release](http://bosh.io/releases/github.com/cloudfoundry-incubator/cf-routing-release?all=1)
@@ -1093,7 +1093,7 @@ For a more detailed manifest snippet, see the [Starter Snippet for the Service C
 ## <a id="broker-metrics"></a>(Optional) Configure Service Metrics
 
 The ODB BOSH release contains a metrics job that can be used to emit metrics
-when colocated with the Pivotal Cloud Foundry Service Metrics SDK.
+when co-located with the Pivotal Cloud Foundry Service Metrics SDK.
 To do this, you must include the [Loggregator](https://github.com/cloudfoundry/loggregator) release.
 
 To download the Pivotal Cloud Foundry Service Metrics SDK, see [Pivotal Network](https://network.pivotal.io/products/service-metrics-sdk/).
@@ -1345,27 +1345,27 @@ To enable lifecycle errands, do the following steps.
 
     Where `POST-DEPLOY-ERRAND-JOB` is the errand job you want to add.
 
-### <a id="colocated-errands"></a> (Optional) Enable Colocated Errands
+### <a id="colocated-errands"></a> (Optional) Enable Co-located Errands
 
 <p class="note"><strong>Note</strong>: This feature requires BOSH Director v263 or later.</p>
 
-You can run both `post-deploy` and `pre-delete` errands as colocated errands.
-Colocated errands run on an existing service instance group instead of a separate one.
+You can run both `post-deploy` and `pre-delete` errands as co-located errands.
+Co-located errands run on an existing service instance group instead of a separate one.
 This avoids additional resource allocation.
 
-Like other lifecycle errands, colocated errands are deployed on a per-plan basis.
+Like other lifecycle errands, co-located errands are deployed on a per-plan basis.
 Currently the ODB supports colocating only the `post-deploy` or `pre-delete` errands.
 
 For more information, see the [Errands](https://bosh.io/docs/errands.html) in the BOSH documentation.
 
-To enable colocated errands for a plan, do the following steps.
+To enable co-located errands for a plan, do the following steps.
 
-1. Add each colocated errand job to the manifest as follows:
+1. Add each co-located errand job to the manifest as follows:
     - Add the errand in `service_deployment`.
     - Add the errand in the plan's `lifecycle_errands` configuration.
     - Set the instances the errand should run on in the `lifecycle_errands`.
 
-    Below is an example manifest that includes a colocated post-deploy errand:
+    Below is an example manifest that includes a co-located post-deploy errand:
 
     ```yaml
     service_deployment:
@@ -1374,23 +1374,23 @@ To enable colocated errands for a plan, do the following steps.
           version: SERVICE-RELEASE-VERSION
           jobs:
             - SERVICE-RELEASE-JOB
-            - COLOCATED-POST-DEPLOY-ERRAND-JOB
+            - CO-LOCATED-POST-DEPLOY-ERRAND-JOB
     service_catalog:
       plans:
         - name: CF-MARKETPLACE-PLAN-NAME
           lifecycle_errands:
             post_deploy:
-              - name: COLOCATED-POST-DEPLOY-ERRAND-JOB
+              - name: CO-LOCATED-POST-DEPLOY-ERRAND-JOB
                 instances:
                   - SERVICE-RELEASE-JOB/0
-              - name: NON-COLOCATED-POST-DEPLOY-ERRAND
+              - name: NON-CO-LOCATED-POST-DEPLOY-ERRAND
           instance_groups:
-            - name: NON-COLOCATED-POST-DEPLOY-ERRAND
+            - name: NON-CO-LOCATED-POST-DEPLOY-ERRAND
               ...
             - name: SERVICE-RELEASE-JOB
               ...
     ```
 
-    Where `COLOCATED-POST-DEPLOY-ERRAND-JOB` is the colocated errand you want to
+    Where `CO-LOCATED-POST-DEPLOY-ERRAND-JOB` is the co-located errand you want to
     run and `SERVICE-RELEASE-JOB/0` is the instances you want the errand to run
     on.
