@@ -1,10 +1,9 @@
 ---
-title: Monitoring Your On-Demand Broker
+title: Metrics for Monitoring an On-Demand Broker
 owner: London Services Enablement
 ---
 
-This topic explains how to monitor your on-demand broker using the logs and metrics
-that it generates.
+This topic describes the metrics that the on-demand broker generates.
 For general information about logging and metrics in Pivotal Cloud Foundry (PCF),
 see [Logging and Metrics](http://docs.pivotal.io/pivotalcf/loggregator/index.html).
 
@@ -16,6 +15,7 @@ They are formatted as long, single lines of text, for example:
 ```
 origin:"BROKER-DEPLOYMENT-NAME" eventType:ValueMetric timestamp:1560950924586744417 deployment:"BROKER-DEPLOYMENT-NAME" job:"broker" index:"0" ip:"BROKER-IP-ADDRESS" tags:<key:"source_id" value:"broker"> valueMetric:<name:"/on-demand-broker/BROKER-DEPLOYMENT-NAME/total_instances" value:10 unit:"count">
 ```
+
 ## <a id="odb-metrics"></a>On-Demand Broker Metrics
 
 The following sections describe the metrics used for monitoring the on-demand broker.
@@ -37,7 +37,7 @@ The following sections describe the metrics used for monitoring the on-demand br
       <th>Alert thresholds</th>
       <td>
         This threshold applies if service instance quotas are configured. For instructions, see
-        <a href="operating.html#service-instance-quotas">(Optional) Set Service Instance Quotas.</a>
+        <a href="operating.html#service-instance-quotas">(Optional) Set Service Instance Quotas</a>.
         <br><br>
         <strong>Warning</strong>: &gt; quota * 0.8 <br>
         <strong>Critical</strong>: &gt; quota * 0.95
@@ -70,7 +70,7 @@ The following sections describe the metrics used for monitoring the on-demand br
       <th>Alert thresholds</th>
       <td>
         This threshold applies if service instance quotas are configured. For instructions, see
-        <a href="operating.html#service-instance-quotas">(Optional) Set Service Instance Quotas.</a>
+        <a href="operating.html#service-instance-quotas">(Optional) Set Service Instance Quotas</a>.
         <br><br>
         <strong>Warning</strong>: &gt; quota * 0.8 <br>
         <strong>Critical</strong>: &gt; quota * 0.95
@@ -107,7 +107,7 @@ The following sections describe the metrics used for monitoring the on-demand br
       <td>
         This threshold applies if service instance resource quotas are configured.
         For instructions, see
-        <a href="operating.html#service-resource-quotas">(Optional) Set Resource Quotas</a>
+        <a href="operating.html#service-resource-quotas">(Optional) Set Resource Quotas</a>.
         <br><br>
         <strong>Warning</strong>: &gt; quota * 0.8 <br>
         <strong>Critical</strong>: &gt; quota * 0.95
@@ -145,7 +145,7 @@ The following sections describe the metrics used for monitoring the on-demand br
       <td>
         This threshold applies if service instance resource quotas are configured.
         For instructions, see
-        <a href="operating.html#service-resource-quotas">(Optional) Set Resource Quotas</a>
+        <a href="operating.html#service-resource-quotas">(Optional) Set Resource Quotas</a>.
         <br><br>
         <strong>Warning</strong>: &gt; quota * 0.8 <br>
         <strong>Critical</strong>: &gt; quota * 0.95
