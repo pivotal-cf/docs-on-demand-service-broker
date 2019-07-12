@@ -650,12 +650,15 @@ service_catalog:
     support_url: SUPPORT-URL
   # optional - applied to every plan:
   global_properties: {}
-  global_quotas: # optional
+  # optional:
+  global_quotas:
     # the maximum number of service instances across all plans:
     service_instance_limit: INSTANCE-LIMIT
-    # optional - resource usage limits, determined by the 'cost' of each service instance plan:
+    # optional - global resource usage limits:
     resources:
+      # arbitrary hash of resource types:
       ips:
+        # global limit for this resource type - reaching this limit depends on the resource type’s 'cost', which is defined in each plan:
         limit: RESOURCE-LIMIT
       memory:
         limit: RESOURCE-LIMIT
@@ -699,11 +702,11 @@ service_catalog:
         service_instance_limit: INSTANCE-LIMIT
         # optional - resource usage limits for this plan:
         resources:
-          # Arbitrary hash of resource types:
+          # arbitrary hash of resource types:
           memory:
-            # optional - overwrites global limit for this resource type
+            # optional - overwrites global limit for this resource type:
             limit: RESOURCE-LIMIT
-            # optional – the 'cost' of each instance in terms of resource type:
+            # optional – the amount of the quota that each service instance of this plan uses:
             cost: RESOURCE-COST
       # resource mapping for the instance groups defined by the service author:
       instance_groups:
@@ -1016,8 +1019,9 @@ This creates a URI for your broker.
 
 ## <a id="service-instance-quotas"></a>(Optional) Set Service Instance Quotas
 
-Set service instance quotas to limit the number of service instances ODB can create.
-You can set two types quotas for service instances:
+You can set service instance quotas to limit the number of service instances ODB can create.
+
+There are two types service instances quotas:
 
 - **Global quotas** -- limit the number of service instances across all plans
 
@@ -1030,12 +1034,13 @@ You can set two types quotas for service instances:
 
 When creating a service instance, ODB checks the global service instance limit.
 If this limit has not been reached, ODB checks the plan service instance limit.
+If no limits have been reached, the service instance is created.
 
 ### Procedure for Setting Service Instance Quotas
 
 To set service instance quotas, do the following in the manifest:
 
-- **If you want to set global quotas:** add a `global_quotas` section to the service
+- **To set global quotas:** add a `global_quotas` section to the service
 catalog:
 
       ```yaml
@@ -1046,7 +1051,7 @@ catalog:
           ...
       ```
       <br>
-- **If you want to set plan quotas:** add a `quotas` section to the plans that
+- **To set plan quotas:** add a `quotas` section to the plans that
 you want to limit:
 
       ```yaml
@@ -1065,30 +1070,37 @@ For a more detailed manifest snippet, see the [Starter Snippet for the Service C
 ## <a id="service-resource-quotas"></a>(Optional) Set Resource Quotas
 
 You can set resource quotas to limit the amount of a particular resource that
-service instances can use.
+each service instance can use.
 If you want to limit physical resources, such as memory, persistent disk size,
-or the number of IP addresses in the network, using resource quotas gives you more control
-than service instance quotas.
+or the number of IP addresses in the network, setting resource quotas can give
+you more control than service instance quotas.
 
 A resource quota is defined by an arbitrary resource type with two
 associated keys, limit and cost.
+The resource limit is the maximum amount of a resource that is permitted.
+The resource cost represents how much of the resource limit that a service instance
+of a plan consumes.
 
-You can set two types of resource quotas:
+There are two types of resource quotas:
 
-- **Global resource quotas** -- limit how much of a certain resource is
-available to be consumed across all plans. ODB allows new instances to be
-created until the sum of resources consumed reach the global quota. Resource
-costs cannot be defined at the global level.
+- **Global quotas** -- limit how much of a resource is available for all plans to consume.
+ODB allows new instances to be created until the sum of resources consumed reach the global quota,
+unless a plan quota is reached first.
+You cannot define resource costs at the global level.
 
-- **Plan resource quotas** -- limit how much of a certain resource is
-available and/or consumed by a specific plan.
+- **Plan quotas** -- limit how much of a resource is available for a specific plan to consume.
+ODB allows new instances of a plan to be created until the resources consumed reach the plan's quota.
+If there is no plan limit, then instances can be created until the global quota is reached.
+You can define resource costs at the plan level.
 
-Resource quotas are enforced, first at the global level and then at plan level,
-by checking the limits for each resource type.
+When creating a service instance, ODB checks the global resource limit for each resource type.
+If these limits have not been reached, ODB checks the plan resource limits.
+If no limits have been reached, the service instance is created.
+
 
 <p class="note"><strong>Note</strong>: When calculating the amount of resources used,
-ODB will not take orphan deployments into consideration.  See <a
-href="./troubleshooting-bosh.html#listing-orphans">List Orphan Deployments</a>
+ODB will not take orphan deployments into consideration.  See
+<a href="./troubleshooting-bosh.html#listing-orphans">List Orphan Deployments</a>
 and <a href="./management.html#orphan-deployments">Delete Orphaned
 Deployments</a> for more information.</p>
 
@@ -1096,13 +1108,14 @@ Deployments</a> for more information.</p>
 
 To set resource quotas, do the following in the manifest:
 
-- **If you want to set global quotas:** add a `global_quotas` section to the service
+- **To set global quotas:** add a `global_quotas` section to the service
 catalog:
 
     ```
     global_quotas:
       resources:
-        RESOURCE-NAME: { limit: RESOURCE-LIMIT }
+        RESOURCE-NAME:
+          limit: RESOURCE-LIMIT
     ```
   Where:<br>
   <ul>
@@ -1116,26 +1129,28 @@ catalog:
       ...
       global_quotas:
         resources:
-          ips: { limit: 50 }
-          memory: { limit: 150 }
+          ips:
+            limit: 50
+          memory:
+            limit: 150
     ```
     <br>
 
-- **If you want to set plan quotas:** add a `quotas` section to the plans that you want to
+- **To set plan quotas:** add a `quotas` section to the plans that you want to
 limit resources in:
 
     ```
     quotas:
       resources:
         RESOURCE-NAME:
-          limit: RESOURCE-LIMIT
+          limit: RESOURCE-LIMIT  # optional - if not set the limit defaults to the global limit
           cost: RESOURCE-COST
     ```
   Where:<br>
   <ul>
     <li><code>RESOURCE-NAME</code> is a string defining the resource you want to limit.</li>
     <li><code>RESOURCE-LIMIT</code> is a value for the maximum allowed for each resource.</li>
-    <li><code>RESOURCE-COST</code> is a value of how much a service instance of the plan will consume for that resource.</li>
+    <li><code>RESOURCE-COST</code> is a value of how much of the quota a service instance of the plan consumes for that resource.</li>
   </ul>
   For example:
 
@@ -1147,7 +1162,7 @@ limit resources in:
           quotas:
             resources:
               ips:
-                cost: 2 # each service instance will consume 2, up to 50 from the global resource limit
+                cost: 2 # each service instance consumes 2, up to 50 "ips" from the global resource limit
               memory:
                 limit: 25 # maximum limit of "memory" to be consumed by this plan
                 cost: 5 # each service instance will consume 5, up to 25 of plan resource limit
