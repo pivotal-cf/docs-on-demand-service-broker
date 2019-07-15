@@ -31,7 +31,7 @@ See [On-Demand Services Golang SDK](#sdk) below.
 
 ## <a id="sdk"></a> On-Demand Services Golang SDK
 
-Pivotal has published an SDK for teams writing their service adapters in golang.
+Pivotal has published an SDK for teams writing their service adapters in Go.
 It covers command line invocation handling, parameter parsing, response
 serialization, and error handling so the adapter authors can focus on the
 service-specific logic in the adapter.
@@ -44,7 +44,7 @@ manifest global and job level.
 Global properties are deprecated in BOSH, in favor of job level properties and job links.
 
 For an example of property generation, see the
-[Kafka example service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/4a27c55ff6ea4a62e95e9a57e100333af5b24573/adapter/generate_manifest.go#L100-L129).
+[Kafka example service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/4a27c55ff6ea4a62e95e9a57e100333af5b24573/adapter/generate_manifest.go#L100-L129) in GitHub.
 
 ### <a id="sdk_usage"></a>Use the SDK
 
@@ -321,7 +321,7 @@ type BoshFeatures struct {
 
 For an example implementation, see the [Redis example service adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/4f78b89d791733d025ae96f4056eb6840989818e/adapter/redis_manifest_generator.go#L215-L222) in GitHub.
 
-For more information about BOSH Features, see [the BOSH documentation](https://bosh.io/docs/manifest-v2.html#features).
+For more information about BOSH Features, see [Features Block](https://bosh.io/docs/manifest-v2.html#features) in the BOSH documentation.
 
 
 ## <a id="storing-secrets"></a>(Optional) Store Secrets on BOSH CredHub
@@ -468,7 +468,7 @@ For more information about using the value during a bind, see
 
 ### <a id="modifying-secrets"></a>Modify ODB-managed Secrets
 
-<p class="note warning"><strong>WARNING</strong>:
+<p class="note warning"><strong>Warning:</strong>
   Pivotal discourages modifying the value of secrets without changing the secret name.
   If the BOSH deploy task fails during update or upgrade, ODB-managed secrets might
   be left in an inconsistent state.
@@ -523,7 +523,7 @@ that does the following:
   </ol>
 
 For example code that does the above, see the [Redis Example Adapter]
-(https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/ecf33c082bcd5180cf37ad32de03696fe2a0568f/adapter/redis_manifest_generator.go#L471-L483).
+(https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/ecf33c082bcd5180cf37ad32de03696fe2a0568f/adapter/redis_manifest_generator.go#L471-L483) in GitHub.
 
 #### <a id="inconsistent-secrets"></a>Inconsistent Secrets after a Failed Update
 
@@ -543,31 +543,30 @@ Pivotal recommends that you avoid modifying secrets without using new names for
 new versions of secrets.
 
 
-## <a id="create-binding-credentials"></a> (Optional) Binding Credentials
+## <a id="create-binding-credentials"></a> (Optional) Create Binding Credentials
 
-Ensure binding credentials for a service instance share a namespace and
-are unique, if possible.
+Binding credentials are a set of information that a user or app submits to Cloud Foundry in exchange for
+permission to use a service instance. Create binding credentials to restrict the users and apps that can use
+your service instance.
 
-For example, for a MySQL service, two bindings could include different username/password pairs, but
-share the same MySQL database tables and data.
+Place binding credentials for a service instance together in the same namespace and make them unique, if possible, so
+that you can revoke access for specific apps and users without affecting the bindings of others.
 
-The first step is to determine which credentials are best to supply in the
-context of your service.
 Pivotal recommends that users are identified statelessly from the binding ID.
 The simplest way to do this is to name the user after the binding ID.
 
 You can take one of three approaches to credentials for a service binding:
 
-+ [Static Credentials](#static-credentials)
-+ [Credentials Unique to Each Binding](#unique-credentials)
++ [Use Static Credentials](#static-credentials)
++ [Use Credentials Unique to Each Binding](#unique-credentials)
 + [Use an Agent](#agent)
 
-###<a id="static-credentials"></a>Static Credentials
+### <a id="static-credentials"></a>Use Static Credentials
 
-In this case, the same credentials are used for all bindings.
+In this approach, the same credentials are used for all bindings.
 One option is to define these credentials in the service instance manifest.
 
-This scenario makes sense for services that use the same credentials for all
+This approach makes sense for services that use the same credentials for all
 bindings, such as Redis.
 
 For example:
@@ -575,18 +574,18 @@ For example:
 ```yaml
 properties:
   redis:
-    password: PASSWORD
+    password: EXAMPLE-PASSWORD
 ```
 
-### <a id="unique-credentials"></a>Credentials Unique to Each Binding
+### <a id="unique-credentials"></a>Use Credentials Unique to Each Binding
 
-In this case, when the adapter `generate-manifest` subcommand is invoked,
+In this approach, when the adapter `generate-manifest` subcommand is invoked,
 it generates random admin credentials and returns them as part of the service
 instance manifest. When the `create-binding` subcommand is invoked, the adapter
 can use the admin credentials from the manifest to create unique credentials
 for the binding. Subsequent `create-binding` calls create new credentials.
 
-This option makes sense for services whose binding creation resembles user creation,
+This approach makes sense for services with binding creation that resembles user creation,
 such as MySQL or RabbitMQ. For example, in MySQL the admin user can be used to create
 a new user and database for the binding:
 
@@ -597,12 +596,12 @@ properties:
 
 ### <a id="agent"></a>Use an Agent
 
-In this case, the author defines an agent responsible for handling the creation
+In this approach, the author defines an agent responsible for handling the creation
 of credentials unique to each binding. The agent must be added as a BOSH release
-in the service manifest. Moreover, the service and agent jobs should be colocated
+in the service manifest. Moreover, the service and agent jobs should be co-located
 in the same instance group.
 
-This option is useful for services where the adapter cannot, or tends not, to
+This approach is useful for services where the adapter cannot, or tends not, to
 directly call out to the service instance and instead delegates responsibility
 for setting up new credentials to an agent.
 
@@ -652,7 +651,7 @@ For example:
     ```
     <br>
 For an example `spec` file, see the
-[Redis Example Service Release](https://github.com/pivotal-cf-experimental/redis-example-service-release/blob/master/jobs/redis-server/spec).
+[Redis Example Service Release](https://github.com/pivotal-cf-experimental/redis-example-service-release/blob/master/jobs/redis-server/spec) in GitHub.
 
 2. Write code in the service adapter that shares the link you provided above in
 the BOSH manifest generated for your service instance deployment. Share the link
@@ -679,8 +678,7 @@ to the BOSH Director before deployment of the service instance. This enables
 the service author to provide service instance-specific BOSH configs which
 exist only for the lifetime of the service instance.
 
-See the [BOSH documentation](https://bosh.io/docs/configs/) for more details
-about generic BOSH configs.
+For more detail, see [Generic Configs](https://bosh.io/docs/configs/) in the BOSH documentation.
 
 To return a BOSH config fragment specific to a service instance
 manifest, it must be included in the response from the `generate-manifest`
@@ -736,11 +734,11 @@ be deleted.
 ## <a id="packaging"></a>Package the Service Adapter
 
 Package the service adapter as a BOSH release.
-The operator should colocate the service adapter release with the ODB release in
+The operator should co-locate the service adapter release with the ODB release in
 a BOSH manifest to place the adapter executable on the same VM as the ODB server.
 As a result, the adapter BOSH job's `monit` file should have no processes defined.
 
-See the following example service adapter releases:
+See the following example service adapter releases in GitHub:
 
 - <a href="https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release">Kafka example service adapter release</a>
 - <a href="https://github.com/pivotal-cf-experimental/redis-example-service-adapter-release">Redis example service adapter release</a>
