@@ -128,12 +128,18 @@ The service adapter must generate the above items given information about the fo
 For more information about the input parameters and expected output, see
 [generate-manifest](./adapter-reference.html#generate-manifest).
 
-<p class="note"><strong>Note</strong>:
+<p class="note"><strong>Note:</strong>
   ODB requires <code>generate-manifest</code> to be idempotent.
   Given the same arguments when a previous manifest is supplied&mdash;which
   happens during a deployment update&mdash;the command should always output
   the same BOSH manifest.
 </p>
+
+`ManifestGenerator` can be used in efforts to:
+<ul>
+  <li>[Store Secrets on BOSH CredHub](#storing-secrets)</li>
+  <li>[Use Generic BOSH Configs with Service Instances](#bosh-configs)</li>
+</ul>
 
 The code snippet below shows the interface signature:
 
@@ -174,6 +180,8 @@ The `Binder` interface is required for most service adapters. This includes:
   For single-user services, for example Redis, this endpoint does nothing.<br>
   For more information about the input parameters and expected output, see
   [delete-binding](./adapter-reference.html#delete-binding).
+
+`Binder` can also be used in efforts to [enable ODB to obtain BOSH DNS addresses](#dns-addresses), as detailed further below.
 
 The code snippet below shows the interface signature:
 
@@ -545,12 +553,14 @@ new versions of secrets.
 
 ## <a id="create-binding-credentials"></a> (Optional) Create Binding Credentials
 
-Binding credentials are a set of information that a user or app submits to Cloud Foundry in exchange for
+Binding credentials are a set of information that a user or app uses for
 permission to use a service instance. Create binding credentials to restrict the users and apps that can use
 your service instance.
 
-Place binding credentials for a service instance together in the same namespace and make them unique, if possible, so
-that you can revoke access for specific apps and users without affecting the bindings of others.
+Place binding credentials for a service instance together in the same namespace and make them unique, if
+possible, so that you can revoke access for specific apps and users without affecting the bindings of others.
+
+You can store binding credentials in CredHub. For more information, see [(Optional) Store Secrets on BOSH CredHub](#storing-secrets) below.
 
 Pivotal recommends that users are identified statelessly from the binding ID.
 The simplest way to do this is to name the user after the binding ID.
