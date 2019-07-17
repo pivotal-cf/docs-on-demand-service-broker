@@ -116,8 +116,8 @@ This must generate a BOSH manifest for your service instance deployment, then ou
 to stdout a JSON document containing the following:
 
 - The BOSH manifest as YAML
-- BOSH secrets
-- BOSH Configs
+- BOSH secrets -- for instructions, see [(Optional) Store Secrets on BOSH CredHub](#storing-secrets) below
+- BOSH Configs -- for instructions, see [(Optional) Use Generic BOSH Configs with Service Instances](#bosh-configs) below
 
 The service adapter must generate the above items given information about the following:
 
@@ -134,12 +134,6 @@ For more information about the input parameters and expected output, see
   happens during a deployment update&mdash;the command should always output
   the same BOSH manifest.
 </p>
-
-`ManifestGenerator` can be used in efforts to:
-<ul>
-  <li>[Store Secrets on BOSH CredHub](#storing-secrets)</li>
-  <li>[Use Generic BOSH Configs with Service Instances](#bosh-configs)</li>
-</ul>
 
 The code snippet below shows the interface signature:
 
