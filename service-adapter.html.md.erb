@@ -633,9 +633,12 @@ instance_groups:
         release: credentials-agent-release
 ```
 
-## <a id="dns-addresses"></a> (Optional) Enable ODB to Obtain BOSH DNS Addresses
+## <a id="dns-addresses"></a> (Optional) Enable BOSH DNS Addresses for Bindings
 
-<p class="note"><strong>Note:</strong> This feature requires v266.3 or later of the BOSH Director. This is available in Ops Manager v2.2 and later.</p>
+<p class="note"><strong>Note:</strong>
+  This feature requires v266.3 or later of the BOSH Director.
+  This is available in Ops Manager v2.2 and later.
+</p>
 
 You can configure ODB to provide BOSH DNS addresses for service instances to the
 service adapter `create-binding` and `delete-binding` calls.
@@ -664,7 +667,9 @@ For an example `spec` file, see the
 [Redis Example Service Release](https://github.com/pivotal-cf-experimental/redis-example-service-release/blob/master/jobs/redis-server/spec) in GitHub.
 
 2. Write code in the service adapter that shares the link you provided above in
-the BOSH manifest generated for your service instance deployment. Share the link
+the BOSH manifest generated for your service instance deployment.
+<br><br>
+Share the link
 in the same job that you added the link to in step 1. Include the link in all
 instance groups that require a DNS address at binding time.
 <br><br>
