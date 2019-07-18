@@ -1142,7 +1142,7 @@ For more information about service metrics, see [Service Metrics for Pivotal Clo
   <br><br>When the broker is using TLS, the broker certificate must contain this BOSH provided address in its  Subject Alternative Names section, otherwise the certificate cannot be verified by Cloud Foundry. For details about how to insert a BOSH DNS address into a config
 server generated certificate, see <a href="https://bosh.io/docs/dns/#dns-variables-integration">BOSH DNS Addresses in Config Server Generated Certs</a> in the BOSH documentation.</p>
 
-## <a id="binding-with-dns"></a>(Optional) Obtain BOSH DNS Addresses for Binding Creation and Deletion
+## <a id="binding-with-dns"></a>(Optional) Use BOSH DNS Addresses for Bindings
 
 You can configure ODB to retrieve BOSH DNS addresses for service instances.
 These addresses are passed to the service adapter when you create or delete a binding.
@@ -1156,80 +1156,56 @@ service, see [Enable ODB to Obtain BOSH DNS Addresses](./service-adapter.html#dn
 
 ### Procedure
 
-To enable ODB to obtain BOSH DNS addresses for binding creation and deletion, do the following:
+To enable ODB to obtain BOSH DNS addresses, configure the `binding_with_dns` property
+in the manifest as follows on plans that require DNS addresses to create and delete bindings:
 
-1. In the manifest, configure the `binding_with_dns` property on plans that require
-DNS addresses to create and delete bindings.
-<br><br>
-For more information about the properties to add, see [Options for _binding\_with
-\_dns_](#binding-property) below.
-<br><br>
+```yaml
+binding_with_dns:
+  - name: ADDRESS-NAME
+    link_provider: LINK-NAME
+    instance_group: INSTANCE-GROUP
+    properties:
+      azs: [AVAILABILITY-ZONES]   # Optional
+      status: ADDRESS-STATUS    # Optional
+```
+
+Where:
+
+- `ADDRESS-NAME` is an arbitrary identifier used to identify the address when creating a binding.
+- `LINK-NAME` is the exposed name of the link. You can find this in the
+documentation for the service and under `provides.name` in the release `spec` file.
+You can override it in the deployment manifest by setting the `as` property of the link.
+- `INSTANCE-GROUP` is the name of the instance group sharing the link.
+The resultant DNS address resolves to IP addresses of this instance group.
+- `AVAILABILITY-ZONES` is a list of availability zone names.
+When this is provided, the resultant DNS address resolves to IP addresses in these zones.
+- `ADDRESS-STATUS` is a filter for link address status. The permitted statuses are `healthy`,
+`unhealthy`, `all`, or `default`. When this is provided, the resultant DNS address
+resolves to IP addresses with this status.
+
 For example:
 
-    ```yaml
-    service_catalog:
+```yaml
+service_catalog:
+  ...
+  plans:
+    ...
+    - name: plan-requiring-dns-addresses
       ...
-      plans:
-        ...
-        - name: plan-requiring-dns-addresses
-          ...
-          binding_with_dns:                 # add this section
-            - name: leader-address
-              link_provider: example-link-1
-              instance_group: leader-node
-            - name: follower-address
-              link_provider: example-link-2
-              instance_group: follower-node
-              properties:
-                azs: [z1, z2]
-                status: healthy
-    ```
+      binding_with_dns:                 # add this section
+        - name: leader-address
+          link_provider: example-link-1
+          instance_group: leader-node
+        - name: follower-address
+          link_provider: example-link-2
+          instance_group: follower-node
+          properties:
+            azs: [z1, z2]
+            status: healthy
+```
 
-    <br>
-    Each entry in `binding_with_dns` is converted to a BOSH DNS address that is
-    passed to the service adapter when you create a binding.
-
-#### <a id="binding-property"></a>Options for _binding\_with\_dns_
-
-The following table provides descriptions of the properties to add to the `binding_with_dns` section:
-
-<table class="nice">
-<col width="165">
-<thead>
-<tr>
-<th>Property</th>
-<th>Description</th>
-<th>Mandatory/Optional</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>name</code></td>
-<td>An arbitrary identifier used to identify the address when creating a binding</td>
-<td>Mandatory</td>
-</tr>
-<tr>
-<td><code>link_provider</code></td>
-<td>This is the exposed name of the link. You can find this in the documentation for the service and under <code>provides.name</code> in the release <code>spec</code> file.<br><br> You can override it in the deployment manifest by setting the <code>as</code> property of the link.</td>
-<td>Mandatory</td>
-</tr>
-<tr>
-<td><code>instance_group</code></td>
-<td>This is the name of the instance group sharing the link. The resultant DNS address resolves to IP addresses of this instance group.</td>
-<td>Mandatory</td>
-</tr>
-<tr>
-<td><code>properties.azs</code></td>
-<td>This is a list of availability zone names. When this is provided, the resultant DNS address resolves to IP addresses in these zones.</td>
-<td>Optional</td>
-</tr>
-<tr>
-<td><code>properties.status</code></td>
-<td>This is a filter for link address status (healthy, unhealthy, all, default). When this is provided, the resultant DNS address resolves to IP addresses with this status.</td>
-<td>Optional</td>
-</tr>
-</tbody>
-</table>
+Each entry in `binding_with_dns` is converted to a BOSH DNS address that is
+passed to the service adapter when you create a binding.
 
 ## <a id="startup-checks"></a>About Broker Startup Checks
 
