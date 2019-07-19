@@ -355,10 +355,10 @@ BOSH CredHub name.
 The following sections provide information about how to use ODB-managed secrets to store,
 persist, and modify secrets in BOSH CredHub:
 
-- [Use ODB-managed Secrets](#odb-managed-secrets)
-- [Migrate from Plaintext Secrets to ODB-managed Secrets](#migrating-to-stored-secrets)
+- [Use ODB-Managed Secrets](#odb-managed-secrets)
+- [Migrate from Plaintext Secrets to ODB-Managed Secrets](#migrating-to-stored-secrets)
 - [Persist Credentials Across Updates](#odb-persisting-creds)
-- [Modify ODB-managed Secrets](#modifying-secrets)
+- [Modify ODB-Managed Secrets](#modifying-secrets)
 
 
 ### <a id="odb-managed-secrets"></a> Use ODB-Managed Secrets
@@ -369,7 +369,7 @@ output of `generate-manifest`:
 <p class="note"><strong>Note: </strong>
   If you have a previous manifest containing plaintext secrets that you want to
   convert to ODB-managed secrets, see
-  <a href="#migrating-to-stored-secrets">Migrate from Plaintext Secrets to ODB-managed Secrets</a>
+  <a href="#migrating-to-stored-secrets">Migrate from Plaintext Secrets to ODB-Managed Secrets</a>
    below.
 </p>
 
@@ -390,7 +390,7 @@ For example:
 }
 ```
 
-### <a id="migrating-to-stored-secrets"></a>Migrate from Plaintext Secrets to ODB-managed Secrets
+### <a id="migrating-to-stored-secrets"></a>Migrate from Plaintext Secrets to ODB-Managed Secrets
 
 You can use the service adapter to migrate from plaintext secrets in the manifest
 to ODB-managed secrets that are stored in BOSH CredHub.
@@ -411,7 +411,7 @@ secrets placeholder `((odb_secret:SECRET-NAME))` in the new manifest.
 
 * Returns the value of the secrets in the `secrets` map.
 For more information about the `secrets` map, see
-[Use ODB-managed Secrets](#odb-managed-secrets) above.
+[Use ODB-Managed Secrets](#odb-managed-secrets) above.
 
   * Each placeholder in the manifest a corresponding entry in the `secrets` map.
   * Each key in the `secrets` map at least one corresponding placeholder in the manifest.
@@ -475,7 +475,7 @@ placeholder `((odb_secret:SECRET-NAME))`.
 For more information about using the value during a bind, see
 [create-binding](./adapter-reference.html#create-binding).
 
-### <a id="modifying-secrets"></a>Modify ODB-managed Secrets
+### <a id="modifying-secrets"></a>Modify ODB-Managed Secrets
 
 <p class="note warning"><strong>Warning:</strong>
   Pivotal discourages modifying the value of secrets without changing the secret name.
