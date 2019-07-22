@@ -167,7 +167,7 @@ The `Binder` interface is required for most service adapters. This includes:
   This creates credentials for the service instance and print them to stdout as JSON.
   These should be unique, if possible.<br>
   For more information about the input parameters and expected output, see
-  [create-binding](./adapter-reference.html#create-binding).
+  [create-binding](./service-adapter.html#create-binding-credentials).
 
 - `delete-binding`:
   This invalidates the created credentials, if possible.
@@ -175,14 +175,8 @@ The `Binder` interface is required for most service adapters. This includes:
   For more information about the input parameters and expected output, see
   [delete-binding](./adapter-reference.html#delete-binding).
 
-- `secure_binding_credentials`:
-  This stores binding credentials securely in runtime CredHub. When users create bindings or service keys, ODB passes a secure reference to the service credentials through the network instead of in plaintext.
-  For more information, see [(Optional) Enable Secure Binding](http://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-n/operating.html#secure-binding)
-
-- `binding_with_dns`:
-  This configures ODB to retrieve BOSH DNS addresses for service instances. These addresses are passed to the
-  service adapter when you create or delete a binding.
-  For more information, see [(Optional) Obtain BOSH DNS Addresses for Binding Creation and Deletion](http://docs.pivotal.io/svc-sdk/odb/0-n/operating.html#binding-with-dns)
+To configure ODB to provide BOSH DNS addresses for service instances to the service adapter `create-binding`
+and `delete-binding` calls, see [(Optional) Obtain BOSH DNS Addresses for Binding Creation and Deletion](./service-adapter.html#dns-addresses)
 
 The code snippet below shows the interface signature:
 
