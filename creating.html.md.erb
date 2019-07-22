@@ -85,8 +85,6 @@ part of service instance deployment.
 ODB uses these errands to manage an instance lifecycle.
 A deployment is only considered successful if the deployment and all
 lifecycle errands complete successfully.
-For more information about these errands, see
-[Service Instance Lifecycle Errands](operating.html#lifecycle-errands).
 
 ODB supports the following service instance lifecycle errands:
 
@@ -98,6 +96,9 @@ ODB supports the following service instance lifecycle errands:
 - **Pre-delete**: These errands run before the deletion of a service instance.
   For example, cleaning up data before a service shutdown.
   To see the workflow for pre-delete errands, see [Delete a Service Instance with Pre-Delete Errand](./concepts.html#pre-delete).
+
+For information for operators about how to enable these errands in the manifest, see
+[Enable Service Instance Lifecycle Errands](operating.html#enable-errands).
 
 ### <a id="include-errands"></a>Include Service Instance Lifecycle Errands
 
