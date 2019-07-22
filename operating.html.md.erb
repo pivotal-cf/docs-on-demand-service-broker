@@ -1251,11 +1251,9 @@ ODB supports the following lifecycle errands:
 
 - `post_deploy` runs after creating or updating a service instance. An example use case is
   running a health check to ensure the service instance is functioning.<br>
-  For more information about these errands, see [Post-Deploy Errands](https://docs.pivotal.io/tiledev/tile-errands.html#post-deploy).
   For more information about the workflow, see [Create or Update Service Instance with Post-Deploy Errands](./concepts.html#post-deploy).<br><br>
 - `pre_delete` runs before the deletion of a service instance.
-  An example use case is cleaning up data before a service shutdown. For more
-  information about these errands, see [Pre-Delete Errands](https://docs.pivotal.io/tiledev/tile-errands.html#pre-delete).
+  An example use case is cleaning up data before a service shutdown. 
   For more information about the workflow, see [Delete a Service Instance with Pre-Delete Errands](./concepts.html#pre-delete).
 
 ### <a id="enable-errands"></a> Enable Service Instance Lifecycle Errands
