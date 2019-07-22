@@ -650,8 +650,8 @@ see [DNS-ADDRESSES-JSON](./adapter-reference.html#create-binding-dns-addresses).
 To enable ODB to provide service instance DNS addresses to the `create-binding` and `delete-binding` calls,
 do the following:
 
-1. Provide a link from the service instance's BOSH release.
-Choose any job in the service release and add the link to its `spec` file.
+1. Provide a link from the service instance's BOSH release by choosing any job
+in the service release and adding the link to its `spec` file.
 <br><br>
 For example:
 
@@ -664,9 +664,9 @@ For example:
     ```
     <br>
 For an example `spec` file, see the
-[Redis Example Service Release](https://github.com/pivotal-cf-experimental/redis-example-service-release/blob/master/jobs/redis-server/spec) in GitHub.
+[redis-example-service-release](https://github.com/pivotal-cf-experimental/redis-example-service-release/blob/master/jobs/redis-server/spec) in GitHub.
 
-2. Write code in the service adapter that shares the link you provided above in
+2. Write code in the service adapter that shares the link you provided in
 the BOSH manifest generated for your service instance deployment.
 <br><br>
 Share the link
