@@ -95,8 +95,8 @@ there are pending changes.
 If a user runs the `cf create-service` command with post-deploy errands configured
 for the deployment, ODB does not report success to Cloud Foundry until the deployment
 is created, or updated, and all post-deploy errands complete.
-For more information, see
-[Post-Deploy Errands](https://docs.pivotal.io/tiledev/tile-errands.html#post-deploy).
+For more information about post-deploy errands, see
+[Service Instance Lifecycle Errands](operating.html#lifecycle-errands).
 
 The sequence diagram below shows the workflow for creating or updating a service
 instance when post-deploy errands are configured.
@@ -204,8 +204,8 @@ The sequence diagram below shows the workflow for deleting service instances.
 If a user runs the `cf delete-service` command with pre-delete errands configured
 for the deployment, ODB does not report success to Cloud Foundry until all
 pre-delete errands complete and the deployment is deleted.
-For more information, see
-[Pre-Delete Errands](https://docs.pivotal.io/tiledev/tile-errands.html#pre-delete).
+For more information about pre-delete errands, see
+[Service Instance Lifecycle Errands](operating.html#lifecycle-errands).
 
 The sequence diagram below shows the workflow for deleting service instances with
 pre-delete errands configured.
