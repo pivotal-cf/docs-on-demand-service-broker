@@ -36,7 +36,7 @@ It covers command line invocation handling, parameter parsing, response
 serialization, and error handling so the adapter authors can focus on the
 service-specific logic in the adapter.
 For more information about the golang SDK, see the
-[On-Demand Services SDK](https://github.com/pivotal-cf/on-demand-services-sdk)
+[on-demand-services-sdk](https://github.com/pivotal-cf/on-demand-services-sdk)
 repository on GitHub.
 
 The SDK supports properties in two levels for the generated BOSH manifest,
@@ -44,7 +44,7 @@ manifest global and job level.
 Global properties are deprecated in BOSH, in favor of job level properties and job links.
 
 For an example of property generation, see the
-[Kafka example service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/4a27c55ff6ea4a62e95e9a57e100333af5b24573/adapter/generate_manifest.go#L100-L129) in GitHub.
+[kafka-example-service-adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/4a27c55ff6ea4a62e95e9a57e100333af5b24573/adapter/generate_manifest.go#L100-L129) in GitHub.
 
 ### <a id="sdk_usage"></a>Use the SDK
 
@@ -117,7 +117,7 @@ to stdout a JSON document containing the following:
 
 - The BOSH manifest as YAML
 - BOSH secrets -- for instructions, see [(Optional) Store Secrets on BOSH CredHub](#storing-secrets) below
-- BOSH Configs -- for instructions, see [(Optional) Use Generic BOSH Configs with Service Instances](#bosh-configs) below
+- BOSH configs -- for instructions, see [(Optional) Use Generic BOSH Configs with Service Instances](#bosh-configs) below
 
 The service adapter must generate the above items given information about the following:
 
@@ -166,8 +166,9 @@ The `Binder` interface is required for most service adapters. This includes:
 - `create-binding`:
   This creates credentials for the service instance and print them to stdout as JSON.
   These should be unique, if possible.<br>
+  For more information about binding credentials, see  [(Optional) Create Binding Credentials](./service-adapter.html#create-binding-credentials).
   For more information about the input parameters and expected output, see
-  [create-binding](./service-adapter.html#create-binding-credentials).
+  [create-binding](./adapter-reference.html#create-binding).
 
 - `delete-binding`:
   This invalidates the created credentials, if possible.
@@ -247,7 +248,7 @@ type GeneratePlanSchemaParams struct {
 
 ### <a id="helper_function"></a>Helpers
 
-The golang SDK provides helper functions.
+The golang SDK provides the following helper functions.
 
 #### GenerateInstanceGroupsWithNoProperties
 
@@ -303,8 +304,8 @@ serviceadapter.NewAppGuidNotProvidedError()
 ```
 
 For more complete code examples, see the
-[Kafka example service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter)
-on GitHub and the [Redis example service adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter) on GitHub.
+[kafka-example-service-adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter)
+on GitHub and the [redis-example-service-adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter) on GitHub.
 
 
 ### <a id="bosh_features"></a>BOSH Features
@@ -322,7 +323,7 @@ type BoshFeatures struct {
 }
 ```
 
-For an example implementation, see the [Redis example service adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/4f78b89d791733d025ae96f4056eb6840989818e/adapter/redis_manifest_generator.go#L215-L222) in GitHub.
+For an example implementation, see the [redis-example-service-adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/4f78b89d791733d025ae96f4056eb6840989818e/adapter/redis_manifest_generator.go#L215-L222) in GitHub.
 
 For more information about BOSH Features, see [Features Block](https://bosh.io/docs/manifest-v2.html#features) in the BOSH documentation.
 
@@ -332,7 +333,7 @@ For more information about BOSH Features, see [Features Block](https://bosh.io/d
 To avoid writing secrets in plaintext in the manifest, you can use ODB-managed
 secrets to store secrets on BOSH CredHub.
 When using ODB-managed secrets, the service adapter generates secrets and uses
-ODB as a proxy to the BOSH CredHub Config server.
+ODB as a proxy to the BOSH CredHub config server.
 
 For ODB-managed secrets, ODB does the following during provision:
 
@@ -493,8 +494,6 @@ To regenerate the manifest with modified secrets, write code in your service ada
 1. Replaces the property in the manifest with an ODB-managed secrets placeholder
 that uses a new secret name.
 
-<%# Could do with some commands or at least an example %>
-
 1. Uses the `GenerateManifest` method to return the new secret in the `secrets` map.
 
 #### <a id="odb-detecting-new-secrets"></a>Detect When Secrets Are Modified
@@ -525,7 +524,7 @@ that does the following:
     <li>Inserts the BOSH CredHub name from the previous manifest.</li>
   </ol>
 
-For example code that does the above, see the [Redis Example Adapter]
+For example code that does the above, see the [redis-example-service-adapter]
 (https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/ecf33c082bcd5180cf37ad32de03696fe2a0568f/adapter/redis_manifest_generator.go#L471-L483) in GitHub.
 
 #### <a id="inconsistent-secrets"></a>Inconsistent Secrets after a Failed Update
@@ -555,7 +554,7 @@ your service instance.
 Place binding credentials for a service instance together in the same namespace and make them unique, if
 possible, so that you can revoke access for specific apps and users without affecting the bindings of others.
 
-You can store binding credentials in CredHub. For more information, see [(Optional) Store Secrets on BOSH CredHub](#storing-secrets) below.
+You can store binding credentials in BOSH CredHub. For more information, see [(Optional) Store Secrets on BOSH CredHub](#storing-secrets) above.
 
 Pivotal recommends that users are identified statelessly from the binding ID.
 The simplest way to do this is to name the user after the binding ID.
