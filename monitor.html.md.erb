@@ -9,7 +9,10 @@ see [Logging and Metrics](http://docs.pivotal.io/pivotalcf/loggregator/index.htm
 
 ## <a id="metrics"></a>About Metrics
 
-Metrics are regularly-generated log messages that report measured component states.
+**Enabling Metrics**: The on-demand broker only emits metrics when deployed with Service Metrics.
+For more information, see the [Deploying a Release with Service Metrics](https://docs.pivotal.io/svc-sdk/service-metrics/1-5/operator.html) in the Service Metrics documentation.
+
+**Metrics Format**: Metrics are regularly-generated log messages that report measured component states.
 They are formatted as long, single lines of text, for example:
 
 ```
@@ -19,9 +22,6 @@ origin:"BROKER-DEPLOYMENT-NAME" eventType:ValueMetric timestamp:1560950924586744
 ## <a id="odb-metrics"></a>On-Demand Broker Metrics
 
 The following sections describe the metrics used for monitoring the on-demand broker.
-
-<p class="note"><strong>Note:</strong> The on-demand broker metrics described below will only be published if the on-demand broker is deployed with <a href="https://docs.pivotal.io/svc-sdk/service-metrics/1-5/operator.html">the Service Metrics release</a>. For more information about the Service Metrics release, see <a href="https://docs.pivotal.io/svc-sdk/service-metrics/1-5/index.html">here</a>.
-</p>
 
 ### <a id="global-service-instance-count-metrics"></a>Global Service Instance Count
 
