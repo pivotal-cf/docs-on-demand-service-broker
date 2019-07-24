@@ -314,7 +314,7 @@ Upload the following releases to your BOSH Director:
 * **On Demand Service Broker (ODB)**---Download ODB from [Pivotal Network](https://network.pivotal.io/products/on-demand-services-sdk/).
 * **Your service adapter**---Get the service adapter from the release author.
 * **Your service release**---Get the service release from the release author.
-* **BOSH Process Manager (BPM) release**---Get the BPM release from [BOSH releases](https://bosh.io/releases/github.com/cloudfoundry-incubator/bpm-release?all=1) in GitHub. You might not need to do this if the BPM release is already uploaded.
+* **BOSH Process Manager (bpm) release**---Get the bpm release from the location listed in [BOSH releases](https://bosh.io/releases/github.com/cloudfoundry-incubator/bpm-release?all=1) in the BOSH documentation. You might not need to do this if the bpm release is already uploaded.
 
 To upload a release to your BOSH Director, do the following:
 
@@ -378,7 +378,7 @@ For examples of complete broker manifests, see [Write a Broker Manifest](#broker
 
 ```yaml
 addons:
-  # Broker uses BPM to isolate co-located BOSH jobs from one another
+  # Broker uses bpm to isolate co-located BOSH jobs from one another
   - name: bpm
     jobs:
     - name: bpm
@@ -1071,13 +1071,11 @@ resources reach the global quota.
 - **Plan resource quotas** -- limit how much of a certain resource is consumed by a
 specific plan.
 
-<p class="note"><strong>Note</strong>: These limits do not include orphaned deployments.
-  See <a href="./troubleshooting-bosh.html#listing-orphans">List Orphan Deployments</a>
-   and <a href="./management.html#orphan-deployments">Delete Orphaned Deployments</a>
- for more information.</p>
-
-When creating a service instance, ODB checks the global resource limit.
-If this limit has not been reached, ODB checks the plan resource limit.
+<p class="note"><strong>Note</strong>: When calculating the amount of resources used,
+ODB does not take orphan deployments into consideration.  See
+<a href="./troubleshooting-bosh.html#listing-orphans">List Orphan Deployments</a>
+and <a href="./management.html#orphan-deployments">Delete Orphaned
+Deployments</a> for more information.</p>
 
 ### Procedure for Setting Service Resource Quotas
 
@@ -1303,18 +1301,18 @@ The default is 60 seconds.
 For more information, see <a href="#broker-manifest">Write a Broker Manifest</a> above.
 
 
-## <a id="broker-bpm"></a>About ODB and Bosh Process Manager (BPM)
+## <a id="broker-bpm"></a>About ODB and Bosh Process Manager (bpm)
 
-Starting in ODB [version v0.27.0](https://docs.pivotal.io/svc-sdk/odb/0-27/release-notes.html), the broker binary adopted [Bosh Process Manager](https://bosh.io/docs/bpm/bpm/) (BPM) for better job isolation and security. Starting in ODB [version v0.30.0](https://docs.pivotal.io/svc-sdk/odb/0-30/release-notes.html), all broker management errands also use BPM. 
+Starting in ODB [version v0.27.0](https://docs.pivotal.io/svc-sdk/odb/0-27/release-notes.html), the broker binary adopted [Bosh Process Manager](https://bosh.io/docs/bpm/bpm/) (bpm) for better job isolation and security. Starting in ODB [version v0.30.0](https://docs.pivotal.io/svc-sdk/odb/0-30/release-notes.html), all broker management errands also use bpm.
 
-For BPM to work with a broker:
+For bpm to work with a broker:
 
-* The BPM release must be included in the broker job. An example of this configuration can be found at the top of the manifest snippet in [Starter Snippet for Your Broker](#broker-starter-snippet).
-* Because BPM restricts access to the current job, the broker needs to signify to BPM that it needs access to the service adapter config. For this, the `broker` job's `service_adapter` configuration must specify the `mount_paths` to the service adapter. An example of this configuration can be found at the bottom of the manifest snippet in [Starter Snippet for Your Broker](#broker-starter-snippet).
+* The bpm release must be included in the broker job. An example of this configuration can be found at the top of the manifest snippet in [Starter Snippet for Your Broker](#broker-starter-snippet).
+* Because bpm restricts access to the current job, the broker needs to signify to bpm that it needs access to the service adapter config. For this, the `broker` job's `service_adapter` configuration must specify the `mount_paths` to the service adapter. An example of this configuration can be found at the bottom of the manifest snippet in [Starter Snippet for Your Broker](#broker-starter-snippet).
 
-For [broker management errands](management.html#management) that are not colocated with the broker:
+For [broker management errands](management.html#management) that are not co-located with the broker:
 
-* The BPM release must be included in each errand job. 
+* The bpm release must be included in each errand job.
 
 ## <a id="lifecycle-errands"></a>Service Instance Lifecycle Errands
 
@@ -1331,7 +1329,7 @@ ODB supports the following lifecycle errands:
   running a health check to ensure the service instance is functioning.<br>
   For more information about the workflow, see [Create or Update Service Instance with Post-Deploy Errands](./concepts.html#post-deploy).<br><br>
 - `pre_delete` runs before the deletion of a service instance.
-  An example use case is cleaning up data before a service shutdown. 
+  An example use case is cleaning up data before a service shutdown.
   For more information about the workflow, see [Delete a Service Instance with Pre-Delete Errands](./concepts.html#pre-delete).
 
 ### <a id="enable-errands"></a> Enable Service Instance Lifecycle Errands
