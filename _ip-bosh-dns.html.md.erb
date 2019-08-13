@@ -1,0 +1,11 @@
+<p class="note">
+  <strong>Note:</strong> When the broker URI of this errand is not configured,
+  the errand defaults to a BOSH-provided IP address or BOSH-provided BOSH DNS address.
+  See <a href="https://bosh.io/docs/dns/#links">Impact on links</a> in the BOSH documentation.
+  <br><br>When the broker is using TLS, the broker certificate must contain this
+  BOSH provided address in its  Subject Alternative Names section, otherwise the certificate
+  cannot be verified by Cloud Foundry. For details about how to insert a BOSH DNS address
+  into a config server generated certificate, see
+  <a href="https://bosh.io/docs/dns/#dns-variables-integration">BOSH DNS Addresses in Config Server Generated Certs</a>
+  in the BOSH documentation.
+</p>
