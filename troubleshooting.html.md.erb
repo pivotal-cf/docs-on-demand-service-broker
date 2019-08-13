@@ -3,94 +3,62 @@ title: Troubleshooting for Ops Manager Operators
 owner: London Services Enablement
 ---
 
-<div class="quick-links">
-    <ul>
-        <li><a href="#guid">How to Retrieve a Service Instance GUID</a></li>
-        <li><a href="#errors">Troubleshooting Errors</a></li>
-        <ul>
-	        <li><a href="#install-fail">Failed Install</a></li>
-	        <li><a href="#timeouts">Broker Request Timeouts</a></li>
-	        <li><a href="#cannot-create-delete">Cannot Create or Delete Service Instances</a></li>
-	        <li><a href="#cannot-bind">Cannot Bind or Unbind Service Instances to Apps</a></li>
-	        <li><a href="#upgrade-individual-instances">Cannot Update a Service Instance</a></li>
-	        <li><a href="#cannot-connect">Cannot Connect to a Service Instance</a></li>
-	        <li><a href="#upgrade-all-fails">Upgrade All Service Instances Fails</a></li>
-	        <li><a href="#missing-logs">Missing Logs and Metrics</a></li>
-          <li><a href="#credhub-error">Unable to Render Templates for Job CredHub</a></li>
-        </ul>
-        <li><a href="#components">Troubleshooting Components</a></li>
-        <ul>
-	        <li><a href="#bosh">BOSH Problems</a></li>
-	        <li><a href="#bosh-config">Configuration</a></li>
-	        <li><a href="#auth">Authentication</a></li>
-	        <li><a href="#network">Networking</a></li>
-	        <li><a href="#quotas">Quotas</a></li>
-	        <li><a href="#failing-jobs">Failing Jobs and Unhealthy Instances</a></li>
-        </ul>
-        <li><a href="#techniques">Techniques for Troubleshooting</a></li>
-        <ul>
-	        <li><a href="#parse-error">Parse a Cloud Foundry (CF) Error Message</a></li>
-	        <li><a href="#bosh-cf-access">Access Broker and Instance Logs and VMs</a></li>
-	        <li><a href="#broker-errands">Run Service Broker Errands to Manage Brokers and Instances</a></li>
-	        <li><a href="#instance-creds">Get Admin Credentials for a Service Instance</a></li>
-	        <li><a href="#id-instance-owner">Identify Apps using a Service Instance</a></li>
-	        <li><a href="#view-resources">View BOSH Resource Saturation and Scaling</a></li>
-	        <li><a href="#monitor-quota">Monitor Quota Saturation and Service Instance Count</a></li>
-	        <li><a href="#reinstall">Reinstall a Tile</a></li>
-        </ul>
-        <li><a href="#kb">Knowledge Base (Community)</a></li>
-        <li><a href="#support">File a Support Ticket</a></li>
-    </ul>
-</div>
-
 This topic provides information for operators about troubleshooting on-demand services.
 
-<!-- Partials are in https://github.com/pivotal-cf/docs-services-partials -->
+## <a id="guid"></a> How to Retrieve a Service Instance GUID
 
-<a id="guid"></a><h2>How to Retrieve a Service Instance GUID</h2>
-
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/retrieve-guid' %>
 
-<a id="errors"></a><h2>Troubleshooting Errors</h2>
+## <a id="errors"></a> Troubleshooting Errors
 
 This section provides information about how to troubleshoot specific errors or error messages.
 
-<a id="install-fail"></a><h3>Failed Install</h3>
+### <a id="install-fail"></a> Failed Install
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-err-install-fail' %>
 
-<a id="timeouts"></a><h3>Broker Request Timeouts</h3>
+### <a id="timeouts"></a> Broker Request Timeouts
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-err-timeouts' %>
 
-<a id="cannot-create-delete"></a><h3>Cannot Create or Delete Service Instances</h3>
+### <a id="cannot-create-delete"></a>Cannot Create or Delete Service Instances
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-err-cannot-create-delete' %>
 
-<a id="cannot-bind"><h3></a>Cannot Bind or Unbind Service Instances to Apps</h3>
+### <a id="cannot-bind"></a>Cannot Bind or Unbind Service Instances to Apps
 
-<a id="instance-not-exist"></a><h4>Instance Does Not Exist</h4>
+#### <a id="instance-not-exist"></a> Instance Does Not Exist
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-err-instance-not-exist' %>
 
-<a id="other-errors"></a><h4>Other Errors</h4>
+#### <a id="other-errors"></a> Other Errors
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-err-other-errors' %>
 
-<a id="upgrade-individual-instances"></a><h3>Cannot Update a Service Instance</h3>
+### <a id="upgrade-individual-instances"></a> Cannot Update a Service Instance
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial 'tshoot-err-cannot-update' %>
 
-<a id="cannot-connect"></a><h3>Cannot Connect to a Service Instance</h3>
+### <a id="cannot-connect"></a> Cannot Connect to a Service Instance
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-err-cannot-connect' %>
 
-<a id="upgrade-all-fails"><h3></a>Upgrade All Service Instances Fails</h3>
+### <a id="upgrade-all-fails"></a>Upgrade All Service Instances Fails
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-err-upgrade-all-fails' %>
 
-<a id="missing-logs"></a><h3>Missing Logs and Metrics</h3>
+### <a id="missing-logs"></a> Missing Logs and Metrics
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-err-missing-logs' %>
 
 <a id="credhub-error"></a><h3>Unable to Render Templates for Job CredHub</h3>
@@ -113,126 +81,149 @@ or later and v2.3.16 or later) or CredHub v2.1.6 (included in Ops Manager v2.4.1
 
 This section provides information about troubleshooting on-demand broker components.
 
-<a id="bosh"></a><h3>BOSH Problems</h3>
+### <a id="bosh"></a> BOSH Problems
 
-<a id="large-queue"></a><h4>Large BOSH Queue</h4>
+#### <a id="large-queue"></a> Large BOSH Queue
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-comp-large-queue' %>
 
-<a id="bosh-config"></a><h3>Configuration</h3>
+### <a id="bosh-config"></a> Configuration
 
-<a id="bosh-instance-fail"></a><h4>Service Instances in Failing State</h4>
+#### <a id="bosh-instance-fail"></a> Service Instances in Failing State
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-comp-bosh-instance-fail' %>
 
-<a id="auth"></a><h3>Authentication</h3>
+### <a id="auth"></a> Authentication
 
-<a id="uaa-change"></a><h4>UAA Changes</h4>
+#### <a id="uaa-change"></a> UAA Changes
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-comp-uaa-change' %>
 
-<a id="network"></a><h3>Networking</h3>
+### <a id="network"></a> Networking
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-comp-network' %>
 
-<a id="broker-to-instances"></a><h4>Validate Service Broker Connectivity to Service Instances</h4>
+#### <a id="broker-to-instances"></a> Validate Service Broker Connectivity to Service Instances
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-comp-broker-to-instances' %>
 
-<a id="app-to-instances"></a><h4>Validate App Access to Service Instance</h4>
+#### <a id="app-to-instances"></a> Validate App Access to Service Instance
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-comp-app-to-instances' %>
 
-<a id="quotas"></a><h3>Quotas</h3>
+### <a id="quotas"></a> Quotas
 
-<a id="plan-quotas"></a><h4>Plan Quota Issues</h4>
+#### <a id="plan-quotas"></a> Plan Quota Issues
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-comp-plan-quotas' %>
 
-<a id="global-quotas"></a><h4>Global Quota Issues</h4>
+#### <a id="global-quotas"></a> Global Quota Issues
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-comp-global-quotas' %>
 
-<a id="failing-jobs"></a><h3>Failing Jobs and Unhealthy Instances</h3>
+### <a id="failing-jobs"></a> Failing Jobs and Unhealthy Instances
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-comp-failing-jobs' %>
 
-
-<a id="techniques"></a><h2>Techniques for Troubleshooting</h2>
+## <a id="techniques"></a> Techniques for Troubleshooting
 
 This section provides general techniques for troubleshooting, which might include the following:
 
-<ul>
-	<li>Interacting with the on-demand service broker</li>
-	<li>Interacting with on-demand service instance BOSH deployments</li>
-	<li>Performing general maintenance and housekeeping tasks</li>
-</ul>
+*   Interacting with the on-demand service broker
+*   Interacting with on-demand service instance BOSH deployments
+*   Performing general maintenance and housekeeping tasks
 
-<a id="parse-error"></a><h3>Parse a Cloud Foundry (CF) Error Message</h3>
 
+### <a id="parse-error"></a> Parse a Cloud Foundry (CF) Error Message
+
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-tech-parse-error' %>
 
-<a id="bosh-cf-access"></a><h3>Access Broker and Instance Logs and VMs</h3>
+### <a id="bosh-cf-access"></a> Access Broker and Instance Logs and VMs
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-tech-bosh-cf-access' %>
 
-<a id="access-broker"></a><h4>Access Broker Logs and VM(s)</h4>
+#### <a id="access-broker"></a> Access Broker Logs and VM(s)
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-tech-access-broker' %>
 
-<a id="access-instance"></a><h4>Access Service Instance Logs and VMs</h4>
+#### <a id="access-instance"></a> Access Service Instance Logs and VMs
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-tech-access-instance' %>
 
-<a id="broker-errands"></a><h3>Run Service Broker Errands to Manage Brokers and Instances</h3>
+### <a id="broker-errands"></a> Run Service Broker Errands to Manage Brokers and Instances
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-tech-broker-errands' %>
 
-<a id="register-broker"></a><h4>Register Broker</h4>
+#### <a id="register-broker"></a> Register Broker
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-tech-register-broker' %>
 
-<a id="deregister-broker"></a><h4>Deregister Broker</h4>
+#### <a id="deregister-broker"></a> Deregister Broker
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-tech-deregister-broker' %>
 
-<a id="upgrade-all"></a><h4>Upgrade All Service Instances</h4>
+#### <a id="upgrade-all"></a> Upgrade All Service Instances
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-tech-upgrade-all' %>
 
-<a id="delete-all"></a><h4>Delete All Service Instances</h4>
+#### <a id="delete-all"></a> Delete All Service Instances
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-tech-delete-all' %>
 
-<a id="detect-orphans"></a><h4>Detect Orphaned Instances Service Instances</h4>
+#### <a id="detect-orphans"></a> Detect Orphaned Instances Service Instances
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-tech-detect-orphans' %>
 
-<a id="instance-creds"></a><h3>Get Admin Credentials for a Service Instance</h3>
+### <a id="instance-creds"></a> Get Admin Credentials for a Service Instance
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-tech-instance-creds' %>
 
-<a id="id-instance-owner"></a><h3>Identify Apps using a Service Instance</h3>
+### <a id="id-instance-owner"></a> Identify Apps using a Service Instance
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-tech-id-instance-owner' %>
 
-<a id="view-resources"></a><h3>View BOSH Resource Saturation and Scaling</h3>
+### <a id="view-resources"></a> View BOSH Resource Saturation and Scaling
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-tech-view-resources' %>
 
-<a id="monitor-quota"></a><h3>Monitor Quota Saturation and Service Instance Count</h3>
+### <a id="monitor-quota"></a> Monitor Quota Saturation and Service Instance Count
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-tech-monitor-quota' %>
 
-<a id="reinstall"></a><h3>Reinstall a Tile</h3>
+### <a id="reinstall"></a> Reinstall a Tile
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-tech-reinstall' %>
 
+## <a id="kb"></a> Knowledge Base (Community)
 
-<a id="kb"></a><h2>Knowledge Base (Community)</h2>
-
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-kb' %>
 
-<a id="support"></a><h2>File a Support Ticket</h2>
+## <a id="support"></a> File a Support Ticket
 
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/odb/tshoot-support' %>
