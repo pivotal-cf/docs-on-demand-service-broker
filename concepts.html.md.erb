@@ -48,7 +48,7 @@ There are two ways this process can fail:
 to its orphan mitigation strategy.
 For more information, see [Orphans](http://docs.cloudfoundry.org/services/api.html#orphans).
 
--  **Asynchronously:** This happens while BOSH deploys the service instance.
+- **Asynchronously:** This happens while BOSH deploys the service instance.
 The Cloud Controller does not issue a delete request.
 
 
@@ -62,12 +62,14 @@ Updates can only proceed if the existing service instance is up-to-date.
 ODB calls `generate-manifest` on the service adapter to determine whether there are
 any pending changes for the instance.
 
-<p class="note"><strong>Note</strong>:
-	When determining whether there are pending changes for an instance during an update,
-	ODB ignores any configuration supplied in the
-	update block of the manifest returned by the service adapter's <code>generate-manifest</code> subcommand
-        For more information, see <a href="https://bosh.io/docs/deployment-manifest.html#update" target="_blank">Update Block</a>
-        in the Cloud Foundry BOSH documentation.</p>
+<p class="note">
+	<strong>Note:</strong> When determining whether there are pending changes for an instance during an update,
+	ODB ignores any configuration supplied in the update block of the manifest returned by the service
+	adapter's <code>generate-manifest</code> subcommand.
+  For more information, see
+	<a href="https://bosh.io/docs/deployment-manifest.html#update" target="_blank">Update Block</a>
+	in the Cloud Foundry BOSH documentation.
+</p>
 
 
 #### <a id="update-service-instance-no-changes"></a>Update When There Are No Pending Changes
@@ -114,7 +116,7 @@ ODB provides the BOSH errand `recreate-all-service-instances`. This errand execu
 It is used for triggering low-level BOSH agent certificate re-installation, or for
 backup and restore purposes, for example in a migration between foundations.
 
-The sequence diagram below shows the workflow for recreating service instances.
+The sequence diagram below shows the workflow for re-creating service instances.
 
 <%= partial 'mmd/recreate_all_instances_workflow.mmd' %>
 
@@ -128,7 +130,7 @@ This section contains diagrams that present the workflow for the following actio
 
 - [Upgrade All Service Instances with External Service Instances API Configured](#upgrade-all-external-instances)
 
-- [Upgrade All Service Instances with Maintenence Info Configured](#upgrade-all-instances-with-maintenance-info)
+- [Upgrade All Service Instances with Maintenance Information Configured](#upgrade-all-instances-with-maintenance-info)
 
 
 ### <a id="upgrade-all-instances"></a>Upgrade All Service Instances
@@ -156,16 +158,16 @@ with external service instances API configured.
 
 <%= partial 'mmd/upgrade_all_instances_with_si_api_workflow.mmd' %>
 
-### <a id="upgrade-all-instances-with-maintenance-info"></a>Upgrade All Service Instances with Maintenence Info Configured
+### <a id="upgrade-all-instances-with-maintenance-info"></a>Upgrade All Service Instances with Maintenance Information Configured
 
-If Cloud Foundry supports Maintenence Info, and it is supplied in the On-Demand Broker configuration,
-the Upgrade All Service Instances errand will coordinate with the Cloud Foundry to only
-update service instances that are outdated.
-If a service instance has already been upgraded successfully, then the errand will have
-no effect on that service instance.
+If Cloud Foundry supports maintenance information, and it is supplied in the ODB configuration,
+the `upgrade-all-service-instances` errand coordinates with Cloud Foundry to only update service instances
+that are outdated.
+If a service instance has already been upgraded successfully, then the errand has no effect on that service
+instance.
 
-The sequence diagram below shows the workflow for upgrading all service instances
-when Maintenence Info is configured.
+The sequence diagram below shows the workflow for upgrading all service instances when maintenance
+information is configured.
 
 <%= partial 'mmd/upgrade_all_instances_with_maintenance_info_workflow.mmd' %>
 
