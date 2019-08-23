@@ -886,7 +886,7 @@ runtime CredHub.
 When users create bindings or service keys, ODB passes a secure reference to the
 service credentials through the network instead of in plaintext.
 
-### <a id="secure-binding-reqs"></a> Requirements
+### Requirements
 
 To store service credentials in runtime CredHub, your deployment must meet the
 following requirements:
@@ -903,7 +903,7 @@ the address for runtime CredHub is a local domain name.
   because consul server VMs have been removed in Pivotal Application Service (PAS) v2.4.
 </p>
 
-### <a id="enable-secure-binding"></a> Procedure for Enabling Secure Binding
+### Procedure for Enabling Secure Binding
 
 To enable secure binding:
 
@@ -955,7 +955,7 @@ For example:
 
 For a more detailed manifest snippet, see [Starter Snippet for Your Broker](#broker-starter-snippet) above.
 
-### <a id="cred-storage"></a> How Credentials Are Stored on Runtime CredHub
+### How Credentials Are Stored on Runtime CredHub
 
 The credentials for a given service binding are stored with the following format:
 
@@ -1046,7 +1046,7 @@ When creating a service instance, ODB checks the global service instance limit.
 If this limit has not been reached, ODB checks the plan service instance limit.
 If no limits have been reached, the service instance is created.
 
-### <a id="setting-si-quotas"></a> Procedure for Setting Service Instance Quotas
+### Procedure for Setting Service Instance Quotas
 
 To set service instance quotas, do the following in the manifest:
 
@@ -1115,7 +1115,7 @@ and <a href="./management.html#orphan-deployments">Delete Orphaned
 Deployments</a>
 </p>
 
-### <a id="setting-resource-quotas"></a> Procedure for Setting Resource Quotas
+### Procedure for Setting Resource Quotas
 
 To set resource quotas, do the following in the manifest:
 
@@ -1239,14 +1239,14 @@ server generated certificate, see <a href="https://bosh.io/docs/dns/#dns-variabl
 You can configure ODB to retrieve BOSH DNS addresses for service instances.
 These addresses are passed to the service adapter when you create or delete a binding.
 
-### <a id="dns-binding-reqs"></a> Requirements
+### Requirements
 
 - A service that has this feature enabled in the service adapter<br>
 For information for service authors about how to enable this feature for their on-demand
 service, see [Enable BOSH DNS Addresses for Bindings](./service-adapter.html#dns-addresses).
 - BOSH Director v266.12 or v267.6 and later, available in Ops Manager v2.2.5 and later
 
-### <a id="dns-binding-procedure"> Procedure
+### Procedure
 
 To enable ODB to obtain BOSH DNS addresses, configure the `binding_with_dns` property
 in the manifest as follows on plans that require DNS addresses to create and delete bindings:
