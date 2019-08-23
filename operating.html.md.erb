@@ -25,9 +25,7 @@ Operators are responsible for the following:
 * Managing brokers and service plans.
   See [Broker and Service Management](./management.html).
 
-<p class="note"><strong>Note:</strong> Pivotal recommends that you provide documentation
- when you make changes to the manifest to inform other operators about the new configurations.
-</p>
+<p class="note"><strong>Note:</strong> Pivotal recommends that you provide documentation when you make changes to the manifest to inform other operators about the new configurations.</p>
 
 ## <a id="networking"></a>Set Up Networking
 
@@ -40,12 +38,16 @@ Regardless of the specific network layout, you must ensure network
 rules are set up so that connections are open as described in the table below.
 
 <table class="nice">
-  <th>Source Component</th>
-  <th>Destination Component</th>
-  <th>Default TCP Port</th>
-  <th>Notes</th>
   <tr>
-    <td><strong>ODB</strong></td>
+    <th>Source Component</th>
+    <th>Destination Component</th>
+    <th>Default TCP Port</th>
+    <th>Notes</th>
+  </tr>
+  <tr>
+    <td>
+      <strong>ODB</strong>
+    </td>
     <td>
       <strong>BOSH Director</strong><br><br>
       <strong>BOSH UAA</strong>
@@ -57,22 +59,29 @@ rules are set up so that connections are open as described in the table below.
     <td>The default ports are not configurable.</td>
   </tr>
   <tr>
-    <td><strong>ODB</strong></td>
-    <td><strong>Deployed service instances</strong></td>
-    <td>Specific to the service (such as RabbitMQ for PCF).
-      May be one or more ports.</td>
-    <td>This connection is for administrative tasks.
-      Avoid opening general use, app-specific ports for this connection.</td>
+    <td>
+      <strong>ODB</strong>
+    </td>
+    <td>
+      <strong>Deployed service instances</strong>
+    </td>
+    <td>Specific to the service (such as RabbitMQ for PCF). May be one or more ports.</td>
+    <td>This connection is for administrative tasks. Avoid opening general use, app-specific ports for this connection.</td>
   </tr>
   <tr>
-    <td><strong>ODB</strong></td>
-    <td><strong>PAS</strong>
+    <td>
+      <strong>ODB</strong>
+    </td>
+    <td>
+      <strong>PAS</strong>
     </td>
     <td>8443</td>
     <td>The default port is not configurable.</td>
   </tr>
   <tr>
-    <td><strong>Errand VMs</strong></td>
+    <td>
+      <strong>Errand VMs</strong>
+    </td>
     <td>
       <strong>PAS</strong><br><br>
       <strong>ODB</strong><br><br>
@@ -86,35 +95,38 @@ rules are set up so that connections are open as described in the table below.
     <td>The default port is not configurable.</td>
   </tr>
   <tr>
-    <td><strong>BOSH Agent</strong></td>
-    <td><strong>BOSH Director</strong>
+    <td>
+      <strong>BOSH Agent</strong>
+    </td>
+    <td>
+      <strong>BOSH Director</strong>
     </td>
     <td>4222</td>
-    <td>The BOSH Agent runs on every VM in the system, including the BOSH Director VM.
-      The BOSH Agent initiates the connection with the BOSH Director.<br>
-      The default port is not configurable.
-      The communication between these components is two-way.
+    <td>The BOSH Agent runs on every VM in the system, including the BOSH Director VM. The BOSH Agent initiates the connection with the BOSH Director.<br>
+      The default port is not configurable. The communication between these components is two-way.
     </td>
   </tr>
   <tr>
-    <td><strong>Deployed apps on PAS</strong></td>
-    <td><strong>Deployed service instances</strong>
+    <td>
+      <strong>Deployed apps on PAS</strong>
+    </td>
+    <td>
+      <strong>Deployed service instances</strong>
     </td>
     <td>Specific to the service. May be one or more ports.</td>
-    <td>This connection is for general use, app-specific tasks.
-      Avoid opening administrative ports for this connection.</td>
+    <td>This connection is for general use, app-specific tasks. Avoid opening administrative ports for this connection.</td>
   </tr>
   <tr>
-    <td><strong>PAS</strong></td>
-    <td><strong>ODB</strong>
+    <td>
+      <strong>PAS</strong>
+    </td>
+    <td>
+      <strong>ODB</strong>
     </td>
     <td>8080</td>
-    <td>This port can be different for individual services.
-      This port can also be configurable by the operator if allowed by the
-      tile developer.</td>
+    <td>This port can be different for individual services. This port can also be configurable by the operator if allowed by the tile developer.</td>
   </tr>
 </table>
-
 
 ## <a id="configure-bosh"></a>Configure Your BOSH Director
 
@@ -134,8 +146,7 @@ ODB requires the following:
   in the BOSH documentation.
 - cf-release v1.10.0 or later (PCF v2.0 or later).
 
-<div class="note">
-  <strong>Notes: </strong>
+<div class="note"><strong>Notes:</strong>
   <ul>
     <li>ODB does not support BOSH Windows.</li>
     <li>Service instance lifecycle errands require BOSH Director v261 on PCF v1.10 or later. For more information, see <a href="#lifecycle-errands"> Service Instance Lifecycle Errands</a> below.</li>
@@ -283,8 +294,17 @@ in the broker manifest. For more information, see [Write a Broker Manifest](#bro
 <div class="note">
   <p style="margin-top: 0"><strong>Note:</strong> The client or user must have the following permissions.</p>
   <ul>
-    <li><strong>If using client credentials</strong> then, as of Cloud Foundry v238, the UAA client must have the authority <code>cloud_controller.admin</code>.</li>
-    <li><strong>If using user credentials</strong> then the user must be a member of the <code>scim.read</code> and <code>cloud_controller.admin</code> groups.</li>
+    <li>
+      <strong>If using client credentials</strong>
+      then, as of Cloud Foundry v238, the UAA client must have the authority
+      <code>cloud_controller.admin</code>.</li>
+    <li>
+      <strong>If using user credentials</strong>
+      then the user must be a member of the
+      <code>scim.read</code>
+      and
+      <code>cloud_controller.admin</code>
+      groups.</li>
   </ul>
 </div>
 
@@ -317,28 +337,26 @@ Upload the following releases to your BOSH Director:
 * **Your service release**---Get the service release from the release author.
 * **BOSH Process Manager (bpm) release**---Get the bpm release from the location listed in [BOSH releases](https://bosh.io/releases/github.com/cloudfoundry-incubator/bpm-release?all=1) in the BOSH documentation. You might not need to do this if the bpm release is already uploaded.
 
-To upload a release to your BOSH Director:
+To upload a release to your BOSH Director, run the following command:
 
-1. Run the following command.
+```
+bosh -e BOSH-DIRECTOR-NAME upload-release RELEASE-FILE-NAME.tgz
+```
 
-    ```
-    bosh -e BOSH-DIRECTOR-NAME upload-release RELEASE-FILE-NAME.tgz
-    ```
+Example command for ODB:
 
-    **Example command for ODB:**
+<pre class="terminal">
+$ bosh -e lite upload-release on-demand-service-broker-0.22.0.tgz
+</pre>
 
-    <pre class="terminal">
-    $ bosh -e lite upload-release on-demand-service-broker-0.22.0.tgz
-    </pre>
+<br>Example commands for service adapter or service release:
+<pre class="terminal">
+$ bosh -e lite upload-release my-service-release.tgz
+</pre>
 
-    <br>**Example commands for service adapter or service release:**
-    <pre class="terminal">
-    $ bosh -e lite upload-release my-service-release.tgz
-    </pre>
-
-    <pre class="terminal">
-    $ bosh -e lite upload-release my-service-adapter.tgz
-    </pre>
+<pre class="terminal">
+$ bosh -e lite upload-release my-service-adapter.tgz
+</pre>
 
 
 ## <a id="broker-manifest"></a>Write a Broker Manifest
@@ -374,9 +392,7 @@ The snippet uses BOSH v2 syntax as well as global cloud config and job-level pro
 
 For examples of complete broker manifests, see [Write a Broker Manifest](#broker-manifest) above.
 
-<p class="note warning"><strong>Warning</strong>: The <code>disable_ssl_cert_verification</code>
-  option is dangerous and should be set to <code>false</code> in production.
-</p>
+<p class="note warning"><strong>Warning:</strong> The <code>disable_ssl_cert_verification</code> option is dangerous and should be set to <code>false</code> in production.</p>
 
 ```yaml
 addons:
@@ -461,9 +477,9 @@ When configuring the service catalog, supply the following:
   is provided by exactly one release.<br><br>
 
 * **Stemcells:**
-  <p class="note"><strong>Note:</strong>
-  If you use Xenial stemcells, you must update any BOSH add-ons to support Xenial stemcells.
-  For links to instructional topics about updating see <a href="./upgrades.html#update-addons">Update Add-ons to Run with Xenial Stemcell</a>.</p>
+
+    <p class="note"><strong>Note:</strong> If you use Xenial stemcells, you must update any BOSH add-ons to support Xenial stemcells. For links to instructional topics about updating see
+    <a href="./upgrades.html#update-addons">Update Add-ons to Run with Xenial Stemcell</a>.</p>
   * These are used on each VM in the service deployments.
   * Use exact versions for releases and stemcells. The use of `latest` and floating
   stemcells are not supported.<br><br>
@@ -599,11 +615,7 @@ When composing plans, supply the following:
     `&stemcellVersion` annotation and then referenced in the maintenance information with
     the `*stemcellVersion` tag.
 
-    <p class="note"><strong>Note:</strong> The Open Service Broker API only supports
-    <code>maintenance_info.version</code>. Pivotal discourages the use of <code>public</code> and
-    <code>private</code> if Cloud Foundry is the platform communicating
-    to the broker.
-    </p>
+    <p class="note"><strong>Note:</strong> The Open Service Broker API only support <code>maintenance_info.version</code>. Pivotal discourages the use of <code>public</code> and <code>private</code> if Cloud Foundry is the platform communicating to the broker.</p>
 
 #### <a id="starter-snippet"></a>Starter Snippet for the Service Catalog and Plans
 
@@ -873,9 +885,9 @@ handle missing secrets based on whether they are required for binding creation.
 
 <p class="note"><strong>Note:</strong> ODB does not fail if it cannot resolve a secret.</p>
 
-## <a id="secure-binding"></a>(Optional) Enable Secure Binding
-<p class="note alert"><strong>Note</strong>: This feature does not work if you
-have configured <code>use_stdin</code> to be false.</p>
+## <a id="secure-binding"></a> (Optional) Enable Secure Binding
+
+<p class="note alert"><strong>Note:</strong> This feature does not work if you have configured <code>use_stdin</code> to be false.</p>
 
 If you enable secure binding, binding credentials are stored securely in
 runtime CredHub.
@@ -893,11 +905,7 @@ This might be provided as part of your Cloud Foundry deployment.
 - Your instance group must have access to the local DNS provider. This is because
 the address for runtime CredHub is a local domain name.
 
-<p class="note"><strong>Note: </strong>
-  Pivotal recommends using BOSH DNS as a DNS provider.
-  If you use PCF v2.4 or later, you cannot use consul as a DNS provider
-  because consul server VMs have been removed in Pivotal Application Service (PAS) v2.4.
-</p>
+<p class="note"><strong>Note:</strong> Pivotal recommends using BOSH DNS as a DNS provider. If you use PCF v2.4 or later, you cannot use consul as a DNS provider because consul server VMs have been removed in Pivotal Application Service (PAS) v2.4.</p>
 
 ### Procedure for Enabling Secure Binding
 
@@ -1015,8 +1023,7 @@ To register the route, co-locate the `route_registrar` job with `on-demand-servi
 1. Upload the routing release to your BOSH Director.
 1. Add the `route_registrar` job to your deployment manifest and configure it with an HTTP route.
 This creates a URI for your broker.
-    <p class="note"><strong>Note:</strong>
-    You must use the same port for the broker and the route. The broker defaults to 8080.</p>
+    <p class="note"><strong>Note:</strong> You must use the same port for the broker and the route. The broker defaults to 8080.</p>
   For how to configure the `route_registrar` job, see
   [routing release](https://github.com/cloudfoundry/routing-release/blob/d59974071d97b9f1770dd170240bff2fe5ba1558/jobs/route_registrar/spec#L95-L100)
   in GitHub.
@@ -1032,11 +1039,9 @@ There are two types service instances quotas:
 
 - **Plan quotas** -- limit the number of service instances for a given plan
 
-<p class="note"><strong>Note</strong>: These limits do not include orphaned deployments.
-  For more information, see <a href="./troubleshooting-bosh.html#listing-orphans">List Orphan Deployments</a>
-   and <a href="./management.html#orphan-deployments">Delete Orphaned Deployments</a>
-   for more information.
-</p>
+<p class="note"><strong>Note:</strong> These limits do not include orphaned deployments. For more information, see <a href="./troubleshooting-bosh.html#listing-orphans">List Orphan Deployments</a>
+  and <a href="./management.html#orphan-deployments">Delete Orphaned Deployments</a>
+  for more information.</p>
 
 When creating a service instance, ODB checks the global service instance limit.
 If this limit has not been reached, ODB checks the plan service instance limit.
@@ -1104,12 +1109,9 @@ If these limits have not been reached, ODB checks the plan resource limits.
 If no limits have been reached, the service instance is created.
 
 
-<p class="note"><strong>Note</strong>: When calculating the amount of resources used,
-ODB does not take orphan deployments into consideration. For more information, see
-<a href="./troubleshooting-bosh.html#listing-orphans">List Orphan Deployments</a>
-and <a href="./management.html#orphan-deployments">Delete Orphaned
-Deployments</a>
-</p>
+<p class="note"><strong>Note:</strong> When calculating the amount of resources used, ODB does not take orphan deployments into consideration. For more information, see
+  <a href="./troubleshooting-bosh.html#listing-orphans">List Orphan Deployments</a> and
+  <a href="./management.html#orphan-deployments">Delete Orphaned Deployments</a>.</p>
 
 ### Procedure for Setting Resource Quotas
 
@@ -1224,11 +1226,14 @@ Pivotal has tested this example configuration with Loggregator v58 and service-m
 
 For more information about service metrics, see [Service Metrics for Pivotal Cloud Foundry](http://docs.pivotal.io/service-metrics).
 
-<p class="note alert"><strong>Note:</strong> When <code>service-metrics-adapter</code> is not configured,
-  it defaults to a BOSH-provided IP address or BOSH-provided BOSH DNS address, depending on in configuration on the broker URI. See <a href="https://bosh.io/docs/dns/#links">Impact on links</a> in the BOSH documentation.
-  <br><br>When the broker is using TLS, the broker certificate must contain this BOSH provided address in its Subject Alternative Names section, otherwise the certificate cannot be verified by Cloud Foundry. For details about how to insert a BOSH DNS address into a config
-server generated certificate, see <a href="https://bosh.io/docs/dns/#dns-variables-integration">BOSH DNS Addresses in Config Server Generated Certs</a> in the BOSH documentation.
-</p>
+<p class="note alert"><strong>Note:</strong> When <code>service-metrics-adapter</code> is not configured, it
+  defaults to a BOSH-provided IP address or BOSH-provided BOSH DNS address, depending on in configuration on
+  the broker URI. See <a href="https://bosh.io/docs/dns/#links">Impact on links</a>
+  in the BOSH documentation.
+  <br><br>When the broker is using TLS, the broker certificate must contain this BOSH provided address in
+  its Subject Alternative Names section, otherwise the certificate cannot be verified by Cloud Foundry. For
+  details about how to insert a BOSH DNS address into a config server generated certificate, see
+  <a href="https://bosh.io/docs/dns/#dns-variables-integration">BOSH DNS Addresses in Config Server Generated Certs</a> in the BOSH documentation.</p>
 
 ## <a id="binding-with-dns"></a>(Optional) Use BOSH DNS Addresses for Bindings
 
@@ -1343,8 +1348,7 @@ For [broker management errands](management.html#management) that are not co-loca
 
 ## <a id="lifecycle-errands"></a>Service Instance Lifecycle Errands
 
- <p class="note"><strong>Note:</strong> This feature requires BOSH Director v261 or later.
- </p>
+<p class="note"><strong>Note:</strong> This feature requires BOSH Director v261 or later.</p>
 
 Service instance lifecycle errands allow additional short-lived jobs to run as part of service instance deployment.
 A deployment is only considered successful if all lifecycle errands exit successfully.
@@ -1366,64 +1370,62 @@ Service instance lifecycle errands are configured on a per-plan basis.
 Lifecycle errands do not run if you change a plan's lifecycle errand
 configuration while an existing deployment is in progress.
 
-To enable lifecycle errands, do the following steps.
+To enable lifecycle errands, add each errand job in the following manifest places:
 
-1. Add each errand job in the following manifest places:
-    - `service_deployment`
-    - The plan's `lifecycle_errands` configuration
-    - The plan's `instance_groups`
+- `service_deployment`
+- The plan's `lifecycle_errands` configuration
+- The plan's `instance_groups`
 
-    Below is an example manifest snippet that configures lifecycle errands for a plan:
+Below is an example manifest snippet that configures lifecycle errands for a plan:
 
-    ```yaml
-    service_deployment:
-      releases:
-        - name: SERVICE-RELEASE
-          version: SERVICE-RELEASE-VERSION
-          jobs:
-          - SERVICE-RELEASE-JOB
-          - POST-DEPLOY-ERRAND-JOB
-          - PRE-DELETE-ERRAND-JOB
-          - ANOTHER-POST-DEPLOY-ERRAND-JOB
-    service_catalog:
-      plans:
-        - name: CF-MARKETPLACE-PLAN-NAME
-          lifecycle_errands:
-            post_deploy:
-              - name: POST-DEPLOY-ERRAND-JOB
-              - name: ANOTHER-POST-DEPLOY-ERRAND-JOB
-                disabled: true
-            pre_delete:
-              - name: PRE-DELETE-ERRAND-JOB
-          instance_groups:
-            - name: SERVICE-RELEASE-JOB
-              ...
-            - name: POST-DEPLOY-ERRAND-JOB
-              lifecycle: errand
-              vm_type: VM-TYPE
-              instances: INSTANCE-COUNT
-              networks: [NETWORK]
-              azs: [AZ]
-            - name: ANOTHER-POST-DEPLOY-ERRAND-JOB
-              lifecycle: errand
-              vm_type: VM-TYPE
-              instances: INSTANCE-COUNT
-              networks: [NETWORK]
-              azs: [AZ]
-            - name: PRE-DELETE-ERRAND-JOB
-              lifecycle: errand
-              vm_type: VM-TYPE
-              instances: INSTANCE-COUNT
-              networks: [NETWORK]
-              azs: [AZ]
-    ```
+```yaml
+service_deployment:
+  releases:
+    - name: SERVICE-RELEASE
+      version: SERVICE-RELEASE-VERSION
+      jobs:
+      - SERVICE-RELEASE-JOB
+      - POST-DEPLOY-ERRAND-JOB
+      - PRE-DELETE-ERRAND-JOB
+      - ANOTHER-POST-DEPLOY-ERRAND-JOB
+service_catalog:
+  plans:
+    - name: CF-MARKETPLACE-PLAN-NAME
+      lifecycle_errands:
+        post_deploy:
+          - name: POST-DEPLOY-ERRAND-JOB
+          - name: ANOTHER-POST-DEPLOY-ERRAND-JOB
+            disabled: true
+        pre_delete:
+          - name: PRE-DELETE-ERRAND-JOB
+      instance_groups:
+        - name: SERVICE-RELEASE-JOB
+          ...
+        - name: POST-DEPLOY-ERRAND-JOB
+          lifecycle: errand
+          vm_type: VM-TYPE
+          instances: INSTANCE-COUNT
+          networks: [NETWORK]
+          azs: [AZ]
+        - name: ANOTHER-POST-DEPLOY-ERRAND-JOB
+          lifecycle: errand
+          vm_type: VM-TYPE
+          instances: INSTANCE-COUNT
+          networks: [NETWORK]
+          azs: [AZ]
+        - name: PRE-DELETE-ERRAND-JOB
+          lifecycle: errand
+          vm_type: VM-TYPE
+          instances: INSTANCE-COUNT
+          networks: [NETWORK]
+          azs: [AZ]
+```
 
-    Where `POST-DEPLOY-ERRAND-JOB` is the errand job you want to add.
+Where `POST-DEPLOY-ERRAND-JOB` is the errand job you want to add.
 
 ### <a id="colocated-errands"></a> (Optional) Enable Co-located Errands
 
-<p class="note"><strong>Note</strong>: This feature requires BOSH Director v263 or later.
-</p>
+<p class="note"><strong>Note:</strong> This feature requires BOSH Director v263 or later.</p>
 
 You can run both `post-deploy` and `pre-delete` errands as co-located errands.
 Co-located errands run on an existing service instance group instead of a separate one.
@@ -1434,39 +1436,38 @@ Currently the ODB supports co-locating only the `post-deploy` or `pre-delete` er
 
 For more information, see the [Errands](https://bosh.io/docs/errands.html) in the BOSH documentation.
 
-To enable co-located errands for a plan, do the following steps.
+To enable co-located errands for a plan, add each co-located errand job to the manifest as follows:
 
-1. Add each co-located errand job to the manifest as follows:
-    - Add the errand in `service_deployment`.
-    - Add the errand in the plan's `lifecycle_errands` configuration.
-    - Set the instances the errand should run on in the `lifecycle_errands`.
+- Add the errand in `service_deployment`.
+- Add the errand in the plan's `lifecycle_errands` configuration.
+- Set the instances the errand should run on in the `lifecycle_errands`.
 
-    Below is an example manifest that includes a co-located post-deploy errand:
+Below is an example manifest that includes a co-located post-deploy errand:
 
-    ```yaml
-    service_deployment:
-      releases:
-        - name: SERVICE-RELEASE
-          version: SERVICE-RELEASE-VERSION
-          jobs:
-            - SERVICE-RELEASE-JOB
-            - CO-LOCATED-POST-DEPLOY-ERRAND-JOB
-    service_catalog:
-      plans:
-        - name: CF-MARKETPLACE-PLAN-NAME
-          lifecycle_errands:
-            post_deploy:
-              - name: CO-LOCATED-POST-DEPLOY-ERRAND-JOB
-                instances:
-                  - SERVICE-RELEASE-JOB/0
-              - name: NON-CO-LOCATED-POST-DEPLOY-ERRAND
-          instance_groups:
-            - name: NON-CO-LOCATED-POST-DEPLOY-ERRAND
-              ...
-            - name: SERVICE-RELEASE-JOB
-              ...
-    ```
+```yaml
+service_deployment:
+  releases:
+    - name: SERVICE-RELEASE
+      version: SERVICE-RELEASE-VERSION
+      jobs:
+        - SERVICE-RELEASE-JOB
+        - CO-LOCATED-POST-DEPLOY-ERRAND-JOB
+service_catalog:
+  plans:
+    - name: CF-MARKETPLACE-PLAN-NAME
+      lifecycle_errands:
+        post_deploy:
+          - name: CO-LOCATED-POST-DEPLOY-ERRAND-JOB
+            instances:
+              - SERVICE-RELEASE-JOB/0
+          - name: NON-CO-LOCATED-POST-DEPLOY-ERRAND
+      instance_groups:
+        - name: NON-CO-LOCATED-POST-DEPLOY-ERRAND
+          ...
+        - name: SERVICE-RELEASE-JOB
+          ...
+```
 
-    Where `CO-LOCATED-POST-DEPLOY-ERRAND-JOB` is the co-located errand you want to
-    run and `SERVICE-RELEASE-JOB/0` is the instances you want the errand to run
-    on.
+Where `CO-LOCATED-POST-DEPLOY-ERRAND-JOB` is the co-located errand you want to
+run and `SERVICE-RELEASE-JOB/0` is the instances you want the errand to run
+on.
