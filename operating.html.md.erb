@@ -560,6 +560,7 @@ When composing plans, supply the following:
             private:
               SECRET: PASSWORD
             version: 1.4.7-rc.1 # must be semver
+            desciption: "OS image update.\nExpect downtime." # optional
           plans:
           - name: STABLE
             maintenance_info: # plan-specific
@@ -576,6 +577,7 @@ When composing plans, supply the following:
         * Plan-specific configuration takes precedence over global configuration
         * `maintenance_info.public` is returned as configured
         * `maintenance_info.version` is returned as configured
+        * `maintenance_info.description` is returned as configured
         * All properties in `maintenance_info.private` are aggregated and hashed into a single string
 
         For the example manifest above, the catalog response is:
@@ -593,7 +595,8 @@ When composing plans, supply the following:
                             "size": 3
                         },
                         "private": "HASHED-VALUE",
-                        "version": "7.0.0"
+                        "version": "7.0.0",
+                        "desciption": "OS image update.\nExpect downtime."
                     }
                 }, {
                     "name": "EDGE",
@@ -615,7 +618,11 @@ When composing plans, supply the following:
     `&stemcellVersion` annotation and then referenced in the maintenance information with
     the `*stemcellVersion` tag.
 
-    <p class="note"><strong>Note:</strong> The Open Service Broker API only support <code>maintenance_info.version</code>. Pivotal discourages the use of <code>public</code> and <code>private</code> if Cloud Foundry is the platform communicating to the broker.</p>
+    <p class="note"><strong>Note:</strong> The Open Service Broker API only supports
+    <code>maintenance_info.version</code> and <code>maintenance_info.description</code>.
+    Pivotal discourages the use of <code>public</code> and
+    <code>private</code> if Cloud Foundry is the platform communicating
+    to the broker.</p>
 
 #### <a id="starter-snippet"></a>Starter Snippet for the Service Catalog and Plans
 
@@ -693,6 +700,7 @@ service_catalog:
       log_aggregrator_mtls_cert: *YAML_ANCHOR_TO_MTLS_CERT
     # optional - should conform to semver
     version: 1.2.3-rc2
+    description: "OS image update.\nExpect downtime."
   plans:
     - name: CF-MARKETPLACE-PLAN-NAME
       # optional - used by the cf CLI to display whether this plan is "free" or "paid":
