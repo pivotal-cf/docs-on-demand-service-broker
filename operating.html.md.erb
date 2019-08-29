@@ -25,8 +25,9 @@ Operators are responsible for the following:
 * Managing brokers and service plans.
   See [Broker and Service Management](./management.html).
 
-<p class="note"><strong>Note</strong>: Pivotal recommends that you provide documentation
- when you make changes to the manifest to inform other operators about the new configurations.</p>
+<p class="note"><strong>Note:</strong> Pivotal recommends that you provide documentation
+ when you make changes to the manifest to inform other operators about the new configurations.
+</p>
 
 ## <a id="networking"></a>Set Up Networking
 
@@ -126,7 +127,7 @@ See the following topics for how to set up your BOSH Director:
 
 ### <a id="software-reqs"></a> Software Requirements
 
-The On-Demand Broker requires the following:
+ODB requires the following:
 
 - BOSH Director v266.12.0 or v267.6.0 and later.
   To install the BOSH Director, see [Quick Start](https://bosh.io/docs/quick-start/)
@@ -214,7 +215,7 @@ see [Using BOSH Teams](https://bosh.io/docs/director-bosh-teams/)
 in the BOSH documentation.
 
 To use BOSH teams to ensure that your on-demand service broker client can only modify deployments it
-created, do the following:
+created:
 
 1. Run the following UAA CLI (UAAC) command to create the client:
 
@@ -226,9 +227,9 @@ created, do the following:
     ```
     Where:
     <ul>
-      <li>`CLIENT-ID` is your client ID.</li>
-      <li>`CLIENT-SECRET` is your client secret.</li>
-      <li>`TEAM-NAME` is the name of the team authorized to modify this deployment.</li>
+      <li><code>CLIENT-ID</code> is your client ID.</li>
+      <li><code>CLIENT-SECRET</code> is your client secret.</li>
+      <li><code>TEAM-NAME</code> is the name of the team authorized to modify this deployment.</li>
     </ul>
     <br>
     For example:
@@ -316,7 +317,7 @@ Upload the following releases to your BOSH Director:
 * **Your service release**---Get the service release from the release author.
 * **BOSH Process Manager (bpm) release**---Get the bpm release from the location listed in [BOSH releases](https://bosh.io/releases/github.com/cloudfoundry-incubator/bpm-release?all=1) in the BOSH documentation. You might not need to do this if the bpm release is already uploaded.
 
-To upload a release to your BOSH Director, do the following:
+To upload a release to your BOSH Director:
 
 1. Run the following command.
 
@@ -349,7 +350,7 @@ There are two parts to writing your broker manifest. You must:
 
 If you are unfamiliar with writing BOSH v2 manifests, see [Deployment Config](http://bosh.io/docs/manifest-v2.html).
 
-For example manifests, see the following:
+Two example manifests are below.
 
   * For a Redis service---[redis-example-service-adapter-release](https://github.com/pivotal-cf-experimental/redis-example-service-adapter-release/blob/master/docs/example-manifest.yml) in GitHub.
 
@@ -374,7 +375,8 @@ The snippet uses BOSH v2 syntax as well as global cloud config and job-level pro
 For examples of complete broker manifests, see [Write a Broker Manifest](#broker-manifest) above.
 
 <p class="note warning"><strong>Warning</strong>: The <code>disable_ssl_cert_verification</code>
-  option is dangerous and should be set to <code>false</code> in production.</p>
+  option is dangerous and should be set to <code>false</code> in production.
+</p>
 
 ```yaml
 addons:
@@ -460,7 +462,7 @@ When configuring the service catalog, supply the following:
 
 * **Stemcells:**
   <p class="note"><strong>Note:</strong>
-  If you are using Xenial stemcells, you must update any BOSH add-ons to support Xenial stemcells.
+  If you use Xenial stemcells, you must update any BOSH add-ons to support Xenial stemcells.
   For links to instructional topics about updating see <a href="./upgrades.html#update-addons">Update Add-ons to Run with Xenial Stemcell</a>.</p>
   * These are used on each VM in the service deployments.
   * Use exact versions for releases and stemcells. The use of `latest` and floating
@@ -600,7 +602,8 @@ When composing plans, supply the following:
     <p class="note"><strong>Note:</strong> The Open Service Broker API only supports
     <code>maintenance_info.version</code>. Pivotal discourages the use of <code>public</code> and
     <code>private</code> if Cloud Foundry is the platform communicating
-    to the broker.</p>
+    to the broker.
+    </p>
 
 #### <a id="starter-snippet"></a>Starter Snippet for the Service Catalog and Plans
 
@@ -676,7 +679,7 @@ service_catalog:
     private:
       # example of private data that would require a service update to change
       log_aggregrator_mtls_cert: *YAML_ANCHOR_TO_MTLS_CERT
-    # optional - should be conforming to semver
+    # optional - should conform to semver
     version: 1.2.3-rc2
   plans:
     - name: CF-MARKETPLACE-PLAN-NAME
@@ -798,7 +801,7 @@ The broker also accepts only the following cipher suites:
 
 ## <a id="secure-bind-credentials"></a>(Optional) Access Manifest Secrets at Bind Time
 
-<p class="note alert"><strong>Note</strong>: This feature does not work if you have configured <code>use_stdin</code> to be false.</p>
+<p class="note alert"><strong>Note:</strong> This feature does not work if you have configured <code>use_stdin</code> to be false.</p>
 
 A service adapter might need to access secrets embedded in a service instance
 manifest when processing a create binding request.
@@ -892,12 +895,13 @@ the address for runtime CredHub is a local domain name.
 
 <p class="note"><strong>Note: </strong>
   Pivotal recommends using BOSH DNS as a DNS provider.
-  If you are using PCF v2.4 or later, you cannot use consul as a DNS provider
-  because consul server VMs have been removed in Pivotal Application Service (PAS) v2.4.</p>
+  If you use PCF v2.4 or later, you cannot use consul as a DNS provider
+  because consul server VMs have been removed in Pivotal Application Service (PAS) v2.4.
+</p>
 
 ### Procedure for Enabling Secure Binding
 
-To enable secure binding, do the following:
+To enable secure binding:
 
 1. Set up a new runtime CredHub client in Cloud Foundry UAA with `credhub.write` and
 `credhub.read` in its list of scopes.
@@ -959,7 +963,7 @@ The plaintext credentials are stored in runtime CredHub under this key, and the
 key is available under the `VCAP_SERVICES` environment variable for the app.
 
 
-## <a id="plan-schemas"></a>(Optional) Enable Plan Schemas
+## <a id="plan-schemas"></a> (Optional) Enable Plan Schemas
 
 As of OSBAPI Spec v2.13 ODB supports enabling plan schemas. For more information, see [OSBAPI Spec v2.13](https://github.com/openservicebrokerapi/servicebroker/blob/v2.13/spec.md#changes-since-v212) in GitHub.
 
@@ -967,7 +971,7 @@ When this feature is enabled, the broker validates incoming configuration parame
 against a schema during the provision, binding, and update of service instances.
 The broker produces an error if the parameters do not conform.
 
-To enable plan schemas, do the following:
+To enable plan schemas:
 
 1. Ensure that the service adapter implements the command `generate-plan-schemas`.
 When it is not implemented, the broker fails to deploy.
@@ -987,6 +991,7 @@ For more information about this command, see [generate-plan-schemas](./adapter-r
                 ...
                 enable_plan_schemas: true
       ```
+
 For a more detailed manifest snippet, see [Starter Snippet for Your Broker](#broker-starter-snippet) above.
 
 
@@ -1017,7 +1022,7 @@ This creates a URI for your broker.
   in GitHub.
 1. If you configure a route, set the `broker_uri` property in the [register-broker errand](./management.html#register-broker).
 
-## <a id="service-instance-quotas"></a>(Optional) Set Service Instance Quotas
+## <a id="service-instance-quotas"></a> (Optional) Set Service Instance Quotas
 
 You can set service instance quotas to limit the number of service instances ODB can create.
 
@@ -1028,9 +1033,10 @@ There are two types service instances quotas:
 - **Plan quotas** -- limit the number of service instances for a given plan
 
 <p class="note"><strong>Note</strong>: These limits do not include orphaned deployments.
-  See <a href="./troubleshooting-bosh.html#listing-orphans">List Orphan Deployments</a>
+  For more information, see <a href="./troubleshooting-bosh.html#listing-orphans">List Orphan Deployments</a>
    and <a href="./management.html#orphan-deployments">Delete Orphaned Deployments</a>
-   for more information.</p>
+   for more information.
+</p>
 
 When creating a service instance, ODB checks the global service instance limit.
 If this limit has not been reached, ODB checks the plan service instance limit.
@@ -1067,7 +1073,7 @@ Where `INSTANCE-LIMIT` is the maximum number of service instances allowed.
 
 For a more detailed manifest snippet, see the [Starter Snippet for the Service Catalog and Plans](#starter-snippet) above.
 
-## <a id="service-resource-quotas"></a>(Optional) Set Resource Quotas
+## <a id="service-resource-quotas"></a> (Optional) Set Resource Quotas
 
 You can set resource quotas to limit the amount of a particular resource that
 each service instance can use.
@@ -1099,10 +1105,11 @@ If no limits have been reached, the service instance is created.
 
 
 <p class="note"><strong>Note</strong>: When calculating the amount of resources used,
-ODB does not take orphan deployments into consideration.  See
+ODB does not take orphan deployments into consideration. For more information, see
 <a href="./troubleshooting-bosh.html#listing-orphans">List Orphan Deployments</a>
 and <a href="./management.html#orphan-deployments">Delete Orphaned
-Deployments</a> for more information.</p>
+Deployments</a>
+</p>
 
 ### Procedure for Setting Resource Quotas
 
@@ -1170,7 +1177,7 @@ limit resources in:
 
 For a more detailed manifest snippet, see the [Starter Snippet for the Service Catalog and Plans](#starter-snippet) above.
 
-## <a id="broker-metrics"></a>(Optional) Configure Service Metrics
+## <a id="broker-metrics"></a> (Optional) Configure Service Metrics
 
 The ODB BOSH release contains a metrics job that can be used to emit metrics
 when co-located with the Pivotal Cloud Foundry Service Metrics SDK.
@@ -1219,8 +1226,9 @@ For more information about service metrics, see [Service Metrics for Pivotal Clo
 
 <p class="note alert"><strong>Note:</strong> When <code>service-metrics-adapter</code> is not configured,
   it defaults to a BOSH-provided IP address or BOSH-provided BOSH DNS address, depending on in configuration on the broker URI. See <a href="https://bosh.io/docs/dns/#links">Impact on links</a> in the BOSH documentation.
-  <br><br>When the broker is using TLS, the broker certificate must contain this BOSH provided address in its  Subject Alternative Names section, otherwise the certificate cannot be verified by Cloud Foundry. For details about how to insert a BOSH DNS address into a config
-server generated certificate, see <a href="https://bosh.io/docs/dns/#dns-variables-integration">BOSH DNS Addresses in Config Server Generated Certs</a> in the BOSH documentation.</p>
+  <br><br>When the broker is using TLS, the broker certificate must contain this BOSH provided address in its Subject Alternative Names section, otherwise the certificate cannot be verified by Cloud Foundry. For details about how to insert a BOSH DNS address into a config
+server generated certificate, see <a href="https://bosh.io/docs/dns/#dns-variables-integration">BOSH DNS Addresses in Config Server Generated Certs</a> in the BOSH documentation.
+</p>
 
 ## <a id="binding-with-dns"></a>(Optional) Use BOSH DNS Addresses for Bindings
 
@@ -1324,7 +1332,7 @@ For more information, see <a href="#broker-manifest">Write a Broker Manifest</a>
 
 ## <a id="broker-bpm"></a>About ODB and BOSH Process Manager (bpm)
 
-Starting in ODB [version v0.27.0](https://docs.pivotal.io/svc-sdk/odb/0-27/release-notes.html), the broker binary adopted [BOSH Process Manager](https://bosh.io/docs/bpm/bpm/) (bpm) for better job isolation and security. Starting in ODB [version v0.30.0](https://docs.pivotal.io/svc-sdk/odb/0-30/release-notes.html), all broker management errands also use bpm.
+Starting in ODB [version v0.27.0](https://docs.pivotal.io/svc-sdk/odb/0-27/release-notes.html), the broker binary adopted BOSH Process Manager (bpm) for better job isolation and security. Starting in ODB [version v0.30.0](https://docs.pivotal.io/svc-sdk/odb/0-30/release-notes.html), all broker management errands also use bpm. For more information, see [bpm](https://bosh.io/docs/bpm/bpm/) in the BOSH documentation.
 
 For bpm to work with a broker:
 
@@ -1335,7 +1343,8 @@ For [broker management errands](management.html#management) that are not co-loca
 
 ## <a id="lifecycle-errands"></a>Service Instance Lifecycle Errands
 
- <p class="note"><strong>Note</strong>: This feature requires BOSH Director v261 or later.</p>
+ <p class="note"><strong>Note:</strong> This feature requires BOSH Director v261 or later.
+ </p>
 
 Service instance lifecycle errands allow additional short-lived jobs to run as part of service instance deployment.
 A deployment is only considered successful if all lifecycle errands exit successfully.
@@ -1413,7 +1422,8 @@ To enable lifecycle errands, do the following steps.
 
 ### <a id="colocated-errands"></a> (Optional) Enable Co-located Errands
 
-<p class="note"><strong>Note</strong>: This feature requires BOSH Director v263 or later.</p>
+<p class="note"><strong>Note</strong>: This feature requires BOSH Director v263 or later.
+</p>
 
 You can run both `post-deploy` and `pre-delete` errands as co-located errands.
 Co-located errands run on an existing service instance group instead of a separate one.
