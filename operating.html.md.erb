@@ -31,7 +31,7 @@ Operators are responsible for the following:
 
 <%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 
-<%= partial '../../../svc-sdk/odb/odb/service_networks_table' %>
+<%= partial '../../../svc-sdk/odb/partials/services/service_networks_table' %>
 
 <br>
 Regardless of the specific network layout, you must ensure network
@@ -1339,7 +1339,7 @@ For more information, see <a href="#broker-manifest">Write a Broker Manifest</a>
 
 ## <a id="broker-bpm"></a>About ODB and BOSH Process Manager (bpm)
 
-Starting in ODB [version v0.27.0](https://docs.pivotal.io/svc-sdk/odb/0-27/release-notes.html), the broker binary adopted BOSH Process Manager (bpm) for better job isolation and security. Starting in ODB [version v0.30.0](https://docs.pivotal.io/svc-sdk/odb/0-30/release-notes.html), all broker management errands also use bpm. For more information, see [bpm](https://bosh.io/docs/bpm/bpm/) in the BOSH documentation.
+Starting in ODB [version v0.27.0](https://docs.pivotal.io/svc-sdk/odb/0-27/release-notes.html), the broker binary adopted BOSH Process Manager (bpm) for better job isolation and security. Starting in ODB [version v0.30.0](https://docs.pivotal.io/../svc-sdk/odb/0-30/release-notes.html), all broker management errands also use bpm. For more information, see [bpm](https://bosh.io/docs/bpm/bpm/) in the BOSH documentation.
 
 For bpm to work with a broker:
 
