@@ -47,8 +47,10 @@ for example:
 [on-demand-service-broker] [4d63080d-e038-45a3-85f9-93910f6b40b1] 2016/09/05 16:43:26.123456 a valid UAA token was found in cache, will not obtain a new one
 </pre>
 
-<p class="note"><strong>Note</strong>: The ODB's HTTP server and start up logs
-  are not prefixed with a request ID.</p>
+<p class="note">
+  <strong>Note</strong>: The ODB's HTTP server and start up logs
+  are not prefixed with a request ID.
+</p>
 
 All ODB logs have a UTC timestamp.
 
@@ -87,12 +89,14 @@ Example manifest:
                 Tag="delete-all-service-instances-and-deregister-broker")
 ```
 
-<p class="note"><strong>Note</strong>:
+<p class="note">
+  <strong>Note</strong>:
   The errand is configured to redirect <code>stdout</code> and <code>stderr</code> to
   <code>/var/vcap/sys/log/ERRAND_NAME/errand.stdout.log</code> and
   <code>/var/vcap/sys/log/ERRAND_NAME/errand.stderr.log</code>.
   When configuring your errand, be careful to match the actual log file paths in
-  the <code>custom_rule</code> section.</p>
+  the <code>custom_rule</code> section.
+</p>
 
 
 ### <a id="metrics"></a>Metrics
@@ -104,9 +108,11 @@ For how to do the configuration, see [Configure Service Metrics](./operating.htm
 You can consume these metrics by using the CF CLI Firehose plugin.
 See the [firehose-plugin](https://github.com/cloudfoundry/firehose-plugin) repository in GitHub.
 
-<p class="note"><strong>Note</strong>:
-  The broker must be registered with a Cloud Foundry in order for metrics to be successfully emitted.
-  For how to register the broker, see <a href="./management.html#register-broker">Register Broker</a>.</p>
+<p class="note">
+  <strong>Note:</strong> The broker must be registered with a Cloud Foundry in order for metrics to be
+  successfully emitted.
+  For how to register the broker, see <a href="./management.html#register-broker">Register Broker</a>.
+</p>
 
 #### <a id="service-metrics"></a> Service-level Metrics
 The broker emits a metric indicating the total number of instances across all plans.
@@ -141,11 +147,13 @@ You can see and consume these credentials using the CredHub CLI.
 For more information, see the [credHub-cli](https://github.com/cloudfoundry-incubator/credhub-cli)
 repository in GitHub.
 
-<p class="note"><strong>Note</strong>:
+<p class="note">
+  <strong>Note:</strong>
   Usually, CredHub is not accessible from outside the Cloud Foundry network.
-  Use the CredHub CLI from within the internal network, or connect using an appropriate tunnel.</p>
+  Use the CredHub CLI from within the internal network, or connect using an appropriate tunnel.
+</p>
 
-In failure scenarios, like when CredHub is down or when the CredHub client
+In failure scenarios, such as when CredHub is down or when the CredHub client
 credentials are wrong, the broker logs to the file at `/var/vcap/sys/log/broker/broker.log`
 where the root cause is generally given.
 For more information, see [Logs](#logs) above.
