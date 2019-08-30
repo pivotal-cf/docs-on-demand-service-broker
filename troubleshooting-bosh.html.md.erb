@@ -12,7 +12,7 @@ For more troubleshooting information, see
 
 Pivotal recommends that you use the BOSH CLI for administering the deployments
 created by the on-demand broker (ODB); for example for checking VMs, ssh, viewing logs.
-For more information on installing the BOSH CLI, see 
+For more information on installing the BOSH CLI, see
 [Install](https://bosh.io/docs/cli-v2/#install).
 
 Pivotal discourages using the BOSH CLI to update or delete ODB service deployments
@@ -348,8 +348,10 @@ Example JSON body:
 
 ## <a id="kb"></a>Knowledge Base (Community)
 
-<%= partial 'tshoot-kb' %>
+<%= partial '../../../svc-sdk/odb/partials/services-tshoot/tshoot-kb' %>
 
 ## <a id="support"></a>File a Support Ticket
 
-<%= partial 'tshoot-support' %>
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
+
+<%= partial '../../../svc-sdk/odb/partials/services-tshoot/tshoot-support' %>

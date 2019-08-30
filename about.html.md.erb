@@ -3,51 +3,51 @@ title: About On-Demand Brokers
 owner: London Services Enablement
 ---
 
-This topic provides information about on-demand brokers for people who want to 
+This topic provides information about on-demand brokers for people who want to
 create on-demand service tiles for Pivotal Cloud Foundry (PCF).
 
 ## <a id="cf-broker"></a>Cloud Foundry Service Brokers and PCF Tiles
 
-Service brokers let developers create service instances in their development spaces 
-that they can call from their code. 
+Service brokers let developers create service instances in their development spaces
+that they can call from their code.
 
-### Cloud Foundry Service Brokers 
+### Cloud Foundry Service Brokers
 
-Cloud Foundry Service Brokers provide an interface between the Cloud Controller and the 
-add-on software service that they represent. 
-The service broker works by providing an API which the Cloud Controller calls to create service instances, 
-bind them to apps, and perform other operations. 
-Cloud Foundry service brokers are implemented as HTTP servers that conform to the 
+Cloud Foundry Service Brokers provide an interface between the Cloud Controller and the
+add-on software service that they represent.
+The service broker works by providing an API which the Cloud Controller calls to create service instances,
+bind them to apps, and perform other operations.
+Cloud Foundry service brokers are implemented as HTTP servers that conform to the
 [Open Service Broker API](http://docs.cloudfoundry.org/services/api.html).
 
-In addition to providing an API, a service broker publishes a service catalog 
-that may include multiple service plans, such as a free tier and a metered tier. 
-Brokers register their service plans with the Cloud Controller to populate the Marketplace, 
+In addition to providing an API, a service broker publishes a service catalog
+that may include multiple service plans, such as a free tier and a metered tier.
+Brokers register their service plans with the Cloud Controller to populate the Marketplace,
 which developers access with `cf marketplace` or through the Pivotal Cloud Foundry (PCF) Apps Manager.
 
 ### PCF Tiles
 
 On PCF, operators find services on [Pivotal Network](https://network.pivotal.io/)
-and install and configure them through a tile interface in the Ops Manager **Installation Dashboard** 
-to make them available to developers. 
-Installing a service tile creates a service broker, registers it with the Cloud Controller, 
-and publishes the service plans that the broker offers. 
+and install and configure them through a tile interface in the Ops Manager **Installation Dashboard**
+to make them available to developers.
+Installing a service tile creates a service broker, registers it with the Cloud Controller,
+and publishes the service plans that the broker offers.
 Developers can then create service instances in their spaces and bind them to their apps.
 
 ![Your Service Tile in Ops Manager](img/your-service-here.png)
 
-The central element behind a service tile is the service broker, but the tile software 
+The central element behind a service tile is the service broker, but the tile software
 includes other components that make the service easy for operators to install and maintain
-and easy for developers to use. 
-These components include configuration layouts, upgrade rules, lifecycle errands, 
+and easy for developers to use.
+These components include configuration layouts, upgrade rules, lifecycle errands,
 and BOSH manifests for deploying the service instances.
 
 ## <a id="odb-sdk"></a>On-Demand Services SDK and the On-Demand Broker
 
-The on-demand services SDK provides a generic on-demand broker (ODB) that answers API calls from the Cloud Controller. 
+The on-demand services SDK provides a generic on-demand broker (ODB) that answers API calls from the Cloud Controller.
 
-*Service authors* add service-specific functionality to the on-demand services SDK through an 
-executable called a **Service Adapter**. 
+*Service authors* add service-specific functionality to the on-demand services SDK through an
+executable called a **Service Adapter**.
 These components combine to create a BOSH deployment.
 For more information about BOSH deployments, see [What is a Deployment](https://bosh.io/docs/deployment/).
 
@@ -55,11 +55,11 @@ For more information about BOSH deployments, see [What is a Deployment](https://
 The tile consumes the BOSH deployment to generate a BOSH manifest for deploying on-demand instances of the service.
 The diagram below illustrates this process.
 
-![The service adapter plugs into the on-demand broker to create a BOSH deployment. 
+![The service adapter plugs into the on-demand broker to create a BOSH deployment.
 For details read the text above](img/odb-service-adapter.png)
 
-The on-demand services SDK imposes no constraints on the service authors' ability 
-to offer new functionality or expose configuration options in their service plans, 
+The on-demand services SDK imposes no constraints on the service authors' ability
+to offer new functionality or expose configuration options in their service plans,
 such as rate limiting and external load balancers.
 
 ### <a id="roles"></a>On-Demand Service Roles
@@ -70,7 +70,7 @@ This section provides a summary of the responsibilities for each role.
 
 #### <a id="service-author"></a>Service Author
 
-Service authors write and maintain the service adapter. 
+Service authors write and maintain the service adapter.
 For more information about service author responsibilities, see
 [Service Author Deliverables](./creating.html#what-is-required-of-the-service-authors).
 
@@ -82,25 +82,27 @@ For more information, see [Creating an On-Demand Service Tile](./tile.html).
 
 #### <a id="operator"></a>Operator
 
-Operators deploy and maintain the broker. 
-They also manage access control for Cloud Foundry (CF) developers. 
+Operators deploy and maintain the broker.
+They also manage access control for Cloud Foundry (CF) developers.
 This documentation provides information for two types of operator, Ops Manager operators and BOSH operators.
 These roles may be separate or combined.
-The following describes each type of operator:  
+The following describes each type of operator:
 
-- **Ops Manager Operator**: Uses the Ops Manager UI to configure plans and provide service specific configurations. 
-For more information about configuring a specific service, see the [Pivotal Documentation](https://docs.pivotal.io/) 
+- **Ops Manager Operator**: Uses the Ops Manager UI to configure plans and provide service specific configurations.
+For more information about configuring a specific service, see the [Pivotal Documentation](https://docs.pivotal.io/)
 for the service.
 - **BOSH Operator**: Creates and modifies the on-demand service broker manifest to provide service specific configurations.
 For more information about operator responsibilities, see [Operator Responsibilities](./operating.html#operator-checklist).
 
 ## <a id="service-network"></a>Service Network Requirement
 
-<%= partial 'service-networks-v2' %>
+<%= partial '../../../svc-sdk/odb/partials/services/service-networks-v2' %>
 
 ## <a id="on-demand"></a>Default Network and Service Network
 
-<%= partial 'on_demand_architecture' %>
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
+
+<%= partial '../../../svc-sdk/odb/partials/services/on_demand_architecture' %>
 
 ## <a id="adapter"></a>Service Adapters
 
@@ -109,19 +111,19 @@ The diagram below shows where responsibility lies for each aspect of the ODB wor
 
 ![responsibility-diagram](img/responsibility-diagram.png)
 
-The service author can focus on building the BOSH release of their service and provide 
-a service adapter binary that manages manifest generation, schema generation, binding, and unbinding. 
+The service author can focus on building the BOSH release of their service and provide
+a service adapter binary that manages manifest generation, schema generation, binding, and unbinding.
 The ODB manages all interactions with Cloud Foundry and BOSH.
 
-Thanks to BOSH v2, service authors can define resources globally (in **Cloud Config**). 
-This makes manifests portable across BOSH Cloud Provider Interfaces (CPIs) and 
-lets them be substantially smaller than old-style manifests. 
-The ODB takes advantage of other BOSH v2 features as well, including dynamic IP management, 
-availability zones, and links through which deployed BOSH instances can access 
+Thanks to BOSH v2, service authors can define resources globally (in **Cloud Config**).
+This makes manifests portable across BOSH Cloud Provider Interfaces (CPIs) and
+lets them be substantially smaller than old-style manifests.
+The ODB takes advantage of other BOSH v2 features as well, including dynamic IP management,
+availability zones, and links through which deployed BOSH instances can access
 IP addresses and other information from other instances.
 
-Once an on-demand tile is authored and distributed, the operator installs and configures 
-it the same way they do with any other Pivotal products. 
+Once an on-demand tile is authored and distributed, the operator installs and configures
+it the same way they do with any other Pivotal products.
 In the process, they select which of the tile's available service plans to offer their developers.
 
 ## <a id="steps"></a>Get Started Using ODB
@@ -131,8 +133,8 @@ This documentation provides information for operators and developers in the foll
 
 ### <a id="operator"></a>Operator Guide
 
-This section provides information about how to operate an on-demand broker 
-for BOSH operators and Ops Manager operators. 
+This section provides information about how to operate an on-demand broker
+for BOSH operators and Ops Manager operators.
 
 ### <a id="service-author"></a>Service and Tile Developer Guide
 
