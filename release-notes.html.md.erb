@@ -12,8 +12,12 @@ owner: London Services Enablement
 
 New features and changes in this release:
 
-* Modified `upgrade-all-service-instance` errand to go through Cloud Foundry when that is the platform used and maintenance information is configured.
-* SDK users can set `UpdateMode` in the BOSH `Variables` block. For more information, see [Variables Block](https://bosh.io/docs/manifest-v2/#variables) in the BOSH documentation. This is the preferred method to re-generate credentials and should be used instead of `ConvergeVariables`. For more information, see [Features Block](https://bosh.io/docs/manifest-v2/#features) in the BOSH documentation.
+* Modified the `upgrade-all-service-instance` errand to go through Pivotal Cloud Foundry (PCF) when that is the platform used, and the `maintenance-info` property is configured.<br>
+For older versions of the broker, the errand always goes through BOSH when the platform is PCF.
+* SDK users can set `update_mode` in the BOSH `Variables` block.
+This is the preferred method to re-generate credentials and should be used instead of `ConvergeVariables`.<br><br>
+For information about `update_mode`, see [Variables Block](https://bosh.io/docs/manifest-v2/#variables) in the BOSH documentation.<br>
+For more information about `ConvergeVariables`, see [Features Block](https://bosh.io/docs/manifest-v2/#features) in the BOSH documentation.
 
 ### Known Issues
 
