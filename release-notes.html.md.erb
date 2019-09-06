@@ -12,6 +12,10 @@ owner: London Services Enablement
 
 New features and changes in this release:
 
+* Added support for `maintenanceInfo.descripton`. See [Maintenance Info](https://github.com/openservicebrokerapi/servicebroker/blob/master/spec.md#maintenance-info-object) in the OSBAPI spec.
+* Fixed an issue where contacting BOSH Director Links API too many times in parallel would cause some requests to fail during operations such as bind and unbind.
+* Bumped several dependencies
+
 ### Known Issues
 
 There are no known issues for this release.
