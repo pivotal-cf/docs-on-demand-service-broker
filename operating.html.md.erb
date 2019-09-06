@@ -8,7 +8,7 @@ Pivotal Cloud Foundry (PCF) Ops Manager operators and BOSH operators.
 
 ## <a id="operator-checklist"></a> Operator Responsibilities
 
-Operators are responsible for the following:
+Operators are responsible for:
 
 * Requesting appropriate networking rules for on-demand service tiles.
   See [Set Up Networking](#networking) below.
@@ -139,7 +139,7 @@ See the following topics for how to set up your BOSH Director:
 
 ### <a id="software-reqs"></a> Software Requirements
 
-ODB requires the following:
+ODB requires:
 
 - BOSH Director v266.12.0 or v267.6.0 and later.
   To install the BOSH Director, see [Quick Start](https://bosh.io/docs/quick-start/)
@@ -377,7 +377,7 @@ Two example manifests are below.
 ### <a id="core-broker-config"></a> Configure Your Broker
 
 Your manifest must contain exactly one non-errand instance group that is co-located with
-both of the following:
+both:
 
 * The broker job from `on-demand-service-broker`
 * Your service adapter job from your service adapter release
@@ -469,7 +469,7 @@ For an example snippet, see the [Starter Snippet for the Service Catalog and Pla
 
 #### <a id="configure-catalog"></a> Configure the Service Catalog
 
-When configuring the service catalog, supply the following:
+When configuring the service catalog, supply:
 
 * **The release jobs specified by the service author:**
   * Supply each release job exactly once.
@@ -498,7 +498,7 @@ Service authors do not define plans, but instead expose plan properties.
 Operators compose plans consisting of combinations of these properties, along with IaaS resources
 and catalog metadata.
 
-When composing plans, supply the following:
+When composing plans, supply:
 
 * **Cloud Foundry plan metadata for each plan:**<br><br>
   You can use other arbitrary field names in addition to the OSBAPI recommended fields.
@@ -560,7 +560,7 @@ When composing plans, supply the following:
             private:
               SECRET: PASSWORD
             version: 1.4.7-rc.1 # must be semver
-            desciption: "OS image update.\nExpect downtime." # optional
+            description: "OS image update.\nExpect downtime." # optional
           plans:
           - name: STABLE
             maintenance_info: # plan-specific
@@ -596,7 +596,7 @@ When composing plans, supply the following:
                         },
                         "private": "HASHED-VALUE",
                         "version": "7.0.0",
-                        "desciption": "OS image update.\nExpect downtime."
+                        "description": "OS image update.\nExpect downtime."
                     }
                 }, {
                     "name": "EDGE",
@@ -969,7 +969,7 @@ For example:
 
 For a more detailed manifest snippet, see [Starter Snippet for Your Broker](#broker-starter-snippet) above.
 
-### How Credentials Are Stored on Runtime CredHub
+### How Credentials Are Stored on Runtime CredHub <%# H2 and H3 headers have anchor links except when in release notes. %>
 
 The credentials for a given service binding are stored with the following format:
 
@@ -1050,8 +1050,8 @@ There are two types service instances quotas:
 - **Plan quotas** -- limit the number of service instances for a given plan
 
 <p class="note"><strong>Note:</strong> These limits do not include orphaned deployments. For more information, see <a href="./troubleshooting-bosh.html#listing-orphans">List Orphan Deployments</a>
-  and <a href="./management.html#orphan-deployments">Delete Orphaned Deployments</a>
-  for more information.</p>
+  and <a href="./management.html#orphan-deployments">Delete Orphaned Deployments</a>.
+  </p>
 
 When creating a service instance, ODB checks the global service instance limit.
 If this limit has not been reached, ODB checks the plan service instance limit.
