@@ -8,23 +8,27 @@ owner: London Services Enablement
 
 **Release Date: MMMM DD, 2019**
 
+
 ### Features
 
 New features and changes in this release:
 
-* Added support for `maintenanceInfo.descripton`. See [Maintenance Info](https://github.com/openservicebrokerapi/servicebroker/blob/master/spec.md#maintenance-info-object) in the OSBAPI spec.
-* Fixed an issue where contacting BOSH Director Links API too many times in parallel would cause some requests to fail during operations such as bind and unbind.
-* Bumped several dependencies
+* Added support for `maintenanceInfo.description`. For more information, see
+[Maintenance Info](https://github.com/openservicebrokerapi/servicebroker/blob/master/spec.md#maintenance-info-object)
+in the OSBAPI specifications.
+* Fixed an issue where contacting BOSH Director Links API too many times in parallel caused some requests to fail during operations such as bind and unbind.
+* Updated several dependencies
+* This release has the following dependencies:
+
+| Dependency  | Version  |
+|---|---|
+|  golang | 1.12.9  |
+
 
 ### Known Issues
 
 There are no known issues for this release.
 
-### On-Demand Broker Release uses the following dependencies versions: 
-
- | Dependency  | Version  |
-|---|---|
-|  Golang | 1.12.9  |
 
 ## <a id="view"></a> View Release Notes for Another Version
 
