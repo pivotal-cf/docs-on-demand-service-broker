@@ -24,9 +24,11 @@ This release has the following fixes:
 * Errors caused by JSON Schema Validation during create, update, and bind errands are now surfaced to platform
   users.
 
-### Known Issues
+### Known Issue
 
-There are no known issues for this release.
+This release has the following issue:
+
+* Contacting the BOSH Director links API many times in parallel can cause some requests to fail during operations such as bind and unbind.
 
 ## <a id="0.29.0"></a>v0.29.0
 
