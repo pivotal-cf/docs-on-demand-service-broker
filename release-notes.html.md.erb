@@ -35,6 +35,8 @@ property to `true` in the broker job.
   or later and v2.5.3 or later).
   For more information about this error, see [Unable to Render Templates for Job CredHub](troubleshooting.html#credhub-error).
 
+- Contacting the BOSH Director links API many times in parallel can cause some requests to fail during operations such as bind and unbind.
+
 ### Minimum Version Requirements
 
 The following are minimum version requirements for this release:
@@ -107,6 +109,9 @@ property to `true` in the broker job.
 
 - Using BOSH DNS addresses in `delete-binding` is not included in the
 [on-demand services golang SDK](https://github.com/pivotal-cf/on-demand-services-sdk).
+
+- Contacting the BOSH Director links API many times in parallel can cause some requests to fail during operations such as bind and unbind.
+
 
 ### Minimum Version Requirements
 
