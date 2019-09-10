@@ -15,9 +15,9 @@ This release has the following fix:
 * Including `null` plans in your service catalog definition no longer causes the broker to fail to deploy.
 `null` plans are now ignored.
 
-### Known Issues
+### Known Issue
 
-There are no known issues in this release.
+* Contacting the BOSH Director links API many times in parallel can cause some requests to fail during operations such as bind and unbind.
 
 ## <a id="0.31.0"></a>v0.31.0
 
