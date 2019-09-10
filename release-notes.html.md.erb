@@ -16,18 +16,28 @@ New features and changes in this release:
 * Added support for `maintenanceInfo.description`. For more information, see
 [Maintenance Info](https://github.com/openservicebrokerapi/servicebroker/blob/master/spec.md#maintenance-info-object)
 in the OSBAPI specifications.
-* Fixed an issue where contacting BOSH Director Links API too many times in parallel caused some requests to fail during operations such as bind and unbind.
 * Updated several dependencies
-* This release has the following dependencies:
 
-| Dependency  | Version  |
-|---|---|
-|  golang | 1.12.9  |
+
+### Resolved Issue
+
+This release has the following fix:
+
+* Contacting the BOSH Director links API many times in parallel no longer causes some requests to fail during some operations, such as bind and unbind.
 
 
 ### Known Issues
 
 There are no known issues for this release.
+
+
+### Compatibility
+
+This on-demand service broker release has the following dependency:
+
+| Dependency  | Version  |
+|---|---|
+|  golang | 1.12.9  |
 
 
 ## <a id="view"></a> View Release Notes for Another Version
