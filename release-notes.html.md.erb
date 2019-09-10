@@ -39,9 +39,11 @@ tile and BOSH teams for raising and fixing this issue.
   If using a Xenial stemcell in a tile, you must also update any BOSH add-ons.
 For more information, see [Update Add-ons to Run with Xenial Stemcell](./upgrades.html#update-addons).
 
-### Known Issues
+### Known Issue
 
-There are no known issues for this release.
+This release has the following issue:
+
+* Contacting the BOSH Director links API many times in parallel can cause some requests to fail during operations such as bind and unbind.
 
 ### Minimum Version Requirements
 
