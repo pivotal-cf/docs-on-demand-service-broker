@@ -132,6 +132,8 @@ This section contains diagrams that present the workflow for the following actio
 
 - [Upgrade All Service Instances with Maintenance Information Configured](#upgrade-all-instances-with-maintenance-info)
 
+- [Upgrade One Service Instance with Maintenance Information Configured](#upgrade-one-instance)
+
 
 ### <a id="upgrade-all-instances"></a>Upgrade All Service Instances
 
@@ -170,6 +172,16 @@ The sequence diagram below shows the workflow for upgrading all service instance
 information is configured.
 
 <%= partial 'mmd/upgrade_all_instances_with_maintenance_info_workflow.mmd' %>
+
+### <a id="upgrade-one-instance"></a>Upgrade One Service Instance with Maintenance Information Configured
+
+If Cloud Foundry supports maintenance information, and it is supplied in the ODB configuration,
+a user can trigger a single upgrade via `cf update-service SERVICE_NAME --upgrade`.
+
+The sequence diagram below shows the workflow for upgrading one service instance when maintenance
+information is configured.
+
+<%= partial 'mmd/upgrade_one_instance_workflow.mmd' %>
 
 
 ## <a id="binding"></a>About Binding and Unbinding Service Instances
