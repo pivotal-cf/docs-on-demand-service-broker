@@ -214,7 +214,7 @@ You have two options for providing a CA certificate to ODB for validation of the
 
 #### <a id="odb-to-cc"></a>ODB to Cloud Controller
 
-Optionally, you can configure a separate root CA certificate that is used when ODB communicates with the Cloud Foundry API (Cloud Controller). This is necessary if the Cloud Controller is configured with a certificate not trusted by the broker.
+You can configure a separate root CA certificate that is used when ODB communicates with the Cloud Foundry API (Cloud Controller). This is necessary if the Cloud Controller is configured with a certificate not trusted by the broker.
 
 For an example of how to add a separate root CA certificate to the manifest, see the line containing `CA-CERT-FOR-CLOUD-CONTROLLER` in the manifest snippet in [Starter Snippet for Your Broker](#broker-starter-snippet) below.
 
@@ -1018,7 +1018,7 @@ For a more detailed manifest snippet, see [Starter Snippet for Your Broker](#bro
 
 You can register a route to the broker using the `route_registrar` job from the
 routing release.
-The `route_registrar` job achieves the following:
+The `route_registrar` job:
 
 * Load balances multiple instances of ODB using the Cloud Foundry router
 * Allows access to ODB from the public internet

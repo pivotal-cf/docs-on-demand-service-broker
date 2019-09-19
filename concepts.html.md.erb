@@ -139,8 +139,7 @@ ODB provides the BOSH errand `upgrade-all-service-instances`.
 This errand upgrades all service instances managed by the broker.
 This is also used when a plan changes.
 The errand updates all instances that implement a plan with the new plan definition.
-For more information, see [Upgrade All Service Instances](./upgrades.html#upgrade-all-instances)
-in the Operator Guide.
+For more information, see [Upgrade All Service Instances](./upgrades.html#upgrade-all-instances).
 
 The sequence diagram below shows the workflow for upgrading all service instances.
 
@@ -170,6 +169,16 @@ The sequence diagram below shows the workflow for upgrading all service instance
 information is configured.
 
 <%= partial 'mmd/upgrade_all_instances_with_maintenance_info_workflow.mmd' %>
+
+### <a id="upgrade-one-instance"></a>Upgrade One Service Instance with Maintenance Information Configured
+
+If Cloud Foundry supports maintenance information, and it is supplied in the ODB configuration,
+a user can trigger a single upgrade by running `cf update-service SERVICE_NAME --upgrade`.
+
+The sequence diagram below shows the workflow for upgrading one service instance when maintenance
+information is configured.
+
+<%= partial 'mmd/upgrade_one_instance_workflow.mmd' %>
 
 
 ## <a id="binding"></a>About Binding and Unbinding Service Instances
@@ -249,7 +258,7 @@ pre-delete errands configured.
 ODB provides the BOSH errand `delete-all-service-instances`.
 This errand deletes all service instances managed by the broker.
 For how to use this errand, see
-[Delete All Service Instances](./management.html#delete-instances) in the Operator Guide.
+[Delete All Service Instances](./management.html#delete-instances).
 
 The sequence diagram below shows the workflow for deleting all service instances.
 
@@ -262,8 +271,7 @@ ODB provides the BOSH errand `delete-all-service-instances-and-deregister-broker
 This errand deletes all service instances managed by the broker and deregisters
 the broker from Cloud Foundry.
 For how to use this errand, see
-[Delete All Service Instances and Deregister Broker](./management.html#delete-instances-and-deregister)
-in the Operator Guide.
+[Delete All Service Instances and Deregister Broker](./management.html#delete-instances-and-deregister).
 
 The sequence diagram below shows the workflow for deleting all service instances
 and deregistering the broker.
