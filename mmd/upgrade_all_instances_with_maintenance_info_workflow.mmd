@@ -5,16 +5,20 @@ sequenceDiagram
   On Demand Broker->>Cloud Controller:GET instances
   Cloud Controller->>On Demand Broker:instances
   On Demand Broker->>Upgrade Errand:instances
-  loop for all instances
+  loop for each instance
     Upgrade Errand->>Cloud Controller: PUT service_instance (upgrade)
-    Cloud Controller->>On Demand Broker: PATCH instance (upgrade)
-    On Demand Broker->>Service Adapter: generate-manifest
-    Service Adapter->>On Demand Broker: manifest
-    On Demand Broker->>BOSH: deploy
-    BOSH->>On Demand Broker: accepted
-    On Demand Broker->>Cloud Controller: accepted
-    Cloud Controller->>Upgrade Errand: accepted
-    Note over Upgrade Errand,BOSH: Upgrade Errand polls Cloud Controller until complete
+    alt Cloud Controller version matches broker version for instance
+      Cloud Controller->>Upgrade Errand: Success
+    else Cloud Controller version differs from broker version for instance
+      Cloud Controller->>On Demand Broker: PATCH instance (upgrade)
+      On Demand Broker->>Service Adapter: generate-manifest
+      Service Adapter->>On Demand Broker: manifest
+      On Demand Broker->>BOSH: deploy
+      BOSH->>On Demand Broker: accepted
+      On Demand Broker->>Cloud Controller: accepted
+      Cloud Controller->>Upgrade Errand: accepted
+      Note over Upgrade Errand,BOSH: Upgrade Errand polls Cloud Controller until complete
+    end
   end
   Upgrade Errand->>Operator:completed successfully
 </div>
