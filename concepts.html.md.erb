@@ -161,8 +161,8 @@ with external service instances API configured.
 
 ### <a id="upgrade-all-instances-with-maintenance-info"></a>Upgrade All Service Instances with Maintenance Information Configured
 
-If Cloud Foundry supports maintenance information, and it is supplied in the ODB configuration,
-the `upgrade-all-service-instances` errand coordinates with Cloud Foundry to only update service instances
+If Cloud Foundry supports maintenance information and it is supplied in the ODB configuration,
+the `upgrade-all-service-instances` errand coordinates with Cloud Foundry to update only service instances
 that are outdated.
 If a service instance has already been upgraded successfully, then the errand has no effect on that service
 instance.
@@ -174,7 +174,7 @@ information is configured.
 
 ### <a id="upgrade-one-instance"></a>Upgrade One Service Instance with Maintenance Information Configured
 
-If Cloud Foundry supports maintenance information, and it is supplied in the ODB configuration,
+If Cloud Foundry supports maintenance information and it is supplied in the ODB configuration,
 a user can trigger a single upgrade by running `cf update-service SERVICE_NAME --upgrade`.
 
 The sequence diagram below shows the workflow for upgrading one service instance when maintenance
