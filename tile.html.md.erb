@@ -36,7 +36,7 @@ However, Pivotal recommends that you have at least two networks as described abo
 There are several methods you can use to build a tile.
 This topic describes how to build a tile using the Tile Generator.
 
-To use the Tile Generator to build a tile for an on-demand service, do the following:
+To use the Tile Generator to build a tile for an on-demand service:
 
 1. Generate a `tile.yml` file by doing steps 1–4 of [How to
 Use](http://docs.pivotal.io/tiledev/tile-generator.html#how-to).
@@ -93,7 +93,7 @@ bosh:
 ```
 
 To see this example in context, see the
-[example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L104-L106).
+[example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L104-L106) in GitHub.
 
 #### self
 
@@ -129,7 +129,7 @@ bosh:
 ```
 
 To see this example in context, see the
-[example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L107-L111).
+[example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L107-L111) in GitHub.
 
 #### (Optional) cf
 
@@ -161,12 +161,12 @@ cf:
 ```
 
 To see this example in context, see the
-[example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L103-L119).
+[example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L103-L119) in GitHub.
 
 ### <a id="errands"></a>Add On-Demand Broker Lifecycle Errands
 
 The [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/tree/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f)
-example shows how the errands in the on-demand broker release can be used.
+example in GitHub shows how the errands in the on-demand broker release can be used.
 
 Pivotal recommends that you add the errands below to your tile.
 The errands should be specified in the following order:
@@ -187,7 +187,7 @@ For more information about these parameters, see
 
 For more information about these errands and how to add them, see [Broker and Service Management](./management.html).
 
-The example [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/tree/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f)
+The example [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/tree/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f) in GitHub
 shows how to create a tab with fields to configure the parameters for this errand.
 The example tile has constraints to ensure the number of simultaneous
 upgrades is greater than one and the number of canaries is greater than zero.
@@ -332,22 +332,22 @@ to make some changes to your tile's metadata file:
 
   1. Add a form field to allow the user to enable/disable secure bindings.
   For an example form field, see the
-  [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L39-L46).
+  [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L39-L46) in GitHub.
   <br><br>
   1. Add an element in `property_blueprints` that reads the setting in the form
   field and exposes the appropriate manifest snippet for CredHub and secure binding.
   For an example `property_blueprints` section, see the
-  [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L606-L632).
+  [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L606-L632) in GitHub.
   <br><br>
   1. Change the broker job so that it consumes the CredHub BOSH link from the
   `property_blueprints` section.
   For an example broker job, see the
-  [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L96).
+  [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L96) in GitHub.
   <br><br>
   1. Change the broker job so that it consumes the generated secure bindings
   manifest snippet.
   For an example broker job, see the
-  [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L112).
+  [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/blob/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f/metadata_parts/handcraft.yml#L112) in GitHub.
 
 ### <a id="maintenance"></a>(Optional) Configure Maintenance Information
 Maintenance information is used to uniquely describe the deployed version of
