@@ -1,0 +1,12 @@
+<div class="mermaid">
+sequenceDiagram
+  User->>Cloud Controller:cf update-service --upgrade
+  Cloud Controller->>On Demand Broker: PATCH instance (upgrade)
+  On Demand Broker->>Service Adapter: generate-manifest
+  Service Adapter->>On Demand Broker: manifest
+  On Demand Broker->>BOSH: deploy
+  BOSH->>On Demand Broker: accepted
+  On Demand Broker->>Cloud Controller: accepted
+  Cloud Controller->>User: accepted
+  Note over User, Cloud Controller: user can poll Cloud Controller until complete
+</div>
