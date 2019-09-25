@@ -811,9 +811,15 @@ The broker also accepts only the following cipher suites:
 - TLS\_ECDHE\_RSA\_WITH\_AES\_128\_GCM\_SHA256
 - TLS\_ECDHE\_RSA\_WITH\_AES\_256\_GCM\_SHA384
 
-## <a id="secure-bind-credentials"></a>(Optional) Access Manifest Secrets at Bind Time
+## <a id="secure-manifest"></a>(Optional) Manifest Secrets Stored in CredHub
 
 <p class="note alert"><strong>Note:</strong> This feature does not work if you have configured <code>use_stdin</code> to be false.</p>
+
+To avoid writing secrets in plaintext in the manifest, you can use ODB-managed
+secrets to store secrets on BOSH CredHub.
+When using ODB-managed secrets, the service adapter generates secrets and uses
+ODB as a proxy to the BOSH CredHub config server. For more information about how
+to store manifest secrets in BOSH CredHub see [(Optional) Store Secrets on BOSH CredHub](./service-adapter.html#storing-secrets).
 
 A service adapter might need to access secrets embedded in a service instance
 manifest when processing a create binding request.
