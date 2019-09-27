@@ -328,14 +328,24 @@ For an example implementation, see the [redis-example-service-adapter](https://g
 For more information about BOSH Features, see [Features Block](https://bosh.io/docs/manifest-v2.html#features) in the BOSH documentation.
 
 
-## <a id="storing-secrets"></a>(Optional) Store Secrets on BOSH CredHub
+## <a id="storing-secrets"></a>(Optional) Store Manifest Secrets on BOSH CredHub
 
 To avoid writing secrets in plaintext in the manifest, you can use ODB-managed
 secrets to store secrets on BOSH CredHub.
 When using ODB-managed secrets, the service adapter generates secrets and uses
 ODB as a proxy to the BOSH CredHub config server.
 
-For ODB-managed secrets, ODB does the following during provision:
+The following sections provide information about how to use ODB-managed secrets to store,
+persist, and modify secrets in BOSH CredHub:
+
+- [Use ODB-Managed Secrets](#odb-managed-secrets)
+- [Migrate from Plaintext Secrets to ODB-Managed Secrets](#migrating-to-stored-secrets)
+- [Persist Credentials Across Updates](#odb-persisting-creds)
+- [Modify ODB-Managed Secrets](#modifying-secrets)
+
+### <a id="about-odb-managed-secrets"></a>How ODB Processes ODB-Managed Secrets
+
+When you use ODB-managed secrets, ODB does the following during provision:
 
 1. Generates a BOSH CredHub name for each secret in the `secrets` map in the format
 `/odb/SERVICE-OFFERING-ID/SERVICE-INSTANCE-ID/SECRET-NAME`.
@@ -346,20 +356,6 @@ For ODB-managed secrets, ODB does the following during provision:
 BOSH CredHub name.
 
 1. Deploys the updated manifest.
-
-<p class="note"><strong>Note: </strong>
-  to use this feature, the <code>enable_secure_manifests</code> flag must be set to <code>true</code>
-  and ODB must be configured with the credentials to access BOSH CredHub. For information
-  on how to do this see <a href="./operating.html#secure-manifest">(Optional) Manifest Secrets Stored in CredHub</a>.
-</p>
-
-The following sections provide information about how to use ODB-managed secrets to store,
-persist, and modify secrets in BOSH CredHub:
-
-- [Use ODB-Managed Secrets](#odb-managed-secrets)
-- [Migrate from Plaintext Secrets to ODB-Managed Secrets](#migrating-to-stored-secrets)
-- [Persist Credentials Across Updates](#odb-persisting-creds)
-- [Modify ODB-Managed Secrets](#modifying-secrets)
 
 
 ### <a id="odb-managed-secrets"></a> Use ODB-Managed Secrets
@@ -374,22 +370,60 @@ output of `generate-manifest`:
    below.
 </p>
 
-1. Generate a manifest that uses the ODB-managed secrets placeholder
-`((odb_secret:SECRET-NAME))` for the secret that you want to store in BOSH
-CredHub.
+1. The adapter must generate a manifest that:
+    * Uses ODB-managed secrets placeholders
+    `((odb_secret:SECRET-NAME))` for the secrets that you want to store in BOSH
+    CredHub.
+    * Sets the `enable_secure_manifests` flag to `true`.
+      For example:
 
-1. Output the secret as part of the `secrets` map.
+        ```
+        instance_groups:
+          - name: broker
+            ...
+            jobs:
+              - name: broker
+                ...
+                properties:
+                  ...
+                  enable_secure_manifests: true
+                  ...
+        ```
+    * Supplies details for accessing the credentials stored in BOSH CredHub:
 
-For example:
+        ```
+        instance_groups:
+          - name: broker
+            ...
+            jobs:
+              - name: broker
+                ...
+                properties:
+                  ...
+                  enable_secure_manifests: true
+                  bosh_credhub_api:
+                    url: https://BOSH-CREDHUB-ADDRESS:8844/
+                    root_ca_cert: BOSH-CREDHUB-CA-CERT
+                    authentication:
+                      uaa:
+                        client_credentials:
+                          client_id: BOSH-CREDHUB-CLIENT-ID
+                          client_secret: BOSH-CREDHUB-CLIENT-SECRET
+        ```
+      Where the placeholder text is replaced with the values for accessing CredHub.
 
-```json
-{
-  "manifest": "password: ((odb_secret:SECRET-NAME))",
-  "secrets": {
-    "SECRET-NAME":"SOME-RANDOM-PASSWORD"
-  }
-}
-```
+1. The adapter must output manifest secrets as part of the `secrets` map.
+  <%# maybe split this and add examples to the relevant points %>
+  For example:
+
+    ```json
+    {
+      "manifest": "password: ((odb_secret:SECRET-NAME))",
+      "secrets": {
+        "SECRET-NAME":"SOME-RANDOM-PASSWORD"
+      }
+    }
+    ```
 
 ### <a id="migrating-to-stored-secrets"></a>Migrate from Plaintext Secrets to ODB-Managed Secrets
 
