@@ -14,15 +14,18 @@ please try again later or contact your operator for more information.
 </p>
 
 <p>
-  Operators must run the <code>upgrade-all-service-instances</code> errand after upgrading
-  to ensure all existing service instances are upgraded to the latest service offering. Operators
-  must also configure <code>maintenance_info</code>.
-  If you do not upgrade all service instances, app developers cannot:
+To resolve this issue, do one of the following:
   <ul>
-    <li>Set parameters</li>
-    <li>Change plans</li>
-    <li>Upgrade individual service instances to use the latest service offering</li>
+    <li>An operator runs <code>upgrade-all-service-instances</code>
+    to ensure all existing service instances are upgraded to the latest service offering.</li>
+    <li>An app developer runs <code>update-service --upgrade</code> to upgrade
+      an individual service instance to the latest service offering.
+      You can only do this if <code>maintenance_info</code> is configured with a compatible CF version.</li>
   </ul>
+
+  If you do not upgrade service instances, app developers cannot set parameters or
+  change plans.<br><br>
+
   For more information, see <a href="#upgrade-all">Upgrade All Service Instances</a>
   and <a href="./tile.html#maintenance">(Optional) Configure Maintenance Information</a>.
 </p>
