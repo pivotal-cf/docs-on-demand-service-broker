@@ -4,7 +4,7 @@ owner: London Services Enablement
 ---
 <strong><%= modified_date %></strong>
 
-## <a id="0-33-1"></a>v0.33.1
+## <a id="0-34-0"></a>v0.34.0
 
 **Release Date: MMMM DD, 2019**
 
@@ -12,13 +12,16 @@ owner: London Services Enablement
 
 New features and changes in this release:
 
-* Bumps Golang to v1.12.10
+* There are no new features for this release.
 
 ### Resolved Issue
 
-This release has the following fix:
-
-* Changes BOSH API call `/deployments` to `/deployments?exclude_configs=true` as this is faster.
+* Previously if the broker was configured with `maintenance_info` and the broker
+was using a compatible version of CF, the broker's `upgrade-all-service-instances`
+errand would perform each instance's upgrade via CF exclusively. This behavior introduced
+the possibility of skipping BOSH environmental changes such as add-ons, config or
+Credhub changes that would not be captured in `maintenance_info`. This new release
+now performs an upgrade for all instances via CF then via BOSH.
 
 ### Known Issues
 
@@ -28,7 +31,7 @@ There are no known issues for this release.
 
 This on-demand service broker release has the following dependency:
 
- | Dependency  | Version  |
+| Dependency  | Version  |
 |---|---|
 |  Golang | 1.12.10 |
 
