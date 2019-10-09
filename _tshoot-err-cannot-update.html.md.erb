@@ -15,12 +15,14 @@ please try again later or contact your operator for more information.
 
 <p>
   Operators must run the <code>upgrade-all-service-instances</code> errand after upgrading
-  to ensure all existing service instances are upgraded to the latest service offering.
-  See <a href="#upgrade-all">Upgrade All Service Instances</a>.
-</p>
-
-<p>
-  Unless <a href="tile.html#maintenance">maintenance_info</a> is configured, app developers cannot
-  upgrade individual service instances to the latest service offering. They cannot
-  set parameters or change plan until you upgrade their service instances.
+  to ensure all existing service instances are upgraded to the latest service offering. Operators
+  must also configure <code>maintenance_info</code>.
+  If you do not upgrade all service instances, app developers cannot:
+  <ul>
+    <li>Set parameters</li>
+    <li>Change plans</li>
+    <li>Upgrade individual service instances to use the latest service offering</li>
+  </ul>
+  For more information, see <a href="#upgrade-all">Upgrade All Service Instances</a>
+  and <a href="./tile.html#maintenance">(Optional) Configure Maintenance Information</a>.
 </p>

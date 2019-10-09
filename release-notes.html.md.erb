@@ -8,20 +8,21 @@ owner: London Services Enablement
 
 **Release Date: MMMM DD, 2019**
 
-### Features
-
-New features and changes in this release:
-
-* There are no new features for this release.
-
 ### Resolved Issue
 
-* Previously if the broker was configured with `maintenance_info` and the broker
-was using a compatible version of CF, the broker's `upgrade-all-service-instances`
-errand would perform each instance's upgrade via CF exclusively. This behavior introduced
-the possibility of skipping BOSH environmental changes such as add-ons, config or
-Credhub changes that would not be captured in `maintenance_info`. This new release
-now performs an upgrade for all instances via CF then via BOSH.
+This release has the following fix:
+
+* The `upgrade-all-service-instances` errand no longer ignores BOSH
+changes that are not configured in `maintenance_info`.
+BOSH changes include changes to add-ons, the Director runtime config or Credhub.
+For more information,
+see [Upgrade All Service Instances with Maintenance Information Configured](./concepts.html#upgrade-all-instances-with-maintenance-info).
+
+<%# KNOWN ISSUE?: If the broker was configured with `maintenance_info`
+and a compatible version of Cloud Foundry, the `upgrade-all-service-instances` errand
+upgrades each instance using only Cloud Foundry and ignores changes to BOSH. %>
+
+<%# WHEN WAS THIS ISSUE INTRODUCED? IS THIS AN ISSUE WITH UPDATE-SERVICE %>
 
 ### Known Issues
 
@@ -31,9 +32,19 @@ There are no known issues for this release.
 
 This on-demand service broker release has the following dependency:
 
-| Dependency  | Version  |
-|---|---|
-|  Golang | 1.12.10 |
+<table>
+
+  <tr>
+    <th>Dependency</th>
+    <th>Version</th>
+  </tr>
+
+  <tr>
+    <td>golang</td>
+    <td>1.12.10</td>
+  </tr>
+
+</table>
 
 
 ## <a id="view"></a> View Release Notes for Another Version
