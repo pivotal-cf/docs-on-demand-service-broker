@@ -14,15 +14,9 @@ This release has the following fix:
 
 * The `upgrade-all-service-instances` errand no longer ignores BOSH
 changes that are not configured in `maintenance_info`.
-BOSH changes include changes to add-ons, the Director runtime config or Credhub.
-For more information,
-see [Upgrade All Service Instances with Maintenance Information Configured](./concepts.html#upgrade-all-instances-with-maintenance-info).
-
-<%# KNOWN ISSUE?: If the broker was configured with `maintenance_info`
-and a compatible version of Cloud Foundry, the `upgrade-all-service-instances` errand
-upgrades each instance using only Cloud Foundry and ignores changes to BOSH. %>
-
-<%# WHEN WAS THIS ISSUE INTRODUCED? IS THIS AN ISSUE WITH UPDATE-SERVICE %>
+BOSH changes include changes to add-ons, the Director runtime config, and CredHub.<br><br>
+Previously, the errand only used Cloud Foundry when upgrading. Now, the errand also uses BOSH.  The BOSH upgrade
+is shown as a BOSH upgrade loop in the diagram in [Upgrade All Service Instances with Maintenance Information Configured](./concepts.html#upgrade-all-instances-with-maintenance-info).
 
 ### Known Issues
 

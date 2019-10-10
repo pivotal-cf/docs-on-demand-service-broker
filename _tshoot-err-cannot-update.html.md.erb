@@ -14,17 +14,15 @@ please try again later or contact your operator for more information.
 </p>
 
 <p>
-To resolve this issue, do one of the following:
-  <ul>
-    <li>An operator runs <code>upgrade-all-service-instances</code>
-    to ensure all existing service instances are upgraded to the latest service offering.</li>
-    <li>An app developer runs <code>update-service --upgrade</code> to upgrade
-      an individual service instance to the latest service offering.
-      You can only do this if <code>maintenance_info</code> is configured with a compatible CF version.</li>
-  </ul>
+To resolve this issue, an operator must run <code>upgrade-all-service-instances</code>
+    to ensure all existing service instances are upgraded to the latest service offering.
+</p>
 
-  If you do not upgrade service instances, app developers cannot set parameters or
-  change plans.<br><br>
+<p>If <code>maintenance_info</code> is configured with a compatible CF version, app developers can also run <code>update-service --upgrade</code> to upgrade an individual service instance to the latest service offering.
+</p>
+<p>  
+  If you do not resolve this issue, app developers cannot set parameters or
+  change plans.
 
   For more information, see <a href="#upgrade-all">Upgrade All Service Instances</a>
   and <a href="./tile.html#maintenance">(Optional) Configure Maintenance Information</a>.
