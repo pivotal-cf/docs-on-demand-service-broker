@@ -350,7 +350,7 @@ When you use ODB-managed secrets, ODB does the following during provision:
 1. Generates a BOSH CredHub name for each secret in the `secrets` map in the format
 `/odb/SERVICE-OFFERING-ID/SERVICE-INSTANCE-ID/SECRET-NAME`.
 
-1. Saves the value of the secret in the BOSH CredHub using the generated name.
+1. Stores the value of the secret in BOSH CredHub using the generated name.
 
 1. Replaces all occurrences of `((odb_secret:SECRET-NAME))` with the generated
 BOSH CredHub name.
