@@ -111,7 +111,7 @@ type CommandLineHandler struct {
 
 #### <a id="manifestgenerator"></a>ManifestGenerator
 
-The `ManifestGenerator` interface is required for all service adapters. <%# Would it make sense to say "This includes the generate-manifest subcommand" or "This includes the GenerateManifest method" %>
+The `ManifestGenerator` interface is required for all service adapters.
 This must generate a BOSH manifest for your service instance deployment, then output
 to stdout a JSON document containing the following:
 
@@ -330,8 +330,21 @@ For more information about BOSH Features, see [Features Block](https://bosh.io/d
 
 ## <a id="storing-secrets"></a>(Optional) Store Manifest Secrets on BOSH CredHub
 
-To avoid writing secrets in plaintext in the manifest, you can use ODB-managed
-secrets to store secrets on BOSH CredHub.
+Secrets in the manifest can be formatted as:
+
+- Literal BOSH CredHub references
+- BOSH variables
+- Plaintext
+
+You can avoid using plaintext secrets in the manifest by using ODB-managed
+secrets, which stores secrets on BOSH CredHub.
+
+A service adapter might need to access secrets embedded in a service instance
+manifest when processing a create binding request.
+For example, the adapter might need credentials with sufficient privileges to add a new
+user to a service instance.
+ODB passes the service instance manifest to the adapter in the `create-binding` call.
+
 When using ODB-managed secrets, the service adapter generates secrets and uses
 ODB as a proxy to the BOSH CredHub config server.
 
@@ -347,16 +360,36 @@ persist, and modify secrets in BOSH CredHub:
 
 When you use ODB-managed secrets, ODB does the following during provision:
 
-1. Generates a BOSH CredHub name for each secret in the `secrets` map in the format
+1. Generates a BOSH CredHub reference for each secret in the `secrets` map in the format
 `/odb/SERVICE-OFFERING-ID/SERVICE-INSTANCE-ID/SECRET-NAME`.
 
 1. Stores the value of the secret in BOSH CredHub using the generated name.
 
-1. Replaces all occurrences of `((odb_secret:SECRET-NAME))` with the generated
-BOSH CredHub name.
+1. Replaces all occurrences in the manifest of the ODB-managed secrets placeholder
+`((odb_secret:SECRET-NAME))` with the generated BOSH CredHub reference.
 
 1. Deploys the updated manifest.
 
+<%#
+
+When the `enable_secure_manifests` flag is set to `true` in the manifest, ODB does the following:
+
+1. Queries BOSH and its CredHub instance for the values of secrets.
+
+1. Generates a map of all manifest variable names and CredHub references to secret
+values in the manifest.
+
+1. Passes this map to the service adapter's `create-binding` call. For an
+example of the JSON in the `create-binding` call, see the [Service
+Adapter Interface Reference documentation](./adapter-reference.html#create-binding).
+
+1. If ODB cannot resolve a particular secret, it logs the failure and omits
+the unresolved secret from the secrets map. The service adapter must be able to
+handle missing secrets based on whether they are required to create bindings.
+
+<p class="note"><strong>Note:</strong> ODB does not fail if it cannot resolve a secret.</p>
+
+%>
 
 ### <a id="odb-managed-secrets"></a> Use ODB-Managed Secrets
 
@@ -436,7 +469,7 @@ To migrate from plaintext secrets to ODB-managed secrets, write code in your
 service adapter that does the following:
 
 <p class="note"><strong>Note</strong>: Secrets already stored in BOSH CredHub do not need placeholders.
-This is because ODB ignores BOSH CredHub names during <code>generate-manifest</code>.
+This is because ODB ignores BOSH CredHub references during <code>generate-manifest</code>.
 </p>
 
 * Detects whether a secret is a plaintext secret.
@@ -476,7 +509,7 @@ func extractSecret(oldValue, secretName string, secretsMap map[string]string, ne
     return newValue, secretsMap
   } else {
     // else: this secret could be one of the following:
-    // - a custom CredHub name
+    // - a custom CredHub reference
     // - a reference to the BOSH generated variables block
     // - a CredHub reference to a secret already managed by the ODB
     // In all cases, the ODB does not need to send the secret to CredHub, so it
@@ -503,7 +536,7 @@ properties:
 password: ((/odb/SERVICE-GUID/SERVICE-INSTANCE-GUID/SECRET-NAME))
 ```
 
-If the previous manifest contains BOSH CredHub names for secrets, the
+If the previous manifest contains BOSH CredHub references for secrets, the
 `generate-manifest` command must not replace `properties.password` with the
 placeholder `((odb_secret:SECRET-NAME))`.
 
@@ -561,7 +594,7 @@ that does the following:
   </ol>
   **If the secret has remained the same:**
   <ol>
-    <li>Inserts the BOSH CredHub name from the previous manifest.</li>
+    <li>Inserts the BOSH CredHub reference from the previous manifest.</li>
   </ol>
 
 For example code that does the above, see the [redis-example-service-adapter]
@@ -578,7 +611,7 @@ deployment.
 The failed deployment might contain a mixture of old and new secrets depending
 on the stage that the deployment failed.
 When an operator attempts to troubleshoot this scenario by manually re-deploying
-the previous manifest, this manifest contains BOSH CredHub names that refer
+the previous manifest, this manifest contains BOSH CredHub references that refer
 to the new secret values. This can cause errors with bindings.
 
 Pivotal recommends that you avoid modifying secrets without using new names for
