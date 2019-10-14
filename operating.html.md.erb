@@ -811,7 +811,7 @@ The broker also accepts only the following cipher suites:
 - TLS\_ECDHE\_RSA\_WITH\_AES\_128\_GCM\_SHA256
 - TLS\_ECDHE\_RSA\_WITH\_AES\_256\_GCM\_SHA384
 
-## <a id="secure-manifest"></a>(Optional) Manifest Secrets Stored in CredHub
+## <a id="secure-manifest"></a>(Optional) Enable ODB to Store Manifest Secrets on BOSH CredHub
 
 <p class="note alert"><strong>Note:</strong> This feature does not work if you have configured <code>use_stdin</code> to be false.</p>
 
@@ -821,19 +821,11 @@ When using ODB-managed secrets, the service adapter generates secrets and uses
 ODB as a proxy to the BOSH CredHub config server. For more information about how
 to store manifest secrets in BOSH CredHub see [(Optional) Store Secrets on BOSH CredHub](./service-adapter.html#storing-secrets).
 
-A service adapter might need to access secrets embedded in a service instance
-manifest when processing a create binding request.
-For example, it might need credentials with sufficient privileges to add a new
-user to a service instance.
-These credentials are in the service instance manifest.
-ODB passes this manifest to the adapter in the `create-binding` call.
-
 Secrets in the manifest can be:
 
 - BOSH variables
 - Literal BOSH CredHub references
 - Plain text
-
 
 If you use BOSH variables or literal CredHub references in your manifest,
 do the following in the ODB manifest so that the service adapter can access the secrets:
@@ -876,20 +868,6 @@ Replace the placeholder text below with your values for accessing CredHub:
                       client_id: BOSH-CREDHUB-CLIENT-ID
                       client_secret: BOSH-CREDHUB-CLIENT-SECRET
     ```
-
-<br>
-When the `enable_secure_manifests` flag is set to `true`, ODB queries
-BOSH and its CredHub instance for secret values. ODB then generates a map of all
-manifest variable names and CredHub references to secret values in the manifest.
-ODB passes this map to the service adapter's `create-binding` call. For an
-example of the JSON in the `create-binding` call, see the [Service
-Adapter Interface Reference documentation](./adapter-reference.html#create-binding).
-
-If ODB cannot resolve a particular secret, it logs the failure and omits
-the unresolved secret from the passed secrets map. It is the responsibility of the adapter to
-handle missing secrets based on whether they are required for binding creation.
-
-<p class="note"><strong>Note:</strong> ODB does not fail if it cannot resolve a secret.</p>
 
 ## <a id="secure-binding"></a> (Optional) Enable Secure Binding
 
