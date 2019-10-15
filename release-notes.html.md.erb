@@ -4,19 +4,14 @@ owner: London Services Enablement
 ---
 <strong><%= modified_date %></strong>
 
-## <a id="0-34-0"></a>v0.34.0
+## <a id="0-35-0"></a>v0.35.0
 
-**Release Date: October 15, 2019**
+**Release Date: MMMM DD, 2019**
 
 ### Resolved Issue
 
 This release has the following fix:
 
-* The `upgrade-all-service-instances` errand no longer ignores BOSH
-changes that are not configured in `maintenance_info`.
-BOSH changes include changes to add-ons, the Director runtime config, and CredHub.<br><br>
-Previously, the errand only used Cloud Foundry when upgrading. The errand now also uses BOSH. The BOSH upgrade
-is shown as a BOSH upgrade loop in the diagram in [Upgrade All Service Instances with Maintenance Information Configured](./concepts.html#upgrade-all-instances-with-maintenance-info).
 
 ### Known Issues
 
@@ -25,6 +20,8 @@ There are no known issues for this release.
 ### Compatibility
 
 This on-demand service broker release has the following dependency:
+
+<%# The table below might need changing or deleting %>
 
 <table>
 
@@ -40,6 +37,7 @@ This on-demand service broker release has the following dependency:
 
 </table>
 
+<%# The table above might need changing or deleting %>
 
 ## <a id="view"></a> View Release Notes for Another Version
 
