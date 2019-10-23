@@ -55,7 +55,7 @@ New features and changes in this release:
 * Adds support for `maintenanceInfo.description`. For more information, see
 [Maintenance Info](https://github.com/openservicebrokerapi/servicebroker/blob/master/spec.md#maintenance-info-object)
 in the OSBAPI specifications.
-* Updates several dependencies
+* Updates several dependencies.
 
 
 ### Resolved Issue
@@ -69,7 +69,7 @@ no longer causes some requests to fail during some operations, such as bind and 
 ### Known Issues
 
 * If the broker is configured with `maintenance_info` and Cloud Foundry uses it,
-the `upgrade-all-service-instances` errand upgrades each instance using only Cloud Foundry.
+the `upgrade-all-service-instances` errand upgrades each instance using only Cloud Foundry.<br><br>
 Cloud Foundry does not upgrade instances with changes to BOSH because those changes are
 not represented in `maintenance_info`.
 Changes to BOSH include changes to add-ons, the Director runtime config, and CredHub.
