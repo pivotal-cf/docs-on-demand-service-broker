@@ -68,8 +68,11 @@ no longer causes some requests to fail during some operations, such as bind and 
 
 ### Known Issues
 
-There are no known issues for this release.
-
+* If the broker is configured with `maintenance_info` and Cloud Foundry uses it,
+the `upgrade-all-service-instances` errand upgrades each instance using only Cloud Foundry.
+Cloud Foundry does not upgrade instances with changes to BOSH because those changes are
+not represented in `maintenance_info`.
+Changes to BOSH include changes to add-ons, the Director runtime config, and CredHub.
 
 ### Compatibility
 
