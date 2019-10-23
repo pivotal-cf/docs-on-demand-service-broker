@@ -25,6 +25,12 @@ This release has the following known issue:
 
 * Contacting the BOSH Director links API many times in parallel can cause some requests to fail during operations such as bind and unbind.
 
+* If the broker is configured with `maintenance_info` and Cloud Foundry uses it,
+the `upgrade-all-service-instances` errand upgrades each instance using only Cloud Foundry.<br><br>
+Cloud Foundry does not upgrade instances with changes to BOSH because those changes are
+not represented in `maintenance_info`.
+Changes to BOSH include changes to add-ons, the Director runtime config, and CredHub.
+
 ## <a id="view"></a> View Release Notes for Another Version
 
 To view the release notes for another product version, select the version from the dropdown at the top of this
