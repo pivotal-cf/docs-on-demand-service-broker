@@ -21,7 +21,7 @@ For more information about `converge-variables`, see [Features Block](https://bo
 
 ### Known Issues
 
-This release has the following known issue:
+This release has the following known issues:
 
 * Contacting the BOSH Director links API many times in parallel can cause some requests to fail during operations such as bind and unbind.
 
@@ -30,6 +30,8 @@ the `upgrade-all-service-instances` errand upgrades each instance using only Clo
 Cloud Foundry does not upgrade instances with changes to BOSH because those changes are
 not represented in `maintenance_info`.
 Changes to BOSH include changes to add-ons, the Director runtime config, and CredHub.
+
+<%= partial vars.path_to_partials + "/odb/errand_template_fail" %>
 
 ## <a id="view"></a> View Release Notes for Another Version
 
