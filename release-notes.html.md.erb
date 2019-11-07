@@ -18,9 +18,11 @@ documentation](https://bosh.io/docs/manifest-v2/#update).
 
 * Updates golang to v1.13.3.
 
-### Known Issues
+### Known Issue
 
-There are no known issues for this release.
+This release has the following issue:
+
+<%= partial vars.path_to_partials + "/odb/errand_template_fail" %>
 
 ### Compatibility
 
@@ -55,9 +57,11 @@ BOSH changes include changes to add-ons, the Director runtime config, and CredHu
 Previously, the errand only used Cloud Foundry when upgrading. The errand now also uses BOSH. The BOSH upgrade
 is shown as a BOSH upgrade loop in the diagram in [Upgrade All Service Instances with Maintenance Information Configured](./concepts.html#upgrade-all-instances-with-maintenance-info).
 
-### Known Issues
+### Known Issue
 
-There are no known issues for this release.
+This release has the following issue:
+
+<%= partial vars.path_to_partials + "/odb/errand_template_fail" %>
 
 ### Compatibility
 
