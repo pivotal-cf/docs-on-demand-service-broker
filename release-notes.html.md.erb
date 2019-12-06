@@ -6,13 +6,17 @@ owner: London Services Enablement
 
 ## <a id="0-36-0"></a>v0.36.0
 
-**Release Date: MMMM DD, 2019**
+**Release Date: December DD, 2019**
 
 ### Resolved Issue
 
 This release has the following fix:
 
-<%# Insert fix here %>
+* TLS 1.3 is no longer enabled for HTTPS brokers.
+  * The broker continues to support only TLS 1.2.
+* For updates and upgrades of service instances, previous values for
+Maintenance Info will always be validated when present in the request. Fixes
+the issue reported [here](https://github.com/cloudfoundry/cli/issues/1757).
 
 ### Known Issues
 
