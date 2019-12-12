@@ -98,13 +98,15 @@ For more information about operator responsibilities, see [Operator Responsibili
 
 <%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 
-<%= partial '../../../svc-sdk/odb/partials/services/service-networks-v2' %>
+<%= partial vars.path_to_partials + '/services/service-networks-v3', :locals => {
+  :platform_name => vars.platform_name} %>
 
 ## <a id="on-demand"></a>Default Network and Service Network
 
 <%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 
-<%= partial '../../../svc-sdk/odb/partials/services/on_demand_architecture' %>
+<%= partial vars.path_to_partials + '/services/on_demand_architecture', :locals => {
+  :product_short => vars.product_short} %>
 
 ## <a id="adapter"></a>Service Adapters
 
