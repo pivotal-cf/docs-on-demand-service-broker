@@ -35,7 +35,10 @@ For a list of deliverables provided by the service author, see
 
 ## <a id="networking"></a>Set Up Networking
 
-<%= partial '../../../svc-sdk/odb/partials/services/service_networks_table' %>
+<%= partial vars.path_to_partials + '/services/service_networks_table', :locals => {
+  :platform_name => vars.platform_name,
+	:app_runtime_full => vars.app_runtime_full,
+	:product_short => vars.product_short} %>
 
 <br>
 Regardless of the specific network layout, the operator must ensure network
