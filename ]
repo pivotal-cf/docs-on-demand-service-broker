@@ -1,0 +1,25 @@
+Input sensible variables [#169651863]
+
+# Conflicts:
+#	operating.html.md.erb
+#
+# It looks like you may be committing a cherry-pick.
+# If this is not correct, please remove the file
+#	.git/CHERRY_PICK_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# Date:      Fri Dec 13 14:31:34 2019 +0000
+#
+# On branch v0.28.x
+# Your branch is up to date with 'origin/v0.28.x'.
+#
+# You are currently cherry-picking commit c251ab4.
+#
+# Changes to be committed:
+#	modified:   about.html.md.erb
+#	modified:   operating.html.md.erb
+#
