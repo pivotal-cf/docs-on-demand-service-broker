@@ -36,9 +36,9 @@ For a list of deliverables provided by the service author, see
 ## <a id="networking"></a>Set Up Networking
 
 <%= partial vars.path_to_partials + '/services/service_networks_table', :locals => {
-  :platform_name => vars.platform_name,
+  :platform_name => vars.platform_old,
 	:app_runtime_full => vars.app_runtime_full,
-	:product_short => vars.product_short} %>
+	:product_short => "Redis"} %>
 
 <br>
 Regardless of the specific network layout, the operator must ensure network
