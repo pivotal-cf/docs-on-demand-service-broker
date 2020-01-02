@@ -9,6 +9,7 @@ For example:
 | Branch name     | Use for|
 |-----------------| ------|
 | master          | Unreleased version (edge - 0.36) https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-n|
+| v0.36.x         | live on January 2, 2020 https://docs.pivotal.io/svc-sdk/odb/0-36|
 | v0.35.x         | live on November 12, 2019 https://docs.pivotal.io/svc-sdk/odb/0-35|
 | v0.34.x         | live on October 15, 2019 https://docs.pivotal.io/svc-sdk/odb/0-34|
 | v0.33.x         | live on September 11, 2019 https://docs.pivotal.io/svc-sdk/odb/0-33|
@@ -22,8 +23,8 @@ For example:
 | v0.25.x         | live on Dec 5, 2018 https://docs.pivotal.io/svc-sdk/odb/0-25|
 | v0.24.x         | live on Nov 14, 2018 https://docs.pivotal.io/svc-sdk/odb/0-24|
 | v0.23.x         | live on Sept 18, 2018 https://docs.pivotal.io/svc-sdk/odb/0-23|
-| v0.22.x         | live |
-| v0.21.x         | live |
+| v0.22.x         | live | https://docs.pivotal.io/svc-sdk/odb/0-22|
+| v0.21.x         | live | https://docs.pivotal.io/svc-sdk/odb/0-21|
 | v0.20.x         | obsolete, but do not delete the branch. PDF available at https://docs.pivotal.io/archives/odb-0.20.pdf. |
 | v0.19.x         | obsolete, but do not delete the branch. PDF available at https://docs.pivotal.io/archives/odb-0.19.pdf. |
 | v0.18.x         | obsolete, but do not delete the branch. PDF available at https://docs.pivotal.io/archives/odb-0.18.pdf. |
