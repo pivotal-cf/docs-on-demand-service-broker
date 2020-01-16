@@ -28,13 +28,13 @@ which developers access with `cf marketplace` or through the Pivotal Cloud Found
 ### PCF Tiles
 
 On PCF, operators find services on [Pivotal Network](https://network.pivotal.io/)
-and install and configure them through a tile interface in the Ops Manager **Installation Dashboard**
+and install and configure them through a tile interface in the <%= vars.ops_manager %> **Installation Dashboard**
 to make them available to developers.
 Installing a service tile creates a service broker, registers it with the Cloud Controller,
 and publishes the service plans that the broker offers.
 Developers can then create service instances in their spaces and bind them to their apps.
 
-![Your Service Tile in Ops Manager](img/your-service-here.png)
+![Your Service Tile in <%= vars.ops_manager %>](img/your-service-here.png)
 
 The central element behind a service tile is the service broker, but the tile software
 includes other components that make the service easy for operators to install and maintain
@@ -76,7 +76,7 @@ For more information about service author responsibilities, see
 
 #### <a id="tile-author"></a>Tile Author
 
-Tile authors determine which configuration options to expose to Ops Manager operators,
+Tile authors determine which configuration options to expose to <%= vars.ops_manager %> operators,
 create the tile, and publish it on Pivotal Network.
 For more information, see [Creating an On-Demand Service Tile](./tile.html).
 
@@ -84,11 +84,11 @@ For more information, see [Creating an On-Demand Service Tile](./tile.html).
 
 Operators deploy and maintain the broker.
 They also manage access control for Cloud Foundry (CF) developers.
-This documentation provides information for two types of operator, Ops Manager operators and BOSH operators.
+This documentation provides information for two types of operator, <%= vars.ops_manager %> operators and BOSH operators.
 These roles may be separate or combined.
 The following describes each type of operator:
 
-- **Ops Manager Operator**: Uses the Ops Manager UI to configure plans and provide service specific configurations.
+- **<%= vars.ops_manager %> Operator**: Uses the <%= vars.ops_manager %> UI to configure plans and provide service specific configurations.
 For more information about configuring a specific service, see the [Pivotal Documentation](https://docs.pivotal.io/)
 for the service.
 - **BOSH Operator**: Creates and modifies the on-demand service broker manifest to provide service specific configurations.
@@ -137,7 +137,7 @@ This documentation provides information for operators and developers in the foll
 ### <a id="operator"></a>Operator Guide
 
 This section provides information about how to operate an on-demand broker
-for BOSH operators and Ops Manager operators.
+for BOSH operators and <%= vars.ops_manager %> operators.
 
 ### <a id="service-author"></a>Service and Tile Developer Guide
 

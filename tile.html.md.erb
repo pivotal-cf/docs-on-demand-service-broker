@@ -20,14 +20,14 @@ Network](https://network.pivotal.io/products/on-demand-services-sdk/).
 
 ## <a id="requirements"></a> About Networks
 
-When using the ODB in a tile with Ops Manager v2.0 and earlier, you need at least
+When using the ODB in a tile with <%= vars.ops_manager %> v2.0 and earlier, you need at least
 two private networks:
 
-- A network where Ops Manager deploys the on-demand broker VM
+- A network where <%= vars.ops_manager %> deploys the on-demand broker VM
 - A different network where the on-demand broker deploys service instance VMs
 
-The network for service instances should be flagged as a Service Network in Ops Manager.
- <p class="note"><strong>Note: </strong>For Ops Manager v2.1 and later, you do not need separate networks for the on-demand broker
+The network for service instances should be flagged as a Service Network in <%= vars.ops_manager %>.
+ <p class="note"><strong>Note: </strong>For <%= vars.ops_manager %> v2.1 and later, you do not need separate networks for the on-demand broker
 and service instances.
 However, Pivotal recommends that you have at least two networks as described above.
 
@@ -44,7 +44,7 @@ Use](http://docs.pivotal.io/tiledev/tile-generator.html#how-to).
 1. Add accessors, on-demand broker lifecycle errands, and optional features to the
 `tile.yml` file generated in step 1.
 This provides configuration for the ODB and additional configuration options for operators
-to select in Ops Manager.
+to select in <%= vars.ops_manager %>.
 <br><br>
 For more information about what to add to the `tile.yml`, see the following sections below:
   - [Add Accessors](#accessors)
@@ -63,17 +63,17 @@ For more information about what to add to the `tile.yml`, see the following sect
 
 The ODB requires tiles to be configured with certain information.
 You must add accessors to the `tile.yml` file to provide values that operators
-cannot configure in Ops Manager.
+cannot configure in <%= vars.ops_manager %>.
 
 Add the following accessors to your `tile.yml` file:
 
 <p class="note"><strong>Note</strong>: The accessors in this section are mandatory. For other accessors, see
   <a href="https://docs.pivotal.io/tiledev/product-template-reference.html#ops-man-snippets">
-    Ops Manager Provided Snippets</a>.</p>
+    <%= vars.ops_manager %> Provided Snippets</a>.</p>
 
 #### director
 
-Ops Manager uses these accessors to get values relating to the BOSH Director installation.
+<%= vars.ops_manager %> uses these accessors to get values relating to the BOSH Director installation.
 For the on-demand broker to interact with BOSH Director, on-demand service tiles
 must be configured with credentials for managing BOSH deployments.
 
@@ -97,7 +97,7 @@ To see this example in context, see the
 
 #### self
 
-Ops Manager uses these accessors to get values that have been assigned to the tile after installation.
+<%= vars.ops_manager %> uses these accessors to get values that have been assigned to the tile after installation.
 To enable `$self` accessors, set `service_broker: true` at the top level of your
 `tile.yml` file.
 
@@ -133,7 +133,7 @@ To see this example in context, see the
 
 #### (Optional) cf
 
-Ops Manager uses these accessors to get values from the Pivotal Application Service (PAS)
+<%= vars.ops_manager %> uses these accessors to get values from the Pivotal Application Service (PAS)
 tile.
 If you want to use PAS, add these accessors to your `tile.yml` file.
 
@@ -194,9 +194,9 @@ upgrades is greater than one and the number of canaries is greater than zero.
 
 ### <a id="public-ip"></a>(Optional) Allow Public IP Addresses for On-Demand Service Instance Groups
 
-Ops Manager provides a VM extension called `public_ip` in the BOSH Director’s
+<%= vars.ops_manager %> provides a VM extension called `public_ip` in the BOSH Director’s
 cloud config.
-Use this feature to give Ops Manager operators the option to assign a public IP
+Use this feature to give <%= vars.ops_manager %> operators the option to assign a public IP
 address to instance groups.
 This IP is only used for outgoing traffic to the internet from VMs with the
 `public_ip` extension.
@@ -252,7 +252,7 @@ For example:
 
 ### <a id="floating-stemcell"></a>(Optional) Enable Floating Stemcells
 
-Ops Manager provides a feature called [Floating
+<%= vars.ops_manager %> provides a feature called [Floating
 Stemcells](https://docs.pivotal.io/pivotalcf/customizing/understanding-stemcells.html)
 that allows PCF to quickly propagate a patched stemcell to all VMs in the deployment
 that have the same compatible stemcell.
@@ -303,7 +303,7 @@ For example:
 
 ### <a id="secure-creds"></a>(Optional) Allow Secure Binding
 
-You can give Ops Manager operators the option to enable secure binding.
+You can give <%= vars.ops_manager %> operators the option to enable secure binding.
 If secure binding is enabled, binding credentials are stored securely in
 runtime CredHub.
 When users create bindings or service keys, ODB passes a secure reference to the
@@ -327,7 +327,7 @@ For example:
           ca_cert: UAA_CA_CERT
     ```
 
-1. To let users enable and disable this feature in the Ops Manager UI, you need
+1. To let users enable and disable this feature in the <%= vars.ops_manager %> UI, you need
 to make some changes to your tile's metadata file:
 
   1. Add a form field to allow the user to enable/disable secure bindings.
