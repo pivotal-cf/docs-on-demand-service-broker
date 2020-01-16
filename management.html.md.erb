@@ -414,7 +414,7 @@ To delete an orphan deployment, do the following:
 
 The `upgrade-all-service-instances` errand upgrades all existing service instances
 to the latest service offering. If you have made changes to
-the plan definition or uploaded a new tile into Ops Manager,
+the plan definition or uploaded a new tile into <%= vars.ops_manager %>,
 Pivotal recommends that you upgrade all on-demand service instances to the latest software or plan definition.
 
 The `upgrade-all-service-instances` errand does the following:
@@ -451,7 +451,7 @@ The `recreate-all-service-instances` errand recreates all service instance VMs
 managed by a broker.
 You might want use this errand when doing, for example, the following:
 
-   * Rotating the Ops Manager root certificate authority (CA).
+   * Rotating the <%= vars.ops_manager %> root certificate authority (CA).
    For more information about rotating CAs, see [Rotate CAs and Leaf Certificates](https://docs.pivotal.io/pivotalcf/security/pcf-infrastructure/api-cert-rotation.html#rotate-ca).
    * A full restore of the platform during disaster recovery or migration.
 
