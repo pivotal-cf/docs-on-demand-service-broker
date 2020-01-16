@@ -4,7 +4,7 @@ owner: London Services Enablement
 ---
 
 This topic provides information about operating the on-demand broker for
-Pivotal Cloud Foundry (PCF) Ops Manager operators and BOSH operators.
+Pivotal Cloud Foundry (PCF) <%= vars.ops_manager %> operators and BOSH operators.
 
 ## <a id="operator-checklist"></a> Operator Responsibilities
 
@@ -168,7 +168,7 @@ The CA certificates used to sign the BOSH and Cloud Controller certificates are 
 
 #### <a id="odb-to-bosh-dir"></a>ODB to BOSH Director
 
-In some rare cases where the BOSH Director is not installed through Ops Manager,
+In some rare cases where the BOSH Director is not installed through <%= vars.ops_manager %>,
 BOSH can be configured to be publicly accessible with a domain name and a TLS certificate issued
 by a public certificate authority.
 In such a case, you can navigate to https<span>:</span>//BOSH-DOMAIN-NAME:25555/info in a browser
@@ -1215,7 +1215,7 @@ These addresses are passed to the service adapter when you create or delete a bi
 - A service that has this feature enabled in the service adapter<br>
 For information for service authors about how to enable this feature for their on-demand
 service, see [Enable BOSH DNS Addresses for Bindings](./service-adapter.html#dns-addresses).
-- BOSH Director v266.12 or v267.6 and later, available in Ops Manager v2.2.5 and later
+- BOSH Director v266.12 or v267.6 and later, available in <%= vars.ops_manager %> v2.2.5 and later
 
 ### Procedure
 
