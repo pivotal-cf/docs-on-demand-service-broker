@@ -1,29 +1,37 @@
-<p>
-  If developers report errors such as the following when trying to run <code>cf-update-service</code>:
-</p>
+<%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
 
-<pre class="terminal">
-FAILED
-Server error, status code: 502, error code: 10001, message:
-Service broker error: Service cannot be updated at this time,
-please try again later or contact your operator for more information.
-</pre>
+    id: 'upgrade-individual-instances',
 
-<p>
-  Their service instance might not be running the latest service offering.
-</p>
+    description: 'Cannot Update a Service Instance',
 
-<p>
-To resolve this issue, an operator must run <code>upgrade-all-service-instances</code>
+    symptom: <<~DESC,
+    If developers report errors such as the following when trying to run <code>cf-update-service</code>:
+    <pre class="terminal">
+    FAILED
+    Server error, status code: 502, error code: 10001, message:
+    Service broker error: Service cannot be updated at this time,
+    please try again later or contact your operator for more information.
+    </pre>
+    DESC
+
+    cause: 'Their service instance might not be running the latest service offering.',
+
+    solution:'
+    <p>
+    Operators must run the <code>upgrade-all-service-instances</code> errand after upgrading
     to ensure all existing service instances are upgraded to the latest service offering.
-</p>
+    See <a href="#upgrade-all">Upgrade All Service Instances</a>.
+    </p>
 
-<p>If <code>maintenance_info</code> is configured with a compatible CF version, app developers can also run <code>update-service --upgrade</code> to upgrade an individual service instance to the latest service offering.
-</p>
-<p>  
-  If you do not resolve this issue, app developers cannot set parameters or
-  change plans.
+    <p>
+    If <code>maintenance_info</code> is configured with a compatible CF version, app developers can also
+    run <code>update-service --upgrade</code> to upgrade an individual service instance to the latest service offering.
+    </p>
 
-  For more information, see <a href="#upgrade-all">Upgrade All Service Instances</a>
-  and <a href="./tile.html#maintenance">(Optional) Configure Maintenance Information</a>.
-</p>
+    <p>
+    Until you resolve this issue, app developers cannot set parameters or
+    change plans.
+    For more information, see <a href="#upgrade-all">Upgrade All Service Instances</a>
+    and <a href="./tile.html#maintenance">(Optional) Configure Maintenance Information</a>.
+    </p>'
+}%>
