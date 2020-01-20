@@ -1,25 +1,29 @@
-<p>
-  If developers report errors such as the following when trying to run <code>cf-update-service</code>:
-</p>
+<%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
 
-<pre class="terminal">
-FAILED
-Server error, status code: 502, error code: 10001, message:
-Service broker error: Service cannot be updated at this time,
-please try again later or contact your operator for more information.
-</pre>
+    id: 'upgrade-individual-instances',
 
-<p>
-  Their service instance might not be running the latest service offering.
-</p>
+    description: 'Cannot Update a Service Instance',
 
-<p>
-  Operators must run the <code>upgrade-all-service-instances</code> errand after upgrading
-  to ensure all existing service instances are upgraded to the latest service offering.
-  See <a href="#upgrade-all">Upgrade All Service Instances</a>.
-</p>
+    symptom: 'If developers report errors such as the following when trying to run <code>cf-update-service</code>:
+    <pre class="terminal">
+    FAILED
+    Server error, status code: 502, error code: 10001, message:
+    Service broker error: Service cannot be updated at this time,
+    please try again later or contact your operator for more information.
+    </pre>',
 
-<p>
-  App developers cannot upgrade individual service instances to the latest service offering.
-  They cannot set parameters or change plan until you upgrade their service instances.
-</p>
+    cause: 'Their service instance might not be running the latest service offering.',
+
+    solution:'
+    <p>
+    Operators must run the <code>upgrade-all-service-instances</code> errand after upgrading
+    to ensure all existing service instances are upgraded to the latest service offering.
+    See <a href="#upgrade-all">Upgrade All Service Instances</a>.
+    </p>
+
+    <p>
+    App developers cannot upgrade individual service instances to the latest service offering.
+    They cannot set parameters or change plan until you upgrade their service instances.
+    </p>
+    '
+}%>
