@@ -10,18 +10,29 @@ This topic provides information for operators about troubleshooting on-demand se
 <%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/partials/services/retrieve-guid' %>
 
-## <a id="errors"></a> Troubleshooting Errors
+## <a id="errors"></a> Troubleshoot Errors
 
 This section provides information about how to troubleshoot specific errors or error messages.
+
++ [Failed Installation](#install-fail)
++ [Cannot Create or Delete Service Instances](#cannot-create-delete)
++ [Broker Request Timeouts](#timeouts)
++ [Instance Does Not Exist](#instance-not-exist)
++ [Cannot Bind to or Unbind from Service Instances](#cannot-bind)
++ [Cannot Connect to a Service Instance](#cannot-connect)
++ [Cannot Update a Service Instance](#upgrade-individual-instances)
++ [Upgrade All Service Instances Errand Fails](#upgrade-all-fails)
++ [Missing Logs and Metrics](#missing-logs)
++ [Unable to Render Templates for Job CredHub](#credhub-error)
 
 <%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/partials/services-tshoot/tshoot-err-install-fail' %>
 
 <%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
-<%= partial '../../../svc-sdk/odb/partials/services-tshoot/tshoot-err-timeouts' %>
+<%= partial '../../../svc-sdk/odb/partials/services-tshoot/tshoot-err-cannot-create-delete' %>
 
 <%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
-<%= partial '../../../svc-sdk/odb/partials/services-tshoot/tshoot-err-cannot-create-delete' %>
+<%= partial '../../../svc-sdk/odb/partials/services-tshoot/tshoot-err-timeouts' %>
 
 <%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/partials/services-tshoot/tshoot-err-instance-not-exist' %>
@@ -30,10 +41,10 @@ This section provides information about how to troubleshoot specific errors or e
 <%= partial '../../../svc-sdk/odb/partials/services-tshoot/tshoot-err-other-errors' %>
 
 <%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
-<%= partial 'tshoot-err-cannot-update' %>
+<%= partial '../../../svc-sdk/odb/partials/services-tshoot/tshoot-err-cannot-connect' %>
 
 <%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
-<%= partial '../../../svc-sdk/odb/partials/services-tshoot/tshoot-err-cannot-connect' %>
+<%= partial 'tshoot-err-cannot-update' %>
 
 <%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/partials/services-tshoot/tshoot-err-upgrade-all-fails' %>
@@ -41,7 +52,7 @@ This section provides information about how to troubleshoot specific errors or e
 <%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/partials/services-tshoot/tshoot-err-missing-logs' %>
 
-<a id="credhub-error"></a><h3>Unable to Render Templates for Job CredHub</h3>
+### <a id="credhub-error"></a>Unable to Render Templates for Job CredHub
 
 If you receive an error similar to the following:
 
@@ -57,7 +68,7 @@ To solve this error, use CredHub v1.9.12 or later (included in Ops Manager v2.2.
 or later and v2.3.16 or later) or CredHub v2.1.6 (included in Ops Manager v2.4.10
 or later and v2.5.3 or later).
 
-<a id="components"></a><h2>Troubleshooting Components</h2>
+## <a id="components"></a>Troubleshoot Components
 
 This section provides information about troubleshooting on-demand broker components.
 
