@@ -10,18 +10,28 @@ This topic provides information for operators about troubleshooting on-demand se
 <%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/partials/services/retrieve-guid' %>
 
-## <a id="errors"></a> Troubleshooting Errors
+## <a id="errors"></a> Troubleshoot Errors
 
 This section provides information about how to troubleshoot specific errors or error messages.
+
++ [Failed Installation](#install-fail)
++ [Cannot Create or Delete Service Instances](#cannot-create-delete)
++ [Broker Request Timeouts](#timeouts)
++ [Instance Does Not Exist](#instance-not-exist)
++ [Cannot Bind to or Unbind from Service Instances](#cannot-bind)
++ [Cannot Connect to a Service Instance](#cannot-connect)
++ [Cannot Update a Service Instance](#upgrade-individual-instances)
++ [Upgrade All Service Instances Errand Fails](#upgrade-all-fails)
++ [Missing Logs and Metrics](#missing-logs)
 
 <%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/partials/services-tshoot/tshoot-err-install-fail' %>
 
 <%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
-<%= partial '../../../svc-sdk/odb/partials/services-tshoot/tshoot-err-timeouts' %>
+<%= partial '../../../svc-sdk/odb/partials/services-tshoot/tshoot-err-cannot-create-delete' %>
 
 <%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
-<%= partial '../../../svc-sdk/odb/partials/services-tshoot/tshoot-err-cannot-create-delete' %>
+<%= partial '../../../svc-sdk/odb/partials/services-tshoot/tshoot-err-timeouts' %>
 
 <%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/partials/services-tshoot/tshoot-err-instance-not-exist' %>
@@ -31,6 +41,12 @@ This section provides information about how to troubleshoot specific errors or e
 
 <%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/partials/services-tshoot/tshoot-err-cannot-connect' %>
+<<<<<<< HEAD
+=======
+
+<%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
+<%= partial 'tshoot-err-cannot-update' %>
+>>>>>>> f909402... Add mini-TOC for cross product errors and other fixes [#170902374]
 
 <%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/partials/services-tshoot/tshoot-err-upgrade-all-fails' %>
@@ -38,8 +54,12 @@ This section provides information about how to troubleshoot specific errors or e
 <%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/partials/services-tshoot/tshoot-err-missing-logs' %>
 
+<<<<<<< HEAD
 
 <a id="components"></a><h2>Troubleshooting Components</h2>
+=======
+## <a id="components"></a> Troubleshoot Components
+>>>>>>> f909402... Add mini-TOC for cross product errors and other fixes [#170902374]
 
 This section provides information about troubleshooting on-demand broker components.
 
