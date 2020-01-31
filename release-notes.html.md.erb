@@ -12,16 +12,21 @@ owner: London Services Enablement
 
 New features and changes in this release:
 
-  * Bumped github.com/cloudfoundry/bosh-cli
-  * Bumped gopkg.in/yaml.v2 from 2.2.7 to 2.2.8
-  * Bumped github.com/pkg/errors from 0.8.1 to 0.9.1
+  * Updated the BOSH CLI. For more information, see the [GitHub repository](github.com/cloudfoundry/bosh-cli).
+  * Updated `pkg yaml` from v2.2.7 to v2.2.8. For more information, see the [GoDoc documentation](https://godoc.org/gopkg.in/yaml.v2).
+  * Updated `pkg errors` from v0.8.1 to v0.9.1. For more information, see the [GitHub repository](github.com/pkg/errors).
+
 
 ### Resolved Issues
 
 This release has the following fixes:
 
-* Binding operation accepts empty credentials from the adapter when secure binding is enabled. If the adapter returns empty credentials, ODB will not attempt to store those in CredHub. The platform is still responsible to decide if this is a valid binding. 
-* For operations that require the broker to validate that there are no BOSH tasks in progress, the broker now requests only current tasks (processing, queued and cancelling) from BOSH  rather than all the tasks. Requesting all tasks and retrieving the correct state for each of them was causing one request for each task to BOSH, leading to long-running broker HTTP requests when the number of tasks for that deployment is large. 
+* Binding operation accepts empty credentials from the adapter when secure binding is enabled.
+If the adapter returns empty credentials, <%= vars.product_abbr %> attempts to store them in CredHub.
+The platform is still responsible for deciding if the binding is valid.
+* For operations that require the broker to check that there are no BOSH tasks in progress, the broker now
+requests only current tasks from BOSH -- processing, queued, and cancelling -- rather than all the tasks.
+This prevents excessively long broker HTTP requests when there is a large number of tasks for the deployment.
 
 
 ### Known Issues
@@ -30,7 +35,7 @@ There are no known issues for this release.
 
 ### Compatibility
 
-This on-demand service broker release has the following dependency:
+This release has the following dependency:
 
 <%# The table below might need changing or deleting %>
 
