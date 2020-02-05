@@ -52,21 +52,26 @@ This section provides information about how to troubleshoot specific errors or e
 <%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 <%= partial '../../../svc-sdk/odb/partials/services-tshoot/tshoot-err-missing-logs' %>
 
-### <a id="credhub-error"></a>Unable to Render Templates for Job CredHub
+<%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
 
-If you receive an error similar to the following:
+    id: 'credhub-error',
+
+    description: 'Unable to Render Templates for Job CredHub',
+
+    symptom: 'You receive an error similar to the following:
 
 <pre class="terminal">
 Task 54 | 19:40:25 | Creating missing vms: credhub/03CCE517-F40D-42C8-B758-606FC042A8D4 (0) (00:00:53)
-             L Error: - Unable to render templates for job 'credhub'. Errors are:
-    - Failed to fetch variable '/opsmgr/cf-f0052ab642e7684aa41d/credhub_key_encryption_passwords/0/key' with id '703CCE517-F40D-42C8-B758-606FC042A8D4' from config server: Invalid JSON response
-</pre>
-<br>
-This might be due to an issue with BOSH CredHub v1.9.11 and v2.1.5.
-<br><br>
-To solve this error, use CredHub v1.9.12 or later (included in Ops Manager v2.2.22
-or later and v2.3.16 or later) or CredHub v2.1.6 (included in Ops Manager v2.4.10
-or later and v2.5.3 or later).
+             L Error: - Unable to render templates for job \'credhub\'. Errors are:
+    - Failed to fetch variable \'/opsmgr/cf-f0052ab642e7684aa41d/credhub_key_encryption_passwords/0/key\' with id \'703CCE517-F40D-42C8-B758-606FC042A8D4\' from config server: Invalid JSON response
+</pre>',
+
+    cause: 'This might be due to an issue with BOSH CredHub v1.9.11 and v2.1.5.',
+
+    solution: 'Use CredHub v1.9.12 or later (included in Ops Manager v2.2.22
+    or later and v2.3.16 or later) or CredHub v2.1.6 (included in Ops Manager v2.4.10
+    or later and v2.5.3 or later).'
+}%>
 
 ## <a id="components"></a>Troubleshoot Components
 
