@@ -62,17 +62,6 @@ This section provides information about how to troubleshoot specific errors or e
 
 <pre class="terminal">
 Task 54 | 19:40:25 | Creating missing vms: credhub/03CCE517-F40D-42C8-B758-606FC042A8D4 (0) (00:00:53)
-<<<<<<< HEAD
-             L Error: - Unable to render templates for job 'credhub'. Errors are:
-    - Failed to fetch variable '/opsmgr/cf-f0052ab642e7684aa41d/credhub_key_encryption_passwords/0/key' with id '703CCE517-F40D-42C8-B758-606FC042A8D4' from config server: Invalid JSON response
-</pre>
-<br>
-This might be due to an issue with BOSH CredHub v1.9.11 and v2.1.5.
-<br><br>
-To solve this error, use CredHub v1.9.12 or later (included in Ops Manager v2.2.22
-or later and v2.3.16 or later) or CredHub v2.1.6 (included in Ops Manager v2.4.10
-
-=======
              L Error: - Unable to render templates for job \'credhub\'. Errors are:
     - Failed to fetch variable \'/opsmgr/cf-f0052ab642e7684aa41d/credhub_key_encryption_passwords/0/key\' with id \'703CCE517-F40D-42C8-B758-606FC042A8D4\' from config server: Invalid JSON response
 </pre>',
@@ -83,7 +72,6 @@ or later and v2.3.16 or later) or CredHub v2.1.6 (included in Ops Manager v2.4.1
     or later and v2.3.16 or later) or CredHub v2.1.6 (included in Ops Manager v2.4.10
     or later and v2.5.3 or later).'
 }%>
->>>>>>> af2f0d7... Convert to troubleshooting template [#171021837]
 
 ## <a id="components"></a>Troubleshoot Components
 
