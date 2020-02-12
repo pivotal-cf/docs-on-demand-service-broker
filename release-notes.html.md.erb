@@ -4,30 +4,18 @@ owner: London Services Enablement
 ---
 <strong><%= modified_date %></strong>
 
-## <a id="0-38-0"></a>v0.38.0
+## <a id="0-38-0"></a>v0.39.0
 
-**Release Date: February 12, 2020**
+**Release Date: MMMM DD, 2020**
 
 ### Features
 
 New features and changes in this release:
 
-  * Updated the BOSH CLI. For more information, see the [GitHub repository](https://github.com/cloudfoundry/bosh-cli).
-  * Updated `pkg yaml` from v2.2.7 to v2.2.8. For more information, see the [GoDoc documentation](https://godoc.org/gopkg.in/yaml.v2).
-  * Updated `pkg errors` from v0.8.1 to v0.9.1. For more information, see the [GitHub repository](https://github.com/pkg/errors).
-
 
 ### Resolved Issues
 
 This release has the following fixes:
-
-* Binding operation accepts empty credentials from the adapter when secure binding is enabled.
-If the adapter returns empty credentials, <%= vars.product_abbr %> attempts to store them in CredHub.
-The platform is still responsible for deciding if the binding is valid.
-* For operations that require the broker to check that there are no BOSH tasks in progress, the broker now
-requests only current tasks from BOSH -- processing, queued, and cancelling -- rather than all the tasks.
-This prevents excessively long broker HTTP requests when there is a large number of tasks for the deployment.
-
 
 ### Known Issues
 
