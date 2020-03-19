@@ -4,9 +4,9 @@ owner: London Services Enablement
 ---
 
 This topic provides information about on-demand brokers for people who want to
-create on-demand service tiles for <%= vars.platform %>.
+create on-demand service tiles for Pivotal Cloud Foundry (PCF).
 
-## <a id="cf-broker"></a>Cloud Foundry Service Brokers and <%= vars.platform %> Tiles
+## <a id="cf-broker"></a>Cloud Foundry Service Brokers and PCF Tiles
 
 Service brokers let developers create service instances in their development spaces
 that they can call from their code.
@@ -23,11 +23,11 @@ Cloud Foundry service brokers are implemented as HTTP servers that conform to th
 In addition to providing an API, a service broker publishes a service catalog
 that may include multiple service plans, such as a free tier and a metered tier.
 Brokers register their service plans with the Cloud Controller to populate the Marketplace,
-which developers access with `cf marketplace` or through the <%= vars.platform %> Apps Manager.
+which developers access with `cf marketplace` or through the Pivotal Cloud Foundry (PCF) Apps Manager.
 
-### <%= vars.platform %> Tiles
+### PCF Tiles
 
-On <%= vars.platform %>, operators find services on [Pivotal Network](https://network.pivotal.io/)
+On PCF, operators find services on [Pivotal Network](https://network.pivotal.io/)
 and install and configure them through a tile interface in the <%= vars.ops_manager %> **Installation Dashboard**
 to make them available to developers.
 Installing a service tile creates a service broker, registers it with the Cloud Controller,

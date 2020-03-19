@@ -4,7 +4,7 @@ owner: London Services Enablement
 ---
 
 This topic describes how to create and manage an on-demand service broker (ODB)
- on a local development machine using <%= vars.platform %> Dev and BOSH Lite.
+ on a local development machine using Pivotal Cloud Foundry (PCF) Dev and BOSH Lite.
 
 For more information about the components in this topic, see [PCF Dev and
 BOSH-Lite](https://docs.pivotal.io/tiledev/environments.html#pcfdev).
@@ -28,8 +28,8 @@ install and configure the following components:
 in the BOSH Lite documentation.
 
 - **PCF Dev file <%= vars.odb_pcfdev_version %>.**
-  To install <%= vars.platform %> Dev, see [Installing <%= vars.platform %> Dev](https://docs.pivotal.io/pcf-dev/#installing).
-  Record the <%= vars.platform %> Dev domain for later.
+  To install PCF Dev, see [Installing PCF Dev](https://docs.pivotal.io/pcf-dev/#installing).
+  Record the PCF Dev domain for later.
   The default is `local.pcfdev.io`.
 
 ## <a id="setup"></a>Part 1: Set Up
@@ -105,7 +105,7 @@ To set up the Kafka example service adapter, do the following:
 To set up ODB, do the following:
 
 1. Download the on-demand service broker from Pivotal Network. To download,
-see [<%= vars.platform %> On Demand Services SDK](https://network.pivotal.io/products/on-demand-services-sdk/).
+see [Pivotal Cloud Foundry On Demand Services SDK](https://network.pivotal.io/products/on-demand-services-sdk/).
 
 1. Upload the `on-demand-service-broker` release.
   <pre>
@@ -121,7 +121,7 @@ see [<%= vars.platform %> On Demand Services SDK](https://network.pivotal.io/pro
 ## <a id="create"></a>Part 2: Create
 
 This section describes how to create a BOSH deployment and a service broker
-on <%= vars.platform %> Dev.
+on PCF Dev.
 
 ### <a id="create_bosh"></a> Step 1: Create a BOSH Deployment
 
@@ -292,7 +292,7 @@ for the BOSH Lite Director. For example:
        step above.
     - `BOSH-LITE-URL` is the `URL` value you recorded in the BOSH environment
        step above.
-    - `PCF-DEV-DOMAIN` is the <%= vars.platform %> Dev domain you recorded in the
+    - `PCF-DEV-DOMAIN` is the PCF Dev domain you recorded in the
       [Prerequisites](#prerequisites) above.
 
 
@@ -323,11 +323,11 @@ for the BOSH Lite Director. For example:
     Succeeded
     </pre>
 
-### <a id="create_service"></a> Step 2: Create a Service Broker on <%= vars.platform %> Dev
+### <a id="create_service"></a> Step 2: Create a Service Broker on PCF Dev
 
-To create a service broker on <%= vars.platform %> Dev, do the following:
+To create a service broker on PCF Dev, do the following:
 
-1. Create a service broker on <%= vars.platform %> Dev and enable access to its service offering.
+1. Create a service broker on PCF Dev and enable access to its service offering.
     <pre>
     cf create-service-broker kafka-broker USERNAME PASSWORD http<span>:</span>//BROKER-IP:8080
     </pre>
