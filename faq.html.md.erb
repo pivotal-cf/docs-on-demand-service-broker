@@ -3,8 +3,7 @@ title: Data on Deployment Performance and Sizing
 owner: London Services Enablement
 ---
 
-This topic contains test data on on-demand service instances managed in a Pivotal
-Cloud Foundry (PCF) environment.
+This topic contains test data on on-demand service instances managed in a <%= vars.platform_name %> environment.
 
 Pivotal tested the on-demand broker (ODB) with 500 on-demand service instances using
 the [example Kafka on-demand tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile).
@@ -17,8 +16,8 @@ Setup and results are shown below.
 | Environment                         |                                        |
 |:------------------------------------|:---------------------------------------|
 | IaaS                                | Google Cloud Platform                  |
-| PCF Operations Manager              | v1.9.7                                 |
-| PCF Elastic Runtime                 | v1.9.13                                |
+| <%= vars.platform_name %> Operations Manager              | v1.9.7                                 |
+| <%= vars.platform_name %> Elastic Runtime                 | v1.9.13                                |
 | Example Kafka On-Demand Tile        | v0.15.1                                |
 
 | BOSH Director Configuration         |                                        |
@@ -90,4 +89,3 @@ Therefore, only two service instances can be created at the same time.
 For upgrade all and delete all operations, Operations Manager runs a BOSH errand.
 This errand task occupies a BOSH Director worker, leaving one worker available to
 upgrade, or delete deployments.
-

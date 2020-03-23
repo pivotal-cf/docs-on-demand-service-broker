@@ -4,7 +4,7 @@ owner: London Services Enablement
 ---
 
 This topic provides information about operating the on-demand broker for
-Pivotal Cloud Foundry (PCF) <%= vars.ops_manager %> operators and BOSH operators.
+<%= vars.platform_name %> <%= vars.ops_manager %> operators and BOSH operators.
 
 ## <a id="operator-checklist"></a> Operator Responsibilities
 
@@ -68,7 +68,7 @@ rules are set up so that connections are open as described in the table below.
     <td>
       <strong>Deployed service instances</strong>
     </td>
-    <td>Specific to the service (such as RabbitMQ for PCF). May be one or more ports.</td>
+    <td>Specific to the service (such as RabbitMQ for <%= vars.platform_name %>). May be one or more ports.</td>
     <td>This connection is for administrative tasks. Avoid opening general use, app-specific ports for this connection.</td>
   </tr>
   <tr>
@@ -147,12 +147,12 @@ ODB requires:
 - BOSH Director v266.12.0 or v267.6.0 and later.
   To install the BOSH Director, see [Quick Start](https://bosh.io/docs/quick-start/)
   in the BOSH documentation.
-- cf-release v1.10.0 or later (PCF v2.0 or later).
+- cf-release v1.10.0 or later (<%= vars.platform_name %> v2.0 or later).
 
 <div class="note"><strong>Notes:</strong>
   <ul>
     <li>ODB does not support BOSH Windows.</li>
-    <li>Service instance lifecycle errands require BOSH Director v261 on PCF v1.10 or later. For more information, see <a href="#lifecycle-errands"> Service Instance Lifecycle Errands</a> below.</li>
+    <li>Service instance lifecycle errands require BOSH Director v261 on <%= vars.platform_name %> v1.10 or later. For more information, see <a href="#lifecycle-errands"> Service Instance Lifecycle Errands</a> below.</li>
   </ul>
 </div>
 
@@ -820,7 +820,7 @@ This might be provided as part of your Cloud Foundry deployment.
 - Your instance group must have access to the local DNS provider. This is because
 the address for runtime CredHub is a local domain name.
 
-<p class="note"><strong>Note:</strong> Pivotal recommends using BOSH DNS as a DNS provider. If you use PCF v2.4 or later, you cannot use consul as a DNS provider because consul server VMs have been removed in Pivotal Application Service (PAS) v2.4.</p>
+<p class="note"><strong>Note:</strong> Pivotal recommends using BOSH DNS as a DNS provider. If you use <%= vars.platform_name %> v2.4 or later, you cannot use consul as a DNS provider because consul server VMs have been removed in Pivotal Application Service (PAS) v2.4.</p>
 
 ### Procedure for Enabling Secure Binding
 
@@ -1097,10 +1097,10 @@ For a more detailed manifest snippet, see the [Starter Snippet for the Service C
 ## <a id="broker-metrics"></a> (Optional) Configure Service Metrics
 
 The ODB BOSH release contains a metrics job that can be used to emit metrics
-when co-located with the Pivotal Cloud Foundry Service Metrics SDK.
+when co-located with the <%= vars.platform_name %> Service Metrics SDK.
 To do this, you must include the [Loggregator](https://github.com/cloudfoundry/loggregator) release.
 
-To download the Pivotal Cloud Foundry Service Metrics SDK, see [Pivotal Network](https://network.pivotal.io/products/service-metrics-sdk/).
+To download the <%= vars.platform_name %> Service Metrics SDK, see [Pivotal Network](https://network.pivotal.io/products/service-metrics-sdk/).
 
 Add the following jobs to the broker instance group:
 
@@ -1139,7 +1139,7 @@ manifest in GitHub.
 
 Pivotal has tested this example configuration with Loggregator v58 and service-metrics v1.5.0.
 
-For more information about service metrics, see [Service Metrics for Pivotal Cloud Foundry](http://docs.pivotal.io/service-metrics).
+For more information about service metrics, see [Service Metrics for <%= vars.platform_name %>](http://docs.pivotal.io/service-metrics).
 
 <p class="note alert"><strong>Note:</strong> When <code>service-metrics-adapter</code> is not configured, it
   defaults to a BOSH-provided IP address or BOSH-provided BOSH DNS address, depending on in configuration on

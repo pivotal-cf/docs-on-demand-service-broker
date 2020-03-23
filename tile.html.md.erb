@@ -254,7 +254,7 @@ For example:
 
 <%= vars.ops_manager %> provides a feature called [Floating
 Stemcells](https://docs.pivotal.io/pivotalcf/customizing/understanding-stemcells.html)
-that allows PCF to quickly propagate a patched stemcell to all VMs in the deployment
+that allows <%= vars.platform_name %> to quickly propagate a patched stemcell to all VMs in the deployment
 that have the same compatible stemcell.
 Both the broker deployment and the service instances deployed by the On-Demand
 Broker can make use of this feature.
@@ -310,7 +310,7 @@ When users create bindings or service keys, ODB passes a secure reference to the
 service credentials through the network instead of plain text.
 
 <p class="note"><strong>Note:</strong>
-  To use the secure binding credentials feature you must use PCF v2.0 or later.</p>
+  To use the secure binding credentials feature you must use <%= vars.platform_name %> v2.0 or later.</p>
 
 To include the option to enable secure binding, update your `tile.yml` file as follows:
 
