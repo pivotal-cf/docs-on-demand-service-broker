@@ -111,7 +111,7 @@ The errand does the following:
 1. Deletes all service instances sequentially. Each service instance deletion includes:
   1. Running any pre-delete errands
   1. Deleting the BOSH deployment of the service instance
-  1. Removing any ODB-managed secrets from CredHub
+  1. Removing any <%= vars.product_abbr %>-managed secrets from CredHub
   1. Checking for instance deletion failure, which results in the errand failing immediately
 1. Determines whether any instances have been created while the errand was running.
 If new instances are detected, the errand returns an error.
@@ -244,7 +244,7 @@ access to ensure that new instances cannot be provisioned during the lifetime of
 1. Deletes all service instances sequentially. Each service instance deletion includes:
   1. Running any pre-delete errands
   1. Deleting the BOSH deployment of the service instance
-  1. Removing any ODB-managed secrets from CredHub
+  1. Removing any <%= vars.product_abbr %>-managed secrets from CredHub
   1. Checking for instance deletion failure, which results in the errand failing immediately
 1. Determines whether any instances have been created while the errand was running.
 If new instances are detected, the errand returns an error.
@@ -436,7 +436,7 @@ To add the `upgrade-all-service-instances` errand to the manifest, follow the pr
 ### <a id="recreate-all-service-instances"></a>Recreate All Service Instances
 
 <div class="note">
-    <strong>Note:</strong> ODB only supports the <code>recreate-all-service-instances</code>
+    <strong>Note:</strong> <%= vars.product_abbr %> only supports the <code>recreate-all-service-instances</code>
     errand in the following BOSH versions:<br><br>
     <ul>
       <li>266.10.0–266.10.x</li>

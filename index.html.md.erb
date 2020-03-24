@@ -16,7 +16,7 @@ The operator does not pre-allocate a block of VMs for the instance pool,
 and they can specify an allowable range rather than fixed settings for instance resource levels.
 When a developer creates an on-demand service instance, they then provision it at creation time.
 
-The on-demand services SDK provides a generic, on-demand broker (ODB).
+The on-demand services SDK provides a generic, on-demand broker (<%= vars.product_abbr %>).
 This simplifies broker and tile authoring,
 and is the standard approach for both Pivotal internal services teams and Pivotal
 partner independent software vendors (ISVs) to develop on-demand services for <%= vars.platform_name %>.
@@ -61,12 +61,12 @@ The benefits of provisioning service instances with resources on-demand are:
 * Operators can scale resource consumption in line with need, without having to plan for pre-provisioning.
 * App developers get more control over resources and do not have to acquire them through the operator.
 
-The benefits of using ODB to develop on-demand services are:
+The benefits of using <%= vars.product_abbr %> to develop on-demand services are:
 
-* ODB reduces the amount of code service developers have to write by abstracting away functionality common to most single-tenant on-demand service brokers.
-* ODB uses BOSH to deploy service instances, so anything that is BOSH-deployable can integrate with Cloud Foundry's services Marketplace.
+* <%= vars.product_abbr %> reduces the amount of code service developers have to write by abstracting away functionality common to most single-tenant on-demand service brokers.
+* <%= vars.product_abbr %> uses BOSH to deploy service instances, so anything that is BOSH-deployable can integrate with Cloud Foundry's services Marketplace.
 
-ODB uses the following BOSH features:
+<%= vars.product_abbr %> uses the following BOSH features:
 
 * Dynamic IP management
 * Availability zones
@@ -74,7 +74,7 @@ ODB uses the following BOSH features:
 This results in manifests that are portable across BOSH Cloud Provider Interfaces (CPIs) and are substantially smaller than old-style manifests.
 * Links between deployed BOSH instances consuming information from other instances, for example, IP addresses.
 
-## <a id='prerequisites'></a>Prerequisites for Deploying Brokers That Use ODB
+## <a id='prerequisites'></a>Prerequisites for Deploying Brokers That Use <%= vars.product_abbr %>
 
 For information about minimum versions of Cloud Foundry and BOSH, see
 [Software Requirements](operating.html#software-reqs).

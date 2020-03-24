@@ -11,11 +11,11 @@ For more troubleshooting information, see
 ## <a id="admin-instances"></a>Administer Service Instances
 
 Pivotal recommends that you use the BOSH CLI for administering the deployments
-created by the on-demand broker (ODB); for example for checking VMs, ssh, viewing logs.
+created by the on-demand broker (<%= vars.product_abbr %>); for example for checking VMs, ssh, viewing logs.
 For more information on installing the BOSH CLI, see
 [Install](https://bosh.io/docs/cli-v2/#install).
 
-Pivotal discourages using the BOSH CLI to update or delete ODB service deployments
+Pivotal discourages using the BOSH CLI to update or delete <%= vars.product_abbr %> service deployments
 as it causes `cf update-service` and `cf delete-service` operations to fail while
 the BOSH operation is in progress.
 
@@ -29,7 +29,7 @@ errand. For more information, see
 
 ### <a id="logs"></a>Logs
 
-The ODB writes logs to a log file and to syslog.
+The <%= vars.product_abbr %> writes logs to a log file and to syslog.
 
 The broker log contains error messages and non-zero exit codes returned by the
 service adapter, as well as the `stdout` and `stderr` streams of the adapter.
@@ -40,7 +40,7 @@ facility `user`, with priority `info`.
 
 If you want to forward syslog to a syslog aggregator, see [Syslog Forwarding for Errand Logs](#errands-syslog) below.
 
-The ODB generates a UUID for each request and prefixes all the logs for that request,
+The <%= vars.product_abbr %> generates a UUID for each request and prefixes all the logs for that request,
 for example:
 
 <pre class="terminal">
@@ -48,11 +48,11 @@ for example:
 </pre>
 
 <p class="note">
-  <strong>Note</strong>: The ODB's HTTP server and start up logs
+  <strong>Note</strong>: The <%= vars.product_abbr %>'s HTTP server and start up logs
   are not prefixed with a request ID.
 </p>
 
-All ODB logs have a UTC timestamp.
+All <%= vars.product_abbr %> logs have a UTC timestamp.
 
 ### <a id="errands-syslog"></a> Syslog Forwarding for Errand Logs
 
@@ -266,7 +266,7 @@ or `--cpi` as necessary.
 
 ## <a id="id-uaa-issues"></a>Identify Issues When Connecting to BOSH or UAA
 
-The ODB interacts with the BOSH Director to provision and deprovision instances,
+The <%= vars.product_abbr %> interacts with the BOSH Director to provision and deprovision instances,
 and is authenticated through the Director's UAA.
 For an example configuration, see
 [kafka-example-service-adapter-release](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter-release/blob/778fa99ee08af2193fd8381279d73fcfb94cf662/docs/example-manifest.yml#L37-L47)
@@ -289,7 +289,7 @@ correct and try again.
 
 ## <a id="listing-instances"></a>List Service Instances
 
-ODB persists the list of ODB-deployed service instances and provides an endpoint
+<%= vars.product_abbr %> persists the list of <%= vars.product_abbr %>-deployed service instances and provides an endpoint
 to retrieve them.
 This endpoint requires basic authentication.
 
@@ -322,7 +322,7 @@ Example JSON body:
 
 ## <a id="listing-orphans"></a>List Orphan Deployments
 
-ODB provides an endpoint that compares the list of service instance
+<%= vars.product_abbr %> provides an endpoint that compares the list of service instance
 deployments against the service instances registered in Cloud Foundry. When called,
 the endpoint returns a list of orphaned deployments, if any are present.
 

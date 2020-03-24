@@ -39,12 +39,12 @@ This section contains the following topics:
 <div class="note">
   <strong>Notes</strong>:
   <ul>
-  <li>The on-demand broker (ODB) requires <code>generate-manifest</code> to be
+  <li>The on-demand broker (<%= vars.product_abbr %>) requires <code>generate-manifest</code> to be
     <strong>idempotent</strong>.
     Given the same arguments when a previous manifest is
     supplied&mdash;which happens during a deployment update&mdash;the command
     should always output the same BOSH manifest.</li> <li>When determining
-    whether there are pending changes for an instance during an update, ODB
+    whether there are pending changes for an instance during an update, <%= vars.product_abbr %>
     <em>ignores</em> any configuration supplied in the <a
     href="https://bosh.io/docs/deployment-manifest.html#update"
     target="_blank">update block of the manifest</a> returned by the
@@ -146,7 +146,7 @@ For example:
 <br>
 Keep in mind the following:
 
-* ODB only supports using exact release and stemcell versions. The use of `latest` and floating stemcells are not supported.
+* <%= vars.product_abbr %> only supports using exact release and stemcell versions. The use of `latest` and floating stemcells are not supported.
 * Your Service Adapter should be opinionated about which jobs it requires to generate its manifest.
   For example, the Kafka example requires `kafka_node` and `zookeeper`.
   It should not be opinionated about the mapping of BOSH release to job.
@@ -290,7 +290,7 @@ and an optional update block.
  **(Optional) Update Block**
 
   This block defines a plan-specific configuration for BOSH's update instance operation.
-  Although the ODB considers this block optional, the service adapter must output
+  Although the <%= vars.product_abbr %> considers this block optional, the service adapter must output
   an update block in every manifest it generates.
   Some ways to achieve that are:
 
@@ -298,7 +298,7 @@ and an optional update block.
   when a plan-specific update block is not provided by the operator.
   1. Hard code an update block for all plans in the service adapter.
   1. Make the update block mandatory, so that operators must provide an update
-  block for every plan in the service catalog section of the ODB manifest.
+  block for every plan in the service catalog section of the <%= vars.product_abbr %> manifest.
 
 ####<a id="generate-request-params-JSON"></a>REQUEST-PARAMS-JSON
 
@@ -443,9 +443,9 @@ The following table describes the supported exit codes and output for the
 
 | Exit code     | Description     | Output                                                                                                                           |
 |:--------------|:----------------|:---------------------------------------------------------------------------------------------------------------------------------|
-| 0             | success         | <ul><li>Stdout: JSON document containing the BOSH manifest YAML, a map of adapter-generated secrets to be managed by ODB, and a map of BOSH configs</li></ul>                 |
+| 0             | success         | <ul><li>Stdout: JSON document containing the BOSH manifest YAML, a map of adapter-generated secrets to be managed by <%= vars.product_abbr %>, and a map of BOSH configs</li></ul>                 |
 | 10            | not implemented |                                                                                                                                  |
-| anything else | failure         | <ul><li>Stdout: optional error message for CF CLI users</li> <li>Stderr: error message for operator</li> <li>ODB logs both stdout and stderr</li></ul>     |
+| anything else | failure         | <ul><li>Stdout: optional error message for CF CLI users</li> <li>Stderr: error message for operator</li> <li><%= vars.product_abbr %> logs both stdout and stderr</li></ul>     |
 
 <br>
 Example JSON output printed when the `generate-manifest` command is successful:
@@ -598,7 +598,7 @@ The following table describes the supported exit codes and output for the
 |:--------------|:----------------|:-------------------------------------------------------------------------------------------------------------------------------------------------|
 | 0             | success         | <ul><li>Stdout: dashboard URL JSON</li></ul>                                                                                                     |
 | 10            | not implemented |                                                                                                                                                  |
-| anything else | failure         | <ul><li>Stdout: optional error message for CF CLI users</li><li>Stderr: error message for operator<br> ODB logs both stdout and stderr</li></ul> |
+| anything else | failure         | <ul><li>Stdout: optional error message for CF CLI users</li><li>Stderr: error message for operator<br> <%= vars.product_abbr %> logs both stdout and stderr</li></ul> |
 
 <br>
 Example JSON output printed when the `dashboard-url` command is successful:
@@ -767,8 +767,8 @@ the manifest field that contains the reference to the variable.</p>
 ####<a id="create-binding-dns-addresses"></a>DNS-ADDRESSES-JSON
 
 When this feature is enabled and a broker is deployed with `binding_with_dns` set for a plan,
-the ODB retrieves DNS addresses from BOSH before calling the adapter.
-ODB passes these addresses to the service adapter along with the names given in the
+the <%= vars.product_abbr %> retrieves DNS addresses from BOSH before calling the adapter.
+<%= vars.product_abbr %> passes these addresses to the service adapter along with the names given in the
 `binding_with_dns` properties.
 
 For how to enable this feature for your on-demand service, see [Enable
@@ -803,7 +803,7 @@ The snippet above produces the following in `DNS-ADDRESSES-JSON`:
 Each entry in `binding_with_dns` is converted to a single BOSH DNS address using the BOSH links API.
 
 The On Demand Services SDK includes the `DNSAddresses` parameter for the `CreateBinding` and `DeleteBinding` methods.
-The ODB invokes the `CreateBinding` and `DeleteBinding` methods with this parameter, which is a map of name to DNS address.
+The <%= vars.product_abbr %> invokes the `CreateBinding` and `DeleteBinding` methods with this parameter, which is a map of name to DNS address.
 
 ###<a id="create-binding-output"></a>Output
 
@@ -814,9 +814,9 @@ The following table describes the supported exit codes and output for the
 |:--------------|:--------------------------------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------|
 | 0             | success                                           | <ul><li>Stdout: binding credentials JSON </li></ul>                                                                                                  |
 | 10            | subcommand not implemented                        |                                                                                                                                                      |
-| 42            | app_guid not provided in the binding request body | <ul><li>Stderr: error message for operator</li><li>ODB logs both stdout and stderr </li></ul>                                                        |
-| 49            | binding already exists                            | <ul><li>Stderr: error message for operator</li><li>ODB logs both stdout and stderr </li></ul>                                                        |
-| anything else | failure                                           | <ul><li>Stdout: optional error message for CF CLI users</li><li>Stderr: error message for operator</li><li>ODB logs both stdout and stderr</li></ul> |
+| 42            | app_guid not provided in the binding request body | <ul><li>Stderr: error message for operator</li><li><%= vars.product_abbr %> logs both stdout and stderr </li></ul>                                                        |
+| 49            | binding already exists                            | <ul><li>Stderr: error message for operator</li><li><%= vars.product_abbr %> logs both stdout and stderr </li></ul>                                                        |
+| anything else | failure                                           | <ul><li>Stdout: optional error message for CF CLI users</li><li>Stderr: error message for operator</li><li><%= vars.product_abbr %> logs both stdout and stderr</li></ul> |
 
 <br>
 Example JSON output printed when the `create-binding` command is successful:
@@ -939,8 +939,8 @@ The following table describes the supported exit codes and output for the
 |:--------------|:-----------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 0             | success                | <ul><li>No output is required </li></ul>                                                                                                              |
 | 10            | not implemented        |                                                                                                                                                       |
-| 41            | binding does not exist | <ul><li>Stderr: error message for operator</li><li>ODB logs both stdout and stderr </li></ul>                                                         |
-| anything else | failure                | <ul><li>Stdout: optional error message for CF CLI users</li><li>Stderr: error message for operator</li><li>ODB logs both stdout and stderr </li></ul> |
+| 41            | binding does not exist | <ul><li>Stderr: error message for operator</li><li><%= vars.product_abbr %> logs both stdout and stderr </li></ul>                                                         |
+| anything else | failure                | <ul><li>Stdout: optional error message for CF CLI users</li><li>Stderr: error message for operator</li><li><%= vars.product_abbr %> logs both stdout and stderr </li></ul> |
 
 <br>
 This can be used to connect to the actual VMs if required, to delete a service specific binding.
@@ -1040,7 +1040,7 @@ The following table describes the supported exit codes and output for the
 |:--------------|:-----------------------|:---------------------------------------------------------------------------------------------------------------------------------|
 | 0             | success                | <ul><li>Stdout: JSON document containing the plan schemas</li></ul>
 | 10            | not implemented        |                                                  |
-| anything else | failure                | <ul><li>Stdout: optional error message for cf CLI users</li> <li>Stderr: error message for operator</li>  <li>ODB logs both stdout and stderr</li></ul> |
+| anything else | failure                | <ul><li>Stdout: optional error message for cf CLI users</li> <li>Stderr: error message for operator</li>  <li><%= vars.product_abbr %> logs both stdout and stderr</li></ul> |
 
 <br>
 Example JSON output printed when the `generate-plan-schemas` command is successful:

@@ -13,14 +13,14 @@ in GitHub.
 
 To build an on-demand tile you need the following releases:
 
-- **On Demand Service Broker (ODB)**---Download ODB from [Pivotal
+- **On Demand Service Broker (<%= vars.product_abbr %>)**---Download <%= vars.product_abbr %> from [Pivotal
 Network](https://network.pivotal.io/products/on-demand-services-sdk/).
 - **Your service adapter**---Get this from the service author.
 - **Your service release**---Get this from the release author.
 
 ## <a id="requirements"></a> About Networks
 
-When using the ODB in a tile with <%= vars.ops_manager %> v2.0 and earlier, you need at least
+When using the <%= vars.product_abbr %> in a tile with <%= vars.ops_manager %> v2.0 and earlier, you need at least
 two private networks:
 
 - A network where <%= vars.ops_manager %> deploys the on-demand broker VM
@@ -43,7 +43,7 @@ Use](http://docs.pivotal.io/tiledev/tile-generator.html#how-to).
 
 1. Add accessors, on-demand broker lifecycle errands, and optional features to the
 `tile.yml` file generated in step 1.
-This provides configuration for the ODB and additional configuration options for operators
+This provides configuration for the <%= vars.product_abbr %> and additional configuration options for operators
 to select in <%= vars.ops_manager %>.
 <br><br>
 For more information about what to add to the `tile.yml`, see the following sections below:
@@ -61,7 +61,7 @@ For more information about what to add to the `tile.yml`, see the following sect
 
 ### <a id="accessors"></a>Add Accessors
 
-The ODB requires tiles to be configured with certain information.
+The <%= vars.product_abbr %> requires tiles to be configured with certain information.
 You must add accessors to the `tile.yml` file to provide values that operators
 cannot configure in <%= vars.ops_manager %>.
 
@@ -306,7 +306,7 @@ For example:
 You can give <%= vars.ops_manager %> operators the option to enable secure binding.
 If secure binding is enabled, binding credentials are stored securely in
 runtime CredHub.
-When users create bindings or service keys, ODB passes a secure reference to the
+When users create bindings or service keys, <%= vars.product_abbr %> passes a secure reference to the
 service credentials through the network instead of plain text.
 
 <p class="note"><strong>Note:</strong>

@@ -10,7 +10,7 @@ For more information about service author responsibilities, see
 
 ## <a id="about"></a> Overview
 
-A service adapter is an executable invoked by the on-demand broker (ODB) that
+A service adapter is an executable invoked by the on-demand broker (<%= vars.product_abbr %>) that
 fulfills service-specific functionality such as creating binding credentials and
 BOSH manifests for service instances.
 
@@ -55,8 +55,8 @@ Perform the following steps to install and invoke the SDK:
     ```
     go get github.com/pivotal-cf/on-demand-services-sdk
     ```
-    Use the same version of the SDK as your ODB release. For example, if you are
-    using v0.8.0 of the ODB BOSH release, you should check out the v0.8.0 tag of
+    Use the same version of the SDK as your <%= vars.product_abbr %> release. For example, if you are
+    using v0.8.0 of the <%= vars.product_abbr %> BOSH release, you should check out the v0.8.0 tag of
     the SDK.
 
 1. In the main function for the service adapter, call the `HandleCLI` function:
@@ -129,7 +129,7 @@ For more information about the input parameters and expected output, see
 [generate-manifest](./adapter-reference.html#generate-manifest).
 
 <p class="note"><strong>Note:</strong>
-  ODB requires <code>generate-manifest</code> to be idempotent.
+  <%= vars.product_abbr %> requires <code>generate-manifest</code> to be idempotent.
   Given the same arguments when a previous manifest is supplied&mdash;which
   happens during a deployment update&mdash;the command should always output
   the same BOSH manifest.
@@ -176,7 +176,7 @@ The `Binder` interface is required for most service adapters. This includes:
   For more information about the input parameters and expected output, see
   [delete-binding](./adapter-reference.html#delete-binding).
 
-To configure ODB to provide BOSH DNS addresses for service instances to the service adapter `create-binding`
+To configure <%= vars.product_abbr %> to provide BOSH DNS addresses for service instances to the service adapter `create-binding`
 and `delete-binding` calls, see [(Optional) Enable BOSH DNS Addresses for Bindings](./service-adapter.html#dns-addresses)
 
 The code snippet below shows the interface signature:
@@ -292,7 +292,7 @@ you think is relevant for the operator logs.
 Both the stdout and stderr streams are printed in the broker log for the operator.
 For that reason, Pivotal recommends that the service adapter does not print the
 manifest or other sensitive details to stdout or stderr.
-ODB does no validation on this output.
+<%= vars.product_abbr %> does no validation on this output.
 
 The SDK provides three specific errors for the `CreateBinding` function, which
 allow the adapter to exit with the appropriate code:
@@ -336,36 +336,36 @@ Secrets in the manifest can be formatted as:
 - BOSH variables
 - Plaintext
 
-You can avoid using plaintext secrets in the manifest by using ODB-managed
+You can avoid using plaintext secrets in the manifest by using <%= vars.product_abbr %>-managed
 secrets, which stores secrets on BOSH CredHub.
 
 A service adapter might need to access secrets embedded in a service instance
 manifest when processing a create binding request.
 For example, the adapter might need credentials with sufficient privileges to add a new
 user to a service instance.
-ODB passes the service instance manifest to the adapter in the `create-binding` call.
+<%= vars.product_abbr %> passes the service instance manifest to the adapter in the `create-binding` call.
 
-When using ODB-managed secrets, the service adapter generates secrets and uses
-ODB as a proxy to the BOSH CredHub config server.
+When using <%= vars.product_abbr %>-managed secrets, the service adapter generates secrets and uses
+<%= vars.product_abbr %> as a proxy to the BOSH CredHub config server.
 
-The following sections provide information about how to use ODB-managed secrets to store,
+The following sections provide information about how to use <%= vars.product_abbr %>-managed secrets to store,
 persist, and modify secrets in BOSH CredHub:
 
-- [Use ODB-Managed Secrets](#odb-managed-secrets)
-- [Migrate from Plaintext Secrets to ODB-Managed Secrets](#migrating-to-stored-secrets)
+- [Use <%= vars.product_abbr %>-Managed Secrets](#odb-managed-secrets)
+- [Migrate from Plaintext Secrets to <%= vars.product_abbr %>-Managed Secrets](#migrating-to-stored-secrets)
 - [Persist Credentials Across Updates](#odb-persisting-creds)
-- [Modify ODB-Managed Secrets](#modifying-secrets)
+- [Modify <%= vars.product_abbr %>-Managed Secrets](#modifying-secrets)
 
-### <a id="about-odb-managed-secrets"></a>How ODB Processes ODB-Managed Secrets
+### <a id="about-odb-managed-secrets"></a>How <%= vars.product_abbr %> Processes <%= vars.product_abbr %>-Managed Secrets
 
-When you use ODB-managed secrets, ODB does the following during provision:
+When you use <%= vars.product_abbr %>-managed secrets, <%= vars.product_abbr %> does the following during provision:
 
 1. Generates a BOSH CredHub reference for each secret in the `secrets` map in the format
 `/odb/SERVICE-OFFERING-ID/SERVICE-INSTANCE-ID/SECRET-NAME`.
 
 1. Stores the value of the secret in BOSH CredHub using the generated name.
 
-1. Replaces all occurrences in the manifest of the ODB-managed secrets placeholder
+1. Replaces all occurrences in the manifest of the <%= vars.product_abbr %>-managed secrets placeholder
 `((odb_secret:SECRET-NAME))` with the generated BOSH CredHub reference.
 
 1. Deploys the updated manifest.
@@ -391,20 +391,20 @@ handle missing secrets based on whether they are required to create bindings.
 
 %>
 
-### <a id="odb-managed-secrets"></a> Use ODB-Managed Secrets
+### <a id="odb-managed-secrets"></a> Use <%= vars.product_abbr %>-Managed Secrets
 
-To use ODB-managed secrets, the service adapter must do the following for the
+To use <%= vars.product_abbr %>-managed secrets, the service adapter must do the following for the
 output of `generate-manifest`:
 
 <p class="note"><strong>Note: </strong>
   If you have a previous manifest containing plaintext secrets that you want to
-  convert to ODB-managed secrets, see
-  <a href="#migrating-to-stored-secrets">Migrate from Plaintext Secrets to ODB-Managed Secrets</a>
+  convert to <%= vars.product_abbr %>-managed secrets, see
+  <a href="#migrating-to-stored-secrets">Migrate from Plaintext Secrets to <%= vars.product_abbr %>-Managed Secrets</a>
    below.
 </p>
 
 1. The adapter must generate a manifest that:
-    * Uses ODB-managed secrets placeholders
+    * Uses <%= vars.product_abbr %>-managed secrets placeholders
     `((odb_secret:SECRET-NAME))` for the secrets that you want to store in BOSH
     CredHub.
     * Sets the `enable_secure_manifests` flag to `true`.
@@ -458,28 +458,28 @@ output of `generate-manifest`:
     }
     ```
 
-### <a id="migrating-to-stored-secrets"></a>Migrate from Plaintext Secrets to ODB-Managed Secrets
+### <a id="migrating-to-stored-secrets"></a>Migrate from Plaintext Secrets to <%= vars.product_abbr %>-Managed Secrets
 
 You can use the service adapter to migrate from plaintext secrets in the manifest
-to ODB-managed secrets that are stored in BOSH CredHub.
+to <%= vars.product_abbr %>-managed secrets that are stored in BOSH CredHub.
 When the `generate-manifest` subcommand is provided with a previous manifest, the
 service adapter copies secrets from the previous deployment to the new manifest.
 
-To migrate from plaintext secrets to ODB-managed secrets, write code in your
+To migrate from plaintext secrets to <%= vars.product_abbr %>-managed secrets, write code in your
 service adapter that does the following:
 
 <p class="note"><strong>Note</strong>: Secrets already stored in BOSH CredHub do not need placeholders.
-This is because ODB ignores BOSH CredHub references during <code>generate-manifest</code>.
+This is because <%= vars.product_abbr %> ignores BOSH CredHub references during <code>generate-manifest</code>.
 </p>
 
 * Detects whether a secret is a plaintext secret.
 
-* Replaces each plaintext secret from the previous manifest with an ODB-managed
+* Replaces each plaintext secret from the previous manifest with an <%= vars.product_abbr %>-managed
 secrets placeholder `((odb_secret:SECRET-NAME))` in the new manifest.
 
 * Returns the value of the secrets in the `secrets` map.
 For more information about the `secrets` map, see
-[Use ODB-Managed Secrets](#odb-managed-secrets) above.
+[Use <%= vars.product_abbr %>-Managed Secrets](#odb-managed-secrets) above.
 
   * Each placeholder in the manifest a corresponding entry in the `secrets` map.
   * Each key in the `secrets` map at least one corresponding placeholder in the manifest.
@@ -523,10 +523,10 @@ func extractSecret(oldValue, secretName string, secretsMap map[string]string, ne
 ### <a id="odb-persisting-creds"></a>Persist Secrets across Updates
 
 When dealing with properties that need to persist across updates,
-the service adapter must extract the existing name for any ODB-managed
+the service adapter must extract the existing name for any <%= vars.product_abbr %>-managed
 secrets from the previous manifest.
 
-The following manifest snippet shows an ODB-managed secret with a BOSH CredHub
+The following manifest snippet shows an <%= vars.product_abbr %>-managed secret with a BOSH CredHub
 name:
 
 ```
@@ -543,18 +543,18 @@ placeholder `((odb_secret:SECRET-NAME))`.
 For more information about using the value during a bind, see
 [create-binding](./adapter-reference.html#create-binding).
 
-### <a id="modifying-secrets"></a>Modify ODB-Managed Secrets
+### <a id="modifying-secrets"></a>Modify <%= vars.product_abbr %>-Managed Secrets
 
 <p class="note warning"><strong>Warning:</strong>
   Pivotal discourages modifying the value of secrets without changing the secret name.
-  If the BOSH deploy task fails during update or upgrade, ODB-managed secrets might
+  If the BOSH deploy task fails during update or upgrade, <%= vars.product_abbr %>-managed secrets might
   be left in an inconsistent state.
   For more information, see <a href="#inconsistent-secrets">Inconsistent Secrets after a Failed Update</a>
   below.
 </p>
 
 When updating or upgrading a service instance, operators might need to modify the value
-of an ODB-managed secret.
+of an <%= vars.product_abbr %>-managed secret.
 These secrets are passed to the service adapter from the following:
 
 - Plan properties in the on-demand broker manifest
@@ -564,20 +564,20 @@ These secrets are passed to the service adapter from the following:
 To regenerate the manifest with modified secrets, write code in your service adapter
  that does the following:
 
-1. Replaces the property in the manifest with an ODB-managed secrets placeholder
+1. Replaces the property in the manifest with an <%= vars.product_abbr %>-managed secrets placeholder
 that uses a new secret name.
 
 1. Uses the `GenerateManifest` method to return the new secret in the `secrets` map.
 
 #### <a id="odb-detecting-new-secrets"></a>Detect When Secrets Are Modified
 
-The service adapter must only insert the ODB-managed secrets placeholder if
+The service adapter must only insert the <%= vars.product_abbr %>-managed secrets placeholder if
 a secret has been modified.
-This is because ODB requires that the `GenerateManifest` method is idempotent.
+This is because <%= vars.product_abbr %> requires that the `GenerateManifest` method is idempotent.
 When the service adapter generates a new manifest after a deployment update,
 it must be the same as the previous manifest when `GenerateManifest` is given the same input.
 
-ODB provides all the currently deployed secrets to the `GenerateManifest` method
+<%= vars.product_abbr %> provides all the currently deployed secrets to the `GenerateManifest` method
 using the `previousSecrets` argument.
 For more information about the input to the `previousSecrets` argument, see
 [PREVIOUS-SECRETS-JSON](./adapter-reference.html#previous-secrets).
@@ -589,7 +589,7 @@ that does the following:
 
 1. **If the secret has changed:**
   <ol>
-    <li>Inserts the ODB-managed secrets placeholder.</li>
+    <li>Inserts the <%= vars.product_abbr %>-managed secrets placeholder.</li>
     <li>Adds the value to the `secrets` map.</li>
   </ol>
   **If the secret has remained the same:**
@@ -602,10 +602,10 @@ For example code that does the above, see the [redis-example-service-adapter]
 
 #### <a id="inconsistent-secrets"></a>Inconsistent Secrets after a Failed Update
 
-If you modify the value of a secret without providing a new secret name, ODB-managed
+If you modify the value of a secret without providing a new secret name, <%= vars.product_abbr %>-managed
 secrets can be left in an inconsistent state if the update or upgrade of a BOSH
 deployment fails.
-This is because ODB updates the secrets in BOSH CredHub before updating the
+This is because <%= vars.product_abbr %> updates the secrets in BOSH CredHub before updating the
 deployment.
 
 The failed deployment might contain a mixture of old and new secrets depending
@@ -707,14 +707,14 @@ instance_groups:
   This is available in <%= vars.ops_manager %> v2.2 and later.
 </p>
 
-You can configure ODB to provide BOSH DNS addresses for service instances to the
+You can configure <%= vars.product_abbr %> to provide BOSH DNS addresses for service instances to the
 service adapter `create-binding` and `delete-binding` calls.
 This is useful when the binding for a service instance contains, or relies on,
 BOSH DNS addresses for that deployment.
 For more information about how DNS addresses are passed to the `create-binding` and `delete-binding` calls,
 see [DNS-ADDRESSES-JSON](./adapter-reference.html#create-binding-dns-addresses).
 
-To enable ODB to provide service instance DNS addresses to the `create-binding` and `delete-binding` calls,
+To enable <%= vars.product_abbr %> to provide service instance DNS addresses to the `create-binding` and `delete-binding` calls,
 do the following:
 
 1. Provide a link from the service instance's BOSH release by choosing any job
@@ -755,7 +755,7 @@ For example:
 
 ## <a id="bosh-configs"></a>(Optional) Use Generic BOSH Configs with Service Instances
 
-The service adapter can generate generic BOSH configs and use ODB to apply them
+The service adapter can generate generic BOSH configs and use <%= vars.product_abbr %> to apply them
 to the BOSH Director before deployment of the service instance. This enables
 the service author to provide service instance-specific BOSH configs which
 exist only for the lifetime of the service instance.
@@ -784,7 +784,7 @@ command, as in the example below.
 
 Where `MY-SERVICE-INSTANCE` is your service instance.
 
-ODB takes the configs in the output and for each entry creates a generic
+<%= vars.product_abbr %> takes the configs in the output and for each entry creates a generic
 BOSH config on the director, using the map key as the config type and using
 the service instance deployment name as the config name. If the
 example above were applied using the BOSH CLI, it would look similar to this:
@@ -796,7 +796,7 @@ $ bosh update-config --type cloud --name MY-SERVICE-INSTANCE config.yml
 
 The valid config types are: cloud, cpi and runtime.
 
-The configs are scoped for the BOSH team client ODB is deployed with and they
+The configs are scoped for the BOSH team client <%= vars.product_abbr %> is deployed with and they
 are applied to subsequently deployed service instances.
 
 <p class="note"><strong>Note:</strong> Pivotal recommends that service adapters
@@ -804,7 +804,7 @@ also namespace their configuration to avoid depending on a config value, which
 might be deleted in the future when the associated service instance is removed.
 </p>
 
-On updates, ODB passes the BOSH configs previously set for the instance to
+On updates, <%= vars.product_abbr %> passes the BOSH configs previously set for the instance to
 the service adapter on `generate-manifest`. When the service adapter returns a
 new value for an existing type, the configuration is overwritten. When no
 value is returned for an existing type, that type remains as is. When new
@@ -816,8 +816,8 @@ be deleted.
 ## <a id="packaging"></a>Package the Service Adapter
 
 Package the service adapter as a BOSH release.
-The operator should co-locate the service adapter release with the ODB release in
-a BOSH manifest to place the adapter executable on the same VM as the ODB server.
+The operator should co-locate the service adapter release with the <%= vars.product_abbr %> release in
+a BOSH manifest to place the adapter executable on the same VM as the <%= vars.product_abbr %> server.
 As a result, the adapter BOSH job's `monit` file should have no processes defined.
 
 See the following example service adapter releases in GitHub:

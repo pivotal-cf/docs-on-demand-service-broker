@@ -3,15 +3,15 @@ title: Security
 owner: London Services Enablement
 ---
 
-This topic provides information about the API endpoints that the on-demand broker (ODB)
+This topic provides information about the API endpoints that the on-demand broker (<%= vars.product_abbr %>)
 accesses, and the minimum UAA authorities and corresponding permissions required
-for the ODB to operate correctly.
+for the <%= vars.product_abbr %> to operate correctly.
 
 ## <a id="bosh-endpoints"></a>BOSH API Endpoints
 
-ODB accesses the following BOSH API endpoints during the service instance lifecycle:
+<%= vars.product_abbr %> accesses the following BOSH API endpoints during the service instance lifecycle:
 
-| API endpoint                                                   | Examples of usage in ODB                                                                                                                                 |
+| API endpoint                                                   | Examples of usage in <%= vars.product_abbr %>                                                                                                                                 |
 |:---------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `POST /deployments`                                            | Create or update a service instance                                                                                                                         |
 | `POST /deployments/DEPLOYMENT-NAME/errands/ERRAND-NAME/runs`   | <ul><li>Register or de-register the on-demand broker with the Cloud Controller</li><li>Run smoke tests</li></ul>                                                                   |
@@ -28,7 +28,7 @@ in the BOSH documentation.
 
 ## <a id="bosh-uaa"></a>BOSH UAA Permissions
 
-The actions that ODB needs to be able to perform are:
+The actions that <%= vars.product_abbr %> needs to be able to perform are:
 
 Modify:
 
@@ -56,7 +56,7 @@ documentation.
 ### <a id="unused-bosh"></a> Unused BOSH permissions
 
 The `bosh.teams.TEAM-NAME.admin` authority also allows the following actions, which currently are
-not used by ODB:
+not used by <%= vars.product_abbr %>:
 
 - `bosh start/stop/recreate`
 - `bosh cck`
@@ -66,7 +66,7 @@ not used by ODB:
 
 ## <a id="ipsec"></a><%= vars.platform_name %> IPsec Add-On
 
-Pivotal tested ODB with the IPsec Add-On for <%= vars.platform_name %> and it appears to work.
+Pivotal tested <%= vars.product_abbr %> with the IPsec Add-On for <%= vars.platform_name %> and it appears to work.
 The tests excluded the BOSH Director itself from IPsec ranges because the BOSH
 add-on cannot be applied to BOSH itself.
 
@@ -76,15 +76,15 @@ For how to install the IPsec Add-On for <%= vars.platform_name %>, see
 
 ## <a id="cf-endpoints"></a>CF API Endpoints
 
-ODB accesses the following CF API endpoints during the service instance lifecycle:
+<%= vars.product_abbr %> accesses the following CF API endpoints during the service instance lifecycle:
 
-| API endpoint                                                         | Examples of usage in ODB                                                                           |
+| API endpoint                                                         | Examples of usage in <%= vars.product_abbr %>                                                                           |
 |:---------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------|
 | `GET /v2/info`                                                       | Identify CF API version to determine feature compatibility & availability                              |
 | `GET /v2/services`                                                   | List all services to find our own service based on defined unique ID rather than GUID                  |
-| `GET /v2/services/SERVICE-GUID/service_plans`                        | Find registered service plans for ODB service e.g. for calculating plan quota usage                    |
+| `GET /v2/services/SERVICE-GUID/service_plans`                        | Find registered service plans for <%= vars.product_abbr %> service e.g. for calculating plan quota usage                    |
 | `GET /v2/service_brokers`                                            | Find service broker metadata by name during broker deregistration                                      |
-| `DELETE /v2/service_brokers/SERVICE-BROKER-GUID`                     | Delete ODB service broker during broker deregister errand                                              |
+| `DELETE /v2/service_brokers/SERVICE-BROKER-GUID`                     | Delete <%= vars.product_abbr %> service broker during broker deregister errand                                              |
 | `GET /v2/service_plans/SERVICE-PLAN-GUID`                            | Identify service plan when upgrading an instance to trigger any lifecycle errands                      |
 | `PUT /v2/service_plans/SERVICE-PLAN-GUID`                            | Disable service access prior to service deletion                                                       |
 | `GET /v2/service_plans/SERVICE-PLAN-GUID/service_instances`          | Find service instances for given plan when determining global quota and running startup checks         |
@@ -100,7 +100,7 @@ documentation.
 
 ## <a id="cf-uaa"></a>Cloud Foundry UAA Permissions
 
-The actions that ODB needs to be able to perform are:
+The actions that <%= vars.product_abbr %> needs to be able to perform are:
 
 Modify:
 
@@ -129,7 +129,7 @@ on-demand service instances across a foundation, regardless of org and space.
 ### <a id="unused-cf"></a> Unused Cloud Foundry permissions
 
 The Cloud Controller admin authority also allows the following actions, which
-currently are not used by ODB:
+currently are not used by <%= vars.product_abbr %>:
 
 - `cf push`
 - `cf delete`

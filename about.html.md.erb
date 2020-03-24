@@ -21,7 +21,7 @@ Cloud Foundry service brokers are implemented as HTTP servers that conform to th
 [Open Service Broker API](http://docs.cloudfoundry.org/services/api.html).
 
 In addition to providing an API, a service broker publishes a service catalog
-that may include multiple service plans, such as a free tier and a metered tier.
+that can include multiple service plans, such as a free tier and a metered tier.
 Brokers register their service plans with the Cloud Controller to populate the Marketplace,
 which developers access with `cf marketplace` or through the <%= vars.platform_name %> Apps Manager.
 
@@ -42,14 +42,15 @@ and easy for developers to use.
 These components include configuration layouts, upgrade rules, lifecycle errands,
 and BOSH manifests for deploying the service instances.
 
-## <a id="odb-sdk"></a>On-Demand Services SDK and the On-Demand Broker
+## <a id="odb-sdk"></a><%= vars.product_short %> and the On-Demand Broker
 
-The on-demand services SDK provides a generic on-demand broker (ODB) that answers API calls from the Cloud Controller.
+The <%= vars.product_short %> provides a generic on-demand broker (ODB) that answers API calls from the Cloud Controller.
 
-*Service authors* add service-specific functionality to the on-demand services SDK through an
+*Service authors* add service-specific functionality to the <%= vars.product_short %> through an
 executable called a **Service Adapter**.
 These components combine to create a BOSH deployment.
-For more information about BOSH deployments, see [What is a Deployment](https://bosh.io/docs/deployment/).
+For more information about BOSH deployments, see [What is a Deployment](https://bosh.io/docs/deployment/) in
+the BOSH documentation.
 
 *Tile authors* customize the tile interface used by operators.
 The tile consumes the BOSH deployment to generate a BOSH manifest for deploying on-demand instances of the service.
@@ -58,7 +59,7 @@ The diagram below illustrates this process.
 ![The service adapter plugs into the on-demand broker to create a BOSH deployment.
 For details read the text above](img/odb-service-adapter.png)
 
-The on-demand services SDK imposes no constraints on the service authors' ability
+The <%= vars.product_short %> imposes no constraints on the service authors' ability
 to offer new functionality or expose configuration options in their service plans,
 such as rate limiting and external load balancers.
 
@@ -85,7 +86,7 @@ For more information, see [Creating an On-Demand Service Tile](./tile.html).
 Operators deploy and maintain the broker.
 They also manage access control for Cloud Foundry (CF) developers.
 This documentation provides information for two types of operator, <%= vars.ops_manager %> operators and BOSH operators.
-These roles may be separate or combined.
+These roles can be separate or combined.
 The following describes each type of operator:
 
 - **<%= vars.ops_manager %> Operator**: Uses the <%= vars.ops_manager %> UI to configure plans and provide service specific configurations.
@@ -123,10 +124,10 @@ Thanks to BOSH v2, service authors can define resources globally (in **Cloud Con
 This makes manifests portable across BOSH Cloud Provider Interfaces (CPIs) and
 lets them be substantially smaller than old-style manifests.
 The ODB takes advantage of other BOSH v2 features as well, including dynamic IP management,
-availability zones, and links through which deployed BOSH instances can access
+availability zones (AZ), and links through which deployed BOSH instances can access
 IP addresses and other information from other instances.
 
-Once an on-demand tile is authored and distributed, the operator installs and configures
+After an on-demand tile is authored and distributed, the operator installs and configures
 it the same way they do with any other Pivotal products.
 In the process, they select which of the tile's available service plans to offer their developers.
 

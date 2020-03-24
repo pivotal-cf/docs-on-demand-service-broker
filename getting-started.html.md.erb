@@ -3,7 +3,7 @@ title: Getting Started&#58; ODB on a Local Development Environment
 owner: London Services Enablement
 ---
 
-This topic describes how to create and manage an on-demand service broker (ODB)
+This topic describes how to create and manage an on-demand service broker (<%= vars.product_abbr %>)
  on a local development machine using <%= vars.platform_name %> Dev and BOSH Lite.
 
 For more information about the components in this topic, see [<%= vars.platform_name %> Dev and
@@ -20,7 +20,7 @@ Kafka open source messaging. See the following sample code directories:</p>
 </div>
 ## <a id="prereq"></a>Prerequisites
 
-Before you set up and use ODB on your local machine,
+Before you set up and use <%= vars.product_abbr %> on your local machine,
 install and configure the following components:
 
 - **BOSH Lite <%= vars.odb_bosh_lite_version %> or later.**
@@ -35,7 +35,7 @@ in the BOSH Lite documentation.
 ## <a id="setup"></a>Part 1: Set Up
 
 This section details how to prepare BOSH Lite and set up the Kafka example service,
-the Kakfa example service adapter, and ODB.
+the Kakfa example service adapter, and <%= vars.product_abbr %>.
 
 ### <a id="set_up_bosh"></a>Step 1: Prepare BOSH Lite
 
@@ -100,9 +100,9 @@ To set up the Kafka example service adapter, do the following:
     bosh -e lite upload-release
   </pre>
 
-### <a id="set_up_odb"></a> Step 4: Set Up ODB
+### <a id="set_up_odb"></a> Step 4: Set Up <%= vars.product_abbr %>
 
-To set up ODB, do the following:
+To set up <%= vars.product_abbr %>, do the following:
 
 1. Download the on-demand service broker from Pivotal Network. To download,
 see [<%= vars.platform_name %> On Demand Services SDK](https://network.pivotal.io/products/on-demand-services-sdk/).
@@ -112,7 +112,7 @@ see [<%= vars.platform_name %> On Demand Services SDK](https://network.pivotal.i
   bosh -e lite upload-release on-demand-service-broker-X.Y.Z.tgz
   </pre>
   Where:
-  - `X.Y.Z` is the ODB release version.<br><br>
+  - `X.Y.Z` is the <%= vars.product_abbr %> release version.<br><br>
   For example:
   <pre class="terminal">
   $ bosh -e lite upload-release on-demand-service-broker-0.21.1.tgz
@@ -396,7 +396,7 @@ To verify and use your on-demand service, do the following:
     service-instance_2715262c-8564-4cd9-b629-0ae99e6aa4b9   kafka-example-service/0+dev.2           bosh-warden-boshlite-ubuntu-trusty-go\_agent/<%= vars.odb_warden_stemcell_version %>   latest
     </pre>
 
-    This example shows that the service instance is provisioned and the service releases are specified in the ODB deployment manifest.
+    This example shows that the service instance is provisioned and the service releases are specified in the <%= vars.product_abbr %> deployment manifest.
 
 
 ### <a id="use"></a> Step 2: Use Your On-Demand Service

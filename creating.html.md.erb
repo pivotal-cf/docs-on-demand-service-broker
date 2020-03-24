@@ -23,7 +23,7 @@ Service authors provide the following:
 ## <a id="create-a-service-release"></a>Overview
 
 A service release is a BOSH release of the service that you want to create on-demand instances of.
-The on-demand broker (ODB) deploys this release at instance creation time,
+The on-demand broker (<%= vars.product_abbr %>) deploys this release at instance creation time,
 once for each service instance.
 
 To create a service release, Pivotal recommends that you do the following:
@@ -82,11 +82,11 @@ The example uses implicit job links to get the IP addresses of the brokers and t
 
 Service instance lifecycle errands allow additional short-lived jobs to run as
 part of service instance deployment.
-ODB uses these errands to manage an instance lifecycle.
+<%= vars.product_abbr %> uses these errands to manage an instance lifecycle.
 A deployment is only considered successful if the deployment and all
 lifecycle errands complete successfully.
 
-ODB supports the following service instance lifecycle errands:
+<%= vars.product_abbr %> supports the following service instance lifecycle errands:
 
 - **Post-deploy**: These errands run after creating or updating a service instance.
   For example, running a health check to ensure the service instance is functioning.
