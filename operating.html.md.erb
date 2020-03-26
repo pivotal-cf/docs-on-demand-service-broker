@@ -196,11 +196,11 @@ You have two options for providing a CA certificate to <%= vars.product_abbr %> 
     For example:
 
     ```yaml
-    Instance_groups:
-        - Name: broker
-          Jobs:
-            - Name: broker
-              Properties:
+    instance_groups:
+        - name: broker
+          jobs:
+            - name: broker
+              properties:
                 bosh:
                   root_ca_cert:
                     -----BEGIN CERTIFICATE-----

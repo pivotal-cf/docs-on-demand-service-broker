@@ -813,6 +813,37 @@ types are passed, those are set.
 When the service instance is deleted, all the associated BOSH configs are also
 be deleted.
 
+## <a id="backup-agent"></a>(Optional) Enable support for Backup Agent Bindings
+
+ODB supports an special type of binding: `backup_agent`. When enabled, it allows
+ODB clients to request, through the service bindings flow, the address of the
+backup agent.
+
+To enable it, do the following:
+
+1. Set the `support_backup_agent_binding` to `true` in the broker job
+   properties:<br><br>
+For example:
+    ```yaml
+    instance_groups:
+    - name: broker
+      jobs:
+      - name: broker
+        release: on-demand-broker-release
+        properties:
+          support_backup_agent_binding: true
+        ...
+    ```
+    <br>
+
+2. Update your service adapter to support this type of binding. Generally, when
+   backup agent binding is requested, service adapters must generate a
+   binding containing only `backup_agent_url` in the response. To detect when
+   the `backup_agent` of binding is being requested, the service adapter can
+   inspect whether the `bind_resource.backup_agent` property is true in the
+   `create-binding` input (SDK users can use the
+   `createBindingParams.RequestParams.BindResource()` function).
+
 ## <a id="packaging"></a>Package the Service Adapter
 
 Package the service adapter as a BOSH release.
