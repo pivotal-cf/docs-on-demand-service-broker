@@ -16,8 +16,8 @@ Setup and results are shown below.
 | Environment                         |                                        |
 |:------------------------------------|:---------------------------------------|
 | IaaS                                | Google Cloud Platform                  |
-| <%= vars.platform_name %> Operations Manager              | v1.9.7                                 |
-| <%= vars.platform_name %> Elastic Runtime                 | v1.9.13                                |
+| <%= vars.ops_manager %>              | v1.9.7                                 |
+| Elastic Runtime                 | v1.9.13                                |
 | Example Kafka On-Demand Tile        | v0.15.1                                |
 
 | BOSH Director Configuration         |                                        |
@@ -82,10 +82,10 @@ These durations may vary for a number of reasons, for example:
 ## <a id="test_notes"></a>Notes
 
 For create operations, the on-demand broker creates a BOSH deployment for each service instance.
-By default, the BOSH Director in Operations Manager v1.9 has three workers with
+By default, the BOSH Director in <%= vars.ops_manager %> v1.9 has three workers with
 a dedicated status worker, so only two workers are available to process deployment tasks.
 Therefore, only two service instances can be created at the same time.
 
-For upgrade all and delete all operations, Operations Manager runs a BOSH errand.
+For upgrade all and delete all operations, <%= vars.ops_manager %> runs a BOSH errand.
 This errand task occupies a BOSH Director worker, leaving one worker available to
 upgrade, or delete deployments.

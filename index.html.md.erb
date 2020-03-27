@@ -4,7 +4,7 @@ owner: London Services Enablement
 ---
 
 This guide is for people who want to author service tiles for <%= vars.platform_name %>
-using the on-demand services SDK, part of the <%= vars.platform_name %> Services SDK.
+using the <%= vars.product_full %>.
 
 ## <a id='overview'></a>Overview
 
@@ -16,7 +16,7 @@ The operator does not pre-allocate a block of VMs for the instance pool,
 and they can specify an allowable range rather than fixed settings for instance resource levels.
 When a developer creates an on-demand service instance, they then provision it at creation time.
 
-The on-demand services SDK provides a generic, on-demand broker (<%= vars.product_abbr %>).
+The <%= vars.product_short %> provides a generic, on-demand broker (<%= vars.product_abbr %>).
 This simplifies broker and tile authoring,
 and is the standard approach for both Pivotal internal services teams and Pivotal
 partner independent software vendors (ISVs) to develop on-demand services for <%= vars.platform_name %>.
@@ -26,7 +26,7 @@ For more information about service brokers and how the on-demand broker works wi
 ## <a id='product-snapshot'></a>Product Snapshot
 
 The following table provides version and version-support information about the
-on-demand services SDK.
+<%= vars.product_short %>.
 
 <table class="nice">
 	<th>Element</th>
@@ -44,7 +44,7 @@ on-demand services SDK.
 		<td>2.5 or later</td>
 	</tr>
 	<tr>
-		<td>Compatible Pivotal Application Service (PAS) version(s)</td>
+		<td>Compatible <%= vars.app_runtime_full %> version(s)</td>
 		<td>2.5 or later</td>
 	</tr>
 	<tr>

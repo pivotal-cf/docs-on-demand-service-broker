@@ -105,7 +105,7 @@ To set up the Kafka example service adapter, do the following:
 To set up <%= vars.product_abbr %>, do the following:
 
 1. Download the on-demand service broker from Pivotal Network. To download,
-see [<%= vars.platform_name %> On Demand Services SDK](https://network.pivotal.io/products/on-demand-services-sdk/).
+see [<%= vars.product_full %>](https://network.pivotal.io/products/on-demand-services-sdk/).
 
 1. Upload the `on-demand-service-broker` release.
   <pre>
@@ -237,9 +237,9 @@ for the BOSH Lite Director. For example:
                 username: admin
                 password: admin
           cf:
-            url: https://api.<%= vars.platform_name %>-DEV-DOMAIN
+            url: https://api.PCF-DEV-DOMAIN
             authentication:
-              url: https://uaa.<%= vars.platform_name %>-DEV-DOMAIN
+              url: https://uaa.PCF-DEV-DOMAIN
               user_credentials:
                 username: admin
                 password: admin
@@ -292,7 +292,7 @@ for the BOSH Lite Director. For example:
        step above.
     - `BOSH-LITE-URL` is the `URL` value you recorded in the BOSH environment
        step above.
-    - `<%= vars.platform_name %>-DEV-DOMAIN` is the <%= vars.platform_name %> Dev domain you recorded in the
+    - `PCF-DEV-DOMAIN` is the <%= vars.platform_name %> Dev domain you recorded in the
       [Prerequisites](#prerequisites) above.
 
 
@@ -426,7 +426,7 @@ To use the service instance that you created, do the following:
 
 ### <a id="complete"></a> Step 3: Read and Write to Your Service Instance
 
-Now the app runs at `https:/kafka-example-app.<%= vars.platform_name %>-DEV-DOMAIN`.
+Now the app runs at `https:/kafka-example-app.PCF-DEV-DOMAIN`.
 You can use it to read and write to your on-demand Kafka service instance.
 
 For example:
@@ -434,11 +434,11 @@ For example:
 * To write data, run the following.
 
     ```
-    curl -XPOST http://kafka-example-app.<%= vars.platform_name %>-DEV-DOMAIN/queues/my-queue -d SOME-DATA
+    curl -XPOST http://kafka-example-app.PCF-DEV-DOMAIN/queues/my-queue -d SOME-DATA
     ```
 
 * To read data, run the following.
 
     ```
-    curl http://kafka-example-app.<%= vars.platform_name %>-DEV-DOMAIN/queues/my-queue
+    curl http://kafka-example-app.PCF-DEV-DOMAIN/queues/my-queue
     ```

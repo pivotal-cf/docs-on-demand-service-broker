@@ -4,7 +4,7 @@ owner: London Services Enablement
 ---
 
 This topic provides information about operating the on-demand broker for
-<%= vars.platform_name %> <%= vars.ops_manager %> operators and BOSH operators.
+<%= vars.ops_manager %> operators and BOSH operators.
 
 ## <a id="operator-checklist"></a> Operator Responsibilities
 
@@ -76,7 +76,7 @@ rules are set up so that connections are open as described in the table below.
       <strong><%= vars.product_abbr %></strong>
     </td>
     <td>
-      <strong>PAS</strong>
+      <strong><%= vars.app_runtime_full %></strong>
     </td>
     <td>8443</td>
     <td>The default port is not configurable.</td>
@@ -86,7 +86,7 @@ rules are set up so that connections are open as described in the table below.
       <strong>Errand VMs</strong>
     </td>
     <td>
-      <strong>PAS</strong><br><br>
+      <strong><%= vars.app_runtime_full %></strong><br><br>
       <strong><%= vars.product_abbr %></strong><br><br>
       <strong>Deployed Service Instances</strong>
     </td>
@@ -111,7 +111,7 @@ rules are set up so that connections are open as described in the table below.
   </tr>
   <tr>
     <td>
-      <strong>Deployed apps on PAS</strong>
+      <strong>Deployed apps on <%= vars.app_runtime_full %></strong>
     </td>
     <td>
       <strong>Deployed service instances</strong>
@@ -121,7 +121,7 @@ rules are set up so that connections are open as described in the table below.
   </tr>
   <tr>
     <td>
-      <strong>PAS</strong>
+      <strong><%= vars.app_runtime_full %></strong>
     </td>
     <td>
       <strong><%= vars.product_abbr %></strong>
@@ -820,7 +820,11 @@ This might be provided as part of your Cloud Foundry deployment.
 - Your instance group must have access to the local DNS provider. This is because
 the address for runtime CredHub is a local domain name.
 
-<p class="note"><strong>Note:</strong> Pivotal recommends using BOSH DNS as a DNS provider. If you use <%= vars.platform_name %> v2.4 or later, you cannot use consul as a DNS provider because consul server VMs have been removed in Pivotal Application Service (PAS) v2.4.</p>
+<p class="note"><strong>Note:</strong>
+  Pivotal recommends using BOSH DNS as a DNS provider.
+  If you use <%= vars.platform_name %> v2.4 or later, you cannot use consul as a
+  DNS provider because consul server VMs have been removed in <%= vars.app_runtime_full %> v2.4.
+</p>
 
 ### Procedure for Enabling Secure Binding
 
@@ -1097,7 +1101,7 @@ For a more detailed manifest snippet, see the [Starter Snippet for the Service C
 ## <a id="broker-metrics"></a> (Optional) Configure Service Metrics
 
 The <%= vars.product_abbr %> BOSH release contains a metrics job that can be used to emit metrics
-when co-located with the <%= vars.platform_name %> Service Metrics SDK.
+when co-located with the Service Metrics SDK.
 To do this, you must include the [Loggregator](https://github.com/cloudfoundry/loggregator) release.
 
 To download the <%= vars.platform_name %> Service Metrics SDK, see [Pivotal Network](https://network.pivotal.io/products/service-metrics-sdk/).
