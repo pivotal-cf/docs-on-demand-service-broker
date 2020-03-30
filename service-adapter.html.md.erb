@@ -24,14 +24,14 @@ See [On-Demand Services Golang SDK](#sdk) below.
 1. [Package the Service Adapter](#packaging).
 
 <p class="note"><strong>Note: </strong>
-  Pivotal recommends that you use the SDK to create your service adapter.
+  VMware recommends that you use the SDK to create your service adapter.
   If you choose not to, see
   <a href="#interfaces">Interfaces</a> below for the implementation that you need to provide.
 </p>
 
 ## <a id="sdk"></a> On-Demand Services Golang SDK
 
-Pivotal has published an SDK for teams writing their service adapters in Go.
+VMware has published an SDK for teams writing their service adapters in Go.
 It covers command line invocation handling, parameter parsing, response
 serialization, and error handling so the adapter authors can focus on the
 service-specific logic in the adapter.
@@ -290,7 +290,7 @@ The adapter code is responsible for performing any error logging to stderr that
 you think is relevant for the operator logs.
 
 Both the stdout and stderr streams are printed in the broker log for the operator.
-For that reason, Pivotal recommends that the service adapter does not print the
+For that reason, VMware recommends that the service adapter does not print the
 manifest or other sensitive details to stdout or stderr.
 <%= vars.product_abbr %> does no validation on this output.
 
@@ -546,7 +546,7 @@ For more information about using the value during a bind, see
 ### <a id="modifying-secrets"></a>Modify <%= vars.product_abbr %>-Managed Secrets
 
 <p class="note warning"><strong>Warning:</strong>
-  Pivotal discourages modifying the value of secrets without changing the secret name.
+  VMware discourages modifying the value of secrets without changing the secret name.
   If the BOSH deploy task fails during update or upgrade, <%= vars.product_abbr %>-managed secrets might
   be left in an inconsistent state.
   For more information, see <a href="#inconsistent-secrets">Inconsistent Secrets after a Failed Update</a>
@@ -614,7 +614,7 @@ When an operator attempts to troubleshoot this scenario by manually re-deploying
 the previous manifest, this manifest contains BOSH CredHub references that refer
 to the new secret values. This can cause errors with bindings.
 
-Pivotal recommends that you avoid modifying secrets without using new names for
+VMware recommends that you avoid modifying secrets without using new names for
 new versions of secrets.
 
 
@@ -629,7 +629,7 @@ possible, so that you can revoke access for specific apps and users without affe
 
 You can store binding credentials in BOSH CredHub. For more information, see [(Optional) Store Secrets on BOSH CredHub](#storing-secrets) above.
 
-Pivotal recommends that users are identified statelessly from the binding ID.
+VMware recommends that users are identified statelessly from the binding ID.
 The simplest way to do this is to name the user after the binding ID.
 
 You can take one of three approaches to credentials for a service binding:
@@ -799,7 +799,7 @@ The valid config types are: cloud, cpi and runtime.
 The configs are scoped for the BOSH team client <%= vars.product_abbr %> is deployed with and they
 are applied to subsequently deployed service instances.
 
-<p class="note"><strong>Note:</strong> Pivotal recommends that service adapters
+<p class="note"><strong>Note:</strong> VMware recommends that service adapters
 also namespace their configuration to avoid depending on a config value, which
 might be deleted in the future when the associated service instance is removed.
 </p>

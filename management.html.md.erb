@@ -115,7 +115,7 @@ The errand does the following:
   1. Checking for instance deletion failure, which results in the errand failing immediately
 1. Determines whether any instances have been created while the errand was running.
 If new instances are detected, the errand returns an error.
-In this case, Pivotal recommends running the errand again.
+In this case, VMware recommends running the errand again.
 
 #### Add the Errand to the Manifest
 
@@ -248,7 +248,7 @@ access to ensure that new instances cannot be provisioned during the lifetime of
   1. Checking for instance deletion failure, which results in the errand failing immediately
 1. Determines whether any instances have been created while the errand was running.
 If new instances are detected, the errand returns an error.
-In this case, Pivotal recommends running the errand again.
+In this case, VMware recommends running the errand again.
 1. Deregisters the broker from Cloud Foundry.
 
 #### Add the Errand to the Manifest
@@ -415,7 +415,7 @@ To delete an orphan deployment, do the following:
 The `upgrade-all-service-instances` errand upgrades all existing service instances
 to the latest service offering. If you have made changes to
 the plan definition or uploaded a new tile into <%= vars.ops_manager %>,
-Pivotal recommends that you upgrade all on-demand service instances to the latest software or plan definition.
+VMware recommends that you upgrade all on-demand service instances to the latest software or plan definition.
 
 The `upgrade-all-service-instances` errand does the following:
 
