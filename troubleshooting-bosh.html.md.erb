@@ -10,12 +10,12 @@ For more troubleshooting information, see
 
 ## <a id="admin-instances"></a>Administer Service Instances
 
-Pivotal recommends that you use the BOSH CLI for administering the deployments
+VMware recommends that you use the BOSH CLI for administering the deployments
 created by the on-demand broker (<%= vars.product_abbr %>); for example for checking VMs, ssh, viewing logs.
 For more information on installing the BOSH CLI, see
 [Install](https://bosh.io/docs/cli-v2/#install).
 
-Pivotal discourages using the BOSH CLI to update or delete <%= vars.product_abbr %> service deployments
+VMware discourages using the BOSH CLI to update or delete <%= vars.product_abbr %> service deployments
 as it causes `cf update-service` and `cf delete-service` operations to fail while
 the BOSH operation is in progress.
 
@@ -56,7 +56,7 @@ All <%= vars.product_abbr %> logs have a UTC timestamp.
 
 ### <a id="errands-syslog"></a> Syslog Forwarding for Errand Logs
 
-If you want to forward your errand logs to a syslog aggregator, Pivotal recommends
+If you want to forward your errand logs to a syslog aggregator, VMware recommends
 colocating syslog release with the errand job.
 For information, see the [syslog release](https://github.com/cloudfoundry/syslog-release)
 repository in GitHub.

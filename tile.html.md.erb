@@ -13,8 +13,8 @@ in GitHub.
 
 To build an on-demand tile you need the following releases:
 
-- **On Demand Service Broker (<%= vars.product_abbr %>)**---Download <%= vars.product_abbr %> from [Pivotal
-Network](https://network.pivotal.io/products/on-demand-services-sdk/).
+- **On Demand Service Broker (<%= vars.product_abbr %>)**---Download <%= vars.product_abbr %> from
+[<%= vars.product_network %>](https://network.pivotal.io/products/on-demand-services-sdk/).
 - **Your service adapter**---Get this from the service author.
 - **Your service release**---Get this from the release author.
 
@@ -29,7 +29,7 @@ two private networks:
 The network for service instances should be flagged as a Service Network in <%= vars.ops_manager %>.
  <p class="note"><strong>Note: </strong>For <%= vars.ops_manager %> v2.1 and later, you do not need separate networks for the on-demand broker
 and service instances.
-However, Pivotal recommends that you have at least two networks as described above.
+However, VMware recommends that you have at least two networks as described above.
 
 ## <a id="building"></a>Build a Tile for an On-Demand Service
 
@@ -168,7 +168,7 @@ To see this example in context, see the
 The [example-kafka-on-demand-tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile/tree/e206e04a1eb80a5f53a5edd9a1f11e096bea5f4f)
 example in GitHub shows how the errands in the on-demand broker release can be used.
 
-Pivotal recommends that you add the errands below to your tile.
+VMware recommends that you add the errands below to your tile.
 The errands should be specified in the following order:
 
 Post-deploy:
@@ -421,13 +421,13 @@ For the example manifest above, the catalog response is:
 }
 ```
 
-Pivotal recommends using YAML anchors and references to avoid repeating maintenance information
+VMware recommends using YAML anchors and references to avoid repeating maintenance information
 values within the manifest. For instance, the stemcell version can be anchored with the
 `&stemcellVersion` annotation and then referenced in the maintenance information with
 the `*stemcellVersion` tag.
 
 <p class="note"><strong>Note:</strong> The Open Service Broker API only supports
 <code>maintenance_info.version</code> and <code>maintenance_info.description</code>.
-Pivotal discourages the use of <code>public</code> and
+VMware discourages the use of <code>public</code> and
 <code>private</code> if Cloud Foundry is the platform communicating
 to the broker.</p>
