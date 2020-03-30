@@ -27,7 +27,7 @@ which developers access with `cf marketplace` or through the <%= vars.platform_n
 
 ### <%= vars.platform_name %> Tiles
 
-On <%= vars.platform_name %>, operators find services on [Pivotal Network](https://network.pivotal.io/)
+On <%= vars.platform_name %>, operators find services on [<%= vars.product_network %>](https://network.pivotal.io/)
 and install and configure them through a tile interface in the <%= vars.ops_manager %> **Installation Dashboard**
 to make them available to developers.
 Installing a service tile creates a service broker, registers it with the Cloud Controller,
@@ -79,7 +79,7 @@ For more information about service author responsibilities, see
 #### <a id="tile-author"></a>Tile Author
 
 Tile authors determine which configuration options to expose to <%= vars.ops_manager %> operators,
-create the tile, and publish it on Pivotal Network.
+create the tile, and publish it on <%= vars.product_network %>.
 For more information, see [Creating an On-Demand Service Tile](./tile.html).
 
 #### <a id="operator"></a>Operator
@@ -91,7 +91,7 @@ These roles can be separate or combined.
 The following describes each type of operator:
 
 - **<%= vars.ops_manager %> Operator**: Uses the <%= vars.ops_manager %> UI to configure plans and provide service specific configurations.
-For more information about configuring a specific service, see the [Pivotal Documentation](https://docs.pivotal.io/)
+For more information about configuring a specific service, see the [VMware Documentation](https://docs.pivotal.io/)
 for the service.
 - **BOSH Operator**: Creates and modifies the on-demand service broker manifest to provide service specific configurations.
 For more information about operator responsibilities, see [Operator Responsibilities](./operating.html#operator-checklist).
