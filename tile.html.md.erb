@@ -134,10 +134,10 @@ To see this example in context, see the
 #### (Optional) cf
 
 <%= vars.ops_manager %> uses these accessors to get values from the <%= vars.app_runtime_full %>
-tile.
-If you want to use <%= vars.app_runtime_full %>, add these accessors to your `tile.yml` file.
+(<%= vars.app_runtime_abbr %>) tile.
+If you want to use <%= vars.app_runtime_abbr %>, add these accessors to your `tile.yml` file.
 
-The following table lists the accessors you must add to use <%= vars.app_runtime_full %>:
+The following table lists the accessors you must add to use <%= vars.app_runtime_abbr %>:
 
 | Accessor                                        | Description                                                                        |
 |:------------------------------------------------|:-----------------------------------------------------------------------------------|
@@ -252,9 +252,8 @@ For example:
 
 ### <a id="floating-stemcell"></a>(Optional) Enable Floating Stemcells
 
-<%= vars.ops_manager %> provides a feature called [Floating
-Stemcells](https://docs.pivotal.io/pivotalcf/customizing/understanding-stemcells.html)
-that allows <%= vars.platform_name %> to quickly propagate a patched stemcell to all VMs in the deployment
+<%= vars.ops_manager %> provides a feature called [Floating Stemcells](https://docs.pivotal.io/pivotalcf/customizing/understanding-stemcells.html)
+that allows <%= vars.ops_manager %> to quickly propagate a patched stemcell to all VMs in the deployment
 that have the same compatible stemcell.
 Both the broker deployment and the service instances deployed by the On-Demand
 Broker can make use of this feature.
@@ -310,7 +309,7 @@ When users create bindings or service keys, <%= vars.product_abbr %> passes a se
 service credentials through the network instead of plain text.
 
 <p class="note"><strong>Note:</strong>
-  To use the secure binding credentials feature you must use <%= vars.platform_name %> v2.0 or later.</p>
+  To use the secure binding credentials feature you must use <%= vars.ops_manager %> v2.0 or later.</p>
 
 To include the option to enable secure binding, update your `tile.yml` file as follows:
 

@@ -4,9 +4,9 @@ owner: London Services Enablement
 ---
 
 This topic provides information about on-demand brokers for people who want to
-create on-demand service tiles for <%= vars.platform_name %>.
+create on-demand service tiles for <%= vars.ops_manager %>.
 
-## <a id="cf-broker"></a>Cloud Foundry Service Brokers and <%= vars.platform_name %> Tiles
+## <a id="cf-broker"></a>Cloud Foundry Service Brokers and <%= vars.ops_manager %> Tiles
 
 Service brokers let developers create service instances in their development spaces
 that they can call from their code.
@@ -23,11 +23,11 @@ Cloud Foundry service brokers are implemented as HTTP servers that conform to th
 In addition to providing an API, a service broker publishes a service catalog
 that can include multiple service plans, such as a free tier and a metered tier.
 Brokers register their service plans with the Cloud Controller to populate the Marketplace,
-which developers access with `cf marketplace` or through the <%= vars.platform_name %> Apps Manager.
+which developers access with `cf marketplace` or through Apps Manager.
 
-### <%= vars.platform_name %> Tiles
+### <%= vars.ops_manager %> Tiles
 
-On <%= vars.platform_name %>, operators find services on [<%= vars.product_network %>](https://network.pivotal.io/)
+Operators find services on [<%= vars.product_network %>](https://network.pivotal.io/)
 and install and configure them through a tile interface in the <%= vars.ops_manager %> **Installation Dashboard**
 to make them available to developers.
 Installing a service tile creates a service broker, registers it with the Cloud Controller,
@@ -101,7 +101,7 @@ For more information about operator responsibilities, see [Operator Responsibili
 <%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 
 <%= partial vars.path_to_partials + '/services/service-networks-v3', :locals => {
-  :platform_name => vars.platform_old} %>
+  :platform_name => vars.app_runtime_full} %>
 
 ## <a id="on-demand"></a>Default Network and Service Network
 
