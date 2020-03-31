@@ -1215,6 +1215,26 @@ service_catalog:
 Each entry in `binding_with_dns` is converted to a BOSH DNS address that is
 passed to the service adapter when you create a binding.
 
+## <a id="broker-telemetry"></a>(Optional) Enable Telemetry
+
+The telemetry program enables VMware and Pivotal to collect data from customer installations to improve your
+enterprise experience.
+Collecting data at scale enables VMware and Pivotal to identify patterns and alert you to warning signals in
+your installation.<br><br>
+For more information about the telemetry program, see [Telemetry](https://pivotal.io/legal/telemetry).
+
+1. To enable your broker to send telemetry data, add the following to your deployment manifest:
+
+```yaml
+instance_groups:
+- name: broker
+  jobs:
+    - name: broker
+      properties:
+        # ...
+        enable_telemetry: true
+```
+
 ## <a id="startup-checks"></a>About Broker Startup Checks
 
 The ODB does the following startup checks:
