@@ -456,16 +456,23 @@ instance_groups:
             # optional - see the Configure CA Certificates section above:
             root_ca_cert: CA-CERT-FOR-CLOUD-CONTROLLER
             # either client_credentials or user_credentials, not both as shown:
-            authentication:
+            uaa:
               url: CF-UAA-URL
-              client_credentials:
-                # with cloud_controller.admin authority and client_credentials in the authorized_grant_type:
-                client_id: UAA-CLIENT-ID
-                secret: UAA-CLIENT-SECRET
-              user_credentials:
-                # in the cloud_controller.admin and scim.read groups:
-                username: CF-ADMIN-USERNAME
-                password: CF-ADMIN-PASSWORD
+              authentication:
+                client_credentials:
+                  # with cloud_controller.admin authority and client_credentials in the authorized_grant_type:
+                  client_id: UAA-CLIENT-ID
+                  secret: UAA-CLIENT-SECRET
+                user_credentials:
+                  # in the cloud_controller.admin and scim.read groups:
+                  username: CF-ADMIN-USERNAME
+                  password: CF-ADMIN-PASSWORD
+              client_definition:
+                # if set, the client used to authenticate with UAA must have clients.admin (or higher) authority
+                scopes: <comma separated list of scopes>
+                authorities: <comma separated list of authorities>
+                authorized_grant_types: <comma sepearated list of grant types>
+                resource_ids: <comma separated list of resource ids>
           bosh:
             url: DIRECTOR-URL
             # optional - see the Configure CA Certificates section above:
@@ -1276,6 +1283,32 @@ For more information about the telemetry program, see [Telemetry](https://pivota
             # ...
             enable_telemetry: true
     ```
+
+## <a id="creating-uaa-client"> (Optional) Create a client on CF UAA
+
+The on-demand broker can create a client on TAS UAA during provisioning of service instances. There will be one client created per service instance. Any client created by the broker will be removed when the service instance is deleted or updated when the service instance is updated. If the service broker is deleted **without** running the `delete-all-services-instances` errand, the clients will be left in TAS UAA.
+
+### Procedure
+
+To configure ODB to create a client, configure the `cf` property in the broker job as follows:
+
+```yaml
+cf:
+  uaa:
+    url: <UAA URL>
+    client_definition:
+      scopes: <comma separated list of scopes>
+      authorities: <comma separated list of authorities>
+      authorized_grant_types: <comma sepearated list of grant types>
+      resource_ids: <comma separated list of resource ids>
+```
+
+ODB will then generate and append the following properties to the client:
+* Client ID (`client_id`)
+* Client secret (`client_secret`)
+* Redirect URI (`redirect_uri`)
+
+The service adapter will receive the generated client as part of the `generate-manifest` input params.
 
 ## <a id="startup-checks"></a>About Broker Startup Checks
 

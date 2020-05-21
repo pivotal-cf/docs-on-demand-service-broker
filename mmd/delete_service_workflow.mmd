@@ -2,6 +2,9 @@
 sequenceDiagram
   User->>Cloud Controller:cf delete-service
   Cloud Controller->>On Demand Broker:DELETE instance
+  opt Client Definition configured
+    On Demand Broker->>PAS UAA: delete client
+  end
   On Demand Broker->>BOSH:delete deployment
   BOSH->>On Demand Broker:accepted
   On Demand Broker->>Cloud Controller:accepted
