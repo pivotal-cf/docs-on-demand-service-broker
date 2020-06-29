@@ -43,11 +43,8 @@ For example:
 
 # Book repo for publishing this content
 
-Book repo: **docs-book-odb**
+The book repo is [**docs-book-odb**](https://github.com/pivotal-cf/docs-book-odb).
 
-* **edge:** book branch that publishes the next unreleased version, from the **master** content branch. <br>**Pipeline:** https://concourse.run.pivotal.io/teams/cf-docs/pipelines/cf-services-sdk-edge
-
-* **master:** book branch that publishes all the live versions in production. <br>**Pipeline:** https://concourse.run.pivotal.io/teams/cf-docs/pipelines/cf-services-sdk
 
 ## Partials
 
