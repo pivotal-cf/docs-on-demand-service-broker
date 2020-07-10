@@ -23,6 +23,9 @@
   opt BOSH configs enabled
     On Demand Broker->>BOSH: update configs
   end
+  opt Client Definition configured
+    On Demand Broker->>PAS UAA: update client
+  end
   On Demand Broker->>BOSH: deploy
   BOSH->>On Demand Broker: accepted
   On Demand Broker->>Cloud Controller: accepted

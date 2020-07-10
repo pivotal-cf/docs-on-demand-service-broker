@@ -73,8 +73,16 @@ See the following example:
     "previous_manifest": "PREVIOUS-MANIFEST-YAML",
     "request_parameters": "REQUEST-PARAMETERS-JSON",
     "previous_secrets": "PREVIOUS-SECRETS-JSON",
-    "previous_configs": "PREVIOUS-CONFIGS-JSON"
-  }
+    "previous_configs": "PREVIOUS-CONFIGS-JSON",
+    "uaa_client": {
+      "authorities": "list of authorities",
+      "authorized_grant_types": "list of grant types",
+      "client_id": "client id",
+      "client_secret": "generated client secret",
+      "name": "display name -- set to service instance name",
+      "resource_ids": "list of resource ids",
+      "scopes": "list of scopes"
+    }
 }
 ```
 <br>

@@ -2,6 +2,9 @@
 sequenceDiagram
   User->> Cloud Controller: cf create-service
   Cloud Controller->> On Demand Broker: POST instance (provision)
+  opt Client Definition configured
+    On Demand Broker->>PAS UAA: create client
+  end
   On Demand Broker->>Service Adapter: generate-manifest
   Service Adapter->>On Demand Broker: manifest + secrets + BOSH configs
   opt Secure Manifests enabled
@@ -10,6 +13,11 @@ sequenceDiagram
   end
   opt BOSH configs enabled
     On Demand Broker->>BOSH: update configs
+  end
+  On Demand Broker->>Service Adapter: dashboard-url
+  Service Adapter->>On Demand Broker: URL
+  opt Client Definition configured
+    On Demand Broker->>PAS UAA: update redirect_uri of the client
   end
   On Demand Broker->>BOSH: deploy
   BOSH->>On Demand Broker: accepted
