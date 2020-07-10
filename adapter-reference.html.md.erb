@@ -27,9 +27,9 @@ For each of these subcommands, the following applies:
 * Any non-zero exit status indicates failure.
 
 For a list of possible subcommands and the structure of the JSON document
-passed via stdin, see the subcommands below.
+passed through stdin, see the subcommands below.
 
-## <a id="generate-manifest"></a>generate-manifest
+## <a id="generate-manifest"></a> generate-manifest
 
 This section contains the following topics:
 
@@ -51,14 +51,14 @@ This section contains the following topics:
     <code>generate-manifest</code> subcommand.</li>
     <li>
     Service Authors should ensure that the service releases and stemcells
-    satisfy the functional requirements of the service adapter. This can be
-    achieved, for example, by checking that the service release satisfies a minimum
+    satisfy the functional requirements of the service adapter. You can achieve this, for example,
+    by checking that the service release satisfies a minimum
     version constraint.
     </li>
   </ul>
 </div>
 
-###<a id="generate-manifest-parameters"></a>Input Parameters
+### <a id="generate-manifest-parameters"></a> Input Parameters
 
 This section details the parameters provided to the `generate-manifest` subcommand using stdin.
 
@@ -112,7 +112,7 @@ For example:
   <a href="https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go#L82-L91"> example Kafka service adapter</a>.
 </div>
 
-####<a id="service-deployment"></a>SERVICE-DEPLOYMENT-JSON
+####<a id="service-deployment"></a> SERVICE-DEPLOYMENT-JSON
 
 `SERVICE-DEPLOYMENT-JSON` provides information regarding the BOSH Director.
 
@@ -152,20 +152,29 @@ For example:
 }
 ```
 <br>
-Keep in mind the following:
 
-* <%= vars.product_abbr %> only supports using exact release and stemcell versions. The use of `latest` and floating stemcells are not supported.
-* Your Service Adapter should be opinionated about which jobs it requires to generate its manifest.
-  For example, the Kafka example requires `kafka_node` and `zookeeper`.
-  It should not be opinionated about the mapping of BOSH release to job.
-  The jobs can all be provided by one release or across many.
-  The SDK provides the helper function [`GenerateInstanceGroupsWithNoProperties`](https://github.com/pivotal-cf/on-demand-services-sdk/blob/master/serviceadapter/instance_group_mapping.go) for generating instance groups without any properties.
-  The Kafka example service adapter [uses this helper function](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/adapter.go)
-  and [invokes it](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go)
-  to map the service releases parameter to the BOSH manifest `releases` and `instance_groups` sections.
-* You should provide documentation about which jobs are required by your Service Adapter, and which BOSH releases operators should get these jobs from.
+<%= vars.product_abbr %> only supports using exact release and stemcell versions. The use of `latest` and floating stemcells are not supported.
 
-####<a id="plan-json"></a>PLAN-JSON
+Your Service Adapter should be opinionated about which jobs it requires to generate its manifest.
+For example, the Kafka example requires `kafka_node` and `zookeeper`.
+
+It should not be opinionated about the mapping of BOSH release to job.
+The jobs can be spread across many releases or provided through a single release.
+
+The SDK provides the helper function `GenerateInstanceGroupsWithNoProperties` for generating instance groups without any properties.
+For more information, see
+[GenerateInstanceGroupsWithNoProperties](https://github.com/pivotal-cf/on-demand-services-sdk/blob/master/serviceadapter/instance_group_mapping.go) in GitHub.
+
+The Kafka example service adapter uses the helper function `adapter.go` invokes to map the service
+releases parameter to the BOSH manifest `releases` and `instance_groups` sections.
+
+For more information, see
+[adapter.go](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/adapter.go) and
+[generate_manifest.go](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go) in GitHub.
+
+You should provide documentation about which jobs are required by your Service Adapter, and which BOSH releases operators should get these jobs from.
+
+#### <a id="plan-json"></a> PLAN-JSON
 
 `PLAN-JSON` specifies the plan that the manifest is generated for.
 
@@ -182,14 +191,14 @@ The following table describes the schema of the JSON structure required for `PLA
 | instance_group.instances                  | int                      | Number of instances for the instance group                                                                                             |
 | instance_group.lifecycle                  | string                   | Optional, specifies the kind of workload the instance group represents. Valid values are `service` and `errand`; defaults to `service` |
 | instance_group.azs                        | array of strings         | A list of availability zones that the instance groups should be striped across                                                         |
-| instance_group.migrated\_from             | array of migrations      | Optional, list of [bosh migrations](https://bosh.io/docs/migrated-from.html)                                                           |
+| instance_group.migrated\_from             | array of migrations      | Optional, list of [BOSH migrations](https://bosh.io/docs/migrated-from.html)                                                           |
 | migration.name                            | string                   | Optional, name of the instance group to be migrated from                                                                               |
 | properties                                | map                      | Properties which the operator has configured for deployments of the current plan                                                       |
 | lifecycle\_errands                        | map                      | Optional, details of post-deploy and pre-delete errands                                                                                |
 | lifecycle\_errands.post\_deploy           | array of errands         | Optional, post-deploy errands configured for the plan                                                                                  |
 | lifecycle\_errands.pre\_delete            | array of errands         | Optional, pre-delete errands configured for the plan                                                                                   |
 | errand.name                               | string                   | Errand name                                                                                                                            |
-| errand.instances                          | array of strings         | Optional, for a colocated errand, specify a list of INSTANCE-NAME/INSTANCE-IDX to run the errand                                       |
+| errand.instances                          | array of strings         | Optional, for a co-located errand, specify a list of INSTANCE-NAME/INSTANCE-IDX to run the errand                                       |
 | update                                    | map                      | Update block which the operator has configured for deployments of the current plan                                                     |
 | update.canaries                           | int                      | Plan-specific number of canary instances                                                                                               |
 | update.max\_in\_flight                    | int                      | Plan-specific maximum number of non-canary instances to update in parallel                                                             |
@@ -310,28 +319,26 @@ and an optional update block.
 
 ####<a id="generate-request-params-JSON"></a>REQUEST-PARAMS-JSON
 
-This is a JSON object that holds the entire body of the [service
-provision](http://docs.cloudfoundry.org/services/api.html#provisioning) or
-[service
-update](http://docs.cloudfoundry.org/services/api.html#updating-a-service-instance)
-request sent by the Cloud Controller to the service broker. The request
-parameters JSON will be `null` for upgrades.
+This is a JSON object that holds the entire body of the
+[service provision](http://docs.cloudfoundry.org/services/api.html#provisioning) or
+[service update](http://docs.cloudfoundry.org/services/api.html#updating-a-service-instance)
+request sent by the Cloud Controller to the service broker.
+The request parameters JSON is `null` for upgrades.
 
-The field `context` holds platform-specific contextual information under which
-the service instance is to be provisioned.
+The field `context` holds platform-specific contextual information that the service instance is provisioned under.
 
-The field `parameters` contains arbitrary key-value pairs that were passed by
-the application developer as a cf CLI parameter when creating or updating
-the service instance. They allow Cloud Foundry users to override the
-default configuration for a service plan. For example, the [Kafka service
-adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go)
-supports the `auto_create_topics` arbitrary parameter to configure
-auto-creation of topics on the cluster.
+The field `parameters` contains arbitrary key-value pairs that were passed by the app developer as a
+cf CLI parameter when creating or updating the service instance.
+They allow Cloud Foundry users to override the default configuration for a service plan.
+For example, the [Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go) supports the `auto_create_topics`
+arbitrary parameter to configure auto-creation of topics on the cluster.
 
-<p class="note"><strong>Note</strong>: When updating an existing service instance,
+<p class="note">
+  <strong>Note:</strong> When updating an existing service instance,
    any arbitrary parameters passed on a previous create or update are not passed again.
    Therefore, for arbitrary parameters to stay the same across multiple deployments
-   they must be retrieved from the previous manifest.</p>
+   they must be retrieved from the previous manifest.
+ </p>
 <br>
 For example:
 
@@ -360,8 +367,8 @@ For example:
 the service instance. If you have a new deployment, the YAML file is empty.
 
 The manifest format matches the BOSH v2 manifest. For more information about the
-BOSH v2 manifest, see [Deployment Config](https://bosh.io/docs/manifest-v2/) in
-the BOSH documentation.
+BOSH v2 manifest, see [Deployment Config](https://bosh.io/docs/manifest-v2/) in the BOSH
+documentation.
 
 The service author must perform any necessary service-specific migration logic if
 previous manifest is non-nil.
@@ -371,15 +378,17 @@ which need to stay the same across multiple deployments of a manifest. In the Re
 we [generate a password](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_manifest_generator.go#L112-L123) when we do a new deployment.
 But, when the previous deployment manifest is provided, we copy the password over from [the
 previous deployment](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_manifest_generator.go#L333-L338), because generating a new
-password for existing deployments will break existing bindings.
+password for existing deployments breaks existing bindings.
 
-For an example, see the [example Redis service adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_manifest_generator.go#L333-L338).
+For an example, see the [example Redis service adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_manifest_generator.go#L333-L338) in GitHub.
 
-<p class="note warning"><strong>WARNING</strong>:
+<p class="note warning">
+  <strong>Warning:</strong>
   If the service adapter does not migrate properties from the old manifest to
-  the new one, the update fails.</p>
+  the new one, the update fails.
+</p>
 
-####<a id="previous-plan"></a>PREVIOUS-PLAN-JSON
+####<a id="previous-plan"></a> PREVIOUS-PLAN-JSON
 
 This argument takes the previous plan as a JSON string.
 
@@ -444,7 +453,7 @@ For example:
 }
 ```
 
-###<a id="generate-manifest-output"></a>Output
+### <a id="generate-manifest-output"></a> Output
 
 The following table describes the supported exit codes and output for the
 `generate-manifest` subcommand:
@@ -472,14 +481,14 @@ Example JSON output printed when the `generate-manifest` command is successful:
 }
 ```
 
-##<a id="dashboard-url"></a>dashboard-url
+## <a id="dashboard-url"></a> dashboard-url
 
 This section contains the following topics:
 
 - [Input Parameters](#dashboard-url-parameters)
 - [Output](#dashboard-url-output)
 
-###<a id="dashboard-url-parameters"></a>Input Parameters
+### <a id="dashboard-url-parameters"></a> Input Parameters
 
 The following section details the parameters provided to the `dashboard-url` subcommand using stdin.
 
@@ -509,12 +518,12 @@ For example:
 }
 ```
 
-####<a id="dashboard-url-instance-id"></a>SERVICE-INSTANCE-ID
+#### <a id="dashboard-url-instance-id"></a> SERVICE-INSTANCE-ID
 
 This parameter is the unique identifier of the service instance
 provided by the Cloud Controller. For example, `42a09f38-c15b-47fe-a24e-ebf5f83ebd0`.
 
-####<a id="dashboard-url-plan"></a>PLAN-JSON
+#### <a id="dashboard-url-plan"></a> PLAN-JSON
 
 This parameter is the current plan for the service instance as JSON.
 The structure should be the same as the [plan given in the generate manifest](#plan).
@@ -622,16 +631,16 @@ The following table describes the output JSON above:
 
 | Field         | Type   | Description                           |
 |:--------------|:-------|:--------------------------------------|
-| dashboard_url | string | Dashboard url returned to the cf user |
+| dashboard_url | string | Dashboard URL returned to the cf user |
 
-##<a id="create-binding"></a>create-binding
+## <a id="create-binding"></a> create-binding
 
 This section contains the following topics:
 
 - [Input Parameters](#create-binding-parameters)
 - [Output](#create-binding-output)
 
-###<a id="create-binding-parameters"></a>Input Parameters
+### <a id="create-binding-parameters"></a> Input Parameters
 
 The following section details the parameters required by the `create-binding` subcommand as
 a JSON document using stdin.
@@ -685,8 +694,8 @@ See the following example:
 
 <br>
 This can be used to connect to the instance deployment, if required, or to create a service specific binding.
-In the example above, the Service Adapter may connect to MySQL as the admin and create a user.
-As part of the binding, the `mysql_node` IP addresses would be returned, but  not the `management_box`.
+In the example above, the Service Adapter can connect to MySQL as the admin and create a user.
+As part of the binding, the `mysql_node` IP addresses would be returned, but not the `management_box`.
 
 ####<a id="create-binding-manifest"></a>MANIFEST-YAML
 
