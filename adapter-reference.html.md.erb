@@ -34,30 +34,24 @@ passed through stdin, see the subcommands below.
 ## <a id="generate-manifest"></a> generate-manifest
 
 This section contains the following topics:
+
 * [Input Parameters](#generate-manifest-parameters)
 * [Output](#generate-manifest-output)
 
-<p class="note">
-  <strong>Notes:</strong>
-  <ul>
-  <li>The on-demand broker (<%= vars.product_abbr %>) requires <code>generate-manifest</code> to be
-    <strong>idempotent</strong>.
-    Given the same arguments when a previous manifest is
-    supplied&mdash;which happens during a deployment update&mdash;the command
-    should always output the same BOSH manifest.</li> <li>When determining
-    whether there are pending changes for an instance during an update, <%= vars.product_abbr %>
-    <em>ignores</em> any configuration supplied in the <a
-    href="https://bosh.io/docs/deployment-manifest.html#update"
-    target="_blank">update block of the manifest</a> returned by the
-    <code>generate-manifest</code> subcommand.</li>
-    <li>
-    Service Authors should ensure that the service releases and stemcells
-    satisfy the functional requirements of the service adapter. You can achieve this, for example,
-    by checking that the service release satisfies a minimum
-    version constraint.
-    </li>
-  </ul>
-</p>
+The on-demand broker (<%= vars.product_abbr %>) requires <code>generate-manifest</code> to be
+<strong>idempotent</strong>.
+
+Given the same arguments when a previous manifest is supplied, which happens during a deployment
+update, the command should always output the same BOSH manifest.
+
+When determining whether there are pending changes for an instance during an update,
+<%= vars.product_abbr %> ignores any configuration supplied in the
+<a href="https://bosh.io/docs/deployment-manifest.html#update" target="_blank">update block of the manifest</a>
+returned by the <code>generate-manifest</code> subcommand.
+
+Service Authors should ensure that the service releases and stemcells satisfy the functional
+requirements of the service adapter. You can achieve this, for example, by checking that the service
+release satisfies a minimum version constraint.
 
 
 ### <a id="generate-manifest-parameters"></a> Input Parameters
