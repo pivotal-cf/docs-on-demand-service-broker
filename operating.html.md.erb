@@ -468,11 +468,11 @@ instance_groups:
                   username: CF-ADMIN-USERNAME
                   password: CF-ADMIN-PASSWORD
               client_definition:
-                # if set, the client used to authenticate with UAA must have clients.admin (or higher) authority
-                scopes: <comma separated list of scopes>
-                authorities: <comma separated list of authorities>
-                authorized_grant_types: <comma sepearated list of grant types>
-                resource_ids: <comma separated list of resource ids>
+                # if set, the client used to authenticate with UAA must have clients.admin authority or higher
+                scopes: # comma-separated list of scopes
+                authorities: # comma-separated list of authorities
+                authorized_grant_types: # comma-separated list of grant types
+                resource_ids: # comma-separated list of resource IDs
           bosh:
             url: DIRECTOR-URL
             # optional - see the Configure CA Certificates section above:
@@ -1284,23 +1284,26 @@ For more information about the telemetry program, see [Telemetry](https://pivota
             enable_telemetry: true
     ```
 
-## <a id="creating-uaa-client"> (Optional) Create a client on CF UAA
+## <a id="creating-uaa-client"> (Optional) Create a Client on CF UAA
 
-The on-demand broker can create a client on TAS UAA during provisioning of service instances. There will be one client created per service instance. Any client created by the broker will be removed when the service instance is deleted or updated when the service instance is updated. If the service broker is deleted **without** running the `delete-all-services-instances` errand, the clients will be left in TAS UAA.
+The on-demand broker can create a client on TAS UAA during provisioning of service instances.
+One client is created per service instance.
+Any client created by the broker is removed when the service instance is deleted or updated when the
+service instance is updated.
+If the service broker is deleted without running the `delete-all-services-instances` errand, the
+clients are left in TAS UAA.
 
-### Procedure
-
-To configure ODB to create a client, configure the `cf` property in the broker job as follows:
+1. To configure ODB to create a client, configure the `cf` property in the broker job as follows:
 
 ```yaml
 cf:
   uaa:
-    url: <UAA URL>
+    url: # UAA URL
     client_definition:
-      scopes: <comma separated list of scopes>
-      authorities: <comma separated list of authorities>
-      authorized_grant_types: <comma sepearated list of grant types>
-      resource_ids: <comma separated list of resource ids>
+      scopes: # comma-separated list of scopes
+      authorities: # comma-separated list of authorities
+      authorized_grant_types: # comma-separated list of grant types
+      resource_ids: # comma-separated list of resource IDs
 ```
 
 ODB will then generate and append the following properties to the client:
@@ -1308,7 +1311,8 @@ ODB will then generate and append the following properties to the client:
 * Client secret (`client_secret`)
 * Redirect URI (`redirect_uri`)
 
-The service adapter will receive the generated client as part of the `generate-manifest` input params.
+The service adapter receives the generated client as part of the `generate-manifest` input
+parameters.
 
 ## <a id="startup-checks"></a>About Broker Startup Checks
 
