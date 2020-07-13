@@ -82,6 +82,7 @@ See the following example:
     }
 }
 ```
+
 <br>
 All arguments are passed as strings, not JSON objects.
 
@@ -125,6 +126,7 @@ The following table describes the JSON structure required for `SERVICE-DEPLOYMEN
 | stemcells                 | array of stemcells | The stemcells available on the Director                                |
 | stemcell.stemcell_os      | string             | Stemcell OS available on the Director                                  |
 | stemcell.stemcell_version | string             | Stemcell version available on the Director                             |
+
 <br>
 For example:
 
@@ -148,8 +150,8 @@ For example:
     }]
 }
 ```
-<br>
 
+<br>
 <%= vars.product_abbr %> only supports using exact release and stemcell versions. The use of `latest` and floating stemcells are not supported.
 
 Your Service Adapter should be opinionated about which jobs it requires to generate its manifest.
@@ -357,7 +359,6 @@ For example:
   "space_guid": "space-guid-here"
 }
 ```
-
 
 #### <a id="previous-manifest"></a> PREVIOUS-MANIFEST-YAML
 
@@ -658,6 +659,7 @@ See the following example:
   }
 }
 ```
+
 <br>
 All the arguments are passed as strings and not JSON objects.
 
@@ -765,6 +767,7 @@ variables:
 - name: redis_password
   type: password
 ```
+
 <br>
 The service instance manifest snippet above produces a secrets JSON parameter
 similar to the following.

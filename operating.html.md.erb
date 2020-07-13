@@ -1273,44 +1273,46 @@ For more information about the telemetry program, see [Telemetry](https://pivota
 
 1. To enable your broker to send telemetry data, add the following to your deployment manifest:
 
-```yaml
-instance_groups:
-- name: broker
-  jobs:
+    ```yaml
+    instance_groups:
     - name: broker
-      properties:
-        # ...
-        enable_telemetry: true
-```
+      jobs:
+        - name: broker
+          properties:
+            # ...
+            enable_telemetry: true
+    ```
 
 ## <a id="creating-uaa-client"> (Optional) Create a Client on CF UAA
 
-The on-demand broker can create a client on TAS UAA during provisioning of service instances.
+The on-demand broker can create a client on <%= vars.app_runtime_abbr %> UAA during
+the provisioning of service instances.
 One client is created per service instance.
 Any client created by the broker is removed when the service instance is deleted or updated when the
 service instance is updated.
 If the service broker is deleted without running the `delete-all-services-instances` errand, the
-clients are left in TAS UAA.
+clients are left in <%= vars.app_runtime_abbr %> UAA.
 
 1. To configure ODB to create a client, configure the `cf` property in the broker job as follows:
 
-```yaml
-cf:
-  uaa:
-    url: # UAA-URL
-    client_definition:
-      scopes: COMMA-SEPARATED-LIST-OF-SCOPES
-      authorities: COMMA-SEPARATED-LIST-OF-AUTHORITIES
-      authorized_grant_types: COMMA-SEPARATED-LIST-OF-GRANT-TYPES
-      resource_ids: COMMA-SEPARATED-LIST-OF-RESOURCE-IDS
-```
+    ```yaml
+    cf:
+      uaa:
+        url: # UAA-URL
+        client_definition:
+          scopes: COMMA-SEPARATED-LIST-OF-SCOPES
+          authorities: COMMA-SEPARATED-LIST-OF-AUTHORITIES
+          authorized_grant_types: COMMA-SEPARATED-LIST-OF-GRANT-TYPES
+          resource_ids: COMMA-SEPARATED-LIST-OF-RESOURCE-IDS
+    ```
 
-ODB will then generate and append the following properties to the client:
+ODB then generates and appends the following properties to the client:
+
 * Client ID (`client_id`)
 * Client secret (`client_secret`)
 * Redirect URI (`redirect_uri`)
 
-The service adapter receives the generated client as part of the `generate-manifest` input
+The service adapter receives the client that ODB has generated as part of the `generate-manifest` input
 parameters.
 
 ## <a id="startup-checks"></a>About Broker Startup Checks
