@@ -1279,11 +1279,11 @@ For more information about the telemetry program, see [Telemetry](https://pivota
       jobs:
         - name: broker
           properties:
-            # ...
+            ...
             enable_telemetry: true
     ```
 
-## <a id="creating-uaa-client"> (Optional) Create a Client on CF UAA
+## <a id="creating-uaa-client"></a> (Optional) Create a Client on CF UAA
 
 The on-demand broker can create a client on <%= vars.app_runtime_abbr %> UAA during
 the provisioning of service instances.
@@ -1298,7 +1298,7 @@ clients are left in <%= vars.app_runtime_abbr %> UAA.
     ```yaml
     cf:
       uaa:
-        url: # UAA-URL
+        url: UAA-URL
         client_definition:
           scopes: COMMA-SEPARATED-LIST-OF-SCOPES
           authorities: COMMA-SEPARATED-LIST-OF-AUTHORITIES
