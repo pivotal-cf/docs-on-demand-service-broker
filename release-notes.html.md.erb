@@ -6,20 +6,13 @@ owner: London Services Enablement
 
 <%= partial vars.path_to_partials + "/upgrade-planner" %>
 
-## <a id="0-40-0"></a> v0.40.0
+## <a id="0-41-0"></a> v0.41.0
 
-**Release Date: July 13, 2020**
+**Release Date: MMMM DD, 2020**
 
 ### Features
 
 New features and changes in this release:
-
-* `cf.authentication` is now deprecated. See `cf.uaa` in the broker spec for the new format.
-* Broker now accepts a new configuration property: `cf.uaa.client_definition`.
-For more information, see
-[spec](https://github.com/pivotal-cf/on-demand-service-broker-release/blob/master/jobs/broker/spec#L148-L154) in GitHub.
-When configured, the broker creates a UAA client per service instance and passes the new client to the
-service adapter when generating the manifest.
 
 ### Known Issues.
 
@@ -40,7 +33,7 @@ This release has the following dependency:
 
   <tr>
     <td>golang</td>
-    <td>1.13.6</td>
+    <td>x.x.x</td>
   </tr>
 
 </table>
