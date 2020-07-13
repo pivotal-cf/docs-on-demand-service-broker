@@ -1198,7 +1198,7 @@ For more information about service metrics, see
   in the BOSH documentation.
 </p>
 
-## <a id="binding-with-dns"></a>(Optional) Use BOSH DNS Addresses for Bindings
+## <a id="binding-with-dns"></a> (Optional) Use BOSH DNS Addresses for Bindings
 
 You can configure <%= vars.product_abbr %> to retrieve BOSH DNS addresses for service instances.
 These addresses are passed to the service adapter when you create or delete a binding.
@@ -1263,7 +1263,7 @@ service_catalog:
 Each entry in `binding_with_dns` is converted to a BOSH DNS address that is
 passed to the service adapter when you create a binding.
 
-## <a id="broker-telemetry"></a>(Optional) Enable Telemetry
+## <a id="broker-telemetry"></a> (Optional) Enable Telemetry
 
 The telemetry program enables VMware to collect data from customer installations to improve your
 enterprise experience.
@@ -1273,15 +1273,15 @@ For more information about the telemetry program, see [Telemetry](https://pivota
 
 1. To enable your broker to send telemetry data, add the following to your deployment manifest:
 
-    ```yaml
-    instance_groups:
+```yaml
+instance_groups:
+- name: broker
+  jobs:
     - name: broker
-      jobs:
-        - name: broker
-          properties:
-            # ...
-            enable_telemetry: true
-    ```
+      properties:
+        # ...
+        enable_telemetry: true
+```
 
 ## <a id="creating-uaa-client"> (Optional) Create a Client on CF UAA
 
@@ -1297,7 +1297,7 @@ clients are left in TAS UAA.
 ```yaml
 cf:
   uaa:
-    url: # UAA URL
+    url: # UAA-URL
     client_definition:
       scopes: COMMA-SEPARATED-LIST-OF-SCOPES
       authorities: COMMA-SEPARATED-LIST-OF-AUTHORITIES
