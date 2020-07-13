@@ -23,6 +23,7 @@ For example service adapters, see the following examples written in golang:
 
 A service adapter is expected to respond to the subcommands.
 For each of these subcommands, the following applies:
+
 * An exit status of `0` indicates that the command succeeded.
 * An exit status of `10` indicates not implemented.
 * Any non-zero exit status indicates failure.
@@ -334,7 +335,7 @@ arbitrary parameter to configure auto-creation of topics on the cluster.
    any arbitrary parameters passed on a previous create or update are not passed again.
    Therefore, for arbitrary parameters to stay the same across multiple deployments
    they must be retrieved from the previous manifest.
- </p>
+</p>
 
 For example:
 
@@ -357,7 +358,8 @@ For example:
 }
 ```
 
-####<a id="previous-manifest"></a>PREVIOUS-MANIFEST-YAML
+
+#### <a id="previous-manifest"></a> PREVIOUS-MANIFEST-YAML
 
 `PREVIOUS-MANIFEST-YAML` represents the previous BOSH deployment manifest for
 the service instance. If you have a new deployment, the YAML file is empty.
@@ -372,6 +374,7 @@ previous manifest is non-nil.
 Another use case of the previous manifest is for the migration of deployment properties
 which need to stay the same across multiple deployments of a manifest. In the Redis example,
 we [generate a password](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_manifest_generator.go#L112-L123) when we do a new deployment.
+
 But, when the previous deployment manifest is provided, we copy the password over from [the
 previous deployment](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/master/adapter/redis_manifest_generator.go#L333-L338), because generating a new
 password for existing deployments breaks existing bindings.
@@ -384,7 +387,7 @@ For an example, see the [example Redis service adapter](https://github.com/pivot
   the new one, the update fails.
 </p>
 
-####<a id="previous-plan"></a> PREVIOUS-PLAN-JSON
+#### <a id="previous-plan"></a> PREVIOUS-PLAN-JSON
 
 This argument takes the previous plan as a JSON string.
 
@@ -394,7 +397,7 @@ The format of the plan should match the [plan schema](#plan-schema). The previou
 can be used for complex plan migration logic. For an example, the [Kafka service adapter](https://github.com/pivotal-cf-experimental/kafka-example-service-adapter/blob/master/adapter/generate_manifest.go#L27:L33)
  rejects a plan migration if the new plan reduces the number of instances, to prevent data loss.
 
-####<a id="previous-secrets"></a>PREVIOUS-SECRETS-JSON
+#### <a id="previous-secrets"></a>PREVIOUS-SECRETS-JSON
 
 If `enable_secure_manifests` is set to `true` in the broker, any secrets
 that use references to BOSH-generated variables or literal CredHub paths in the
