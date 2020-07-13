@@ -72,13 +72,13 @@ See the following example:
     "previous_secrets": "PREVIOUS-SECRETS-JSON",
     "previous_configs": "PREVIOUS-CONFIGS-JSON",
     "uaa_client": {
-      "authorities": "list of authorities",
-      "authorized_grant_types": "list of grant types",
-      "client_id": "client id",
-      "client_secret": "generated client secret",
-      "name": "display name -- set to service instance name",
-      "resource_ids": "list of resource ids",
-      "scopes": "list of scopes"
+      "authorities": "LIST-OF-AUTHORITIES",
+      "authorized_grant_types": "LIST-OF-GRANT-TYPES",
+      "client_id": "CLIENT-ID",
+      "client_secret": "GENERATED-CLIENT-SECRET",
+      "name": "DISPLAY-NAME",
+      "resource_ids": "RESOURCE-ID-LIST",
+      "scopes": "SCOPES-LIST"
     }
 }
 ```
@@ -97,7 +97,7 @@ For example:
 ```
 
 <div class="note">
-  <strong>Note</strong>:
+  <strong>Note:</strong>
   VMware recommends that service authors use the following order of precedence in their
   service adapters when generating manifests:<br><br>
   <ol>

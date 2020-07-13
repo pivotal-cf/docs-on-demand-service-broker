@@ -469,10 +469,10 @@ instance_groups:
                   password: CF-ADMIN-PASSWORD
               client_definition:
                 # if set, the client used to authenticate with UAA must have clients.admin authority or higher
-                scopes: # comma-separated list of scopes
-                authorities: # comma-separated list of authorities
-                authorized_grant_types: # comma-separated list of grant types
-                resource_ids: # comma-separated list of resource IDs
+                scopes: COMMA-SEPARATED-LIST-OF-SCOPES
+                authorities: COMMA-SEPARATED-LIST-OF-AUTHORITIES
+                authorized_grant_types: COMMA-SEPARATED-LIST-OF-GRANT-TYPES
+                resource_ids: COMMA-SEPARATED-LIST-OF-RESOURCE-IDS
           bosh:
             url: DIRECTOR-URL
             # optional - see the Configure CA Certificates section above:
@@ -493,7 +493,7 @@ instance_groups:
           # There are more broker properties that are discussed below
 ```
 
-### <a id="catalog"></a>Configure Your Service Catalog and Plan Composition
+### <a id="catalog"></a> Configure Your Service Catalog and Plan Composition
 
 Use the following sections as a guide to configure the service catalog and compose
 plans in the properties section of broker job.
@@ -511,8 +511,7 @@ When configuring the service catalog, supply:
 * **Stemcells:**
 
     <p class="note">
-      <strong>Note:</strong> If you use Xenial stemcells, you must update any BOSH add-ons to support Xenial
-      stemcells. For links to instructional topics about updating see
+      <strong>Note:</strong> If you use Xenial stemcells, you must update any BOSH add-ons to support Xenial stemcells. For links to instructional topics about updating see
       <a href="./upgrades.html#update-addons">Update Add-ons to Run with Xenial Stemcell</a>.
     </p>
   * These are used on each VM in the service deployments.
@@ -1300,10 +1299,10 @@ cf:
   uaa:
     url: # UAA URL
     client_definition:
-      scopes: # comma-separated list of scopes
-      authorities: # comma-separated list of authorities
-      authorized_grant_types: # comma-separated list of grant types
-      resource_ids: # comma-separated list of resource IDs
+      scopes: COMMA-SEPARATED-LIST-OF-SCOPES
+      authorities: COMMA-SEPARATED-LIST-OF-AUTHORITIES
+      authorized_grant_types: COMMA-SEPARATED-LIST-OF-GRANT-TYPES
+      resource_ids: COMMA-SEPARATED-LIST-OF-RESOURCE-IDS
 ```
 
 ODB will then generate and append the following properties to the client:
