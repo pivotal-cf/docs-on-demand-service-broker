@@ -1288,8 +1288,8 @@ For more information about the telemetry program, see [Telemetry](https://pivota
 The on-demand broker can create a client on <%= vars.app_runtime_abbr %> UAA during
 the provisioning of service instances.
 One client is created per service instance.
-Any client created by the broker is removed when the service instance is deleted or updated when the
-service instance is updated.
+Any client created by the broker is removed when the service instance is deleted.
+Any client created by the broker is updated when the service instance is updated.
 If the service broker is deleted without running the `delete-all-services-instances` errand, the
 clients are left in <%= vars.app_runtime_abbr %> UAA.
 
@@ -1308,14 +1308,14 @@ clients are left in <%= vars.app_runtime_abbr %> UAA.
 
 ODB then generates and appends the following properties to the client:
 
-* Client ID (`client_id`)
-* Client secret (`client_secret`)
-* Redirect URI (`redirect_uri`)
+* `client_id`
+* `client_secret`
+* `redirect_uri`
 
 The service adapter receives the client that ODB has generated as part of the `generate-manifest` input
 parameters.
 
-## <a id="startup-checks"></a>About Broker Startup Checks
+## <a id="startup-checks"></a> About Broker Startup Checks
 
 The <%= vars.product_abbr %> does the following startup checks:
 
