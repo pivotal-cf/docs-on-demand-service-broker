@@ -21,6 +21,7 @@ For more information, see the broker
 [spec](https://github.com/pivotal-cf/on-demand-service-broker-release/blob/master/jobs/broker/spec#L148-L155) in GitHub.<br><br>
 When configured, the broker creates a UAA client for each service instance and passes the new client to
 the service adapter when generating the manifest.
+* The client used by the On-demand broker to communicate with Cloud Foundry now needs, at least, `client.read` authority. To create clients, it needs `clients.write`.
 For more information, see [Create a Client on CF UAA](./operating.html#creating-uaa-client).
 
 ### Known Issues
