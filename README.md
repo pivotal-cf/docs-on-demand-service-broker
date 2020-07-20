@@ -53,7 +53,7 @@ Cross-product partials for **On-Demand Service Broker SDK** v0.23.x branch are s
 
 Previously, these partials were sourced from the v018.x branch of the [On Demand Service Broker SDK](https://github.com/pivotal-cf/docs-on-demand-service-broker/tree/v0.18.x) content repo.
 
-# Proccess for working in this repo
+# Process for working in this repo
 
 ## Submit changes to the docs through PRs
 
