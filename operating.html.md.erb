@@ -314,40 +314,42 @@ To reach the Cloud Controller, configure <%= vars.product_abbr %> with either cl
 in the broker manifest. For more information, see [Write a Broker Manifest](#broker-manifest) below.
 
 <div class="note">
-  <p style="margin-top: 0"><strong>Note:</strong> The client or user must have the following permissions.</p>
+  <p style="margin-top: 0"><strong>Note:</strong> The UAA client or user must have the following permissions.</p>
   <ul>
     <li>
-      <strong>If using client credentials</strong>
-      then, as of Cloud Foundry v238, the UAA client must have the authority
-      <code>cloud_controller.admin</code>.</li>
+      <strong>If using client credentials:</strong> The UAA client must have the authorities
+      <code>cloud_controller.admin</code> and <code>clients.read</code>.<br>
+      To configure ODB to create a client for each services instance, the UAA client must have
+      the <code>clients.write</code> authority.
+      For more information about this feature, see <a href="#creating-uaa-client">Create a Client on CF UAA</a>.
+    </li>
     <li>
-      <strong>If using user credentials</strong>
-      then the user must be a member of the
-      <code>scim.read</code>
-      and
-      <code>cloud_controller.admin</code>
-      groups.</li>
+      <strong>If using user credentials:</strong> The user must be a member of the
+      <code>scim.read</code> and <code>cloud_controller.admin</code> groups.
+    </li>
   </ul>
 </div>
 
 The following is an example broker manifest snippet for the client credentials:
 
 ```
-authentication:
+uaa:
   ...
-  client_credentials:
-    client_id: UAA-CLIENT-ID
-    secret: UAA-CLIENT-SECRET
+  authentication:
+    client_credentials:
+      client_id: UAA-CLIENT-ID
+      secret: UAA-CLIENT-SECRET
 ```
 
 The following is an example broker manifest snippet for the user credentials:
 
 ```
-authentication:
+uaa:
   ...
-  user_credentials:
-    username: CF-ADMIN-USERNAME
-    password: CF-ADMIN-PASSWORD
+  authentication:
+    user_credentials:
+      username: CF-ADMIN-USERNAME
+      password: CF-ADMIN-PASSWORD
 ```
 
 ## <a id="upload-releases"></a>Upload Required Releases
@@ -460,7 +462,7 @@ instance_groups:
               url: CF-UAA-URL
               authentication:
                 client_credentials:
-                  # with cloud_controller.admin authority and client_credentials in the authorized_grant_type:
+                  # with cloud_controller.admin and clients.read authorities (or clients.write authority if you want ODB to create UAA clients) and client_credentials in the authorized_grant_type:
                   client_id: UAA-CLIENT-ID
                   secret: UAA-CLIENT-SECRET
                 user_credentials:
@@ -1293,7 +1295,12 @@ service instance is updated.
 If the service broker is deleted without running the `delete-all-services-instances` errand, the
 clients are left in <%= vars.app_runtime_abbr %> UAA.
 
-1. To configure ODB to create a client, configure the `cf` property in the broker job as follows:
+To configure ODB to create UAA clients for service instances:
+
+1. Ensure the UAA client that ODB uses to communicate with Cloud Foundry has the `clients.write` authority.
+For more information about this UAA client, see <a href="./operating.html#cloud-controller">Set Up Cloud Controller</a>.
+
+1. Configure the `cf` property in the broker job as follows:
 
     ```yaml
     cf:
