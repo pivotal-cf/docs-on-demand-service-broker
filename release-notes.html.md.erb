@@ -12,16 +12,22 @@ owner: London Services Enablement
 
 ### Features
 
+<p class="note breaking">
+  <strong>Breaking Change:</strong> The UAA client that the on-demand broker (ODB) uses to communicate
+  with Cloud Foundry must have, at least, <code>clients.read</code> authority.
+  For more information about this UAA client, see <a href="./operating.html#cloud-controller">Set Up Cloud Controller</a>.
+</p>
+
 New features and changes in this release:
 
 * `cf.authentication` is now deprecated. For more information about the new format, see `cf.uaa` in
 the broker [spec](https://github.com/pivotal-cf/on-demand-service-broker-release/blob/50391857a2d4d4fbc23c27303577aa532db88129/jobs/broker/spec#L133-L155) in GitHub.
-* Broker now accepts a new configuration property: `cf.uaa.client_definition`.
+
+* The on-demand broker now accepts a new configuration property: `cf.uaa.client_definition`.
 For more information, see the broker
-[spec](https://github.com/pivotal-cf/on-demand-service-broker-release/blob/master/jobs/broker/spec#L148-L155) in GitHub.<br><br>
-When configured, the broker creates a UAA client for each service instance and passes the new client to
+[spec](https://github.com/pivotal-cf/on-demand-service-broker-release/blob/master/jobs/broker/spec#L148-L155) in GitHub.<br>
+When configured, the on-demand broker creates a UAA client for each service instance and passes the new client to
 the service adapter when generating the manifest.
-* The client used by the On-demand broker to communicate with Cloud Foundry now needs, at least, `client.read` authority. To create clients, it needs `clients.write`.
 For more information, see [Create a Client on CF UAA](./operating.html#creating-uaa-client).
 
 ### Known Issues
