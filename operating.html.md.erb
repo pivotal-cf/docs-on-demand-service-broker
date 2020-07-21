@@ -1297,7 +1297,7 @@ clients are left in <%= vars.app_runtime_abbr %> UAA.
 
 To configure ODB to create UAA clients for service instances:
 
-1. Ensure the UAA client that ODB uses to communicate with Cloud Foundry has the `clients.write` authority.
+1. Ensure the UAA client that ODB uses to communicate with Cloud Foundry has the `clients.write` and `cloud_controller.admin` authorities.
 For more information about this UAA client, see <a href="./operating.html#cloud-controller">Set Up Cloud Controller</a>.
 
 1. Configure the `cf` property in the broker job as follows:
