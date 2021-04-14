@@ -8,22 +8,6 @@ to <%= vars.ops_manager %> operators and BOSH operators.
 
 <%= partial vars.path_to_partials + "/upgrade-planner" %>
 
-## <a id="update-addons"></a>Update Add-Ons to Run with Xenial Stemcell
-
-If you are using a Xenial stemcell for your deployment and you are using any of
-the following BOSH add-ons, you must update the add-on definition to include the
-Xenial stemcell before you deploy your service:
-
-+ Pivotal File Integrity Monitoring.
-  For update instructions,
-  see [Updating FIM to Run with Xenial Stemcell](https://docs.pivotal.io/addon-fim/1-4/updating-for-xenial.html).
-+ ClamAV for PCF Add-on.
-  For update instructions,
-  see [Updating ClamAV Add-on for PCF to Run with Xenial Stemcells](https://docs.pivotal.io/addon-antivirus/1-4/updating-for-xenial.html).
-+ Pivotal IPsec.
-  For update instructions,
-  see [Updating Pivotal IPsec to Run with Xenial Stemcells](https://docs.pivotal.io/addon-ipsec/1-9/updating-for-xenial.html).
-
 ## <a id="upgrade-broker"></a>Upgrade the Broker
 
 To upgrade the broker, do the following:
