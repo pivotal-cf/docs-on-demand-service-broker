@@ -34,7 +34,8 @@ Installing a service tile creates a service broker, registers it with the Cloud 
 and publishes the service plans that the broker offers.
 Developers can then create service instances in their spaces and bind them to their apps.
 
-![Your Service Tile in Ops Manager](img/your-service-here.png)<%# Images require alt text that describes the image in detail. %>
+![Screenshot of the Ops Manager Installation Dashboard showing the BOSH Director tile
+  and a sample service broker tile.](img/your-service-here.png)
 
 The central element behind a service tile is the service broker, but the tile software
 includes other components that make the service easy for operators to install and maintain
@@ -115,7 +116,12 @@ For more information about operator responsibilities, see [Operator Responsibili
 A service adapter is a binary that is called by the <%= vars.product_abbr %> for service-specific tasks.
 The diagram below shows where responsibility lies for each aspect of the <%= vars.product_abbr %> workflow.
 
-![responsibility-diagram](img/responsibility-diagram.png)<%# Images require alt text that describes the image in detail. %>
+![Diagram shows the three areas of responsibility associated with the ODB workflow. 
+The service author creates the service adapter binary and the service BOSH release.
+ODB provides the on-demand broker BOSH release, which includes broker orchestration,
+the service broker API, the BOSH client, and broker errands.
+The operator manages the on-demand broker manifest which includes BOSH Director details,
+service plan definitions, and service/adapter release information.](img/responsibility-diagram.png)
 
 The service author can focus on building the BOSH release of their service and provide
 a service adapter binary that manages manifest generation, schema generation, binding, and unbinding.
