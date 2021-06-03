@@ -8,7 +8,8 @@ For example:
 
 | Branch name     | Use for|
 |-----------------| ------|
-| master          | Unreleased version (edge - 0.41) https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-n|
+| master          | Unreleased version (edge - 0.43) https://docs-pcf-staging.cfapps.io/svc-sdk/odb/0-n|
+| v0.42.x         | live on June 3, 2021 https://docs.pivotal.io/svc-sdk/odb/0-42|
 | v0.41.x         | live on April 16, 2021 https://docs.pivotal.io/svc-sdk/odb/0-41|
 | v0.40.x         | live on July 13, 2020 https://docs.pivotal.io/svc-sdk/odb/0-40|
 | v0.39.x         | live on April 3, 2020 https://docs.pivotal.io/svc-sdk/odb/0-39|
