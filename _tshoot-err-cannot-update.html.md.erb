@@ -1,37 +1,52 @@
-<%= partial vars.path_to_partials + "/troubleshoot-template", locals: {
-
-    id: 'upgrade-individual-instances',
-
-    description: 'Cannot Update a Service Instance',
-
-    symptom: <<~DESC,
-    If developers report errors such as the following when trying to run <code>cf-update-service</code>:
-    <pre class="terminal">
-    FAILED
-    Server error, status code: 502, error code: 10001, message:
-    Service broker error: Service cannot be updated at this time,
-    please try again later or contact your operator for more information.
-    </pre>
-    DESC
-
-    cause: 'Their service instance might not be running the latest service offering.',
-
-    solution:'
-    <p>
-    Operators must run the <code>upgrade-all-service-instances</code> errand after upgrading
-    to ensure all existing service instances are upgraded to the latest service offering.
-    See <a href="#upgrade-all">Upgrade All Service Instances</a>.
-    </p>
-
-    <p>
-    If <code>maintenance_info</code> is configured with a compatible CF version, app developers can also
-    run <code>update-service --upgrade</code> to upgrade an individual service instance to the latest service offering.
-    </p>
-
-    <p>
-    Until you resolve this issue, app developers cannot set parameters or
-    change plans.
-    For more information, see <a href="#upgrade-all">Upgrade All Service Instances</a>
-    and <a href="./tile.html#maintenance">(Optional) Configure Maintenance Information</a>.
-    </p>'
-}%>
+<a name="upgrade-individual-instances"></a>
+<table class="nice">
+  <style>
+    main table {
+      table-layout: fixed;
+    }
+  </style>
+  <col width="20%">
+  <col width="80%">
+  <tr>
+  <th colspan="2" style="text-align: left;">
+    <br>
+    Cannot Update a Service Instance
+    <br><br>
+  </th>
+  </tr>
+  <tr>
+    <th>Symptom</th>
+    <td>
+      If developers report errors such as the following when trying to run <code>cf-update-service</code>:
+      <pre class="terminal">
+      FAILED
+      Server error, status code: 502, error code: 10001, message:
+      Service broker error: Service cannot be updated at this time,
+      please try again later or contact your operator for more information.
+      </pre>
+    </td>
+  </tr>
+  <tr>
+    <th>Cause</th>
+    <td>Their service instance might not be running the latest service offering.</td>
+  </tr>
+  <tr>
+    <th style="vertical-align: top; padding-top: 1em;">Solution</th>
+    <td>
+      <p>
+        Operators must run the <code>upgrade-all-service-instances</code> errand after upgrading
+        to ensure all existing service instances are upgraded to the latest service offering.
+        See <a href="#upgrade-all">Upgrade All Service Instances</a>.
+      </p>
+      <p>
+        If <code>maintenance_info</code> is configured with a compatible CF version, app developers can also
+        run <code>update-service --upgrade</code> to upgrade an individual service instance to the latest service offering.
+      </p>
+      <p>
+        Until you resolve this issue, app developers cannot set parameters or change plans.
+        For more information, see <a href="#upgrade-all">Upgrade All Service Instances</a>
+        and <a href="./tile.html#maintenance">(Optional) Configure Maintenance Information</a>.
+      </p>
+    </td>
+  </tr>
+</table>
