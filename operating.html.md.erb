@@ -775,7 +775,7 @@ The broker also accepts only the following cipher suites:
 ## <a id="secure-manifest"></a>(Optional) Enable Storing Manifest Secrets on BOSH CredHub
 
 <p class="note warning">
-  <strong>Note:</strong> This feature does not work if you have configured <code>use_stdin</code> to be false.
+  <strong>Warning:</strong> This feature does not work if you have configured <code>use_stdin</code> to be false.
 </p>
 
 To avoid writing secrets in plaintext in the manifest, you can use <%= vars.product_abbr %>-managed secrets to
@@ -835,8 +835,8 @@ Replace the placeholder text below with your values for accessing CredHub:
 
 ## <a id="secure-binding"></a> (Optional) Enable Secure Binding
 
-<p class="note alert">
-  <strong>Note:</strong> This feature does not work if you have configured <code>use_stdin</code> to be false.
+<p class="note warning">
+  <strong>Warning:</strong> This feature does not work if you have configured <code>use_stdin</code> to be false.
 </p>
 
 If you enable secure binding, binding credentials are stored securely in
@@ -1185,8 +1185,8 @@ VMware has tested this example configuration with Loggregator v58 and service-me
 For more information about service metrics, see
 [Service Metrics for <%= vars.platform_name %>](http://docs.pivotal.io/service-metrics).
 
-<p class="note alert"><strong>Note:</strong> When <code>service-metrics-adapter</code> is not configured, it
-  defaults to a BOSH-provided IP address or BOSH-provided BOSH DNS address, depending on in configuration on
+<p class="note warning"><strong>Warning:</strong> When <code>service-metrics-adapter</code> is not configured, it
+  defaults to a BOSH-provided IP address or BOSH-provided BOSH DNS address, depending on the configuration on
   the broker URI. See <a href="https://bosh.io/docs/dns/#links">Impact on links</a>
   in the BOSH documentation.
   <br><br>When the broker is using TLS, the broker certificate must contain this BOSH provided address in
