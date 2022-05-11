@@ -87,6 +87,7 @@ Perform the following steps to install and invoke the SDK:
     }
     ```
     Where:
+
     * `URL-FOR-SERVICE-ADAPTER-REPOSITORY` is the repository containing your service
     adapter, for example `github.com/bar-org/foo-service-adapter/adapter`.
     * `SERVICE-ADAPTER-NAME` is the name of the service adapter, for example `foo-service-adapter`.
@@ -589,17 +590,15 @@ that does the following:
 1. Compares the previous value of the secret to the new value.
 
 1. **If the secret has changed:**
-  <ol>
-    <li>Inserts the <%= vars.product_abbr %>-managed secrets placeholder.</li>
-    <li>Adds the value to the `secrets` map.</li>
-  </ol>
-  **If the secret has remained the same:**
-  <ol>
-    <li>Inserts the BOSH CredHub reference from the previous manifest.</li>
-  </ol>
 
-For example code that does the above, see the [redis-example-service-adapter]
-(https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/ecf33c082bcd5180cf37ad32de03696fe2a0568f/adapter/redis_manifest_generator.go#L471-L483) in GitHub.
+    1. Inserts the <%= vars.product_abbr %>-managed secrets placeholder.
+    1. Adds the value to the `secrets` map.
+
+  **If the secret has remained the same:**
+  
+    1. Inserts the BOSH CredHub reference from the previous manifest.
+
+For example code that does the above, see the [redis-example-service-adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/ecf33c082bcd5180cf37ad32de03696fe2a0568f/adapter/redis_manifest_generator.go#L471-L483) in GitHub.
 
 #### <a id="inconsistent-secrets"></a>Inconsistent Secrets after a Failed Update
 
