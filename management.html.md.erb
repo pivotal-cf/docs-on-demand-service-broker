@@ -79,8 +79,7 @@ To run the `register-broker` errand, do the following:
     bosh -d DEPLOYMENT-NAME run-errand register-broker
     ```
 
-    Where:
-    - `DEPLOYMENT-NAME` is the name of your deployment.
+    Where `DEPLOYMENT-NAME` is the name of your deployment.
 
     For example:
 
@@ -141,6 +140,7 @@ To add the `delete-all-service-instances` errand to the manifest, do the followi
     ```
 
     Where:
+
     * `INTERVAL-IN-SECONDS`: The interval in seconds before a service instance is deleted.
     * `OFFSET-IN-SECONDS`: The offset in seconds before polling Cloud Foundry to check
     if the instance has been deleted.
@@ -166,8 +166,7 @@ To run the `delete-all-service-instances` errand, do the following:
     delete-all-service-instances
     ```
 
-    Where:
-    - `DEPLOYMENT-NAME` is the name of your deployment.
+    Where `DEPLOYMENT-NAME` is the name of your deployment.
 
     For example:
 
@@ -216,8 +215,7 @@ To run the `deregister-broker` errand, do the following:
     bosh -d DEPLOYMENT-NAME run-errand deregister-broker
     ```
 
-    Where:
-    *  `DEPLOYMENT-NAME` is the name of your deployment.
+    Where `DEPLOYMENT-NAME` is the name of your deployment.
 
     For example:
 
@@ -277,6 +275,7 @@ do the following:
     ```
 
       Where:
+
       * `INTERVAL-IN-SECONDS`: The interval in seconds before a service instance is deleted.
       * `OFFSET-IN-SECONDS`: The offset in seconds before polling Cloud Foundry to check
       if the instance has been deleted.
@@ -302,8 +301,7 @@ To run the  `delete-all-service-instances-and-deregister-broker` errand, do the 
     delete-all-service-instances-and-deregister-broker
     ```
 
-    Where:
-    - `DEPLOYMENT-NAME` is the name of your deployment.
+    Where `DEPLOYMENT-NAME` is the name of your deployment.
 
     For example:
 
@@ -364,8 +362,7 @@ To run the `orphan-deployments` errand, do the following:
     bosh -d DEPLOYMENT-NAME run-errand orphan-deployments
     ```
 
-    Where:
-    - `DEPLOYMENT-NAME` is the name of your deployment.
+    Where `DEPLOYMENT-NAME` is the name of your deployment.
 
     For example:
     <pre class="terminal">
@@ -399,8 +396,7 @@ To delete an orphan deployment, do the following:
     bosh -d DEPLOYMENT-NAME delete-deployment
     ```
 
-    Where:
-    - `DEPLOYMENT-NAME` is the name of the orphaned deployment returned in the output of the errand.
+    Where `DEPLOYMENT-NAME` is the name of the orphaned deployment returned in the output of the errand.
 
     For example:
 
@@ -517,8 +513,7 @@ To run the `recreate-all-service-instances` errand, do the following:
     ```
     bosh -d DEPLOYMENT-NAME run-errand recreate-all-service-instances
     ```
-    Where:
-    - `DEPLOYMENT-NAME` is the name of your deployment.
+    Where `DEPLOYMENT-NAME` is the name of your deployment.
 
     For example:
     <pre class="terminal">
@@ -573,6 +568,7 @@ To disable access to a service plan, do the following:
     ```
 
     Where:
+
     * `SERVICE-NAME-FROM-CATALOG` is the name of the service from the service catalog.
     * `PLAN-NAME` is the name of the plan you want to disable.
 
