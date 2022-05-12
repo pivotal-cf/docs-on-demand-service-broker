@@ -117,53 +117,53 @@ To upgrade all existing service instances after the service offering has been up
         <th>Property</th>
         <th>Description</th>
         <tr>
-            <td><code>max\_in\_flight</code></td>
+            <td><code>max_in_flight</code></td>
             <td>Sets the limit for the number of upgrades
           occurring concurrently.  The number of simultaneous upgrades is limited by
           the number of available BOSH workers. See <a
           href="https://bosh.io/jobs/director?source=github.com/cloudfoundry/bosh#p=director.workers">workers</a>
           in the Cloud Foundry BOSH documentation.
-          Set the <code>max\_in\_flight</code> value to lower than this
+          Set the <code>max_in_flight</code> value to lower than this
           limit to avoid over-saturating BOSH.</td>
         </tr>
         <tr>
             <td><code>canaries</code></td>
             <td>Sets the number of canary instances to upgrade first.
             If all canary instances upgrade, the remaining instances are upgraded.
-            If a canary instance fails to upgrade or the <code>attempt\_limit</code>
+            If a canary instance fails to upgrade or the <code>attempt_limit</code>
             is reached, the upgrade fails.
             No further instances are upgraded, and the errand exits with an error;
             however, all in-flight upgrades can complete.
-            Canary instances are upgraded in parallel, respecting the <code>max\_in\_flight</code> value.
+            Canary instances are upgraded in parallel, respecting the <code>max_in_flight</code> value.
             <br><br><strong>Note:</strong> Canary instances are selected in
             a non-deterministic way using all available instances.
             If a selected instance is busy or was deleted, another instance is selected.
             If all instances are busy, the errand retries, respecting the
-            <code>attempt\_limit</code> and <code>attempt\_interval\_seconds</code>.
+            <code>attempt_limit</code> and <code>attempt_interval_seconds</code>.
           </td>
         </tr>
         <tr>
-            <td><strong>(Optional)</strong><br><code>canary\_selection\_params</code></td>
+            <td><strong>(Optional)</strong><br><code>canary_selection_params</code></td>
             <td>Use this to specify an org and a space that you want canaries to be sourced from during an upgrade.
               If an org is specified, then a space must also be provided and vice versa.
               If <code>canaries</code> is specified,
               the broker upgrades that number of instances present in the org and space.
               If fewer instances are present than specified,
               the broker upgrades as many instances as possible in that org and space.
-              <br><br><strong>Note:</strong> If <code>canary\_selection\_params</code>
+              <br><br><strong>Note:</strong> If <code>canary_selection_params</code>
               are specified and no instances exist in that org or space, no canaries are chosen.
               If other instances exist, the broker fails, alerting you to chose different selection criteria.
-              If <code>canary\_selection\_params</code> is specified but empty, it is treated as if none was provided.
+              If <code>canary_selection_params</code> is specified but empty, it is treated as if none was provided.
             </td>
         </tr>
         <tr>
-            <td><code>polling\_interval\_seconds</code></td>
+            <td><code>polling_interval_seconds</code></td>
             <td>This controls the wait between checking the status of the successfully submitted BOSH upgrade job.
             If service instances have in-progress BOSH operations,
             upgrade requests are rejected and the errand queues those instances for a retry:
               <ul><br>
-                <li><code>attempt\_interval\_seconds</code> determines the time to wait between retrying upgrades.</li>
-                <li><code>attempt\_limit</code> sets the number of times these instances are retried for upgrade.</li>
+                <li><code>attempt_interval_seconds</code> determines the time to wait between retrying upgrades.</li>
+                <li><code>attempt_limit</code> sets the number of times these instances are retried for upgrade.</li>
               </ul>
             </td>
         </tr>
