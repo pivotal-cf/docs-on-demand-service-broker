@@ -14,7 +14,7 @@ and which require interaction with the Service Adapter.
 The sequence diagram below shows the workflow for registering a service broker with
 Cloud Foundry.
 
-<%= partial 'mmd/service_catalog_workflow.mmd' %>
+<%= partial 'img/service_catalog_workflow.png' %>
 
 
 
@@ -39,7 +39,7 @@ For more information about this command, see
 
 The sequence diagram below shows the workflow for creating a service instance.
 
-<%= partial 'mmd/create_service_workflow.mmd' %>
+<%= partial 'img/create_service_workflow.png' %>
 
 <br>
 There are two ways this process can fail:
@@ -80,7 +80,7 @@ The manifest from the second call to `generate-manifest` is deployed.
 The sequence diagram below shows the workflow for updating a service instance if
 there are no pending changes.
 
-<%= partial 'mmd/update_service_no_pending_changes_workflow.mmd' %>
+<%= partial 'img/update_service_no_pending_changes_workflow.png' %>
 
 
 #### <a id="update-service-instance-with-changes"></a>Update When There Are Pending Changes
@@ -90,7 +90,7 @@ If there are pending changes, the update fails.
 The sequence diagram below shows the workflow for updating a service instance if
 there are pending changes.
 
-<%= partial 'mmd/update_service_with_pending_changes_workflow.mmd' %>
+<%= partial 'img/update_service_with_pending_changes_workflow.png' %>
 
 
 
@@ -105,7 +105,7 @@ For more information about post-deploy errands, see
 The sequence diagram below shows the workflow for creating or updating a service
 instance when post-deploy errands are configured.
 
-<%= partial 'mmd/create_post_deploy_workflow.mmd' %>
+<%= partial 'img/create_post_deploy_workflow.png' %>
 
 
 
@@ -118,7 +118,7 @@ backup and restore purposes, for example in a migration between foundations.
 
 The sequence diagram below shows the workflow for re-creating service instances.
 
-<%= partial 'mmd/recreate_all_instances_workflow.mmd' %>
+<%= partial 'img/recreate_all_instances_workflow.png' %>
 
 
 
@@ -145,7 +145,7 @@ For more information, see [Upgrade All Service Instances](./upgrades.html#upgrad
 
 The sequence diagram below shows the workflow for upgrading all service instances.
 
-<%= partial 'mmd/upgrade_all_instances_workflow.mmd' %>
+<%= partial 'img/upgrade_all_instances_workflow.png' %>
 
 
 ### <a id="upgrade-all-external-instances"></a>Upgrade All Service Instances with External Service Instances API Configured
@@ -157,7 +157,7 @@ For more information, see [Service Instances API](./upgrades.html#service-instan
 The sequence diagram below shows the workflow for upgrading all service instances
 with external service instances API configured.
 
-<%= partial 'mmd/upgrade_all_instances_with_si_api_workflow.mmd' %>
+<%= partial 'img/upgrade_all_instances_with_si_api_workflow.png' %>
 
 ### <a id="upgrade-all-instances-with-maintenance-info"></a>Upgrade All Service Instances with Maintenance Information Configured
 
@@ -170,7 +170,7 @@ instance.
 The sequence diagram below shows the workflow for upgrading all service instances when maintenance
 information is configured.
 
-<%= partial 'mmd/upgrade_all_instances_with_maintenance_info_workflow.mmd' %>
+<%= partial 'img/upgrade_all_instances_with_maintenance_info_workflow.png' %>
 
 ### <a id="upgrade-one-instance"></a>Upgrade One Service Instance with Maintenance Information Configured
 
@@ -180,7 +180,7 @@ a user can trigger a single upgrade by running `cf update-service SERVICE_NAME -
 The sequence diagram below shows the workflow for upgrading one service instance when maintenance
 information is configured.
 
-<%= partial 'mmd/upgrade_one_instance_workflow.mmd' %>
+<%= partial 'img/upgrade_one_instance_workflow.png' %>
 
 
 ## <a id="binding"></a>About Binding and Unbinding Service Instances
@@ -200,7 +200,7 @@ For more information about this command, see
 
 The sequence diagram below shows the workflow for creating a binding.
 
-<%= partial 'mmd/bind_service_workflow.mmd' %>
+<%= partial 'img/bind_service_workflow.png' %>
 
 
 ### <a id="unbind"></a>Unbind a Service Instance
@@ -211,7 +211,7 @@ For more information about this command, see
 
 The sequence diagram below shows the workflow for unbinding a service instance.
 
-<%= partial 'mmd/unbind_service_workflow.mmd' %>
+<%= partial 'img/unbind_service_workflow.png' %>
 
 
 
@@ -238,7 +238,7 @@ The service adapter is not invoked in the delete service workflow.
 
 The sequence diagram below shows the workflow for deleting service instances.
 
-<%= partial 'mmd/delete_service_workflow.mmd' %>
+<%= partial 'img/delete_service_workflow.png' %>
 
 
 ### <a id="pre-delete"></a>Delete a Service Instance with Pre-Delete Errands
@@ -252,7 +252,7 @@ For more information about pre-delete errands, see
 The sequence diagram below shows the workflow for deleting service instances with
 pre-delete errands configured.
 
-<%= partial 'mmd/pre_delete_workflow.mmd' %>
+<%= partial 'img/pre_delete_workflow.png' %>
 
 
 ### <a id="delete-all-instances"></a>Delete All Service Instances
@@ -264,7 +264,7 @@ For how to use this errand, see
 
 The sequence diagram below shows the workflow for deleting all service instances.
 
-<%= partial 'mmd/delete_all_instances_workflow.mmd' %>
+<%= partial 'img/delete_all_instances_workflow.png' %>
 
 
 ### <a id="delete-all-instances-deregister"></a>Delete All Service Instances and Deregister Broker
@@ -278,4 +278,4 @@ For how to use this errand, see
 The sequence diagram below shows the workflow for deleting all service instances
 and deregistering the broker.
 
-<%= partial 'mmd/delete_all_instances_and_deregister_broker_workflow.mmd' %>
+<%= partial 'img/delete_all_instances_and_deregister_broker_workflow.png' %>
