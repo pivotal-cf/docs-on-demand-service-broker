@@ -1,15 +1,31 @@
+# docs-on-demand-service-broker
 
-# How the branches here work
+This repo contains the On-Demand Services SDK documentation.
 
-Use **master** for next the unreleased version, and numbered branches for the corresponding live releases.
-The latest version on **master** is routed to "/svc-sdk/odb/0-n". This is to facilitate ease of access, push quicker to production, and reduce the need for large changes to the associated files.
+In this README: 
 
-For example:
+- [Branches in this Content Repo](#branches-in-this-content-repo)
+- [Releasing a New Minor Version](#releasing-a-new-minor-version)
+- [Partials](#partials)
+- [Contributing to Documentation](#contributing-to-documentation)
+- [Publishing Docs](#publishing-docs)
+- [Troubleshooting Markdown](#troubleshooting-markdown)
+- [Style Guide](#style-guide)
+
+## Branches in this Content Repo
+
+The master branch is the tree-trunk, so **always** make changes you want carried forward in this branch. This includes:
+
+* Unreleased features
+* Doc bug fixes
+* Doc reorganization or enhancement
+
+Then, if necessary, immediately cherry-pick/copy any changes that you want to push immediately to production into the appropriate branches listed below:
 
 | Branch name     | Use for|
 |-----------------| ------|
-| master          | Unreleased version (edge - 0.43) https://docs-pcf-staging.sc2-04-pcf1-apps.oc.vmware.com/svc-sdk/odb/0-n|
-| v0.42.x         | live on June 3, 2021 https://docs.pivotal.io/svc-sdk/odb/0-42|
+| master          | Unreleased version (edge - 0.43) https://docs-staging.vmware.com/en/draft/On-Demand-Services-SDK-for-VMware-Tanzu/0.43/on-demand-services-sdk/GUID-index.html|
+| v0.42.x         | live on June 3, 2021 https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.42/on-demand-services-sdk/GUID-index.html|
 | v0.41.x         | live on April 16, 2021 https://docs.pivotal.io/svc-sdk/odb/0-41|
 | v0.40.x         | live on July 13, 2020 https://docs.pivotal.io/svc-sdk/odb/0-40|
 | v0.39.x         | live on April 3, 2020 https://docs.pivotal.io/svc-sdk/odb/0-39|
@@ -44,43 +60,98 @@ For example:
 | v0.10.x         | obsolete, but do not delete the branch |
 | v0.9.x          | obsolete, but do not delete the branch |
 
-# Book repo for publishing this content
+## Releasing a New Minor Version
 
-The book repo is [**docs-book-odb**](https://github.com/pivotal-cf/docs-book-odb).
+Because **master** is the latest and greatest documentation, the process would be to cut a **x.x** branch
+for the version that **master** was targeting during that time.
+
+After this point, **master** will then be the target for the next version of the On-Demand Services SDK product.
 
 
 ## Partials
 
-Cross-product partials for **On-Demand Service Broker SDK** v0.23.x branch are single sourced from the [Docs Partials](https://github.com/pivotal-cf/docs-partials) repo.
+Cross-product partials (if any) for On-Demand Services SDK are single sourced from the [Docs Partials](https://github.com/pivotal-cf/docs-partials) repository.
 
-Previously, these partials were sourced from the v018.x branch of the [On Demand Service Broker SDK](https://github.com/pivotal-cf/docs-on-demand-service-broker/tree/v0.18.x) content repo.
 
-# Process for working in this repo
+## Contributing to Documentation
 
-## Submit changes to the docs through PRs
+If there is some documentation to add for an unreleased patch version of Cloud Service Broker then create a branch off of the **live** branch
+you intend to modify and create a pull request against that branch.
+After the version that change is targeting is released, the pull request can be merged and will be live
+the next time a documentation deployment occurs.
 
-Instructions on doing a PR: https://docs.google.com/a/pivotal.io/document/d/14Go0uCj20BFMBzL2ddEKsZp-GONhVp0yr2cEFSskWnQ/edit?usp=sharing
+If the documentation is meant to be target several released versions,
+then you will need to:
++ create a pull request for each individual minor version
++ or ask the technical writer to cherry-pick to particular branches/versions.
 
-## New (unpublished) releases
+For instructions on how to create a pull request on a branch and instructions on how to create a
+pull request using a fork, see
+[Creating a PR](https://docs-wiki.sc2-04-pcf1-apps.oc.vmware.com/wiki/external/create-pr.html)
+in the documentation team wiki.
 
-1. Commit new feature docs to **master** only.
 
-2. When the release is ready to publish, the docs team will create a new live/production branch from master, for example, 0.19.x.
+## Publishing Docs
 
-## Fixes and enhancements on master
+- [docworks](https://docworks.vmware.com/) is the main tool for managing docs used by writers.
+- [docsdash](https://docsdash.vmware.com/) is a deployment UI which manages the promotion from
+staging to pre-prod to production. The process below describes how to upload our docs to staging,
+replacing the publication with the same version.
 
-1. For fixes and enhancement, make PRs to **master**.
+### Prepare Markdown Files
+- Markdown files live in this repo.
+- Images should live in an `images` directory at the same level and linked with a relative link.
+- Each page requires an entry in [config/toc.md](config/toc.md) for the table of contents.
+- Variables live in [config/template_variables.yml](config/template_variables.yml).
 
-2. Tell the docs team in the PR, if it should be applied to other specific branches (or make additional PRs to those branches).
+### In Docsdash
 
-## Fixes on branch only
+1. Wait about 1 minute for processing to complete after uploading.
+2. Go to https://docsdash.vmware.com/deployment-stage
 
-If the fix or enhancement is only relevant to a particular branch, then apply the change to that branch only.
+   There should be an entry with a blue link which says `Documentation` and points to staging.
 
-# Displaying locally
+### Promoting to Pre-Prod and Prod
 
-In order to display our mermaid templates locally (whilst running through `bookbinder watch` for example) the mermaid partials are expected to have file names preprended with an underscore. Unfortunately, this is the exact opposite behaviour to that expected by the templating engine in the live docs.
+**Prerequisite** Needs additional privileges - reach out to a manager on the docs team [#tanzu-docs](https://vmware.slack.com/archives/C055V2M0H) or ask a writer to do this step for you.
 
-To help with this we have two scripts to localise, and then revert these diagram files:
-* `./scripts/mmd-localise` will prepend each mermaid file with an underscore
-* `./scripts/mmd-globalise` will remove the first underscore from each mermaid file
+1. Go to Staging publications in docsdash  
+  https://docsdash.vmware.com/deployment-stage
+
+2. Select a publication (make sure it's the latest version)
+
+3. Click "Deploy selected to Pre-Prod" and wait for the pop to turn green (refresh if necessary after about 10s)
+
+4. Go to Pre-Prod list  
+  https://docsdash.vmware.com/deployment-pre-prod
+
+5. Select a publication
+
+6. Click "Sign off for Release"
+
+7. Wait for your username to show up in the "Signed off by" column
+
+8. Select the publication again
+
+9. Click "Deploy selected to Prod"
+
+## Troubleshooting Markdown
+
+| Problem | List displays as a paragraph |
+|---------|-----------|
+| Symptom:| Bulleted or numbered lists look fine on GitHub but display as a single paragraph in HTML.|
+| Solution: | Add a blank line after the stem sentence and before the first item in the list.|
+
+| Problem | List numbering is broken: every item is `1.` |
+|---------|-----------|
+| Symptom:| Each numbered item in a list is a `1.` instead of `1.`, `2.`, `3.`, etc|
+| Solution: | Try removing any blank newlines within each step.|
+
+| Problem | Code boxes not showing |
+|---------|-----------|
+| Symptom:| VMware publishing system doesn't accept code tags after the three back ticks.|
+| Solution: | Make sure you're not using `shell` or `bash` or `console` or `yaml` after back ticks.|
+
+## Style Guide
+
+This is a word list for terminology and word usage specific to the On-Demand Services SDK for docs.
