@@ -11,6 +11,11 @@ owner: London Services Enablement
 
 **Release Date: July 21, 2022**
 
+### Fix
+* **Using authorization_code grant with UAA client** When UAA client is requested and the `authorization_code` grant type is defined,  the `redirect_uri`is also set. 
+Without this change, creating the service instance fails because UAA fails to create the oauth2 client for the service instance.
+
+
 ### Maintenance Changes
 
 Maintenance change in this release:
