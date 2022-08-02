@@ -15,7 +15,7 @@ owner: London Services Enablement
 
 This release has the following fix:
 
-* **Service instance creation no longer fails when using `authorization_code` grant type with UAA client:**
+* **Service instance creation no longer fails when using `authorization_code` grant type:**
 When the UAA client is requested and the `authorization_code` grant type is defined,
 the `redirect_uri` is also set.
 Without this change, creating the service instance fails because UAA fails to
