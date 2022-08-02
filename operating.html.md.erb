@@ -974,7 +974,7 @@ For more information, see [route_registrar job](http://bosh.io/jobs/route_regist
 To register the route, co-locate the `route_registrar` job with `on-demand-service-broker`:
 
 1. Download the routing release.
-   See [cf-routing Release](http://bosh.io/releases/github.com/cloudfoundry-incubator/cf-routing-release?all=1)
+   See [cf-routing release](http://bosh.io/releases/github.com/cloudfoundry-incubator/cf-routing-release?all=1)
    for more information about doing so.
 
 1. Upload the routing release to your BOSH Director.
@@ -991,7 +991,8 @@ This creates a URI for your broker.
     [routing release](https://github.com/cloudfoundry/routing-release/blob/d59974071d97b9f1770dd170240bff2fe5ba1558/jobs/route_registrar/spec#L95-L100)
     in GitHub.
 
-1. If you configure a route, set the `broker_uri` property in the [register-broker errand](./management.html#register-broker).
+1. If you configure a route, set the `broker_uri` property in the
+[register-broker errand](./management.html#register-broker).
 
 ## <a id="service-instance-quotas"></a> (Optional) Set Service Instance Quotas
 
