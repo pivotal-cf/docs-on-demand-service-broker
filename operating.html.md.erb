@@ -35,7 +35,6 @@ Operators are responsible for:
 <%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 
 <%= partial vars.path_to_partials + '/services/service_networks_table', :locals => {
-  :platform_name => vars.platform_name,
 	:app_runtime_full => vars.app_runtime_full,
 	:product_short => "RabbitMQ"} %>
 
@@ -73,7 +72,7 @@ Operators are responsible for:
     <td>
       <strong>Deployed service instances</strong>
     </td>
-    <td>Specific to the service (such as Redis for <%= vars.platform_name %>). This can be one or more ports.</td>
+    <td>Specific to the service (such as Redis for VMware Tanzu Application Service). This can be one or more ports.</td>
     <td>This connection is for administrative tasks. Avoid opening general use, app-specific ports for this connection.</td>
   </tr>
   <tr>
@@ -157,7 +156,7 @@ See the following topics for how to set up your BOSH Director:
 
 <p class="note">
   <strong>Note:</strong> <%= vars.product_abbr %> does not support BOSH Windows.
-  Service instance lifecycle errands require BOSH Director v261 on <%= vars.platform_name %> v1.10 or later.
+  Service instance lifecycle errands require BOSH Director v261 on <%= vars.platform_code %> v1.10 or later.
   For more information, see <a href="#lifecycle-errands"> Service Instance Lifecycle Errands</a> below.
 </p>
 
@@ -1192,7 +1191,7 @@ manifest in GitHub.
 VMware has tested this example configuration with Loggregator v58 and service-metrics v1.5.0.
 
 For more information about service metrics, see
-[Service Metrics for <%= vars.platform_name %>](http://docs.pivotal.io/service-metrics).
+[Service Metrics for SDK for VMware Tanzu](https://docs.vmware.com/en/Service-Metrics-SDK-for-VMware-Tanzu/1.5/service-metrics/GUID-index.html).
 
 <p class="note warning"><strong>Warning:</strong> When <code>service-metrics-adapter</code> is not configured, it
   defaults to a BOSH-provided IP address or BOSH-provided BOSH DNS address, depending on the configuration on
