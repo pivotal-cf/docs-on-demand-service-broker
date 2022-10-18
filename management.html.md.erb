@@ -236,7 +236,7 @@ For more information on both, see [Delete All Service Instances](#delete-instanc
 
 This errand does the following:
 
-1. Disables service access to the service offering for all orgs and spaces. The errand disables service
+1. Deactivates service access to the service offering for all orgs and spaces. The errand disables service
 access to ensure that new instances cannot be provisioned during the lifetime of the errand.
 1. Unbinds all apps from the service instances.
 1. Deletes all service instances sequentially. Each service instance deletion includes:
@@ -522,7 +522,7 @@ To run the `recreate-all-service-instances` errand, do the following:
 
 ## <a id="update-service-plans"></a> Service Management
 
-This section describes how to update, disable, and remove service plans.
+This section describes how to update, deactivate, and remove service plans.
 For how to upgrade the broker and service plans, see [Upgrading](./upgrades.html).
 
 ### <a id="update-broker"></a>Update the Broker
@@ -557,9 +557,9 @@ For how to run the errand, see [Upgrade All Service Instances](./troubleshooting
 <p class="note warning"><strong>Warning</strong>: When Cloud Foundry registers the broker, do not
   change <code>service_id</code> or <code>plan_id</code> for any plan.</p>
 
-### <a id="disabling-service-plans"></a>Disable Service Plans
+### <a id="deactivating-service-plans"></a>Deactivate Service Plans
 
-To disable access to a service plan, do the following:
+To deactivate access to a service plan, do the following:
 
 1. Run the following command:
 
@@ -579,7 +579,7 @@ To disable access to a service plan, do the following:
     </pre>
 
 <p class="note"><strong>Note:</strong> When a plan has the property <code>cf_service_access:
-  disable</code> in the <code>service_catalog</code> the <code>register-broker</code> errand disables service access to that plan. For more information on the errand, see <a href="#register-broker">Register Broker</a> above.</p>
+  disable</code> in the <code>service_catalog</code> the <code>register-broker</code> errand deactivates service access to that plan. For more information on the errand, see <a href="#register-broker">Register Broker</a> above.</p>
 
 ### <a id="remove-plans"></a>Remove Service Plans
 

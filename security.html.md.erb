@@ -86,7 +86,7 @@ For how to install the Pivotal IPsec add-on, see
 | `GET /v2/service_brokers`                                            | Find service broker metadata by name during broker deregistration                                      |
 | `DELETE /v2/service_brokers/SERVICE-BROKER-GUID`                     | Delete <%= vars.product_abbr %> service broker during broker deregister errand                                              |
 | `GET /v2/service_plans/SERVICE-PLAN-GUID`                            | Identify service plan when upgrading an instance to trigger any lifecycle errands                      |
-| `PUT /v2/service_plans/SERVICE-PLAN-GUID`                            | Disable service access prior to service deletion                                                       |
+| `PUT /v2/service_plans/SERVICE-PLAN-GUID`                            | Deactivate service access prior to service deletion                                                       |
 | `GET /v2/service_plans/SERVICE-PLAN-GUID/service_instances`          | Find service instances for given plan when determining global quota and running startup checks         |
 | `GET /v2/service_instances/SERVICE-INSTANCE-GUID`                    | Determine service instance state to check an operation is not in progress before triggering an upgrade |
 | `DELETE /v2/service_instances/SERVICE-INSTANCE-GUID`                 | Deleting a service instance during delete all service instances errand                                 |
