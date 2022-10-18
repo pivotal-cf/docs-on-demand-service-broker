@@ -64,7 +64,7 @@ To add the `register-broker` errand to the manifest, do the following:
         - `manual`: the errand does not modify service access for this plan.
         - `org-restricted`: the errand enables access to the org set as the `service_access_org` in the plan definition.
 
-        Only Cloud Foundry admin users can see plans with disabled service access.
+        Only Cloud Foundry admin users can see plans with deactivated service access.
         Org Managers and Space Managers cannot see these plans.
 
 <%= partial vars.path_to_partials + "/odb/ip-bosh-dns" %>
@@ -236,7 +236,7 @@ For more information on both, see [Delete All Service Instances](#delete-instanc
 
 This errand does the following:
 
-1. Deactivates service access to the service offering for all orgs and spaces. The errand disables service
+1. Deactivates service access to the service offering for all orgs and spaces. The errand deactivates service
 access to ensure that new instances cannot be provisioned during the lifetime of the errand.
 1. Unbinds all apps from the service instances.
 1. Deletes all service instances sequentially. Each service instance deletion includes:
