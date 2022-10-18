@@ -59,8 +59,8 @@ To add the `register-broker` errand to the manifest, do the following:
       - (Optional) Use the `cf_service_access` property to enable access to
       individual plans. Set the property on each plan in the broker job.
       The values accepted are the following:
-        - `enable`: the errand enables access for that plan. This is the default value.
-        - `disable`: the errand disables access for that plan.
+        - `enable`: the errand activates access for that plan. This is the default value.
+        - `disable`: the errand deactivates access for that plan.
         - `manual`: the errand does not modify service access for this plan.
         - `org-restricted`: the errand enables access to the org set as the `service_access_org` in the plan definition.
 
@@ -570,7 +570,7 @@ To deactivate access to a service plan, do the following:
     Where:
 
     * `SERVICE-NAME-FROM-CATALOG` is the name of the service from the service catalog.
-    * `PLAN-NAME` is the name of the plan you want to disable.
+    * `PLAN-NAME` is the name of the plan you want to deactivate.
 
     For example:
 
