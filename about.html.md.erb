@@ -58,8 +58,7 @@ the BOSH documentation.
 The tile consumes the BOSH deployment to generate a BOSH manifest for deploying on-demand instances of the service.
 The diagram below illustrates this process.
 
-![The service adapter plugs into the on-demand broker to create a BOSH deployment.
-For details read the text above](img/odb-service-adapter.png)
+![Diagram of the service adapter plugging into the on-demand broker to create a BOSH deployment.](img/odb-service-adapter.png)
 
 The <%= vars.product_short %> imposes no constraints on the service authors' ability
 to offer new functionality or expose configuration options in their service plans,
@@ -116,7 +115,7 @@ For more information about operator responsibilities, see [Operator Responsibili
 A service adapter is a binary that is called by the <%= vars.product_abbr %> for service-specific tasks.
 The diagram below shows where responsibility lies for each aspect of the <%= vars.product_abbr %> workflow.
 
-![Diagram shows the three areas of responsibility associated with the ODB workflow. 
+![Diagram showing the three areas of responsibility associated with the ODB workflow.
 The service author creates the service adapter binary and the service BOSH release.
 ODB provides the on-demand broker BOSH release, which includes broker orchestration,
 the service broker API, the BOSH client, and broker errands.
