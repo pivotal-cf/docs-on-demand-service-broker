@@ -61,7 +61,7 @@ To set up the Kafka example service, do the following:
 
 1. In the `kafka-example-service-release` directory, create and upload the
    Kafka example service.
-   
+
     <pre><code>cd kafka-example-service-release
     bosh create-release --name kafka-example-service</code></pre>
 
@@ -93,19 +93,19 @@ To set up the Kafka example service adapter, do the following:
 
 ### <a id="set_up_odb"></a> Step 4: Set Up <%= vars.product_abbr %>
 
-To set up <%= vars.product_abbr %>, do the following:
+To set up <%= vars.product_abbr %>:
 
-1. Download the on-demand service broker from <%= vars.oss_releases %>. To download,
-see [on-demand-service-broker](https://bosh.io/releases/github.com/pivotal-cf/on-demand-service-broker-release).
+1. Download the on-demand service broker from <%= vars.oss_releases %>.
+   To download, see the [BOSH documentation](https://bosh.io/releases/github.com/pivotal-cf/on-demand-service-broker-release).
 
-1. Upload the `on-demand-service-broker` release.
+2. Upload the `on-demand-service-broker` release.
 
     <pre><code>bosh -e lite upload-release on-demand-service-broker-X.Y.Z.tgz</code></pre>
-  
+
     Where `X.Y.Z` is the <%= vars.product_abbr %> release version.<br><br>
-    
+
     For example:
-    
+
     <pre class="terminal">
     $ bosh -e lite upload-release on-demand-service-broker-0.21.1.tgz
     </pre>
@@ -160,9 +160,9 @@ for the BOSH Lite Director. For example:
 1. Record the URL and UUID of your BOSH Lite director.
 
     <pre><code>bosh environment</code></pre>
-  
+
     See the following example output:
-    
+
     <pre class="terminal">
     $ bosh environment
     Config
@@ -281,7 +281,7 @@ for the BOSH Lite Director. For example:
     ```
 
     Where:
-    
+
     - `BOSH-LITE-UUID` is the `UUID` value you recorded in the BOSH environment
        step above.
     - `BOSH-LITE-URL` is the `URL` value you recorded in the BOSH environment
@@ -321,9 +321,9 @@ To create a service broker on <%= vars.platform_code %> Dev, do the following:
 1. Create a service broker on <%= vars.platform_code %> Dev and enable access to its service offering.
 
     <pre><code>cf create-service-broker kafka-broker USERNAME PASSWORD http<span>:</span>//BROKER-IP:8080</code></pre>
-    
+
     Where:
-    
+
     - `USERNAME` and `PASSWORD` are the broker's credentials set under `properties` in the broker job.
     - `BROKER-IP` is the value obtained in the step above. See the last step in
      [Create a BOSH Deployment](#create_bosh).
@@ -368,7 +368,7 @@ To verify and use your on-demand service, do the following:
 1. Check the status of your service.
 
     <pre><code>cf service k1</code></pre>
-    
+
     See the state change from `create in progress` to `create succeeded`.
 
 1. Verify that the on-demand service is provisioned in the BOSH deployment.
