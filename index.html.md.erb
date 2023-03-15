@@ -11,9 +11,9 @@ using the <%= vars.product_full %>.
 Operators make software services such as databases available to developers by
 using the <%= vars.ops_manager %> **Installation Dashboard** to install service tiles.
 
-On-demand services let you provision instances in a flexible way.
-The operator does not pre-allocate a block of VMs for the instance pool,
-and they can specify an allowable range rather than fixed settings for instance resource levels.
+On-demand services enable you to provision instances flexibly.
+The operator does not pre-allocate a block of VMs for the instance pool, and they can specify an
+allowable range rather than fixed settings for instance resource levels.
 When a developer creates an on-demand service instance, they then provision it at creation time.
 
 The <%= vars.product_short %> provides a generic, on-demand broker (<%= vars.product_abbr %>).
@@ -21,7 +21,7 @@ This simplifies broker and tile authoring,
 and is the standard approach for both VMware internal services teams and VMware
 partner independent software vendors (ISVs) to develop on-demand services for <%= vars.app_runtime_full %>.
 For more information about service brokers and how the on-demand broker works, see
-[About On-Demand Brokers](./about.html).
+[About On-Demand Brokers](about.html.md.erb).
 
 ## <a id='product-snapshot'></a>Product Snapshot
 
@@ -29,52 +29,51 @@ The following table provides version and version-support information about the
 <%= vars.product_short %>.
 
 <table class="nice">
-	<th>Element</th>
-	<th>Details</th>
-	<tr>
-		<td>Version</td>
-		<td>0.43.0</td>
-	</tr>
-	<tr>
-		<td>Release date</td>
-		<td>MMM DD, YYYY</td>
-	</tr>
-	<tr>
-		<td>Compatible <%= vars.ops_manager %> version(s)</td>
-		<td>2.5 or later</td>
-	</tr>
-	<tr>
-		<td>Compatible <%= vars.app_runtime_full %> version(s)</td>
-		<td>2.5 or later</td>
-	</tr>
-	<tr>
-		<td>IaaS support</td>
-		<td>AWS, Azure, GCP, OpenStack, and vSphere</td>
-	</tr>
+  <th>Element</th>
+  <th>Details</th>
+  <tr>
+    <td>Version</td>
+    <td>0.43.x</td>
+  </tr>
+  <tr>
+    <td>Compatible <%= vars.ops_manager %> version(s)</td>
+    <td>2.5 or later</td>
+  </tr>
+  <tr>
+    <td>Compatible <%= vars.app_runtime_full %> version(s)</td>
+    <td>2.5 or later</td>
+  </tr>
+  <tr>
+    <td>IaaS support</td>
+    <td>AWS, Azure, GCP, OpenStack, and vSphere</td>
+  </tr>
 </table>
-
 
 ## <a id='new-features'></a>Key Features
 
 The benefits of provisioning service instances with resources on-demand are:
 
-* Operators can scale resource consumption in line with need, without having to plan for pre-provisioning.
-* App developers get more control over resources and do not have to acquire them through the operator.
+- Operators can scale resource consumption in line with need, without having to plan for
+  pre-provisioning.
+- App developers get more control over resources and do not have to acquire them through the operator.
 
 The benefits of using <%= vars.product_abbr %> to develop on-demand services are:
 
-* <%= vars.product_abbr %> reduces the amount of code service developers have to write by abstracting away functionality common to most single-tenant on-demand service brokers.
-* <%= vars.product_abbr %> uses BOSH to deploy service instances, so anything that is BOSH-deployable can integrate with Cloud Foundry's services Marketplace.
+- <%= vars.product_abbr %> reduces the amount of code service developers have to write by abstracting
+  away functionality common to most single-tenant on-demand service brokers.
+- <%= vars.product_abbr %> uses BOSH to deploy service instances, so anything that is BOSH-deployable
+  can integrate with Cloud Foundry's services Marketplace.
 
 <%= vars.product_abbr %> uses the following BOSH features:
 
-* Dynamic IP management
-* Availability zones
-* Globally-defined resources (**Cloud Config**).
-This results in manifests that are portable across BOSH Cloud Provider Interfaces (CPIs) and are substantially smaller than old-style manifests.
-* Links between deployed BOSH instances consuming information from other instances, for example, IP addresses.
+- Dynamic IP management
+- Availability zones
+- Globally-defined resources (**Cloud Config**), which enable manifests that are portable across
+  BOSH Cloud Provider Interfaces (CPIs), and are substantially smaller than old-style manifests
+- Links between deployed BOSH instances consuming information from other instances, such as IP
+  addresses
 
 ## <a id='prerequisites'></a>Prerequisites for Deploying Brokers That Use <%= vars.product_abbr %>
 
 For information about minimum versions of Cloud Foundry and BOSH, see
-[Software Requirements](operating.html#software-reqs).
+[Software Requirements](operating.html.md.erb#software-reqs).
