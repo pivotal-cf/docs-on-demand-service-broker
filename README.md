@@ -2,7 +2,7 @@
 
 This repo contains the On-Demand Services SDK documentation.
 
-In this README: 
+In this README:
 
 - [Branches in this Content Repo](#branches-in-this-content-repo)
 - [Releasing a New Minor Version](#releasing-a-new-minor-version)
@@ -14,17 +14,20 @@ In this README:
 
 ## Branches in this Content Repo
 
-The master branch is the tree-trunk, so **always** make changes you want carried forward in this branch. This includes:
+The master branch is the tree-trunk, so **always** make changes you want carried forward in this
+branch. This includes:
 
-* Unreleased features
-* Doc bug fixes
-* Doc reorganization or enhancement
+- Unreleased features
+- Doc bug fixes
+- Doc reorganization or enhancement
 
-Then, if necessary, immediately cherry-pick/copy any changes that you want to push immediately to production into the appropriate branches listed below:
+Then, if necessary, immediately cherry-pick/copy any changes that you want to push immediately to
+production into the appropriate branches listed below:
 
 | Branch name     | Use for|
 |-----------------| ------|
-| master          | Unreleased version (edge - 0.43) https://docs-staging.vmware.com/en/draft/On-Demand-Services-SDK-for-VMware-Tanzu/0.43/on-demand-services-sdk/GUID-index.html|
+| master          | Unreleased version (edge - 0.44) https://docs-staging.vmware.com/en/draft/On-Demand-Services-SDK-for-VMware-Tanzu/0.44/on-demand-services-sdk/GUID-index.html|
+| v0.43.x         | live on Mar 16, 2023 https://docs-staging.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.43/on-demand-services-sdk/GUID-index.html|
 | v0.42.x         | live on June 3, 2021 https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.42/on-demand-services-sdk/GUID-index.html|
 | v0.41.x         | live on April 16, 2021 https://docs.pivotal.io/svc-sdk/odb/0-41|
 | v0.40.x         | live on July 13, 2020 https://docs.pivotal.io/svc-sdk/odb/0-40|
@@ -62,34 +65,34 @@ Then, if necessary, immediately cherry-pick/copy any changes that you want to pu
 
 ## Releasing a New Minor Version
 
-Because **master** is the latest and greatest documentation, the process would be to cut a **x.x** branch
-for the version that **master** was targeting during that time.
+Because **master** is the latest and greatest documentation, the process would be to cut a **x.x**
+branch for the version that **master** was targeting during that time.
 
-After this point, **master** will then be the target for the next version of the On-Demand Services SDK product.
-
+After this point, **master** will then be the target for the next version of the On-Demand Services SDK
+product.
 
 ## Partials
 
-Cross-product partials (if any) for On-Demand Services SDK are single sourced from the [Docs Partials](https://github.com/pivotal-cf/docs-partials) repository.
-
+Cross-product partials (if any) for On-Demand Services SDK are single sourced from the
+[Docs Partials](https://github.com/pivotal-cf/docs-partials) repository.
 
 ## Contributing to Documentation
 
-If there is some documentation to add for an unreleased patch version of Cloud Service Broker then create a branch off of the **live** branch
+If there is some documentation to add for an unreleased patch version of Cloud Service Broker then
+create a branch off of the **live** branch
 you intend to modify and create a pull request against that branch.
-After the version that change is targeting is released, the pull request can be merged and will be live
-the next time a documentation deployment occurs.
+After the version that change is targeting is released, the pull request can be merged and will be
+live the next time a documentation deployment occurs.
 
-If the documentation is meant to be target several released versions,
-then you will need to:
-+ create a pull request for each individual minor version
-+ or ask the technical writer to cherry-pick to particular branches/versions.
+If the documentation is meant to be target several released versions, then you will need to:
+
+- create a pull request for each individual minor version
+- or ask the technical writer to cherry-pick to particular branches/versions.
 
 For instructions on how to create a pull request on a branch and instructions on how to create a
 pull request using a fork, see
 [Creating a PR](https://docs-wiki.sc2-04-pcf1-apps.oc.vmware.com/wiki/external/create-pr.html)
 in the documentation team wiki.
-
 
 ## Publishing Docs
 
@@ -99,6 +102,7 @@ staging to pre-prod to production. The process below describes how to upload our
 replacing the publication with the same version.
 
 ### Prepare Markdown Files
+
 - Markdown files live in this repo.
 - Images should live in an `images` directory at the same level and linked with a relative link.
 - Each page requires an entry in [config/toc.md](config/toc.md) for the table of contents.
@@ -109,31 +113,32 @@ replacing the publication with the same version.
 1. Wait about 1 minute for processing to complete after uploading.
 2. Go to https://docsdash.vmware.com/deployment-stage
 
-   There should be an entry with a blue link which says `Documentation` and points to staging.
+   There should be an entry with a blue link which says **Documentation** and points to staging.
 
 ### Promoting to Pre-Prod and Prod
 
-**Prerequisite** Needs additional privileges - reach out to a manager on the docs team [#tanzu-docs](https://vmware.slack.com/archives/C055V2M0H) or ask a writer to do this step for you.
+**Prerequisite** Needs additional privileges: reach out to a manager on the docs team
+[#tanzu-docs](https://vmware.slack.com/archives/C055V2M0H) or ask a writer to do this step for you.
 
-1. Go to Staging publications in docsdash  
+1. Go to Staging publications in docsdash
   https://docsdash.vmware.com/deployment-stage
 
-2. Select a publication (make sure it's the latest version)
+1. Select a publication (make sure it's the latest version)
 
-3. Click "Deploy selected to Pre-Prod" and wait for the pop to turn green (refresh if necessary after about 10s)
+1. Click **Deploy selected to Pre-Prod** and wait for the pop to turn green. If necessary, refresh
+   after about 10 seconds.
 
-4. Go to Pre-Prod list  
-  https://docsdash.vmware.com/deployment-pre-prod
+1. Go to the Pre-Prod list: https://docsdash.vmware.com/deployment-pre-prod
 
-5. Select a publication
+1. Select a publication
 
-6. Click "Sign off for Release"
+1. Click **Sign off for Release**
 
-7. Wait for your username to show up in the "Signed off by" column
+1. Wait for your username to show up in the "Signed off by" column
 
-8. Select the publication again
+1. Select the publication again
 
-9. Click "Deploy selected to Prod"
+1. Click **Deploy selected to Prod**
 
 ## Troubleshooting Markdown
 
