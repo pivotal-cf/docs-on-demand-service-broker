@@ -14,7 +14,7 @@ In this README:
 
 ## Branches in this Content Repo
 
-The master branch is the tree-trunk, so **always** make changes you want carried forward in this
+The main branch is the tree-trunk, so **always** make changes you want carried forward in this
 branch. This includes:
 
 - Unreleased features
@@ -26,7 +26,7 @@ production into the appropriate branches listed below:
 
 | Branch name     | Use for|
 |-----------------| ------|
-| master          | Unreleased version (edge - 0.44) https://docs-staging.vmware.com/en/draft/On-Demand-Services-SDK-for-VMware-Tanzu/0.44/on-demand-services-sdk/GUID-index.html|
+| main          | Unreleased version (edge - 0.44) https://docs-staging.vmware.com/en/draft/On-Demand-Services-SDK-for-VMware-Tanzu/0.44/on-demand-services-sdk/GUID-index.html|
 | v0.43.x         | live on Mar 16, 2023 https://docs-staging.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.43/on-demand-services-sdk/GUID-index.html|
 | v0.42.x         | live on June 3, 2021 https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.42/on-demand-services-sdk/GUID-index.html|
 | v0.41.x         | live on April 16, 2021 https://docs.pivotal.io/svc-sdk/odb/0-41|
@@ -65,10 +65,10 @@ production into the appropriate branches listed below:
 
 ## Releasing a New Minor Version
 
-Because **master** is the latest and greatest documentation, the process would be to cut a **x.x**
-branch for the version that **master** was targeting during that time.
+Because **main** is the latest and greatest documentation, the process would be to cut a **x.x**
+branch for the version that **main** was targeting during that time.
 
-After this point, **master** will then be the target for the next version of the On-Demand Services SDK
+After this point, **main** will then be the target for the next version of the On-Demand Services SDK
 product.
 
 ## Partials
