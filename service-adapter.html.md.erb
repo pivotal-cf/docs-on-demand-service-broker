@@ -1,10 +1,10 @@
 ---
-title: Creating a Service Adapter
+title: Creating a Service Adapter using On-Demand Services SDK
 owner: London Services Enablement
 ---
 
-This topic provides information for service authors about how to create a service
-adapter for an on-demand service tile.
+This topic for service authors gives you information about how to create a service
+adapter for an on-demand service tile using <%= vars.product_full %>.
 For more information about service author responsibilities, see
 [Service Author Deliverables](./creating.html#what-is-required-of-the-service-authors).
 
@@ -595,7 +595,7 @@ that does the following:
     1. Adds the value to the `secrets` map.
 
   **If the secret has remained the same:**
-  
+
     1. Inserts the BOSH CredHub reference from the previous manifest.
 
 For example code that does the above, see the [redis-example-service-adapter](https://github.com/pivotal-cf-experimental/redis-example-service-adapter/blob/ecf33c082bcd5180cf37ad32de03696fe2a0568f/adapter/redis_manifest_generator.go#L471-L483) in GitHub.
