@@ -26,7 +26,7 @@ Operators are responsible for:
   See [Broker and Service Management](./management.html).
 
 <p class="note">
-  <strong>Note:</strong> VMware recommends that you provide documentation when you make changes to the
+  <span class="note__title">Note</span> VMware recommends that you provide documentation when you make changes to the
   manifest to inform other operators about the new configurations.
 </p>
 
@@ -154,7 +154,7 @@ See the following topics for how to set up your BOSH Director:
 - cf-release v1.10.0 or later (<%= vars.app_runtime_abbr %> v2.0 or later).
 
 <p class="note">
-  <strong>Note:</strong> <%= vars.product_abbr %> does not support BOSH Windows.
+  <span class="note__title">Note</span> <%= vars.product_abbr %> does not support BOSH Windows.
   Service instance lifecycle errands require BOSH Director v261 on <%= vars.platform_code %> v1.10 or later.
   For more information, see <a href="#lifecycle-errands"> Service Instance Lifecycle Errands</a> below.
 </p>
@@ -312,7 +312,7 @@ To reach the Cloud Controller, configure <%= vars.product_abbr %> with either cl
 in the broker manifest. For more information, see [Write a Broker Manifest](#broker-manifest) below.
 
 <div class="note">
-  <p style="margin-top: 0"><strong>Note:</strong> The UAA client or user must have the following permissions.</p>
+  <p style="margin-top: 0"><span class="note__title">Note</span> The UAA client or user must have the following permissions.</p>
   <ul>
     <li>
       <strong>If using client credentials:</strong> The UAA client must have the authorities
@@ -853,7 +853,7 @@ This might be provided as part of your Cloud Foundry deployment.
 - Your instance group must have access to the local DNS provider. This is because
 the address for runtime CredHub is a local domain name.
 
-<p class="note"><strong>Note:</strong>
+<p class="note"><span class="note__title">Note</span>
   VMware recommends using BOSH DNS as a DNS provider.
   If you use <%= vars.app_runtime_abbr %> v2.4 or later, you cannot use consul as a
   DNS provider because consul server VMs have been removed.
@@ -980,8 +980,8 @@ To register the route, co-locate the `route_registrar` job with `on-demand-servi
 1. Add the `route_registrar` job to your deployment manifest and configure it with an HTTP route.
 This creates a URI for your broker.
 
-    <p class="note">
-      <strong>Note:</strong> You must use the same port for the broker and the route.
+    <p class="note important">
+    <span class="note__title">Important</span> You must use the same port for the broker and the route.
       The broker defaults to 8080.
     </p>
 
@@ -1003,7 +1003,7 @@ There are two types service instances quotas:
 - **Plan quotas** -- limit the number of service instances for a given plan
 
 <p class="note">
-  <strong>Note:</strong> These limits do not include orphaned deployments.
+  <span class="note__title">Note</span> These limits do not include orphaned deployments.
   For more information, see <a href="./troubleshooting-bosh.html#listing-orphans">List Orphan Deployments</a>
   and <a href="./management.html#orphan-deployments">Delete Orphaned Deployments</a>.
 </p>
@@ -1071,7 +1071,7 @@ If no limits have been reached, the service instance is created.
 
 
 <p class="note">
-  <strong>Note:</strong> When calculating the amount of resources used, <%= vars.product_abbr %> does not take
+  <span class="note__title">Note</span> When calculating the amount of resources used, <%= vars.product_abbr %> does not take
   orphan deployments into consideration. For more information, see
   <a href="./troubleshooting-bosh.html#listing-orphans">List Orphan Deployments</a> and
   <a href="./management.html#orphan-deployments">Delete Orphaned Deployments</a>.
@@ -1379,7 +1379,8 @@ release must be included in each errand job.
 
 ## <a id="lifecycle-errands"></a>Service Instance Lifecycle Errands
 
-<p class="note"><strong>Note:</strong> This feature requires BOSH Director v261 or later.</p>
+<p class="note important">
+<span class="note__title">Important</span> This feature requires BOSH Director v261 or later.</p>
 
 Service instance lifecycle errands allow additional short-lived jobs to run as part of service instance deployment.
 A deployment is only considered successful if all lifecycle errands exit successfully.
@@ -1456,7 +1457,8 @@ Where `POST-DEPLOY-ERRAND-JOB` is the errand job you want to add.
 
 ### <a id="colocated-errands"></a> (Optional) Enable Co-located Errands
 
-<p class="note"><strong>Note:</strong> This feature requires BOSH Director v263 or later.</p>
+<p class="note important">
+<span class="note__title">Important</span> This feature requires BOSH Director v263 or later.</p>
 
 You can run both `post-deploy` and `pre-delete` errands as co-located errands.
 Co-located errands run on an existing service instance group instead of a separate one.

@@ -29,7 +29,7 @@ two private networks:
 - A different network where the on-demand broker deploys service instance VMs
 
 The network for service instances should be flagged as a Service Network in <%= vars.ops_manager %>.
- <p class="note"><strong>Note: </strong>For <%= vars.ops_manager %> v2.1 and later, you do not need separate networks for the on-demand broker
+ <p class="note"><span class="note__title">Note</span>For <%= vars.ops_manager %> v2.1 and later, you do not need separate networks for the on-demand broker
 and service instances.
 However, VMware recommends that you have at least two networks as described above.</p>
 
@@ -182,7 +182,7 @@ Pre-delete:
 
 - `delete-all-service-instances-and-deregister-broker`
 
-<p class="note"><strong>Note:</strong> The <code>upgrade-all-service-instances</code> errand can be
+<p class="note"><span class="note__title">Note</span> The <code>upgrade-all-service-instances</code> errand can be
   configured with the number of simultaneous upgrades and the number of canary instances.
 For more information about these parameters, see
 <a href="upgrades.html#upgrade-all-instances">Upgrade All Service Instances</a>.</p>
@@ -310,7 +310,8 @@ runtime CredHub.
 When users create bindings or service keys, <%= vars.product_abbr %> passes a secure reference to the
 service credentials through the network instead of plain text.
 
-<p class="note"><strong>Note:</strong>
+<p class="note important">
+<span class="note__title">Important</span>
   To use the secure binding credentials feature you must use <%= vars.ops_manager %> v2.0 or later.</p>
 
 To include the option to enable secure binding, update your `tile.yml` file as follows:
@@ -427,7 +428,7 @@ values within the manifest. For instance, the stemcell version can be anchored w
 `&stemcellVersion` annotation and then referenced in the maintenance information with
 the `*stemcellVersion` tag.
 
-<p class="note"><strong>Note:</strong> The Open Service Broker API only supports
+<p class="note"><span class="note__title">Note</span> The Open Service Broker API only supports
 <code>maintenance_info.version</code> and <code>maintenance_info.description</code>.
 VMware discourages the use of <code>public</code> and
 <code>private</code> if Cloud Foundry is the platform communicating

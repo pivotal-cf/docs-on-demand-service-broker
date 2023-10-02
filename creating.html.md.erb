@@ -45,7 +45,7 @@ To do so, create and manually deploy a BOSH release for the service by following
 the instructions up to and including _Step 6: Create a Dev Release_ in
 [Creating a Release](https://bosh.io/docs/create-release/) in the BOSH Documentation.
 
-<p class="note"><strong>Note: </strong>
+<p class="note"><span class="note__title">Note</span>
   VMware recommends that you create sample manifests that deploy the service release(s).
   This helps you to write the <code>generate-manifest</code> component of the service adapter.
   For help writing a sample manifest, see <a href="https://bosh.io/docs/manifest-v2/">Deployment Config</a>
@@ -117,7 +117,7 @@ For an example implementation of a health check post-deploy errand, see the
 [redis-example-service-release](https://github.com/pivotal-cf-experimental/redis-example-service-release/tree/master/jobs/health-check)
 on GitHub.
 
-<p class="note"><strong>Note:</strong>
+<p class="note"><span class="note__title">Note</span>
 When using the service adapter <code>generate-manifest</code> command,
 you must validate that any lifecycle errands configured in the <code>plan</code>
 parameter exist in the service release and are included in the service manifest as jobs.
