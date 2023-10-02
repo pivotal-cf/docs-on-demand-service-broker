@@ -313,7 +313,7 @@ To run the  `delete-all-service-instances-and-deregister-broker` errand, do the 
 
 ### <a id="orphan-deployments"></a> Orphan Deployments
 
-<p class="note"><strong>Note:</strong> The deployment for a service instance is orphaned when the BOSH
+<p class="note"><span class="note__title">Note</span> The deployment for a service instance is orphaned when the BOSH
 deployment is still running but the service is no longer registered in
 Cloud Foundry.
 </p>
@@ -432,7 +432,7 @@ To add the `upgrade-all-service-instances` errand to the manifest, follow the pr
 ### <a id="recreate-all-service-instances"></a>Recreate All Service Instances
 
 <div class="note">
-    <strong>Note:</strong> <%= vars.product_abbr %> only supports the <code>recreate-all-service-instances</code>
+    <span class="note__title">Note</span> <%= vars.product_abbr %> only supports the <code>recreate-all-service-instances</code>
     errand in the following BOSH versions:<br><br>
     <ul>
       <li>266.10.0–266.10.x</li>
@@ -578,7 +578,7 @@ To deactivate access to a service plan, do the following:
     cf disable-service-access my-service -p small
     </pre>
 
-<p class="note"><strong>Note:</strong> When a plan has the property <code>cf_service_access:
+<p class="note"><span class="note__title">Note</span> When a plan has the property <code>cf_service_access:
   disable</code> in the <code>service_catalog</code> the <code>register-broker</code> errand deactivates service access to that plan. For more information on the errand, see <a href="#register-broker">Register Broker</a> above.</p>
 
 ### <a id="remove-plans"></a>Remove Service Plans
