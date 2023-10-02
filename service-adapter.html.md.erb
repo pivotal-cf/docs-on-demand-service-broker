@@ -23,7 +23,7 @@ See [On-Demand Services Golang SDK](#sdk) below.
 
 1. [Package the Service Adapter](#packaging).
 
-<p class="note"><strong>Note: </strong>
+<p class="note"><span class="note__title">Note</span>
   VMware recommends that you use the SDK to create your service adapter.
   If you choose not to, see
   <a href="#interfaces">Interfaces</a> below for the implementation that you need to provide.
@@ -129,7 +129,7 @@ The service adapter must generate the above items given information about the fo
 For more information about the input parameters and expected output, see
 [generate-manifest](./adapter-reference.html#generate-manifest).
 
-<p class="note"><strong>Note:</strong>
+<p class="note"><span class="note__title">Note</span>
   <%= vars.product_abbr %> requires <code>generate-manifest</code> to be idempotent.
   Given the same arguments when a previous manifest is supplied&mdash;which
   happens during a deployment update&mdash;the command should always output
@@ -389,7 +389,7 @@ Adapter Interface Reference documentation](./adapter-reference.html#create-bindi
 the unresolved secret from the secrets map. The service adapter must be able to
 handle missing secrets based on whether they are required to create bindings.
 
-<p class="note"><strong>Note:</strong> ODB does not fail if it cannot resolve a secret.</p>
+<p class="note"><span class="note__title">Note</span> ODB does not fail if it cannot resolve a secret.</p>
 
 %>
 
@@ -398,7 +398,7 @@ handle missing secrets based on whether they are required to create bindings.
 To use <%= vars.product_abbr %>-managed secrets, the service adapter must do the following for the
 output of `generate-manifest`:
 
-<p class="note"><strong>Note: </strong>
+<p class="note"><span class="note__title">Note</span>
   If you have a previous manifest containing plaintext secrets that you want to
   convert to <%= vars.product_abbr %>-managed secrets, see
   <a href="#migrating-to-stored-secrets">Migrate from Plaintext Secrets to <%= vars.product_abbr %>-Managed Secrets</a>
@@ -702,7 +702,8 @@ instance_groups:
 
 ## <a id="dns-addresses"></a> (Optional) Enable BOSH DNS Addresses for Bindings
 
-<p class="note"><strong>Note:</strong>
+<p class="note important">
+<span class="note__title">Important</span>
   This feature requires v266.3 or later of the BOSH Director.
   This is available in <%= vars.ops_manager %> v2.2 and later.
 </p>
@@ -799,7 +800,7 @@ The valid config types are: cloud, cpi and runtime.
 The configs are scoped for the BOSH team client <%= vars.product_abbr %> is deployed with and they
 are applied to subsequently deployed service instances.
 
-<p class="note"><strong>Note:</strong> VMware recommends that service adapters
+<p class="note"><span class="note__title">Note</span> VMware recommends that service adapters
 also namespace their configuration to avoid depending on a config value, which
 might be deleted in the future when the associated service instance is removed.
 </p>
