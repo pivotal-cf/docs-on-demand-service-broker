@@ -43,6 +43,11 @@ template_variables:
   segment_runtime_full: Isolation Segment
 
   ops_manager: Tanzu Operations Manager
+  
+  # Associated Tanzu Application Service for VMs version
+  current_tas_version: "4-0"
+  v_major_tas_version: "v4.0"
+  dot_major_tas_version: "4.0"
 
   # Pivotal variables
 
