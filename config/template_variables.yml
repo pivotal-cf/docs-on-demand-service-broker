@@ -71,7 +71,7 @@ template_variables:
 
   segment_runtime_full_pivotal: Pivotal Isolation Segment
 
-  ops_manager_full: Pivotal Operations Manager
+  ops_manager_full: VMware Tanzu Operations Manager
 
   odb_bosh_lite_version: v9000.131.0
   odb_example_redis_service_adapter_version: master
