@@ -69,7 +69,7 @@ cannot configure in <%= vars.ops_manager %>.
 
 Add the following accessors to your `tile.yml` file:
 
-<p class="note"><strong>Note</strong>: The accessors in this section are mandatory. For other accessors, see
+<p class="note"><span class="note__title">Note</span> The accessors in this section are mandatory. For other accessors, see
   <a href="https://docs.pivotal.io/tiledev/product-template-reference.html#ops-man-snippets">
     <%= vars.ops_manager %> Provided Snippets</a>.</p>
 
@@ -103,7 +103,7 @@ To see this example in context, see the
 To enable `$self` accessors, set `service_broker: true` at the top level of your
 `tile.yml` file.
 
-<p class="note"><strong>Note</strong>: Setting <code>service_broker: true</code>
+<p class="note"><span class="note__title">Note</span> Setting <code>service_broker: true</code>
   causes the BOSH Director to redeploy when installing or uninstalling the tile.</p>
 
 The following table lists the accessors you must add:
