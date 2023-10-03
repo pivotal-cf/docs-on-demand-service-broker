@@ -92,7 +92,7 @@ Perform the following steps to install and invoke the SDK:
     adapter, for example `github.com/bar-org/foo-service-adapter/adapter`.
     * `SERVICE-ADAPTER-NAME` is the name of the service adapter, for example `foo-service-adapter`.
 
-    <p class="note"><strong>Note</strong>:
+    <p class="note"><span class="note__title">Note</span>
       The HandleCommandLineInvocation function is deprecated, but to see its functionality,
       see <a href="https://docs.pivotal.io/svc-sdk/odb/0-19/creating.html#usage">Usage</a>.</p>
 
@@ -470,7 +470,7 @@ service adapter copies secrets from the previous deployment to the new manifest.
 To migrate from plaintext secrets to <%= vars.product_abbr %>-managed secrets, write code in your
 service adapter that does the following:
 
-<p class="note"><strong>Note</strong>: Secrets already stored in BOSH CredHub do not need placeholders.
+<p class="note"><<span class="note__title">Note</span> Secrets already stored in BOSH CredHub do not need placeholders.
 This is because <%= vars.product_abbr %> ignores BOSH CredHub references during <code>generate-manifest</code>.
 </p>
 
