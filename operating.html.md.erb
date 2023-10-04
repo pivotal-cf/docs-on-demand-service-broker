@@ -414,8 +414,8 @@ The snippet uses BOSH v2 syntax as well as global cloud config and job-level pro
 
 For examples of complete broker manifests, see [Write a Broker Manifest](#broker-manifest) above.
 
-<p class="note warning">
-  <strong>Warning:</strong> The <code>disable_ssl_cert_verification</code> option is dangerous and should be
+<p class="note caution">
+<span class="note__title">Caution</span> The <code>disable_ssl_cert_verification</code> option is dangerous and should be
   set to <code>false</code> in production.
 </p>
 
@@ -772,8 +772,8 @@ The broker also accepts only the following cipher suites:
 
 ## <a id="secure-manifest"></a>(Optional) Enable Storing Manifest Secrets on BOSH CredHub
 
-<p class="note warning">
-  <strong>Warning:</strong> This feature does not work if you have configured <code>use_stdin</code> to be false.
+<p class="note caution">
+<span class="note__title">Caution</span> This feature does not work if you have configured <code>use_stdin</code> to be false.
 </p>
 
 To avoid writing secrets in plaintext in the manifest, you can use <%= vars.product_abbr %>-managed secrets to
@@ -833,8 +833,8 @@ Replace the placeholder text below with your values for accessing CredHub:
 
 ## <a id="secure-binding"></a> (Optional) Enable Secure Binding
 
-<p class="note warning">
-  <strong>Warning:</strong> This feature does not work if you have configured <code>use_stdin</code> to be false.
+<p class="note caution">
+<span class="note__title">Caution</span> This feature does not work if you have configured <code>use_stdin</code> to be false.
 </p>
 
 If you enable secure binding, binding credentials are stored securely in
@@ -1192,7 +1192,8 @@ VMware has tested this example configuration with Loggregator v58 and service-me
 For more information about service metrics, see
 [Service Metrics for SDK for VMware Tanzu](https://docs.vmware.com/en/Service-Metrics-SDK-for-VMware-Tanzu/1.5/service-metrics/GUID-index.html).
 
-<p class="note warning"><strong>Warning:</strong> When <code>service-metrics-adapter</code> is not configured, it
+<p class="note caution">
+<span class="note__title">Caution</span> When <code>service-metrics-adapter</code> is not configured, it
   defaults to a BOSH-provided IP address or BOSH-provided BOSH DNS address, depending on the configuration on
   the broker URI. See <a href="https://bosh.io/docs/dns/#links">Impact on links</a>
   in the BOSH documentation.

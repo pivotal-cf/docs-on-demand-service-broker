@@ -75,8 +75,8 @@ New service instances are created using the latest service offering.
 To upgrade all existing instances, you can run the upgrade-all-service-instances errand.
 See [Upgrade All Service Instances](#upgrade-all-instances) below.
 
-<p class="note warning">
-  <strong>Warning:</strong> Until a service instance has been upgraded, <code>cf update-service</code> operations are blocked and an error is shown. For more information, see <a href="./troubleshooting.html#upgrade-individual-instances">Cannot Update a Service Instance</a>.
+<p class="note caution">
+<span class="note__title">Caution</span> Until a service instance has been upgraded, <code>cf update-service</code> operations are blocked and an error is shown. For more information, see <a href="./troubleshooting.html#upgrade-individual-instances">Cannot Update a Service Instance</a>.
 </p>
 
 ## <a id="upgrade-all-instances"></a>Upgrade All Service Instances
@@ -196,7 +196,8 @@ errands can use to retrieve the list of instances known to the platform.
 
 You can configure the API endpoint in the broker job.
 
-<p class="warning note"><strong>Warning:</strong> The Service Instances API is an advanced feature. Configuring a Service Instances API is not required, unless you are operating in very specific circumstances, such as running an on-demand service broker with no connection to Cloud Foundry. <br><br> You are required to provide an endpoint which satisfies the API requirements detailed below and also guarantees that all service instances which need to be upgraded are part of that response. If you configure an endpoint which does not satisfy these criteria, some service instances may become unusable.
+<p class="note caution">
+<span class="note__title">Caution</span> The Service Instances API is an advanced feature. Configuring a Service Instances API is not required, unless you are operating in very specific circumstances, such as running an on-demand service broker with no connection to Cloud Foundry. <br><br> You are required to provide an endpoint which satisfies the API requirements detailed below and also guarantees that all service instances which need to be upgraded are part of that response. If you configure an endpoint which does not satisfy these criteria, some service instances may become unusable.
 </p>
 
 <p class="note"><span class="note__title">Note</span> The Service Instances API definition is at v0.1.0 and should be considered subject to change.</p>
