@@ -89,7 +89,8 @@ To run the `register-broker` errand, do the following:
 
 ### <a id="delete-instances"></a>Delete All Service Instances
 
-<p class="note warning"><strong>Warning:</strong> Use extreme caution when running this errand.
+<p class="note caution">
+<span class="note__title">Caution</span> Use extreme caution when running this errand.
   You should only use it when you want to totally destroy all of the on-demand service instances
   from Cloud Foundry.
 </p>
@@ -225,7 +226,8 @@ To run the `deregister-broker` errand, do the following:
 
 ### <a id="delete-instances-and-deregister"></a>Delete All Service Instances and Deregister Broker
 
-<p class="note warning"><strong>Warning:</strong> Use extreme caution when running this errand.
+<p class="note caution">
+<span class="note__title">Caution</span> Use extreme caution when running this errand.
   You should only use it when you want to destroy all of the on-demand service
   instances and deregister the broker from Cloud Foundry.
 </p>
@@ -384,7 +386,8 @@ a list that resembles the following:
 
 #### Delete an Orphan Deployment
 
-<p class="note warning"><strong>Warning:</strong> Deleting the BOSH deployment destroys the service instance.
+<p class="note caution">
+<span class="note__title">Caution</span> Deleting the BOSH deployment destroys the service instance.
   Any data present is lost.
 </p>
 
@@ -554,7 +557,8 @@ For how to run the errand, see [Register Broker](#register-broker) above.
 existing service instances.
 For how to run the errand, see [Upgrade All Service Instances](./troubleshooting.html#upgrade-all).
 
-<p class="note warning"><strong>Warning</strong>: When Cloud Foundry registers the broker, do not
+<p class="note caution">
+<span class="note__title">Caution</span> When Cloud Foundry registers the broker, do not
   change <code>service_id</code> or <code>plan_id</code> for any plan.</p>
 
 ### <a id="deactivating-service-plans"></a>Deactivate Service Plans
@@ -591,5 +595,6 @@ To remove a plan, do the following:
 1. Run the `register-broker` errand to update the Marketplace.
 For more information about this errand, see [Register Broker](#register-broker) above.
 
-<p class="note warning"><strong>Warning:</strong> If any service instances remain on a plan
+<p class="note caution">
+<span class="note__title">Caution</span> If any service instances remain on a plan
   that has been removed from the catalog, the On-Demand Service Broker fails to start.</p>

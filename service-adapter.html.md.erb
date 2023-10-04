@@ -547,7 +547,8 @@ For more information about using the value during a bind, see
 
 ### <a id="modifying-secrets"></a>Modify <%= vars.product_abbr %>-Managed Secrets
 
-<p class="note warning"><strong>Warning:</strong>
+<p class="note caution">
+<span class="note__title">Caution</span>
   VMware discourages modifying the value of secrets without changing the secret name.
   If the BOSH deploy task fails during update or upgrade, <%= vars.product_abbr %>-managed secrets might
   be left in an inconsistent state.
