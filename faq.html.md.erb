@@ -9,7 +9,7 @@ VMware tested the on-demand broker (<%= vars.product_abbr %>) with 500 on-demand
 the [example Kafka on-demand tile](https://github.com/pivotal-cf-experimental/example-kafka-on-demand-tile).
 We recorded how long it took to create, upgrade all, and delete all, with 50, 101,
 and 500 dedicated service instances.
-Setup and results are shown below.
+The setup and results are shown here.
 
 ## <a id="test_setup"></a>Set up
 
@@ -44,10 +44,10 @@ On-Demand Broker** is checked.
 1. Make a change to the plan configuration.
 
 1. Apply pending changes, ensuring that **Upgrade All On-Demand Service Instances**
-is checked.
+is selected.
 
 1. Delete the tile and apply changes, ensuring that **Delete All On-Demand Service
-Instances** is checked.
+Instances** is selected.
 
 ## <a id="test_results"></a>Results
 
@@ -68,7 +68,7 @@ Durations presented in HH:MM:SS format.
 | average delete  | 00:05:09 | 00:05:04 | 0:05:00  |
 | total           | 04:17:38 | 08:31:10 | 41:38:26 |
 
-These durations may vary for a number of reasons, for example:
+These durations might vary for a number of reasons, for example:
 
 - Number of BOSH director workers
 - IaaS performance

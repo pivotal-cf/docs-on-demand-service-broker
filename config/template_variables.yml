@@ -79,5 +79,7 @@ template_variables:
   odb_pcfdev_version: pcfdev-v0.19.1-rc.46
   odb_warden_stemcell_version: 3262.2
 
-  # Used in docs-partials, for TAS version
-  current_major_version: "4-0"
+  # TAS version
+  current_major_version: "5.0"
+  v_major_version: "v5.0"
+  dot_major_version: "5.0"

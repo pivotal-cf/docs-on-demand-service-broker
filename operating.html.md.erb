@@ -6,21 +6,21 @@ owner: London Services Enablement
 This topic for <%= vars.ops_manager %> operators and BOSH operators gives you information
 about operating the on-demand broker (<%= vars.product_abbr %>) provided by <%= vars.product_full %>.
 
-## <a id="operator-checklist"></a> Operator Responsibilities
+## <a id="operator-checklist"></a> Operator responsibilities
 
 Operators are responsible for:
 
 * Requesting appropriate networking rules for on-demand service tiles.
-  See [Set Up Networking](#networking) below.
+  See [Set Up Networking](#networking).
 
 * Configuring the BOSH Director.
-  See [Configure Your BOSH Director](#configure-bosh) below.
+  See [Configure Your BOSH Director](#configure-bosh).
 
 * Uploading the required releases for the broker deployment and service instance deployments.
-  See [Upload Required Releases](#upload-releases) below.
+  See [Upload Required Releases](#upload-releases).
 
 * Writing a broker manifest.
-  See [Write a Broker Manifest](#broker-manifest) below.
+  See [Write a Broker Manifest](#broker-manifest).
 
 * Managing brokers and service plans.
   See [Broker and Service Management](./management.html).
@@ -30,7 +30,7 @@ Operators are responsible for:
   manifest to inform other operators about the new configurations.
 </p>
 
-## <a id="networking"></a>Set Up Networking
+## <a id="networking"></a>Set up networking
 
 <%# The below partial is in https://github.com/pivotal-cf/docs-partials %>
 
@@ -43,13 +43,15 @@ Operators are responsible for:
   open as described in the table below.
 </p>
 
-<table class="nice">
+<table class=“table”>
+<thead>
   <tr>
     <th>Source Component</th>
     <th>Destination Component</th>
     <th>Default TCP Port</th>
     <th>Notes</th>
   </tr>
+  </thead>
   <tr>
     <td>
       <strong><%= vars.product_abbr %></strong>
@@ -135,7 +137,7 @@ Operators are responsible for:
 </table>
 
 
-## <a id="configure-bosh"></a>Configure Your BOSH Director
+## <a id="configure-bosh"></a>Configure your BOSH Director
 
 See the following topics for how to set up your BOSH Director:
 
@@ -144,7 +146,7 @@ See the following topics for how to set up your BOSH Director:
 * [BOSH Teams](#bosh-teams)
 * [Cloud Controller](#cloud-controller)
 
-### <a id="software-reqs"></a> Software Requirements
+### <a id="software-reqs"></a> Software requirements
 
 <%= vars.product_abbr %> requires:
 
@@ -156,7 +158,7 @@ See the following topics for how to set up your BOSH Director:
 <p class="note">
   <span class="note__title">Note</span> <%= vars.product_abbr %> does not support BOSH Windows.
   Service instance lifecycle errands require BOSH Director v261 on <%= vars.platform_code %> v1.10 or later.
-  For more information, see <a href="#lifecycle-errands"> Service Instance Lifecycle Errands</a> below.
+  For more information, see <a href="#lifecycle-errands"> Service Instance Lifecycle Errands</a>.
 </p>
 
 
@@ -195,7 +197,7 @@ You have two options for providing a CA certificate to <%= vars.product_abbr %> 
 certificate. You can add the BOSH Director's root certificate to the <%= vars.product_abbr %> manifest or you
 can use BOSH's `trusted_certs` feature to add a self-signed CA certificate to each VM that BOSH deploys.
 
-* To add the BOSH Director’s root certificate to the <%= vars.product_abbr %> manifest, edit the manifest as below:
+* To add the BOSH Director’s root certificate to the <%= vars.product_abbr %> manifest, edit the following manifest as shown here:
 
     ```yaml
     bosh:
@@ -304,7 +306,7 @@ For a more detailed manifest snippet, see [Starter Snippet for Your Broker](#bro
 
 For more information about securing how <%= vars.product_abbr %> uses BOSH, see [Security](./security.html).
 
-### <a id="cloud-controller"></a>Set Up Cloud Controller
+### <a id="cloud-controller"></a>Set up Cloud Controller
 
 <%= vars.product_abbr %> uses the Cloud Controller as a source of truth for service offerings, plans, and instances.
 
@@ -350,7 +352,7 @@ uaa:
       password: CF-ADMIN-PASSWORD
 ```
 
-## <a id="upload-releases"></a>Upload Required Releases
+## <a id="upload-releases"></a>Upload required releases
 
 Upload the following releases to your BOSH Director:
 
@@ -390,7 +392,7 @@ There are two parts to writing your broker manifest. You must:
 
 If you are unfamiliar with writing BOSH v2 manifests, see [Deployment Config](http://bosh.io/docs/manifest-v2.html).
 
-Two example manifests are below.
+Here are example manifests:
 
   * For a Redis service---[redis-example-service-adapter-release](https://github.com/pivotal-cf-experimental/redis-example-service-adapter-release/blob/master/docs/example-manifest.yml) in GitHub.
 
@@ -407,12 +409,12 @@ both:
 The broker is stateless and does not need a persistent disk.
 It can have a small VM type: a single CPU and 1&nbsp;GB of memory is sufficient in most cases.
 
-#### <a id="broker-starter-snippet"></a>Starter Snippet for Your Broker
+#### <a id="broker-starter-snippet"></a>Starter Snippet for your Broker
 
-Use the snippet below to help you to configure your broker.
+Use the following snippet to help you to configure your broker.
 The snippet uses BOSH v2 syntax as well as global cloud config and job-level properties.
 
-For examples of complete broker manifests, see [Write a Broker Manifest](#broker-manifest) above.
+For examples of complete broker manifests, see [Write a Broker Manifest](#broker-manifest).
 
 <p class="note caution">
 <span class="note__title">Caution</span> The <code>disable_ssl_cert_verification</code> option is dangerous and should be
@@ -493,7 +495,7 @@ instance_groups:
           # There are more broker properties that are discussed below
 ```
 
-### <a id="catalog"></a> Configure Your Service Catalog and Plan Composition
+### <a id="catalog"></a> Configure your Service Catalog and Plan Composition
 
 Use the following sections as a guide to configure the service catalog and compose
 plans in the properties section of broker job.
@@ -520,7 +522,7 @@ When configuring the service catalog, supply:
   * You can use other arbitrary field names as needed in addition to the Open
   Service Broker API (OSBAPI) recommended fields.
   For information about the recommended fields for service metadata, see the
-  [Open Service Broker API Profile](https://docs.pivotal.io/pivotalcf/services/catalog-metadata.html#services-metadata).
+  [Open Service Broker API Profile](https://docs.vmware.com/en/Tile-Developer-Guide/3.0/tile-dev-guide/service-broker-api.html).
 
 #### <a id="compose-plans"></a> Compose Plans
 
@@ -576,11 +578,11 @@ When composing plans, supply:
 #### <a id="starter-snippet"></a>Starter Snippet for the Service Catalog and Plans
 
 Append the snippet below to the properties section of the broker job that you
-configured in [Configure Your Broker](#core-broker-config) above.
+configured in [Configure Your Broker](#core-broker-config).
 Ensure that you provide the required information listed in
-[Configure Your Service Catalog and Plan Composition](#catalog) above.
+[Configure Your Service Catalog and Plan Composition](#catalog).
 
-For examples of complete broker manifests, see [Write a Broker Manifest](#broker-manifest) above.
+For examples of complete broker manifests, see [Write a Broker Manifest](#broker-manifest).
 
 ```yaml
 service_deployment:
@@ -909,7 +911,7 @@ For example:
   Where `NEW-CREDHUB-CLIENT-ID` and `NEW-CREDHUB-CLIENT-SECRET` are the runtime
   CredHub client credentials you created in step 1.
 
-For a more detailed manifest snippet, see [Starter Snippet for Your Broker](#broker-starter-snippet) above.
+For a more detailed manifest snippet, see [Starter Snippet for Your Broker](#broker-starter-snippet).
 
 ### How Credentials Are Stored on Runtime CredHub
 
@@ -954,7 +956,7 @@ For more information about this command, see [generate-plan-schemas](./adapter-r
                 enable_plan_schemas: true
       ```
 
-For a more detailed manifest snippet, see [Starter Snippet for Your Broker](#broker-starter-snippet) above.
+For a more detailed manifest snippet, see [Starter Snippet for Your Broker](#broker-starter-snippet).
 
 
 
@@ -1041,7 +1043,7 @@ you want to limit:
 
 Where `INSTANCE-LIMIT` is the maximum number of service instances allowed.
 
-For a more detailed manifest snippet, see the [Starter Snippet for the Service Catalog and Plans](#starter-snippet) above.
+For a more detailed manifest snippet, see the [Starter Snippet for the Service Catalog and Plans](#starter-snippet).
 
 ## <a id="service-resource-quotas"></a> (Optional) Set Resource Quotas
 
@@ -1141,7 +1143,7 @@ limit resources in:
                 cost: 5 # each service instance will consume 5, up to 25 of plan resource limit
     ```
 
-For a more detailed manifest snippet, see the [Starter Snippet for the Service Catalog and Plans](#starter-snippet) above.
+For a more detailed manifest snippet, see the [Starter Snippet for the Service Catalog and Plans](#starter-snippet).
 
 ## <a id="broker-metrics"></a> (Optional) Configure Service Metrics
 
@@ -1275,7 +1277,7 @@ The telemetry program enables VMware to collect data from customer installations
 enterprise experience.
 Collecting data at scale enables VMware to identify patterns and alert you to warning signals in
 your installation.<br><br>
-For more information about the telemetry program, see [Telemetry](https://pivotal.io/legal/telemetry).
+For more information about the telemetry program, see [Telemetry](https://tanzu.vmware.com/content/tanzu-data-collection-programs/disclosures).
 
 1. To enable your broker to send telemetry data, add the following to your deployment manifest:
 
@@ -1333,7 +1335,7 @@ The <%= vars.product_abbr %> does the following startup checks:
 * It verifies that the CF and BOSH versions satisfy the minimum versions required.
 If your service offering includes lifecycle errands, the minimum required version
 for BOSH is higher.
-For more information, see [Configure Your BOSH Director](#configure-bosh) above.
+For more information, see [Configure Your BOSH Director](#configure-bosh).
 <br><br>
     If your system does not meet minimum requirements, you see an insufficient
     version error. For example:
@@ -1359,14 +1361,14 @@ the BOSH Director does not respond to the initial `bosh deploy` request.
 You can determine how long the broker waits before being forced to shut down by
 using the `broker.shutdown_timeout` property in the manifest.
 The default is 60 seconds.
-For more information, see <a href="#broker-manifest">Write a Broker Manifest</a> above.
+For more information, see <a href="#broker-manifest">Write a Broker Manifest</a>.
 
 
 ## <a id="broker-bpm"></a>About <%= vars.product_abbr %> and BOSH Process Manager (bpm)
 
-Starting in <%= vars.product_abbr %> [version v0.27.0](https://docs.pivotal.io/svc-sdk/odb/0-27/release-notes.html),
+Starting in <%= vars.product_abbr %> [version v0.27.0](https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.27/on-demand-services-sdk-0-27.pdf),
 the broker binary adopted BOSH Process Manager (bpm) for better job isolation and security.
-Starting in <%= vars.product_abbr %> [version v0.30.0](https://docs.pivotal.io/svc-sdk/odb/0-30/release-notes.html),
+Starting in <%= vars.product_abbr %> [version v0.30.0](https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.27/on-demand-services-sdk-0-30.pdf),
 all broker management errands also use bpm. For more information, see [bpm](https://bosh.io/docs/bpm/bpm/) in
 the BOSH documentation.
 
@@ -1409,7 +1411,7 @@ To enable lifecycle errands, add each errand job in the following manifest place
 - The plan's `lifecycle_errands` configuration
 - The plan's `instance_groups`
 
-Below is an example manifest snippet that configures lifecycle errands for a plan:
+Here is an example manifest snippet that configures lifecycle errands for a plan:
 
 ```yaml
 service_deployment:

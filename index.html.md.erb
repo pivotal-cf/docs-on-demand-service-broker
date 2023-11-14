@@ -6,8 +6,6 @@ owner: London Services Enablement
 This guide is for people who want to author service tiles for <%= vars.ops_manager %>
 using the <%= vars.product_full %>.
 
-## <a id='overview'></a>Overview
-
 Operators make software services such as databases available to developers by
 using the <%= vars.ops_manager %> **Installation Dashboard** to install service tiles.
 
@@ -28,33 +26,30 @@ For more information about service brokers and how the on-demand broker works, s
 The following table provides version and version-support information about the
 <%= vars.product_short %>.
 
-<table class="nice">
-	<th>Element</th>
-	<th>Details</th>
-	<tr>
-		<td>Version</td>
-		<td>0.42.7</td>
-	</tr>
-	<tr>
-		<td>Release date</td>
-		<td>January 4, 2023</td>
-	</tr>
-	<tr>
-		<td>Compatible <%= vars.ops_manager %> version(s)</td>
-		<td>2.5 or later</td>
-	</tr>
-	<tr>
-		<td>Compatible <%= vars.app_runtime_full %> version(s)</td>
-		<td>2.5 or later</td>
-	</tr>
-	<tr>
-		<td>IaaS support</td>
-		<td>AWS, Azure, GCP, OpenStack, and vSphere</td>
-	</tr>
+<table class=“table”>
+  <thead>
+  <th>Element</th>
+  <th>Details</th>
+  <tr>
+    <td>Version</td>
+    <td>0.44.x</td>
+  </tr>
+  </thead>
+  <tr>
+    <td>Compatible <%= vars.ops_manager %> version(s)</td>
+    <td>2.5 or later</td>
+  </tr>
+  <tr>
+    <td>Compatible <%= vars.app_runtime_full %> version(s)</td>
+    <td>2.5 or later</td>
+  </tr>
+  <tr>
+    <td>IaaS support</td>
+    <td>AWS, Azure, GCP, OpenStack, and vSphere</td>
+  </tr>
 </table>
 
-
-## <a id='new-features'></a>Key Features
+## <a id='new-features'></a>Key features
 
 The benefits of provisioning service instances with resources on-demand are:
 
@@ -74,7 +69,7 @@ The benefits of using <%= vars.product_abbr %> to develop on-demand services are
 This results in manifests that are portable across BOSH Cloud Provider Interfaces (CPIs) and are substantially smaller than old-style manifests.
 * Links between deployed BOSH instances consuming information from other instances, for example, IP addresses.
 
-## <a id='prerequisites'></a>Prerequisites for Deploying Brokers That Use <%= vars.product_abbr %>
+## <a id='prerequisites'></a>Prerequisites for deploying brokers that use <%= vars.product_abbr %>
 
 For information about minimum versions of Cloud Foundry and BOSH, see
 [Software Requirements](operating.html#software-reqs).

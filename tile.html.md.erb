@@ -40,8 +40,7 @@ This topic describes how to build a tile using the Tile Generator.
 
 To use the Tile Generator to build a tile for an on-demand service:
 
-1. Generate a `tile.yml` file by doing steps 1–4 of [How to
-Use](http://docs.pivotal.io/tiledev/tile-generator.html#how-to).
+1. Generate a `tile.yml` file by doing steps 1 through 4 of [Using the Tile Generator](https://docs.vmware.com/en/Tile-Developer-Guide/2.10/tile-dev-guide/tile-generator.html#how-to).
 
 1. Add accessors, on-demand broker lifecycle errands, and optional features to the
 `tile.yml` file generated in step 1.
@@ -70,7 +69,7 @@ cannot configure in <%= vars.ops_manager %>.
 Add the following accessors to your `tile.yml` file:
 
 <p class="note"><span class="note__title">Note</span> The accessors in this section are mandatory. For other accessors, see
-  <a href="https://docs.pivotal.io/tiledev/product-template-reference.html#ops-man-snippets">
+  <a href="https://docs.vmware.com/en/Tile-Developer-Guide/2.10/tile-dev-guide/property-template-references.html#ops-man-snippets">
     <%= vars.ops_manager %> Provided Snippets</a>.</p>
 
 #### director
@@ -357,7 +356,7 @@ a service instance. It is used by the platform to determine when an upgrade is
 available for that instance, allowing app developers to trigger the upgrade.
 
 In the broker manifest, it is defined in the `service_catalog`, at global and plan levels,
-as in the below example:
+as in the following example:
 
 ```yaml
 # broker properties
@@ -390,7 +389,7 @@ the `maintenance_info` properties per plan, where:
   * `maintenance_info.description` is returned as configured
   * All properties in `maintenance_info.private` are aggregated and hashed into a single string
 
-For the example manifest above, the catalog response is:
+For the previous example manifest, the catalog response is:
 
 ```json
 {
