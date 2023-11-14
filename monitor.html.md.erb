@@ -5,12 +5,12 @@ owner: London Services Enablement
 
 This topic tells you about the metrics generated from the on-demand broker provided by <%= vars.product_full %>.
 For general information about logging and metrics in <%= vars.app_runtime_full %>,
-see [Overview of Logging and Metrics](https://docs.pivotal.io/application-service/loggregator/data-sources.html).
+see [Overview of logging and metrics](https://docs.vmware.com/en/VMware-Tanzu-Application-Service/3.0/tas-for-vms/data-sources.html).
 
 ## <a id="metrics"></a>About On-Demand Broker Metrics
 
 **Enabling Metrics**: The on-demand broker only emits metrics when deployed with Service Metrics.
-For more information, see the [Deploying a Release with Service Metrics](https://docs.pivotal.io/svc-sdk/service-metrics/operator.html) in the Service Metrics documentation.
+For more information, see the [Deploying a release with Service Metrics](https://docs.vmware.com/en/Service-Metrics-SDK-for-VMware-Tanzu/1.5/service-metrics/GUID-index.html) in the Service Metrics documentation.
 
 **Metrics Format**: Metrics are regularly-generated log messages that report measured component states.
 They are formatted as long, single lines of text, for example:
@@ -25,7 +25,8 @@ The following sections describe the metrics used for monitoring the on-demand br
 
 ### <a id="global-service-instance-count-metrics"></a>Global Service Instance Count
 
-<table>
+<table class=“table”>
+   <thead>
    <tr><th colspan="2" style="text-align: center;"><br> /on-demand-broker/SERVICE-NAME/total_instances<br><br></th></tr>
    <tr>
       <th width="25%">Description</th>
@@ -36,6 +37,7 @@ The following sections describe the metrics used for monitoring the on-demand br
         <strong>Type</strong>: count<br>
       </td>
    </tr>
+   </thead>
    <tr>
       <th>Alert thresholds</th>
       <td>
@@ -56,7 +58,8 @@ The following sections describe the metrics used for monitoring the on-demand br
 
 ### <a id="plan-service-instance-count-metrics"></a>Service Instance Count Per Plan
 
-<table>
+<table class=“table”>
+<thead>
    <tr><th colspan="2" style="text-align: center;"><br>
      /on-demand-broker/SERVICE-NAME/PLAN-NAME/total_instances<br><br></th></tr>
    <tr>
@@ -69,6 +72,7 @@ The following sections describe the metrics used for monitoring the on-demand br
         <strong>Type</strong>: count<br>
       </td>
    </tr>
+   </thead>
    <tr>
       <th>Alert thresholds</th>
       <td>
@@ -90,11 +94,13 @@ The following sections describe the metrics used for monitoring the on-demand br
 
 ### <a id="global-resource-quota-metrics"></a>Global Resource Quota
 
-<table>
+<table class=“table”>
+<thead>
    <tr><th colspan="2" style="text-align: center;">
      <br> /on-demand-broker/SERVICE-NAME/RESOURCE-TYPE/used<br>
      <br> /on-demand-broker/SERVICE-NAME/RESOURCE-TYPE/remaining<br><br>
    </th></tr>
+   </thead>
    <tr>
       <th width="25%">Description</th>
       <td>
@@ -126,13 +132,15 @@ The following sections describe the metrics used for monitoring the on-demand br
 
 ### <a id="plan-service-instance-count-metrics"></a>Resource Quota Per Plan
 
-<table>
+<table class=“table”>
+<thead>
    <tr>
      <th colspan="2" style="text-align: center;">
        <br> /on-demand-broker/SERVICE-NAME/PLAN-NAME/RESOURCE-TYPE/used<br>
        <br> /on-demand-broker/SERVICE-NAME/PLAN-NAME/RESOURCE-TYPE/remaining<br><br>
      </th>
   </tr>
+  </thead>
    <tr>
       <th width="25%">Description</th>
       <td>

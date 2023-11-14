@@ -10,12 +10,12 @@ and which require interaction with the Service Adapter.
 
 ## <a id="catalog"></a>Register the Service Broker with Cloud Foundry
 
-The sequence diagram below shows the workflow for registering a service broker with
+The following sequence diagram shows the workflow for registering a service broker with
 Cloud Foundry.
 
 ![Workflow diagram for registering a service broker with Cloud Foundry.](img/service_catalog_workflow.png)
 
-## <a id="creating"></a>About Creating and Updating Service Instances
+## <a id="creating"></a>About Creating and updating Service Instances
 
 This section contains diagrams that present the workflow for the following actions:
 
@@ -32,9 +32,9 @@ This section contains diagrams that present the workflow for the following actio
 
 To create a service instance, users run the `cf create-service` command.
 For more information about this command, see
-[Creating Service Instances](https://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html#create).
+[Creating Service Instances](https://docs.vmware.com/en/Single-Sign-On-for-VMware-Tanzu-Application-Service/1.14/sso/GUID-manage-service-instances.html).
 
-The sequence diagram below shows the workflow for creating a service instance.
+The following sequence diagram shows the workflow for creating a service instance.
 
 ![Workflow diagram for creating a service instance.](img/create_service_workflow.png)
 
@@ -53,7 +53,7 @@ The Cloud Controller does not issue a delete request.
 
 To update a service instance, users run the `cf update-service` command.
 For more information about this command, see
-[Update a Service Instance](https://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html#update_service).
+[Update a Service Instance](https://docs.vmware.com/en/Single-Sign-On-for-VMware-Tanzu-Application-Service/1.14/sso/GUID-manage-service-instances.html#update_service).
 
 Updates can only proceed if the existing service instance is up-to-date.
 <%= vars.product_abbr %> calls `generate-manifest` on the service adapter to determine whether there are
@@ -89,7 +89,7 @@ there are pending changes.
 
 ![Workflow diagram for updating a service instance if there are pending changes.](img/update_service_with_pending_changes_workflow.png)
 
-### <a id="post-deploy"></a>Create or Update a Service Instance with Post-Deploy Errands
+### <a id="post-deploy"></a>Create or update a Service Instance with Post-Deploy Errands
 
 If a user runs the `cf create-service` command with post-deploy errands configured
 for the deployment, <%= vars.product_abbr %> does not report success to Cloud Foundry until the deployment
@@ -97,23 +97,23 @@ is created, or updated, and all post-deploy errands complete.
 For more information about post-deploy errands, see
 [Service Instance Lifecycle Errands](operating.html#lifecycle-errands).
 
-The sequence diagram below shows the workflow for creating or updating a service
+The following sequence diagram shows the workflow for creating or updating a service
 instance when post-deploy errands are configured.
 
 ![Workflow diagram for creating or updating a service instance when post-deploy errands are configured.](img/create_post_deploy_workflow.png)
 
-### <a id="recreating"></a>Recreate All Service Instances
+### <a id="recreating"></a>Recreate all Service Instances
 
 <%= vars.product_abbr %> provides the BOSH errand `recreate-all-service-instances`. This errand executes a
 `bosh -d DEPLOYMENT-NAME recreate --fix` on each service instance (SI) managed by the broker.
 It is used for triggering low-level BOSH agent certificate re-installation, or for
 backup and restore purposes, for example in a migration between foundations.
 
-The sequence diagram below shows the workflow for re-creating service instances.
+The following sequence diagram shows the workflow for re-creating service instances.
 
 ![Workflow diagram for re-creating service instances.](img/recreate_all_instances_workflow.png)
 
-## <a id="upgrading"></a>About Upgrading Service Instances
+## <a id="upgrading"></a>About upgrading Service Instances
 
 This section contains diagrams that present the workflow for the following actions:
 
@@ -126,7 +126,7 @@ This section contains diagrams that present the workflow for the following actio
 - [Upgrade One Service Instance with Maintenance Information Configured](#upgrade-one-instance)
 
 
-### <a id="upgrade-all-instances"></a>Upgrade All Service Instances
+### <a id="upgrade-all-instances"></a>Upgrade all Service Instances
 
 <%= vars.product_abbr %> provides the BOSH errand `upgrade-all-service-instances`.
 This errand upgrades all service instances managed by the broker.
@@ -134,22 +134,22 @@ This is also used when a plan changes.
 The errand updates all instances that implement a plan with the new plan definition.
 For more information, see [Upgrade All Service Instances](./upgrades.html#upgrade-all-instances).
 
-The sequence diagram below shows the workflow for upgrading all service instances.
+The following sequence diagram shows the workflow for upgrading all service instances.
 
 ![Workflow diagram for upgrading all service instances.](img/upgrade_all_instances_workflow.png)
 
-### <a id="upgrade-all-external-instances"></a>Upgrade All Service Instances with External Service Instances API Configured
+### <a id="upgrade-all-external-instances"></a>Upgrade all Service Instances with External Service Instances API Configured
 
 If the service instances API is configured, the `upgrade-all-service-instances`
 errand connects to a different endpoint to gather the list of instances to upgrade.
 For more information, see [Service Instances API](./upgrades.html#service-instances-api).
 
-The sequence diagram below shows the workflow for upgrading all service instances
+The following sequence diagram shows the workflow for upgrading all service instances
 with external service instances API configured.
 
 ![Workflow diagram for upgrading all service instances with external service instances API configured.](img/upgrade_all_instances_with_si_api_workflow.png)
 
-### <a id="upgrade-all-instances-with-maintenance-info"></a>Upgrade All Service Instances with Maintenance Information Configured
+### <a id="upgrade-all-instances-with-maintenance-info"></a>Upgrade all Service Instances with Maintenance Information Configured
 
 If Cloud Foundry supports maintenance information and it is supplied in the <%= vars.product_abbr %> configuration,
 the `upgrade-all-service-instances` errand coordinates with Cloud Foundry to update only service instances
@@ -157,7 +157,7 @@ that are outdated.
 If a service instance has already been upgraded successfully, then the errand has no effect on that service
 instance.
 
-The sequence diagram below shows the workflow for upgrading all service instances when maintenance
+The following sequence diagram shows the workflow for upgrading all service instances when maintenance
 information is configured.
 
 ![Workflow diagram for upgrading all service instances when maintenance information is configured.](img/upgrade_all_instances_with_maintenance_info_workflow.png)
@@ -165,9 +165,9 @@ information is configured.
 ### <a id="upgrade-one-instance"></a>Upgrade One Service Instance with Maintenance Information Configured
 
 If Cloud Foundry supports maintenance information and it is supplied in the <%= vars.product_abbr %> configuration,
-a user can trigger a single upgrade by running `cf update-service SERVICE_NAME --upgrade`.
+you can trigger a single upgrade by running `cf update-service SERVICE_NAME --upgrade`.
 
-The sequence diagram below shows the workflow for upgrading one service instance when maintenance
+The following sequence diagram shows the workflow for upgrading one service instance when maintenance
 information is configured.
 
 ![Workflow diagram for upgrading one service instance when maintenance information is configured.](img/upgrade_one_instance_workflow.png)
@@ -186,9 +186,9 @@ This section contains diagrams that present the workflow for the following actio
 
 To bind a service instance, users run the `cf bind-service` command.
 For more information about this command, see
-[Bind a Service Instance](https://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html#bind).
+[Bind a Service Instance](https://docs.vmware.com/en/Single-Sign-On-for-VMware-Tanzu-Application-Service/1.14/sso/GUID-manage-service-instances.html#bind).
 
-The sequence diagram below shows the workflow for creating a binding.
+The following sequence diagram shows the workflow for creating a binding.
 
 ![Workflow diagram for creating a binding.](img/bind_service_workflow.png)
 
@@ -197,13 +197,13 @@ The sequence diagram below shows the workflow for creating a binding.
 
 To unbind a service instance, users run the `cf unbind-service` command.
 For more information about this command, see
-[Unbind a Service Instance](https://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html#unbind).
+[Unbind a Service Instance](https://docs.vmware.com/en/Single-Sign-On-for-VMware-Tanzu-Application-Service/1.14/sso/GUID-manage-service-instances.html#unbind).
 
-The sequence diagram below shows the workflow for unbinding a service instance.
+The following sequence diagram shows the workflow for unbinding a service instance.
 
 ![Workflow diagram for unbinding a service instance.](img/unbind_service_workflow.png)
 
-## <a id="deleting"></a>About Deleting Service Instances
+## <a id="deleting"></a>About deleting Service Instances
 
 This section contains diagrams that present the workflow for the following actions:
 
@@ -220,36 +220,35 @@ This section contains diagrams that present the workflow for the following actio
 
 To delete a service instance, users run the `cf delete-service` command.
 For more information about this command, see
-[Delete a Service Instance](https://docs.pivotal.io/pivotalcf/devguide/services/managing-services.html#delete).
+[Delete a Service Instance](https://docs.vmware.com/en/Single-Sign-On-for-VMware-Tanzu-Application-Service/1.14/sso/GUID-manage-service-instances.html#delete).
 
 The service adapter is not invoked in the delete service workflow.
 
-The sequence diagram below shows the workflow for deleting service instances.
+The following sequence diagram shows the workflow for deleting service instances.
 
 ![Workflow diagram for deleting service instances.](img/delete_service_workflow.png)
 
 ### <a id="pre-delete"></a>Delete a Service Instance with Pre-Delete Errands
 
-If a user runs the `cf delete-service` command with pre-delete errands configured
+If you run the `cf delete-service` command with pre-delete errands configured
 for the deployment, <%= vars.product_abbr %> does not report success to Cloud Foundry until all
 pre-delete errands complete and the deployment is deleted.
 For more information about pre-delete errands, see
 [Service Instance Lifecycle Errands](operating.html#lifecycle-errands).
 
-The sequence diagram below shows the workflow for deleting service instances with
+The following sequence diagram shows the workflow for deleting service instances with
 pre-delete errands configured.
 
 ![Workflow diagram for deleting service instances with pre-delete errands configured.](img/pre_delete_workflow.png)
 
-
-### <a id="delete-all-instances"></a>Delete All Service Instances
+### <a id="delete-all-instances"></a>Delete all Service Instances
 
 <%= vars.product_abbr %> provides the BOSH errand `delete-all-service-instances`.
 This errand deletes all service instances managed by the broker.
 For how to use this errand, see
 [Delete All Service Instances](./management.html#delete-instances).
 
-The sequence diagram below shows the workflow for deleting all service instances.
+The following sequence diagram shows the workflow for deleting all service instances.
 
 ![Workflow diagram for deleting all service instances.](img/delete_all_instances_workflow.png)
 
@@ -262,7 +261,7 @@ the broker from Cloud Foundry.
 For how to use this errand, see
 [Delete All Service Instances and Deregister Broker](./management.html#delete-instances-and-deregister).
 
-The sequence diagram below shows the workflow for deleting all service instances
+The following sequence diagram shows the workflow for deleting all service instances
 and deregistering the broker.
 
 ![Workflow diagram for deleting all service instances and deregistering the broker.](img/delete_all_instances_and_deregister_broker_workflow.png)

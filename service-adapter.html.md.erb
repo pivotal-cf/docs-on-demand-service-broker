@@ -8,8 +8,6 @@ adapter for an on-demand service tile using <%= vars.product_full %>.
 For more information about service author responsibilities, see
 [Service Author Deliverables](./creating.html#what-is-required-of-the-service-authors).
 
-## <a id="about"></a> Overview
-
 A service adapter is an executable invoked by the on-demand broker (<%= vars.product_abbr %>) that
 fulfills service-specific functionality such as creating binding credentials and
 BOSH manifests for service instances.
@@ -17,16 +15,16 @@ BOSH manifests for service instances.
 To create a service adapter, do the following:
 
 1. Use the <%= vars.product_full %> to help you write your service adapter.
-See [On-Demand Services Golang SDK](#sdk) below.
+See [On-Demand Services Golang SDK](#sdk).
 
-1. Add any additional functionality from the optional sections below.
+1. Add any additional functionality from the following optional sections.
 
 1. [Package the Service Adapter](#packaging).
 
 <p class="note"><span class="note__title">Note</span>
   VMware recommends that you use the SDK to create your service adapter.
   If you choose not to, see
-  <a href="#interfaces">Interfaces</a> below for the implementation that you need to provide.
+  <a href="#interfaces">Interfaces</a> for the implementation that you need to provide.
 </p>
 
 ## <a id="sdk"></a> On-Demand Services Golang SDK
@@ -48,7 +46,7 @@ For an example of property generation, see the
 
 ### <a id="sdk_usage"></a>Use the SDK
 
-Perform the following steps to install and invoke the SDK:
+Complete the following steps to install and invoke the SDK:
 
 1. Install the SDK by running the following `go get` command:
 
@@ -98,8 +96,8 @@ Perform the following steps to install and invoke the SDK:
 
 ### <a id="interfaces"></a>Interfaces
 
-The `HandleCLI` function accepts structs that implement the interfaces below.
-Your service adapter should implement these interfaces.
+The `HandleCLI` function accepts structs that implement the following interfaces.
+Your service adapter can implement these interfaces.
 
 ```go
 type CommandLineHandler struct {
@@ -117,8 +115,8 @@ This must generate a BOSH manifest for your service instance deployment, then ou
 to stdout a JSON document containing the following:
 
 - The BOSH manifest as YAML
-- BOSH secrets -- for instructions, see [(Optional) Store Secrets on BOSH CredHub](#storing-secrets) below
-- BOSH configs -- for instructions, see [(Optional) Use Generic BOSH Configs with Service Instances](#bosh-configs) below
+- BOSH secrets -- for instructions, see [(Optional) Store Secrets on BOSH CredHub](#storing-secrets).
+- BOSH configs -- for instructions, see [(Optional) Use Generic BOSH Configs with Service Instances](#bosh-configs).
 
 The service adapter must generate the above items given information about the following:
 
@@ -136,7 +134,7 @@ For more information about the input parameters and expected output, see
   the same BOSH manifest.
 </p>
 
-The code snippet below shows the interface signature:
+The following code snippet shows the interface signature:
 
 ```go
 type ManifestGenerator interface {
@@ -163,7 +161,8 @@ type GenerateManifestOutput struct {
 
 #### <a id="binder"></a>Binder
 
-The `Binder` interface is required for most service adapters. This includes:
+The `Binder` interface is required for most service adapters.
+This includes:
 
 - `create-binding`:
   This creates credentials for the service instance and print them to stdout as JSON.
@@ -181,7 +180,7 @@ The `Binder` interface is required for most service adapters. This includes:
 To configure <%= vars.product_abbr %> to provide BOSH DNS addresses for service instances to the service adapter `create-binding`
 and `delete-binding` calls, see [(Optional) Enable BOSH DNS Addresses for Bindings](./service-adapter.html#dns-addresses)
 
-The code snippet below shows the interface signature:
+The following code snippet shows the interface signature:
 
 ```go
 type Binder interface {
@@ -215,7 +214,7 @@ This generates an optional URL of a web-based management UI for the service inst
 For more information about the input parameters and expected output, see
 [dashboard-url](./adapter-reference.html#dashboard-url).
 
-The code snippet below shows the interface signature:
+The following code snippet shows the interface signature:
 
 ```go
 type DashboardUrlGenerator interface {
@@ -236,7 +235,7 @@ This generates a JSON schema to validate service-specific configuration paramete
 For more information about the input parameters and expected output, see
 [generate-plan-schemas](./adapter-reference.html#generate-plan-schemas).
 
-The code snippet below shows the interface signature:
+The following code snippet shows the interface signature:
 
 ```go
 type SchemaGenerator interface {
@@ -314,7 +313,7 @@ on GitHub and the [redis-example-service-adapter](https://github.com/pivotal-cf-
 
 Service authors can enable configuration of BOSH Features in their service adapters.
 
-The SDK provides the `BoshFeatures` struct below, with the option to add extra features using the `ExtraFeatures` map:
+The SDK provides the following `BoshFeatures` struct, with the option to add extra features using the `ExtraFeatures` map:
 
 ```
 type BoshFeatures struct {
@@ -401,8 +400,7 @@ output of `generate-manifest`:
 <p class="note"><span class="note__title">Note</span>
   If you have a previous manifest containing plaintext secrets that you want to
   convert to <%= vars.product_abbr %>-managed secrets, see
-  <a href="#migrating-to-stored-secrets">Migrate from Plaintext Secrets to <%= vars.product_abbr %>-Managed Secrets</a>
-   below.
+  <a href="#migrating-to-stored-secrets">Migrate from Plaintext Secrets to <%= vars.product_abbr %>-Managed Secrets</a>.
 </p>
 
 1. The adapter must generate a manifest that:
@@ -481,7 +479,7 @@ secrets placeholder `((odb_secret:SECRET-NAME))` in the new manifest.
 
 * Returns the value of the secrets in the `secrets` map.
 For more information about the `secrets` map, see
-[Use <%= vars.product_abbr %>-Managed Secrets](#odb-managed-secrets) above.
+[Use <%= vars.product_abbr %>-Managed Secrets](#odb-managed-secrets).
 
   * Each placeholder in the manifest a corresponding entry in the `secrets` map.
   * Each key in the `secrets` map at least one corresponding placeholder in the manifest.
@@ -552,8 +550,7 @@ For more information about using the value during a bind, see
   VMware discourages modifying the value of secrets without changing the secret name.
   If the BOSH deploy task fails during update or upgrade, <%= vars.product_abbr %>-managed secrets might
   be left in an inconsistent state.
-  For more information, see <a href="#inconsistent-secrets">Inconsistent Secrets after a Failed Update</a>
-  below.
+  For more information, see <a href="#inconsistent-secrets">Inconsistent Secrets after a Failed Update</a>.
 </p>
 
 When updating or upgrading a service instance, operators might need to modify the value
@@ -619,7 +616,7 @@ VMware recommends that you avoid modifying secrets without using new names for
 new versions of secrets.
 
 
-## <a id="create-binding-credentials"></a> (Optional) Create Binding Credentials
+## <a id="create-binding-credentials"></a> (Optional) Create Binding credentials
 
 Binding credentials are a set of information that a user or app uses for
 permission to use a service instance. Use binding credentials to restrict the users and apps that can use
@@ -655,7 +652,7 @@ properties:
     password: EXAMPLE-PASSWORD
 ```
 
-### <a id="unique-credentials"></a>Use Credentials Unique to Each Binding
+### <a id="unique-credentials"></a>Use credentials unique to each Binding
 
 In this approach, when the adapter `generate-manifest` subcommand is invoked
 it generates random admin credentials and returns them as part of the service
@@ -766,7 +763,7 @@ For more detail, see [Generic Configs](https://bosh.io/docs/configs/) in the BOS
 
 To return a BOSH config fragment specific to a service instance
 manifest, it must be included in the response from the `generate-manifest`
-command, as in the example below.
+command, as in the following example:
 
 ```json
 {
@@ -789,7 +786,7 @@ Where `MY-SERVICE-INSTANCE` is your service instance.
 <%= vars.product_abbr %> takes the configs in the output and for each entry creates a generic
 BOSH config on the director, using the map key as the config type and using
 the service instance deployment name as the config name. If the
-example above were applied using the BOSH CLI, it would look similar to this:
+previous example were applied using the BOSH CLI, it would look similar to this:
 
 ```bash
 $ echo <content of configs["cloud"]> > config.yml
@@ -843,9 +840,9 @@ To enable the `backup_agent` binding:
 ## <a id="packaging"></a>Package the Service Adapter
 
 Package the service adapter as a BOSH release.
-The operator should co-locate the service adapter release with the <%= vars.product_abbr %> release in
+The operator can co-locate the service adapter release with the <%= vars.product_abbr %> release in
 a BOSH manifest to place the adapter executable on the same VM as the <%= vars.product_abbr %> server.
-As a result, the adapter BOSH job's `monit` file should have no processes defined.
+As a result, the adapter BOSH job's `monit` file can have no processes defined.
 
 See the following example service adapter releases in GitHub:
 

@@ -81,6 +81,6 @@ template_variables:
   on_demand_architecture_diagram: <img src="./img/odb-architecture-vmware.png" alt=""> <a href="./img/odb-architecture-vmware.png" target="_blank">View a larger version of this image</a>
 
   # TAS version
-  current_major_version: "4.0"
-  v_major_version: "v4.0"
-  dot_major_version: "4.0"
+  current_major_version: "5.0"
+  v_major_version: "v5.0"
+  dot_major_version: "5.0"
