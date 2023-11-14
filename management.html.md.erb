@@ -87,7 +87,7 @@ To run the `register-broker` errand, do the following:
     $ bosh -d cf run-errand register-broker
     </pre>
 
-### <a id="delete-instances"></a>Delete All Service Instances
+### <a id="delete-instances"></a>Delete all Service Instances
 
 <p class="note caution">
 <span class="note__title">Caution</span> Use extreme caution when running this errand.
@@ -313,7 +313,7 @@ To run the  `delete-all-service-instances-and-deregister-broker` errand, do the 
     </pre>
 
 
-### <a id="orphan-deployments"></a> Orphan Deployments
+### <a id="orphan-deployments"></a> Orphan deployments
 
 <p class="note"><span class="note__title">Note</span> The deployment for a service instance is orphaned when the BOSH
 deployment is still running but the service is no longer registered in
@@ -384,7 +384,7 @@ a list that resembles the following:
     service instance no longer exists in the platform and any data is safe to
     delete </pre>
 
-#### Delete an Orphan Deployment
+#### Delete an Orphan deployment
 
 <p class="note caution">
 <span class="note__title">Caution</span> Deleting the BOSH deployment destroys the service instance.
@@ -409,7 +409,7 @@ To delete an orphan deployment, do the following:
     </pre>
 
 
-### <a id="upgrade-all-service-instances"></a> Upgrade All Service Instances
+### <a id="upgrade-all-service-instances"></a> Upgrade all Service Instances
 
 The `upgrade-all-service-instances` errand upgrades all existing service instances
 to the latest service offering. If you have made changes to
@@ -432,7 +432,7 @@ This prevents systemic problems from spreading to the rest of your service insta
 
 To add the `upgrade-all-service-instances` errand to the manifest, follow the procedure in [Upgrade All Service Instances](./upgrades.html#upgrade-all-instances).
 
-### <a id="recreate-all-service-instances"></a>Recreate All Service Instances
+### <a id="recreate-all-service-instances"></a>Recreate all Service Instances
 
 <div class="note">
     <span class="note__title">Note</span> <%= vars.product_abbr %> only supports the <code>recreate-all-service-instances</code>
@@ -551,7 +551,7 @@ the jobs used from a service release.
 1. Deploy the broker.
 
 1. Run the `register-broker` errand to update the Marketplace.
-For how to run the errand, see [Register Broker](#register-broker) above.
+For how to run the errand, see [Register Broker](#register-broker).
 
 1. Run the `upgrade-all-service-instances` errand to apply updated plans to
 existing service instances.
@@ -583,7 +583,8 @@ To deactivate access to a service plan, do the following:
     </pre>
 
 <p class="note"><span class="note__title">Note</span> When a plan has the property <code>cf_service_access:
-  disable</code> in the <code>service_catalog</code> the <code>register-broker</code> errand deactivates service access to that plan. For more information on the errand, see <a href="#register-broker">Register Broker</a> above.</p>
+  disable</code> in the <code>service_catalog</code> the <code>register-broker</code> errand deactivates service access to that plan.
+  For more information on the errand, see <a href="#register-broker">Register Broker</a>.</p>
 
 ### <a id="remove-plans"></a>Remove Service Plans
 
@@ -593,7 +594,7 @@ To remove a plan, do the following:
 
 1. Remove the service plan from the broker manifest.
 1. Run the `register-broker` errand to update the Marketplace.
-For more information about this errand, see [Register Broker](#register-broker) above.
+For more information about this errand, see [Register Broker](#register-broker).
 
 <p class="note caution">
 <span class="note__title">Caution</span> If any service instances remain on a plan

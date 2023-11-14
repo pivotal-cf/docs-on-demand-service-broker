@@ -43,7 +43,7 @@ template_variables:
   segment_runtime_full: Isolation Segment
 
   ops_manager: Tanzu Operations Manager
-  
+
   # Associated Tanzu Application Service for VMs version
   current_tas_version: "4-0"
   v_major_tas_version: "v4.0"
@@ -85,3 +85,9 @@ template_variables:
   odb_pcfdev_version_pivnet: 1811
   odb_pcfdev_version: pcfdev-v0.19.1-rc.46
   odb_warden_stemcell_version: 3262.2
+  on_demand_architecture_diagram: <img src="./img/odb-architecture-vmware.png" alt=""> <a href="./img/odb-architecture-vmware.png" target="_blank">View a larger version of this image</a>
+
+  # TAS version
+  current_major_version: "5.0"
+  v_major_version: "v5.0"
+  dot_major_version: "5.0"
