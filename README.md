@@ -4,15 +4,19 @@ This repo contains the On-Demand Services SDK documentation.
 
 In this README: 
 
-- [Branches in this Content Repo](#branches-in-this-content-repo)
-- [Releasing a New Minor Version](#releasing-a-new-minor-version)
-- [Partials](#partials)
-- [Contributing to Documentation](#contributing-to-documentation)
-- [Publishing Docs](#publishing-docs)
-- [Troubleshooting Markdown](#troubleshooting-markdown)
-- [Style Guide](#style-guide)
+- [docs-on-demand-service-broker](#docs-on-demand-service-broker)
+  - [Branches](#branches)
+  - [Releasing a new minor version](#releasing-a-new-minor-version)
+  - [Partials](#partials)
+  - [Contributing to documentation](#contributing-to-documentation)
+  - [Publishing docs](#publishing-docs)
+    - [Prepare Markdown files](#prepare-markdown-files)
+    - [In Docsdash](#in-docsdash)
+    - [Promoting to pre-prod and prod](#promoting-to-pre-prod-and-prod)
+  - [Troubleshooting Markdown](#troubleshooting-markdown)
+  - [Style Guide](#style-guide)
 
-## Branches in this Content Repo
+## Branches
 
 The master branch is the tree-trunk, so **always** make changes you want carried forward in this branch. This includes:
 
@@ -24,28 +28,30 @@ Then, if necessary, immediately cherry-pick/copy any changes that you want to pu
 
 | Branch name     | Use for|
 |-----------------| ------|
-| master          | Unreleased version (edge - 0.42) https://docs-staging.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.42/on-demand-services-sdk/GUID-index.html|
-| v0.41.x         | live on April 16, 2021 https://docs.pivotal.io/svc-sdk/odb/0-41|
-| v0.40.x         | live on July 13, 2020 https://docs.pivotal.io/svc-sdk/odb/0-40|
-| v0.39.x         | live on April 3, 2020 https://docs.pivotal.io/svc-sdk/odb/0-39|
-| v0.38.x         | live on February, 2020 https://docs.pivotal.io/svc-sdk/odb/0-38|
-| v0.37.x         | live on January 30, 2020 https://docs.pivotal.io/svc-sdk/odb/0-37|
-| v0.36.x         | live on January 2, 2020 https://docs.pivotal.io/svc-sdk/odb/0-36|
-| v0.35.x         | live on November 12, 2019 https://docs.pivotal.io/svc-sdk/odb/0-35|
-| v0.34.x         | live on October 15, 2019 https://docs.pivotal.io/svc-sdk/odb/0-34|
-| v0.33.x         | live on September 11, 2019 https://docs.pivotal.io/svc-sdk/odb/0-33|
-| v0.32.x         | live on August 28, 2019 https://docs.pivotal.io/svc-sdk/odb/0-32|
-| v0.31.x         | live on June 12, 2019 https://docs.pivotal.io/svc-sdk/odb/0-31|
-| v0.30.x         | live on June 7, 2019 https://docs.pivotal.io/svc-sdk/odb/0-30|
-| v0.29.x         | live on May 22, 2019 https://docs.pivotal.io/svc-sdk/odb/0-29|
-| v0.28.x         | live on April 26, 2019 https://docs.pivotal.io/svc-sdk/odb/0-28|
-| v0.27.x         | live on April 5, 2019 https://docs.pivotal.io/svc-sdk/odb/0-27|
-| v0.26.x         | live on Feb 20, 2019 https://docs.pivotal.io/svc-sdk/odb/0-26|
-| v0.25.x         | live on Dec 5, 2018 https://docs.pivotal.io/svc-sdk/odb/0-25|
-| v0.24.x         | live on Nov 14, 2018 https://docs.pivotal.io/svc-sdk/odb/0-24|
-| v0.23.x         | live on Sept 18, 2018 https://docs.pivotal.io/svc-sdk/odb/0-23|
-| v0.22.x         | live | https://docs.pivotal.io/svc-sdk/odb/0-22|
-| v0.21.x         | live | https://docs.pivotal.io/svc-sdk/odb/0-21|
+| main          | Unreleased version (edge - 0.44) https://docs-staging.vmware.com/en/draft/On-Demand-Services-SDK-for-VMware-Tanzu/0.44/on-demand-services-sdk/GUID-index.html|
+| v0.43.x         | On staging at https://docs-staging.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.43/on-demand-services-sdk/GUID-index.html and at prod at https://docs-staging.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.43/on-demand-services-sdk/GUID-index.html|
+| v0.42.x         | On staging at https://docs-staging.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.42/on-demand-services-sdk/GUID-index.html and on prod at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.42/on-demand-services-sdk/GUID-index.html|
+| v0.41.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.41/on-demand-services-sdk-0-41.pdf |
+| v0.40.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.40/on-demand-services-sdk-0-40.pdf |
+| v0.39.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.39/on-demand-services-sdk-0-39.pdf |
+| v0.38.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.38/on-demand-services-sdk-0-38.pdf |
+| v0.37.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.37/on-demand-services-sdk-0-37.pdf |
+| v0.36.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.36/on-demand-services-sdk-0-36.pdf |
+| v0.35.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.35/on-demand-services-sdk-0-35.pdf |
+| v0.34.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.34/on-demand-services-sdk-0-34.pdf |
+| v0.33.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.33/on-demand-services-sdk-0-33.pdf |
+| v0.32.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.32/on-demand-services-sdk-0-32.pdf |
+| v0.31.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.31/on-demand-services-sdk-0-31.pdf |
+| v0.30.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.30/on-demand-services-sdk-0-30.pdf |
+| v0.29.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.29/on-demand-services-sdk-0-29.pdf |
+| v0.28.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.28/on-demand-services-sdk-0-28.pdf |
+| v0.27.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.27/on-demand-services-sdk-0-27.pdf |
+| v0.26.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.26/on-demand-services-sdk-0-26.pdf |
+| v0.25.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.25/on-demand-services-sdk-0-25.pdf |
+| v0.24.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.24/on-demand-services-sdk-0-24.pdf |
+| v0.23.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.23/on-demand-services-sdk-0-23.pdf |
+| v0.22.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.22/on-demand-services-sdk-0-22.pdf |
+| v0.21.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.21/on-demand-services-sdk-0-21.pdf |
 | v0.20.x         | obsolete, but do not delete the branch. PDF available at https://docs.pivotal.io/archives/odb-0.20.pdf. |
 | v0.19.x         | obsolete, but do not delete the branch. PDF available at https://docs.pivotal.io/archives/odb-0.19.pdf. |
 | v0.18.x         | obsolete, but do not delete the branch. PDF available at https://docs.pivotal.io/archives/odb-0.18.pdf. |
@@ -59,20 +65,20 @@ Then, if necessary, immediately cherry-pick/copy any changes that you want to pu
 | v0.10.x         | obsolete, but do not delete the branch |
 | v0.9.x          | obsolete, but do not delete the branch |
 
-## Releasing a New Minor Version
+## Releasing a new minor version
 
-Because **master** is the latest and greatest documentation, the process would be to cut a **x.x** branch
-for the version that **master** was targeting during that time.
+Because **main** is the latest and greatest documentation, the process is to cut a **x.x**
+branch for the version that **main** was targeting during that time.
 
-After this point, **master** will then be the target for the next version of the On-Demand Services SDK product.
-
+After this point, **main** is the target for the next version of the On-Demand Services SDK
+product.
 
 ## Partials
 
 Cross-product partials (if any) for On-Demand Services SDK are single sourced from the [Docs Partials](https://github.com/pivotal-cf/docs-partials) repository.
 
 
-## Contributing to Documentation
+## Contributing to documentation
 
 If there is some documentation to add for an unreleased patch version of Cloud Service Broker then create a branch off of the **live** branch
 you intend to modify and create a pull request against that branch.
@@ -89,15 +95,15 @@ pull request using a fork, see
 [Creating a PR](https://docs-wiki.sc2-04-pcf1-apps.oc.vmware.com/wiki/external/create-pr.html)
 in the documentation team wiki.
 
-
-## Publishing Docs
+## Publishing docs
 
 - [docworks](https://docworks.vmware.com/) is the main tool for managing docs used by writers.
 - [docsdash](https://docsdash.vmware.com/) is a deployment UI which manages the promotion from
 staging to pre-prod to production. The process below describes how to upload our docs to staging,
 replacing the publication with the same version.
 
-### Prepare Markdown Files
+### Prepare Markdown files
+
 - Markdown files live in this repo.
 - Images should live in an `images` directory at the same level and linked with a relative link.
 - Each page requires an entry in [config/toc.md](config/toc.md) for the table of contents.
@@ -110,7 +116,7 @@ replacing the publication with the same version.
 
    There should be an entry with a blue link which says `Documentation` and points to staging.
 
-### Promoting to Pre-Prod and Prod
+### Promoting to pre-prod and prod
 
 **Prerequisite** Needs additional privileges - reach out to a manager on the docs team [#tanzu-docs](https://vmware.slack.com/archives/C055V2M0H) or ask a writer to do this step for you.
 
