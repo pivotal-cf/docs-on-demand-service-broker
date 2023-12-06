@@ -4,15 +4,19 @@ This repo contains the On-Demand Services SDK documentation.
 
 In this README:
 
-- [Branches in this Content Repo](#branches-in-this-content-repo)
-- [Releasing a New Minor Version](#releasing-a-new-minor-version)
-- [Partials](#partials)
-- [Contributing to Documentation](#contributing-to-documentation)
-- [Publishing Docs](#publishing-docs)
-- [Troubleshooting Markdown](#troubleshooting-markdown)
-- [Style Guide](#style-guide)
+- [docs-on-demand-service-broker](#docs-on-demand-service-broker)
+  - [Branches](#branches)
+  - [Releasing a new minor version](#releasing-a-new-minor-version)
+  - [Partials](#partials)
+  - [Contributing to documentation](#contributing-to-documentation)
+  - [Publishing docs](#publishing-docs)
+    - [Prepare Markdown files](#prepare-markdown-files)
+    - [In Docsdash](#in-docsdash)
+    - [Promoting to pre-prod and prod](#promoting-to-pre-prod-and-prod)
+  - [Troubleshooting Markdown](#troubleshooting-markdown)
+  - [Style Guide](#style-guide)
 
-## Branches in this Content Repo
+## Branches
 
 The main branch is the tree-trunk, so **always** make changes you want carried forward in this
 branch. This includes:
@@ -27,8 +31,8 @@ production into the appropriate branches listed below:
 | Branch name     | Use for|
 |-----------------| ------|
 | main          | Unreleased version (edge - 0.44) https://docs-staging.vmware.com/en/draft/On-Demand-Services-SDK-for-VMware-Tanzu/0.44/on-demand-services-sdk/GUID-index.html|
-| v0.43.x         | live on Mar 16, 2023 https://docs-staging.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.43/on-demand-services-sdk/GUID-index.html|
-| v0.42.x         | live on June 3, 2021 https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.42/on-demand-services-sdk/GUID-index.html|
+| v0.43.x         | On staging at https://docs-staging.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.43/on-demand-services-sdk/GUID-index.html and at prod at https://docs-staging.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.43/on-demand-services-sdk/GUID-index.html|
+| v0.42.x         | On staging at https://docs-staging.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.42/on-demand-services-sdk/GUID-index.html and on prod at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.42/on-demand-services-sdk/GUID-index.html|
 | v0.41.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.41/on-demand-services-sdk-0-41.pdf |
 | v0.40.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.40/on-demand-services-sdk-0-40.pdf |
 | v0.39.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.39/on-demand-services-sdk-0-39.pdf |
@@ -63,12 +67,12 @@ production into the appropriate branches listed below:
 | v0.10.x         | obsolete, but do not delete the branch |
 | v0.9.x          | obsolete, but do not delete the branch |
 
-## Releasing a New Minor Version
+## Releasing a new minor version
 
-Because **main** is the latest and greatest documentation, the process would be to cut a **x.x**
+Because **main** is the latest and greatest documentation, the process is to cut a **x.x**
 branch for the version that **main** was targeting during that time.
 
-After this point, **main** will then be the target for the next version of the On-Demand Services SDK
+After this point, **main** is the target for the next version of the On-Demand Services SDK
 product.
 
 ## Partials
@@ -76,7 +80,7 @@ product.
 Cross-product partials (if any) for On-Demand Services SDK are single sourced from the
 [Docs Partials](https://github.com/pivotal-cf/docs-partials) repository.
 
-## Contributing to Documentation
+## Contributing to documentation
 
 If there is some documentation to add for an unreleased patch version of Cloud Service Broker then
 create a branch off of the **live** branch
@@ -94,14 +98,14 @@ pull request using a fork, see
 [Creating a PR](https://docs-wiki.sc2-04-pcf1-apps.oc.vmware.com/wiki/external/create-pr.html)
 in the documentation team wiki.
 
-## Publishing Docs
+## Publishing docs
 
 - [docworks](https://docworks.vmware.com/) is the main tool for managing docs used by writers.
 - [docsdash](https://docsdash.vmware.com/) is a deployment UI which manages the promotion from
 staging to pre-prod to production. The process below describes how to upload our docs to staging,
 replacing the publication with the same version.
 
-### Prepare Markdown Files
+### Prepare Markdown files
 
 - Markdown files live in this repo.
 - Images should live in an `images` directory at the same level and linked with a relative link.
@@ -115,7 +119,7 @@ replacing the publication with the same version.
 
    There should be an entry with a blue link which says **Documentation** and points to staging.
 
-### Promoting to Pre-Prod and Prod
+### Promoting to pre-prod and prod
 
 **Prerequisite** Needs additional privileges: reach out to a manager on the docs team
 [#tanzu-docs](https://vmware.slack.com/archives/C055V2M0H) or ask a writer to do this step for you.
