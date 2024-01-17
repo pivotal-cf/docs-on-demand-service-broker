@@ -30,36 +30,38 @@ production into the appropriate branches listed below:
 
 | Branch name     | Use for|
 |-----------------| ------|
-| main          | Unreleased version (edge - 0.44) https://docs-staging.vmware.com/en/draft/On-Demand-Services-SDK-for-VMware-Tanzu/0.44/on-demand-services-sdk/GUID-index.html|
-| v0.43.x         | On staging at https://docs-staging.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.43/on-demand-services-sdk/GUID-index.html and at prod at https://docs-staging.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.43/on-demand-services-sdk/GUID-index.html|
-| v0.42.x         | On staging at https://docs-staging.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.42/on-demand-services-sdk/GUID-index.html and on prod at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.42/on-demand-services-sdk/GUID-index.html|
-| v0.41.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.41/on-demand-services-sdk-0-41.pdf |
-| v0.40.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.40/on-demand-services-sdk-0-40.pdf |
-| v0.39.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.39/on-demand-services-sdk-0-39.pdf |
-| v0.38.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.38/on-demand-services-sdk-0-38.pdf |
-| v0.37.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.37/on-demand-services-sdk-0-37.pdf |
-| v0.36.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.36/on-demand-services-sdk-0-36.pdf |
-| v0.35.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.35/on-demand-services-sdk-0-35.pdf |
-| v0.34.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.34/on-demand-services-sdk-0-34.pdf |
-| v0.33.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.33/on-demand-services-sdk-0-33.pdf |
-| v0.32.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.32/on-demand-services-sdk-0-32.pdf |
-| v0.31.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.31/on-demand-services-sdk-0-31.pdf |
-| v0.30.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.30/on-demand-services-sdk-0-30.pdf |
-| v0.29.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.29/on-demand-services-sdk-0-29.pdf |
-| v0.28.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.28/on-demand-services-sdk-0-28.pdf |
-| v0.27.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.27/on-demand-services-sdk-0-27.pdf |
-| v0.26.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.26/on-demand-services-sdk-0-26.pdf |
-| v0.25.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.25/on-demand-services-sdk-0-25.pdf |
-| v0.24.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.24/on-demand-services-sdk-0-24.pdf |
-| v0.23.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.23/on-demand-services-sdk-0-23.pdf |
-| v0.22.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.22/on-demand-services-sdk-0-22.pdf |
-| v0.21.x         | PDF available at https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.21/on-demand-services-sdk-0-21.pdf |
-| v0.20.x         | obsolete, but do not delete the branch. PDF available at https://docs.pivotal.io/archives/odb-0.20.pdf. |
-| v0.19.x         | obsolete, but do not delete the branch. PDF available at https://docs.pivotal.io/archives/odb-0.19.pdf. |
-| v0.18.x         | obsolete, but do not delete the branch. PDF available at https://docs.pivotal.io/archives/odb-0.18.pdf. |
-| v0.17.x         | obsolete, but do not delete the branch. PDF available at https://docs.pivotal.io/archives/odb-0.17.pdf. |
-| v0.16.x         | obsolete, but do not delete the branch. PDF available at https://docs.pivotal.io/archives/odb-0.16.pdf. |
-| v0.15.x         | obsolete, but do not delete the branch. PDF available at https://docs.pivotal.io/archives/odb-0.15.pdf. |
+| main          | [Unreleased v0.46](https://docs-staging.vmware.com/en/draft/On-Demand-Services-SDK-for-VMware-Tanzu/0.46/on-demand-services-sdk/GUID-index.html)|
+| v0.45         | [Staging](https://docs-staging.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.45/on-demand-services-sdk/GUID-index.html) and [Prod](https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.45/on-demand-services-sdk/GUID-index.html)|
+| v0.44         | [Staging](https://docs-staging.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.44/on-demand-services-sdk/GUID-index.html) and [Prod](https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.44/on-demand-services-sdk/GUID-index.html)|
+| v0.43.x         | [Staging](https://docs-staging.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.43/on-demand-services-sdk/GUID-index.html) and [Prod](https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.43/on-demand-services-sdk/GUID-index.html)|
+| v0.42.x         | [Staging](https://docs-staging.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.42/on-demand-services-sdk/GUID-index.html) and [Prod](https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.42/on-demand-services-sdk/GUID-index.html)|
+| v0.41.x         | Out of support. [PDF only](https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.41/on-demand-services-sdk-0-41.pdf) |
+| v0.40.x         | Out of support. [PDF only](https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.40/on-demand-services-sdk-0-40.pdf) |
+| v0.39.x         | Out of support. [PDF only](https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.39/on-demand-services-sdk-0-39.pdf) |
+| v0.38.x         | Out of support. [PDF only](https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.38/on-demand-services-sdk-0-38.pdf) |
+| v0.37.x         | Out of support. [PDF only](https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.37/on-demand-services-sdk-0-37.pdf) |
+| v0.36.x         | Out of support. [PDF only](https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.36/on-demand-services-sdk-0-36.pdf) |
+| v0.35.x         | Out of support. [PDF only](https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.35/on-demand-services-sdk-0-35.pdf) |
+| v0.34.x         | Out of support. [PDF only](https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.34/on-demand-services-sdk-0-34.pdf) |
+| v0.33.x         | Out of support. [PDF only](https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.33/on-demand-services-sdk-0-33.pdf) |
+| v0.32.x         | Out of support. [PDF only](https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.32/on-demand-services-sdk-0-32.pdf) |
+| v0.31.x         | Out of support. [PDF only](https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.31/on-demand-services-sdk-0-31.pdf) |
+| v0.30.x         | Out of support. [PDF only](https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.39/on-demand-services-sdk-0-30.pdf) |
+| v0.29.x         | Out of support. [PDF only](https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.29/on-demand-services-sdk-0-29.pdf) |
+| v0.28.x         | Out of support. [PDF only](https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.28/on-demand-services-sdk-0-28.pdf) |
+| v0.27.x         | Out of support. [PDF only](https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.27/on-demand-services-sdk-0-27.pdf) |
+| v0.26.x         | Out of support. [PDF only](https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.26/on-demand-services-sdk-0-26.pdf) |
+| v0.25.x         | Out of support. [PDF only](https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.25/on-demand-services-sdk-0-25.pdf) |
+| v0.24.x         | Out of support. [PDF only](https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.24/on-demand-services-sdk-0-24.pdf) |
+| v0.23.x         | Out of support. [PDF only](https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.23/on-demand-services-sdk-0-23.pdf) |
+| v0.22.x         | Out of support. [PDF only](https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.22/on-demand-services-sdk-0-22.pdf) |
+| v0.21.x         | Out of support. [PDF only](https://docs.vmware.com/en/On-Demand-Services-SDK-for-VMware-Tanzu/0.21/on-demand-services-sdk-0-21.pdf) |
+| v0.20.x         | obsolete, but do not delete the branch. [PDF only](https://docs.pivotal.io/archives/odb-0.20.pdf) |
+| v0.19.x         | obsolete, but do not delete the branch. [PDF only](https://docs.pivotal.io/archives/odb-0.19.pdf) |
+| v0.18.x         | obsolete, but do not delete the branch. [PDF only](https://docs.pivotal.io/archives/odb-0.18.pdf) |
+| v0.17.x         | obsolete, but do not delete the branch. [PDF only](https://docs.pivotal.io/archives/odb-0.17.pdf) |
+| v0.16.x         | obsolete, but do not delete the branch. [PDF only](https://docs.pivotal.io/archives/odb-0.16.pdf) |
+| v0.15.x         | obsolete, but do not delete the branch. [PDF only](https://docs.pivotal.io/archives/odb-0.15.pdf) |
 | v0.14.x         | obsolete, but do not delete the branch |
 | v0.13.x         | obsolete, but do not delete the branch |
 | v0.12.x         | obsolete, but do not delete the branch |
